@@ -19,6 +19,8 @@
  */
 
 @theme inline {
+  --font-sans: "Manrope", sans-serif;
+  --font-display: "Barlow Condensed", sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -59,29 +61,37 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-gold: var(--gold);
+  --color-surface: var(--surface);
+  --color-surface-deep: var(--surface-deep);
+  --shadow-fire: 0 10px 35px color-mix(in oklab, var(--primary) 28%, transparent);
+  --shadow-modal: 0 30px 90px oklch(0 0 0 / 65%);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --radius: 0.35rem;
+  --background: oklch(0.105 0.01 50);
+  --foreground: oklch(0.965 0.015 80);
+  --card: oklch(0.155 0.012 48);
+  --card-foreground: oklch(0.965 0.015 80);
+  --popover: oklch(0.14 0.012 48);
+  --popover-foreground: oklch(0.965 0.015 80);
+  --primary: oklch(0.68 0.22 45);
+  --primary-foreground: oklch(0.12 0.015 48);
+  --secondary: oklch(0.26 0.06 37);
+  --secondary-foreground: oklch(0.95 0.02 75);
+  --muted: oklch(0.19 0.012 48);
+  --muted-foreground: oklch(0.7 0.025 70);
+  --accent: oklch(0.25 0.045 42);
+  --accent-foreground: oklch(0.95 0.02 75);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.32 0.025 52 / 65%);
+  --input: oklch(0.29 0.025 52);
+  --ring: oklch(0.68 0.22 45);
+  --gold: oklch(0.79 0.14 83);
+  --surface: oklch(0.13 0.012 48);
+  --surface-deep: oklch(0.08 0.008 45);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -140,5 +150,45 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    letter-spacing: 0;
+    margin: 0;
+    scroll-behavior: smooth;
   }
+
+  button, a { cursor: pointer; }
+  ::selection { background: var(--primary); color: var(--primary-foreground); }
 }
+
+@utility bg-hero-overlay {
+  background: linear-gradient(90deg, oklch(0.07 0.01 45 / 98%) 0%, oklch(0.08 0.01 45 / 82%) 38%, oklch(0.08 0.01 45 / 18%) 72%), linear-gradient(0deg, oklch(0.08 0.01 45 / 72%) 0%, transparent 45%);
+}
+@utility bg-card-overlay { background: linear-gradient(0deg, oklch(0.12 0.01 48 / 65%), transparent 55%); }
+@utility bg-modal-backdrop { background: oklch(0.04 0.01 45 / 78%); }
+
+@layer components {
+  .nav-link { color: var(--muted-foreground); transition: color 200ms ease; }
+  .nav-link:hover { color: var(--primary); }
+  .eyebrow { color: var(--primary); font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .18em; }
+  .section-title { margin-top: .65rem; font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5.6rem); font-weight: 900; line-height: .9; text-transform: uppercase; }
+  .section-title span { color: var(--primary); }
+  .product-card { transform-style: preserve-3d; transition: transform 400ms ease, border-color 300ms ease, box-shadow 300ms ease; }
+  .product-card:hover { transform: perspective(1000px) rotateX(1.5deg) rotateY(-1.5deg) translateY(-8px); border-color: color-mix(in oklab, var(--primary) 48%, transparent); box-shadow: 0 24px 70px oklch(0 0 0 / 40%); }
+  .footer-title { margin-bottom: 1.25rem; font-family: var(--font-display); font-size: 1rem; font-weight: 800; text-transform: uppercase; color: var(--foreground); }
+  .footer-line { display: flex; gap: .65rem; font-size: .875rem; line-height: 1.75; color: var(--muted-foreground); }
+  .glass-panel { border-radius: var(--radius-lg); background: oklch(0.14 0.015 48 / 82%); backdrop-filter: blur(26px) saturate(130%); }
+  .field { display: block; }
+  .field > span { display: block; margin-bottom: .5rem; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--muted-foreground); }
+  .field > div { display: flex; align-items: center; gap: .75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: oklch(0.1 0.01 48 / 65%); padding: 0 .85rem; transition: border-color 200ms ease; }
+  .field > div:focus-within { border-color: var(--primary); }
+  .field svg { width: 1rem; color: var(--primary); }
+  .field input { height: 3rem; width: 100%; outline: none; color: var(--foreground); background: transparent; font-size: .875rem; }
+  .field input::placeholder { color: var(--muted-foreground); }
+}
+
+.sparks i { position: absolute; bottom: -2rem; width: 3px; height: 14px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 12px var(--primary); animation: spark-rise linear infinite; transform: rotate(25deg); opacity: 0; }
+.hero-image { animation: hero-breathe 10s ease-in-out infinite alternate; }
+@keyframes spark-rise { 0% { transform: translateY(0) rotate(25deg) scale(.4); opacity: 0; } 15% { opacity: .85; } 100% { transform: translateY(-80vh) translateX(70px) rotate(25deg) scale(0); opacity: 0; } }
+@keyframes hero-breathe { from { transform: scale(1.01); } to { transform: scale(1.055); } }
+@media (max-width: 767px) { .bg-hero-overlay { background: linear-gradient(0deg, oklch(0.07 0.01 45 / 98%) 2%, oklch(0.08 0.01 45 / 78%) 50%, oklch(0.08 0.01 45 / 18%) 90%); } .hero-image { object-position: 58% center; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
