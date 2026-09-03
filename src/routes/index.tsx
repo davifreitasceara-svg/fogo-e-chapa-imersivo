@@ -20,6 +20,13 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import heroBurger from "@/assets/hero-burger.jpg";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
@@ -90,8 +97,19 @@ function Index() {
     };
   }, [authOpen]);
 
+  function updateQuantity(id: number, delta: number) {
+    setCart((current) => {
+      const newQty = (current[id] || 0) + delta;
+      if (newQty <= 0) {
+        const { [id]: _, ...rest } = current;
+        return rest;
+      }
+      return { ...current, [id]: newQty };
+    });
+  }
+
   function addToCart(id: number) {
-    setCart((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }));
+    updateQuantity(id, 1);
     setAddedId(id);
     window.setTimeout(() => setAddedId((current) => (current === id ? null : current)), 1100);
   }
@@ -108,10 +126,73 @@ function Index() {
             <a className="nav-link" href="#contato">Contato</a>
           </nav>
           <div className="flex items-center gap-2">
-            <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative">
-              <ShoppingBag className="size-5" />
-              {cartCount > 0 && <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">{cartCount}</span>}
-            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative">
+                  <ShoppingBag className="size-5" />
+                  {cartCount > 0 && <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">{cartCount}</span>}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="flex w-full flex-col border-border bg-surface-deep sm:max-w-md">
+                <SheetHeader>
+                  <SheetTitle className="font-display text-2xl font-black uppercase text-foreground">Sua Sacola</SheetTitle>
+                </SheetHeader>
+                
+                {cartCount > 0 ? (
+                  <div className="flex flex-1 flex-col justify-between overflow-hidden">
+                    <div className="overflow-y-auto py-4 pr-2">
+                      <div className="space-y-4">
+                        {Object.entries(cart).map(([idStr, quantity]) => {
+                          const product = products.find((p) => p.id === parseInt(idStr));
+                          if (!product) return null;
+                          return (
+                            <div key={product.id} className="flex items-center gap-4 border-b border-border pb-4">
+                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-border">
+                                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-display text-base font-bold uppercase leading-none">{product.name}</h4>
+                                <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
+                              </div>
+                              <div className="flex items-center gap-2 rounded-sm border border-border bg-background p-1">
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm" onClick={() => updateQuantity(product.id, -1)}>
+                                  <Minus className="size-3" />
+                                </Button>
+                                <span className="w-4 text-center text-xs font-bold">{quantity}</span>
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm" onClick={() => updateQuantity(product.id, 1)}>
+                                  <Plus className="size-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    
+                    <div className="border-t border-border pt-4">
+                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase text-foreground">
+                        <span>Total</span>
+                        <span className="text-gold">
+                          R$ {Object.entries(cart).reduce((total, [id, qty]) => {
+                            const product = products.find(p => p.id === parseInt(id));
+                            return total + (product ? product.price * qty : 0);
+                          }, 0).toFixed(2).replace(".", ",")}
+                        </span>
+                      </div>
+                      <Button size="lg" className="w-full text-base" onClick={() => window.alert("Checkout não implementado na demonstração.")}>
+                        Finalizar Pedido
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-1 flex-col items-center justify-center text-center">
+                    <ShoppingBag className="mb-4 size-12 text-muted-foreground/30" />
+                    <h3 className="font-display text-xl font-bold uppercase text-foreground">Sua sacola está vazia</h3>
+                    <p className="mt-2 max-w-[200px] text-sm text-muted-foreground">Adicione alguns itens do cardápio para fazer seu pedido.</p>
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
             <Button className="hidden sm:inline-flex" variant="outline" size="sm" onClick={() => setAuthOpen(true)}><UserRound className="size-4" /> Entrar / Cadastrar</Button>
             <Button className="md:hidden" variant="ghost" size="icon" aria-label="Abrir menu" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X /> : <Menu />}</Button>
           </div>
