@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import {
   ArrowDown,
   Check,
+  ChevronLeft,
   ChevronRight,
   Clock3,
   Flame,
@@ -27,7 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import heroBurger from "@/assets/hero-burger.jpg";
+import heroPizza from "@/assets/hero-pizza.jpg";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
 import burgerInferno from "@/assets/burger-inferno.jpg";
@@ -115,118 +115,69 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
-      <header className="fixed inset-x-0 top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 lg:px-8">
-          <Brand />
-          <nav className="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.14em] md:flex" aria-label="Navegação principal">
-            <a className="nav-link" href="#inicio">Início</a>
-            <a className="nav-link" href="#cardapio">Cardápio</a>
-            <a className="nav-link" href="#sobre">Nossa brasa</a>
-            <a className="nav-link" href="#contato">Contato</a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative">
-                  <ShoppingBag className="size-5" />
-                  {cartCount > 0 && <span className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-primary-foreground">{cartCount}</span>}
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="flex w-full flex-col border-border bg-surface-deep sm:max-w-md">
-                <SheetHeader>
-                  <SheetTitle className="font-display text-2xl font-black uppercase text-foreground">Sua Sacola</SheetTitle>
-                </SheetHeader>
-                
-                {cartCount > 0 ? (
-                  <div className="flex flex-1 flex-col justify-between overflow-hidden">
-                    <div className="overflow-y-auto py-4 pr-2">
-                      <div className="space-y-4">
-                        {Object.entries(cart).map(([idStr, quantity]) => {
-                          const product = products.find((p) => p.id === parseInt(idStr));
-                          if (!product) return null;
-                          return (
-                            <div key={product.id} className="flex items-center gap-4 border-b border-border pb-4">
-                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-border">
-                                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
-                              </div>
-                              <div className="flex-1">
-                                <h4 className="font-display text-base font-bold uppercase leading-none">{product.name}</h4>
-                                <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
-                              </div>
-                              <div className="flex items-center gap-2 rounded-sm border border-border bg-background p-1">
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm" onClick={() => updateQuantity(product.id, -1)}>
-                                  <Minus className="size-3" />
-                                </Button>
-                                <span className="w-4 text-center text-xs font-bold">{quantity}</span>
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm" onClick={() => updateQuantity(product.id, 1)}>
-                                  <Plus className="size-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    
-                    <div className="border-t border-border pt-4">
-                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase text-foreground">
-                        <span>Total</span>
-                        <span className="text-gold">
-                          R$ {Object.entries(cart).reduce((total, [id, qty]) => {
-                            const product = products.find(p => p.id === parseInt(id));
-                            return total + (product ? product.price * qty : 0);
-                          }, 0).toFixed(2).replace(".", ",")}
-                        </span>
-                      </div>
-                      <Button size="lg" className="w-full text-base" onClick={() => window.alert("Checkout não implementado na demonstração.")}>
-                        Finalizar Pedido
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-1 flex-col items-center justify-center text-center">
-                    <ShoppingBag className="mb-4 size-12 text-muted-foreground/30" />
-                    <h3 className="font-display text-xl font-bold uppercase text-foreground">Sua sacola está vazia</h3>
-                    <p className="mt-2 max-w-[200px] text-sm text-muted-foreground">Adicione alguns itens do cardápio para fazer seu pedido.</p>
-                  </div>
-                )}
-              </SheetContent>
-            </Sheet>
-            <Button className="hidden sm:inline-flex" variant="outline" size="sm" onClick={() => setAuthOpen(true)}><UserRound className="size-4" /> Entrar / Cadastrar</Button>
-            <Button className="md:hidden" variant="ghost" size="icon" aria-label="Abrir menu" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? <X /> : <Menu />}</Button>
-          </div>
+    <div className="min-h-screen overflow-x-hidden bg-brown-brand text-foreground">
+      <header className="fixed inset-x-0 top-0 z-40 bg-brown-brand">
+        <div className="bg-orange-brand py-1.5 text-[11px] sm:text-xs font-semibold text-brown-brand flex items-center justify-center gap-4 sm:gap-6 w-full text-center px-4">
+          <span>18 Urban Lane, Chicago</span>
+          <span className="hidden sm:inline">🍕 Open Daily - 10AM to 11PM</span>
+          <span className="hidden sm:inline">🍔 Pickup & Delivery Available</span>
         </div>
-        {menuOpen && (
-          <nav className="border-t border-border bg-background px-5 py-5 md:hidden" aria-label="Navegação mobile">
-            {[["Início", "#inicio"], ["Cardápio", "#cardapio"], ["Nossa brasa", "#sobre"], ["Contato", "#contato"]].map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="block border-b border-border py-3 text-sm font-semibold uppercase">{label}</a>)}
-            <Button className="mt-5 w-full" variant="outline" onClick={() => { setMenuOpen(false); setAuthOpen(true); }}>Entrar / Cadastrar</Button>
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl sm:text-3xl">🍔</span>
+            <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">HOTBITE</span>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-8 bg-brown-light px-8 py-3 rounded-full text-sm font-semibold text-white/90">
+             <a href="#about" className="hover:text-orange-brand transition-colors">About</a>
+             <a href="#menu" className="hover:text-orange-brand transition-colors">Menu</a>
+             <a href="#gallery" className="hover:text-orange-brand transition-colors">Gallery</a>
+             <a href="#delivery" className="hover:text-orange-brand transition-colors">Delivery</a>
           </nav>
-        )}
+
+          <Button className="rounded-full bg-orange-brand text-brown-brand hover:bg-orange-brand/90 font-bold px-6">
+             Contact Us
+          </Button>
+        </div>
       </header>
 
       <main>
-        <section id="inicio" className="relative flex min-h-[94svh] items-end overflow-hidden pt-18">
-          <div className="absolute inset-0">
-            <img src={heroBurger} alt="Hambúrguer artesanal Fogo e Chapa cercado por chamas" width={1536} height={1280} fetchPriority="high" className="hero-image h-full w-full object-cover object-[65%_center]" />
-            <div className="absolute inset-0 bg-hero-overlay" />
-          </div>
-          <div className="sparks absolute inset-0 overflow-hidden" aria-hidden="true">
-            {sparks.map((spark, index) => <i key={index} style={{ left: spark.left, animationDelay: spark.delay, animationDuration: spark.duration }} />)}
-          </div>
-          <div className="relative z-10 mx-auto grid w-full max-w-7xl items-end px-5 pb-16 pt-24 lg:grid-cols-[1.05fr_.95fr] lg:px-8 lg:pb-20">
-            <div className="max-w-2xl">
-              <div className="mb-5 inline-flex items-center gap-2 border-l-2 border-primary pl-3 text-xs font-bold uppercase tracking-[0.18em] text-gold"><Sparkles className="size-4" /> Artesanal. Intenso. Sem atalhos.</div>
-              <h1 className="font-display text-[clamp(3.6rem,8vw,7.8rem)] font-black uppercase leading-[0.78] text-foreground">Carne.<br /><span className="text-primary">Fogo.</span><br />Técnica.</h1>
-              <p className="mt-7 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">Smash burgers selados na chapa de ferro, ingredientes escolhidos a dedo e o sabor inconfundível da brasa.</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button size="lg" asChild><a href="#cardapio">Ver cardápio <ChevronRight className="size-4" /></a></Button>
-                <Button size="lg" variant="outline" asChild><a href="#sobre">Conheça a brasa</a></Button>
-              </div>
-              <div className="mt-9 flex items-center gap-5 text-xs uppercase tracking-[0.12em] text-muted-foreground"><span><strong className="block text-xl text-foreground">4.9</strong> avaliação</span><span className="h-8 w-px bg-border" /><span><strong className="block text-xl text-foreground">25 min</strong> tempo médio</span></div>
-            </div>
-          </div>
-          <a href="#cardapio" aria-label="Ir para o cardápio" className="absolute bottom-5 right-5 z-10 hidden animate-bounce items-center gap-2 text-xs uppercase tracking-[0.16em] text-muted-foreground sm:flex lg:right-8">Descubra <ArrowDown className="size-4" /></a>
+        <section id="inicio" className="relative flex min-h-[94svh] items-center justify-center overflow-hidden bg-brown-brand pt-24">
+           {/* Center Text */}
+           <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
+             <h1 className="font-display text-[22vw] leading-[0.8] font-black uppercase text-orange-brand text-3d tracking-tighter mt-12 sm:mt-0">
+               WRAPPED
+               <br/>
+               IN FLAVOR
+             </h1>
+             
+             {/* Center Pizza Image */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[85vw] sm:w-[65vw] max-w-[800px] pointer-events-none drop-shadow-2xl z-20">
+                <img src={heroPizza} alt="Delicious Pizza" className="w-full h-auto object-contain rounded-full shadow-2xl" />
+             </div>
+
+             {/* Floating Elements (Badges and Emojis) */}
+             <div className="hidden sm:block absolute top-[25%] left-[25%] -rotate-12 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Stretchy</div>
+             <div className="hidden sm:block absolute top-[35%] left-[20%] -rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Cheesy</div>
+             <div className="hidden sm:block absolute top-[50%] left-[23%] rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Crispy</div>
+
+             <div className="hidden sm:block absolute top-[60%] right-[32%] text-4xl z-30 drop-shadow-lg">😋</div>
+             <div className="hidden sm:flex absolute top-[75%] right-[25%] bg-brown-light rounded-full p-4 border border-orange-brand z-30 shadow-xl items-center justify-center size-20">
+                <span className="text-4xl">🔥</span>
+             </div>
+             
+             {/* Carousel arrows */}
+             <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
+                <Button size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronLeft className="size-6" /></Button>
+             </div>
+             <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
+                <Button size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronRight className="size-6" /></Button>
+             </div>
+
+             <p className="mt-16 sm:mt-24 text-white/90 text-lg md:text-2xl font-medium tracking-wide z-30 relative px-4 text-center">
+               Crispy, juicy street food made the right way.
+             </p>
+           </div>
         </section>
 
         <section id="cardapio" className="relative border-t border-border bg-surface py-20 sm:py-28">

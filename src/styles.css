@@ -66,6 +66,9 @@
   --color-surface-deep: var(--surface-deep);
   --shadow-fire: 0 10px 35px color-mix(in oklab, var(--primary) 28%, transparent);
   --shadow-modal: 0 30px 90px oklch(0 0 0 / 65%);
+  --color-orange-brand: #ff9d00;
+  --color-brown-brand: #2b1103;
+  --color-brown-light: #4a2411;
 }
 
 :root {
@@ -165,6 +168,16 @@
 }
 @utility bg-card-overlay { background: linear-gradient(0deg, oklch(0.12 0.01 48 / 65%), transparent 55%); }
 @utility bg-modal-backdrop { background: oklch(0.04 0.01 45 / 78%); }
+@utility text-3d {
+  text-shadow: 
+    0px 2px 0px #c26900,
+    0px 4px 0px #b05c00,
+    0px 6px 0px #9f5100,
+    0px 8px 0px #8e4700,
+    0px 10px 0px #7a3a00,
+    0px 12px 15px rgba(0,0,0,0.5),
+    0px 20px 25px rgba(0,0,0,0.4);
+}
 
 @layer components {
   .nav-link { color: var(--muted-foreground); transition: color 200ms ease; }
