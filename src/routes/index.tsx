@@ -19,6 +19,10 @@ import {
   Sparkles,
   UserRound,
   X,
+  ArrowUpRight,
+  PlaySquare,
+  Layers,
+  TrendingUp
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -602,18 +606,23 @@ function Index() {
           </div>
         </section>
 
-        {/* Galeria Section (3D Cylinder) */}
-        <section className="relative overflow-hidden border-y border-border bg-[#1A0A05] py-20 sm:py-28 flex flex-col items-center">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3D1E16]/40 via-[#1A0A05] to-[#1A0A05] opacity-80 pointer-events-none"></div>
+        {/* Galeria Section (3D Cylinder - Exact Match) */}
+        <section className="relative overflow-hidden border-y border-border bg-[#0D0503] py-24 flex flex-col items-center">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#D14F26]/10 via-[#0D0503] to-[#0D0503] opacity-60 pointer-events-none"></div>
           
-          <div className="relative z-10 w-full mb-12 flex justify-center text-center">
+          <div className="relative z-10 w-full mb-8 flex justify-center text-center">
             <div className="flex flex-col items-center max-w-3xl px-5">
-              <h2 className="font-display text-3xl sm:text-5xl font-black text-[#FBF5E9] uppercase leading-[1.1]">
-                Feito para devorar<br/> <span className="text-amber-500">com os olhos</span>
+              <h2 className="font-display text-2xl sm:text-3xl font-medium text-[#FBF5E9]/70 mb-6">
+                Criado para atrair, despertar fome e surpreender seu paladar.
               </h2>
-              <p className="mt-4 text-[#FBF5E9]/60 max-w-xl text-sm sm:text-base">Nossa missão é simples: chapa quente, ingredientes frescos e uma mordida que você nunca vai esquecer.</p>
-              <div className="flex flex-wrap justify-center gap-4 mt-8">
-                <Button variant="fire" size="lg" className="px-8 font-bold uppercase tracking-wider">Ver Cardápio <Flame className="ml-2 size-4" /></Button>
+              
+              <div className="flex flex-wrap justify-center gap-4">
+                <button className="flex items-center gap-2 bg-[#D14F26] text-white px-7 py-3 rounded-full font-bold text-sm hover:bg-[#b0401f] transition-colors shadow-[0_0_15px_rgba(209,79,38,0.3)]">
+                  Fazer Pedido <ArrowUpRight className="size-4" />
+                </button>
+                <button className="flex items-center gap-2 bg-[#2D1A13] border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm hover:bg-[#3D251C] transition-colors">
+                  Ver Cardápio
+                </button>
               </div>
             </div>
           </div>
@@ -631,9 +640,10 @@ function Index() {
             }
           `}</style>
 
-          <div className="relative z-10 w-full flex justify-center items-center h-[400px] sm:h-[600px]" style={{ perspective: "1000px" }}>
+          {/* 3D Scene */}
+          <div className="relative z-10 w-full flex justify-center items-center h-[350px] sm:h-[450px]" style={{ perspective: "800px" }}>
             <div 
-              className="relative w-full h-full flex justify-center items-center scale-[0.55] sm:scale-100" 
+              className="relative w-full h-full flex justify-center items-center scale-[0.6] sm:scale-100 mt-10" 
               style={{ transformStyle: "preserve-3d" }}
             >
               <div 
@@ -658,21 +668,13 @@ function Index() {
                   return (
                     <div 
                       key={idx} 
-                      className="absolute left-1/2 top-1/2 w-[260px] h-[380px] sm:w-[300px] sm:h-[450px] -ml-[130px] sm:-ml-[150px] -mt-[190px] sm:-mt-[225px] rounded-3xl overflow-hidden border-2 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform duration-500 hover:border-amber-500/50"
+                      className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-transform duration-500 hover:border-amber-500/30"
                       style={{ 
-                        transform: `rotateY(${angle}deg) translateZ(-650px)`,
+                        transform: `rotateY(${angle}deg) translateZ(-550px)`,
                         backfaceVisibility: "hidden"
                       }}
                     >
                       <img src={item.img} alt={item.alt} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1A0A05]/90 via-transparent to-transparent flex items-end p-6">
-                        <div className="w-full flex items-center justify-between">
-                          <span className="text-white font-black tracking-wider uppercase text-sm">{item.alt.replace("Fogo e Chapa ", "")}</span>
-                          <div className="size-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                            <Plus className="size-4 text-white" />
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   );
                 })}
@@ -680,10 +682,12 @@ function Index() {
             </div>
           </div>
 
-          <div className="relative z-10 flex flex-wrap justify-center gap-4 sm:gap-8 mt-12 px-5 max-w-4xl border border-white/5 bg-white/5 backdrop-blur-md rounded-2xl py-4">
-            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Curadoria de Ingredientes</span>
-            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Sabor Autêntico</span>
-            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Feito na Brasa</span>
+          <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-16 px-6 sm:px-8 py-3.5 border border-[#D14F26]/30 bg-[#1A0A05]/80 backdrop-blur-md rounded-full shadow-lg">
+            <span className="flex items-center gap-2 text-[#FBF5E9]/90 text-xs sm:text-sm font-medium"><PlaySquare className="size-4 opacity-70" /> Sabor Incomparável</span>
+            <span className="text-[#D14F26] text-xs">◆</span>
+            <span className="flex items-center gap-2 text-[#FBF5E9]/90 text-xs sm:text-sm font-medium"><Layers className="size-4 opacity-70" /> Ingredientes Frescos</span>
+            <span className="text-[#D14F26] text-xs">◆</span>
+            <span className="flex items-center gap-2 text-[#FBF5E9]/90 text-xs sm:text-sm font-medium"><TrendingUp className="size-4 opacity-70" /> Fogo na Chapa</span>
           </div>
         </section>
 
