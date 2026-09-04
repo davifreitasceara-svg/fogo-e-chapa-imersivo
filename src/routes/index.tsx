@@ -98,6 +98,7 @@ function Index() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [addedId, setAddedId] = useState<number | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const carouselSlides = [
     {
@@ -160,6 +161,40 @@ function Index() {
   };
   
   const currentSlide = carouselSlides[heroIndex];
+
+  // Dynamic theme based on the currently selected burger
+  const currentTheme = React.useMemo(() => {
+    switch (heroIndex) {
+      case 0: // CHAPA CLÁSSICO - Green
+        return {
+          bgLight: "#F0FAF4", // very light green
+          primary: "#006B2D",
+          secondary: "#00A144",
+          secondaryAlpha: "rgba(0, 161, 68, 0.15)",
+        };
+      case 1: // BRASA BACON - Purple
+        return {
+          bgLight: "#F5F0FA", // very light purple
+          primary: "#2B005F",
+          secondary: "#4B168C",
+          secondaryAlpha: "rgba(75, 22, 140, 0.15)",
+        };
+      case 2: // INFERNO PICANTE - Red
+        return {
+          bgLight: "#FAF0F0", // very light red
+          primary: "#7A1200",
+          secondary: "#C41E00",
+          secondaryAlpha: "rgba(196, 30, 0, 0.15)",
+        };
+      default:
+        return {
+          bgLight: "#F0FAF4",
+          primary: "#006B2D",
+          secondary: "#00A144",
+          secondaryAlpha: "rgba(0, 161, 68, 0.15)",
+        };
+    }
+  }, [heroIndex]);
 
   const cartCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
   const visibleProducts = useMemo(() => products.filter((product) => product.category === tab), [tab]);
@@ -716,10 +751,11 @@ function Index() {
                   whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
                   viewport={{ once: true }}
                   transition={{ type: "spring", delay: 0.2 }}
-                  className="absolute -top-4 left-4 md:-top-2 md:left-8 bg-white border-[3px] border-[#3D251C] rounded-full px-3 py-1 md:px-4 md:py-2 shadow-[2px_3px_0px_#3D251C] z-30 flex flex-col items-center"
+                  className="absolute -top-4 left-4 md:-top-2 md:left-8 bg-white border-[3px] rounded-full px-3 py-1 md:px-4 md:py-2 shadow-[2px_3px_0px_rgba(0,0,0,0.2)] z-30 flex flex-col items-center transition-colors duration-700"
+                  style={{ borderColor: currentTheme.primary }}
                 >
-                  <span className="font-display font-black text-[10px] md:text-sm text-[#3D251C] leading-none tracking-tighter">BOM</span>
-                  <span className="font-display font-black text-[10px] md:text-sm text-[#3D251C] leading-none tracking-tighter">HUMOR</span>
+                  <span className="font-display font-black text-[10px] md:text-sm leading-none tracking-tighter transition-colors duration-700" style={{ color: currentTheme.primary }}>BOM</span>
+                  <span className="font-display font-black text-[10px] md:text-sm leading-none tracking-tighter transition-colors duration-700" style={{ color: currentTheme.primary }}>HUMOR</span>
                 </motion.div>
                 
                 {/* Main Tilted Title */}
@@ -732,9 +768,10 @@ function Index() {
                 >
                   {/* Top Word (FRESHLY style) */}
                   <h2 
-                    className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-[#A05C3A] uppercase tracking-tighter ml-6 md:ml-12" 
+                    className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter ml-6 md:ml-12 transition-all duration-700" 
                     style={{ 
-                      textShadow: "6px 6px 0px rgba(160, 92, 58, 0.15)"
+                      color: currentTheme.secondary,
+                      textShadow: `6px 6px 0px ${currentTheme.secondaryAlpha}`
                     }}
                   >
                     NOSSOS
@@ -742,14 +779,14 @@ function Index() {
                   
                   {/* Bottom Word (BREWED style) - Inside a skewed brown box */}
                   <div className="relative mt-2 md:mt-4 w-fit">
-                    {/* The skewed brown background box */}
-                    <div className="absolute inset-0 bg-[#A05C3A] transform -skew-y-3 -rotate-2 scale-105 origin-left" />
+                    {/* The skewed background box */}
+                    <div className="absolute inset-0 transform -skew-y-3 -rotate-2 scale-105 origin-left transition-colors duration-700" style={{ backgroundColor: currentTheme.secondary }} />
                     
                     {/* The text itself */}
                     <h2 
-                      className="relative font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-white uppercase tracking-tighter px-4 py-2 transform -skew-y-3 -rotate-2" 
+                      className="relative font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-white uppercase tracking-tighter px-4 py-2 transform -skew-y-3 -rotate-2 transition-all duration-700" 
                       style={{ 
-                        WebkitTextStroke: "2px #A05C3A"
+                        WebkitTextStroke: `2px ${currentTheme.secondary}`
                       }}
                     >
                       DRINKS
@@ -766,12 +803,13 @@ function Index() {
                 transition={{ delay: 0.4, duration: 0.8 }}
                 className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
               >
-                <h3 className="font-display font-black text-[#A05C3A] text-xl mb-3 tracking-tighter uppercase">NOSSA HISTÓRIA</h3>
-                <p className="text-[#6A4A36] text-sm leading-relaxed mb-8 font-medium">
+                <h3 className="font-display font-black text-xl mb-3 tracking-tighter uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>NOSSA HISTÓRIA</h3>
+                <p className="text-sm leading-relaxed mb-8 font-medium transition-colors duration-700 opacity-80" style={{ color: currentTheme.primary }}>
                   Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a nossa hamburgueria e aproveite uma experiência de sabor na brasa.
                 </p>
-                <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-6 text-sm transition-colors border-[3px] border-[#A05C3A] flex items-center gap-3 w-fit">
-                  PEDIR AGORA <ChevronRight className="size-5 bg-white text-[#B87333] rounded-full p-0.5" />
+                <Button className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
+                  style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
+                  PEDIR AGORA <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
                 </Button>
               </motion.div>
 
@@ -807,7 +845,7 @@ function Index() {
         </section>
 
         {/* Drinks Grid Section */}
-        <section className="w-full bg-[#F5F2ED] py-16 md:py-24 border-t border-[#E8E1D5]">
+        <section className="w-full py-16 md:py-24 border-t transition-colors duration-700" style={{ backgroundColor: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }}>
           <div className="mx-auto max-w-[1400px] px-5 lg:px-12">
             
             {/* Header */}
@@ -816,7 +854,8 @@ function Index() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="font-display font-black text-[#A05C3A] text-5xl md:text-6xl lg:text-[5.5rem] leading-[0.85] uppercase tracking-tighter max-w-xl"
+                className="font-display font-black text-5xl md:text-6xl lg:text-[5.5rem] leading-[0.85] uppercase tracking-tighter max-w-xl transition-colors duration-700"
+                style={{ color: currentTheme.secondary }}
               >
                 DRINKS FOR<br/>EVERYDAY
               </motion.h2>
@@ -826,8 +865,9 @@ function Index() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                <Button className="rounded-full bg-[#A05C3A] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-5 text-sm transition-colors border-[3px] border-[#A05C3A] flex items-center gap-3">
-                  VIEW ALL MENU <ChevronRight className="size-5 bg-white text-[#A05C3A] rounded-full p-0.5" />
+                <Button className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
+                  style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
+                  VIEW ALL MENU <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
                 </Button>
               </motion.div>
             </div>
@@ -841,11 +881,12 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="flex flex-col md:border-r border-[#E8E1D5] pr-0 md:pr-8 lg:pr-12 pb-16 md:border-b"
+                className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pb-16 md:border-b transition-colors duration-700"
+                style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">COLA<br/>TRADICIONAL</h3>
-                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COLA<br/>TRADICIONAL</h3>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -863,11 +904,12 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col md:border-r border-[#E8E1D5] px-0 md:px-8 lg:px-12 mt-12 md:mt-0 pb-16 md:border-b"
+                className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
+                style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">SUCO DE<br/>LARANJA</h3>
-                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SUCO DE<br/>LARANJA</h3>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -885,11 +927,12 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0 pb-16 md:border-b border-[#E8E1D5]"
+                className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
+                style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">LIMONADA<br/>SUÍÇA</h3>
-                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>LIMONADA<br/>SUÍÇA</h3>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -907,11 +950,12 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col md:border-r border-[#E8E1D5] pr-0 md:pr-8 lg:pr-12 pt-16"
+                className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pt-16 transition-colors duration-700"
+                style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">CHOPP<br/>GELADO</h3>
-                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHOPP<br/>GELADO</h3>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -929,11 +973,12 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5 }}
-                className="flex flex-col md:border-r border-[#E8E1D5] px-0 md:px-8 lg:px-12 pt-16"
+                className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 pt-16 transition-colors duration-700"
+                style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">CHÁ<br/>GELADO</h3>
-                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHÁ<br/>GELADO</h3>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -951,11 +996,11 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.6 }}
-                className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16"
+                className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16 transition-colors duration-700"
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">GUARANÁ<br/>NATURAL</h3>
-                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GUARANÁ<br/>NATURAL</h3>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
