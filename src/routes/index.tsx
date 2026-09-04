@@ -206,20 +206,28 @@ function Index() {
                { href: "#menu", label: "Menu" },
                { href: "#gallery", label: "Gallery" },
                { href: "#delivery", label: "Delivery" },
-             ].map((link) => (
+             ].map((link, i) => (
                <motion.a 
                  key={link.href}
                  href={link.href} 
-                 className="relative py-1 group"
+                 className="relative py-2 group"
                  variants={{
-                   hidden: { opacity: 0, y: -20, filter: "blur(4px)" },
-                   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+                   hidden: { opacity: 0, y: -30, filter: "blur(6px)" },
+                   visible: { 
+                     opacity: 1, y: 0, filter: "blur(0px)", 
+                     transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } 
+                   },
                  }}
-                 whileHover={{ scale: 1.05 }}
+                 whileHover={{ y: -2 }}
                  whileTap={{ scale: 0.95 }}
                >
                  {link.label}
-                 <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white rounded-full transition-all duration-300 group-hover:w-full" />
+                 <motion.span 
+                   className="absolute bottom-0 left-0 right-0 h-[2px] bg-white rounded-full origin-left" 
+                   initial={{ scaleX: 0 }}
+                   whileHover={{ scaleX: 1 }}
+                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                 />
                </motion.a>
              ))}
           </motion.nav>
@@ -366,9 +374,7 @@ function Index() {
                 <Button onClick={nextHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronRight className="size-8" /></Button>
              </div>
 
-             <p className="mt-16 sm:mt-24 text-white text-lg md:text-2xl font-medium tracking-wide z-30 relative px-4 text-center">
-               Crispy, juicy street food made the right way.
-             </p>
+
 
              {/* Action Buttons */}
              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
