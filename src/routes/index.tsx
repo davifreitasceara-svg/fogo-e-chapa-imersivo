@@ -602,7 +602,7 @@ function Index() {
           </div>
         </section>
 
-        {/* Galeria Section */}
+        {/* Galeria Section (3D Cylinder) */}
         <section className="relative overflow-hidden border-y border-border bg-[#1A0A05] py-20 sm:py-28 flex flex-col items-center">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3D1E16]/40 via-[#1A0A05] to-[#1A0A05] opacity-80 pointer-events-none"></div>
           
@@ -618,44 +618,72 @@ function Index() {
             </div>
           </div>
 
-          <div className="relative z-10 w-full flex overflow-hidden py-10 group">
-            <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-[#1A0A05] to-transparent z-20 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-[#1A0A05] to-transparent z-20 pointer-events-none"></div>
-            
-            <motion.div 
-              className="flex gap-4 sm:gap-6 px-4 cursor-grab active:cursor-grabbing w-fit"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ ease: "linear", duration: 40, repeat: Infinity }}
-              style={{ paddingRight: "1rem" }}
+          <style>{`
+            @keyframes spinGallery {
+              0% { transform: rotateY(0deg); }
+              100% { transform: rotateY(360deg); }
+            }
+            .animate-spin-gallery {
+              animation: spinGallery 40s linear infinite;
+            }
+            .animate-spin-gallery:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
+
+          <div className="relative z-10 w-full flex justify-center items-center h-[400px] sm:h-[600px]" style={{ perspective: "1000px" }}>
+            <div 
+              className="relative w-full h-full flex justify-center items-center scale-[0.55] sm:scale-100" 
+              style={{ transformStyle: "preserve-3d" }}
             >
-              {[
-                { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
-                { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
-                { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
-                { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
-                { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
-                { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" },
-                { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
-                { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
-                { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
-                { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
-                { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
-                { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" }
-              ].map((item, idx) => (
-                <div key={idx} className="relative w-56 h-[380px] sm:w-72 sm:h-[480px] shrink-0 rounded-3xl overflow-hidden border border-white/10 shadow-2xl transition-transform duration-500 hover:-translate-y-2 hover:scale-[1.02]">
-                  <img src={item.img} alt={item.alt} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                    <span className="text-white font-bold tracking-wider uppercase text-sm">O Sabor</span>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
+              <div 
+                className="absolute w-full h-full animate-spin-gallery cursor-grab active:cursor-grabbing"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {[
+                  { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
+                  { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
+                  { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
+                  { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
+                  { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
+                  { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" },
+                  { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
+                  { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
+                  { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
+                  { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
+                  { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
+                  { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" }
+                ].map((item, idx) => {
+                  const angle = idx * (360 / 12);
+                  return (
+                    <div 
+                      key={idx} 
+                      className="absolute left-1/2 top-1/2 w-[260px] h-[380px] sm:w-[300px] sm:h-[450px] -ml-[130px] sm:-ml-[150px] -mt-[190px] sm:-mt-[225px] rounded-3xl overflow-hidden border-2 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform duration-500 hover:border-amber-500/50"
+                      style={{ 
+                        transform: `rotateY(${angle}deg) translateZ(-650px)`,
+                        backfaceVisibility: "hidden"
+                      }}
+                    >
+                      <img src={item.img} alt={item.alt} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1A0A05]/90 via-transparent to-transparent flex items-end p-6">
+                        <div className="w-full flex items-center justify-between">
+                          <span className="text-white font-black tracking-wider uppercase text-sm">{item.alt.replace("Fogo e Chapa ", "")}</span>
+                          <div className="size-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                            <Plus className="size-4 text-white" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          <div className="relative z-10 flex flex-wrap justify-center gap-6 sm:gap-10 mt-8 px-5">
-            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Sabor Incomparável</span>
-            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Ingredientes Frescos</span>
-            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Fogo na Chapa</span>
+          <div className="relative z-10 flex flex-wrap justify-center gap-4 sm:gap-8 mt-12 px-5 max-w-4xl border border-white/5 bg-white/5 backdrop-blur-md rounded-2xl py-4">
+            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Curadoria de Ingredientes</span>
+            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Sabor Autêntico</span>
+            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Feito na Brasa</span>
           </div>
         </section>
 
