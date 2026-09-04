@@ -45,6 +45,9 @@ import sodaSplash from '../assets/soda-splash.jpg'
 import cocaCola from '../assets/coca-cola.jpg'
 import orangeJuice from '../assets/orange-juice.jpg'
 import lemonade from '../assets/lemonade.jpg'
+import beer from '../assets/beer.jpg'
+import icedTea from '../assets/iced-tea.jpg'
+import guarana from '../assets/guarana.jpg'
 import coffeeSplash from "@/assets/coffee-splash.jpg";
 
 export const Route = createFileRoute("/")({
@@ -838,7 +841,7 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                className="flex flex-col md:border-r border-[#E8E1D5] pr-0 md:pr-8 lg:pr-12"
+                className="flex flex-col md:border-r border-[#E8E1D5] pr-0 md:pr-8 lg:pr-12 pb-16 md:border-b"
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">COLA<br/>TRADICIONAL</h3>
@@ -860,7 +863,7 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col md:border-r border-[#E8E1D5] px-0 md:px-8 lg:px-12 mt-12 md:mt-0"
+                className="flex flex-col md:border-r border-[#E8E1D5] px-0 md:px-8 lg:px-12 mt-12 md:mt-0 pb-16 md:border-b"
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">SUCO DE<br/>LARANJA</h3>
@@ -882,7 +885,7 @@ function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0"
+                className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0 pb-16 md:border-b border-[#E8E1D5]"
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">LIMONADA<br/>SUÍÇA</h3>
@@ -892,6 +895,72 @@ function Index() {
                   <img 
                     src={lemonade} 
                     alt="Limonada Suíça" 
+                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Item 4 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-col md:border-r border-[#E8E1D5] pr-0 md:pr-8 lg:pr-12 pt-16"
+              >
+                <div className="flex items-baseline justify-between mb-8">
+                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">CHOPP<br/>GELADO</h3>
+                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                  <img 
+                    src={beer} 
+                    alt="Chopp Gelado" 
+                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Item 5 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-col md:border-r border-[#E8E1D5] px-0 md:px-8 lg:px-12 pt-16"
+              >
+                <div className="flex items-baseline justify-between mb-8">
+                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">CHÁ<br/>GELADO</h3>
+                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                  <img 
+                    src={icedTea} 
+                    alt="Chá Gelado" 
+                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Item 6 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6 }}
+                className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16"
+              >
+                <div className="flex items-baseline justify-between mb-8">
+                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">GUARANÁ<br/>NATURAL</h3>
+                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                  <img 
+                    src={guarana} 
+                    alt="Guaraná Natural" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
                     style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
