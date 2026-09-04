@@ -695,78 +695,13 @@ function Index() {
         </section>
 
         {/* Drinks Section */}
-        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-[#F5F2ED] py-20">
+        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20">
           
-          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
+          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex items-center justify-center w-full h-full">
             
-            {/* Left Content - Title and Text */}
-            <div className="w-full md:w-[50%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
-              
-              <div className="relative w-full max-w-2xl pl-2 md:pl-8 pt-8">
-                {/* Sticker Badge */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
-                  whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
-                  viewport={{ once: true }}
-                  transition={{ type: "spring", delay: 0.2 }}
-                  className="absolute top-0 left-6 md:top-2 md:left-12 bg-white border-[3px] border-[#3D251C] rounded-3xl px-3 py-1 md:px-4 md:py-1.5 shadow-[2px_3px_0px_#3D251C] z-30 flex flex-col items-center"
-                >
-                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">BOM</span>
-                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">HUMOR</span>
-                </motion.div>
-                
-                {/* Main Tilted Title */}
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="relative z-20"
-                >
-                  <h2 
-                    className="font-display text-[19vw] md:text-[10.5vw] leading-[0.82] font-black text-[#965A38] uppercase tracking-tighter" 
-                    style={{ 
-                      textShadow: "6px 6px 0px rgba(61, 37, 28, 0.15), -1px -1px 0 #3D251C, 1px -1px 0 #3D251C, -1px 1px 0 #3D251C, 1px 1px 0 #3D251C",
-                      WebkitTextStroke: "2px #3D251C"
-                    }}
-                  >
-                    BEM
-                  </h2>
-                  <h2 
-                    className="font-display text-[18vw] md:text-[10vw] leading-[0.82] font-black text-[#F5F2ED] uppercase tracking-tighter transform -skew-y-4 -rotate-2 ml-4 md:ml-10" 
-                    style={{ 
-                      textShadow: "6px 6px 0px rgba(61, 37, 28, 0.15)",
-                      WebkitTextStroke: "3px #965A38"
-                    }}
-                  >
-                    GELADO
-                  </h2>
-                </motion.div>
-              </div>
-
-              {/* Story Block */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
-              >
-                <h3 className="font-display font-black text-[#965A38] text-xl mb-3 tracking-tighter uppercase">PARA ACOMPANHAR</h3>
-                <p className="text-[#6A4A36] text-sm leading-relaxed mb-8 font-medium">
-                  Refrigerantes e bebidas geladas perfeitas para acompanhar o sabor marcante do seu Fogo e Chapa. Peça já e refresque seu dia.
-                </p>
-                <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-6 text-sm transition-colors border-[3px] border-[#3D251C] shadow-[4px_4px_0px_#3D251C] flex items-center gap-3 w-fit">
-                  PEDIR AGORA <ChevronRight className="size-5 bg-white text-[#B87333] rounded-full p-0.5" />
-                </Button>
-              </motion.div>
-
-            </div>
-
-            {/* Right Content - Generated Soda Cup Image */}
-            <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
+            {/* Center Content - Generated Soda Cup Image */}
+            <div className="w-full flex justify-center items-center">
                
-               {/* Main Soda Drink Image */}
                <motion.div
                  initial={{ opacity: 0, scale: 0.8 }}
                  whileInView={{ opacity: 1, scale: 1 }}
@@ -777,8 +712,7 @@ function Index() {
                    damping: 15,
                    duration: 1.2
                  }}
-                 className="relative z-20 w-full max-w-[550px]"
-                 style={{ mixBlendMode: "multiply" }}
+                 className="relative z-20 w-full max-w-3xl"
                >
                  <img 
                    src={sodaSplash} 
