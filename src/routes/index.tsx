@@ -778,9 +778,14 @@ function Index() {
                    duration: 1.2
                  }}
                  className="relative z-20 w-full max-w-[550px]"
-                 style={{ mixBlendMode: "darken" }}
+                 style={{ mixBlendMode: "multiply" }}
                >
-                 <img src={sodaSplash} alt="Refrigerante Gelado" className="w-full h-auto object-contain" />
+                 <img 
+                   src={sodaSplash} 
+                   alt="Refrigerante Gelado" 
+                   className="w-full h-auto object-contain"
+                   style={{ filter: "brightness(1.1) contrast(1.2) grayscale(0.1)" }}
+                 />
                </motion.div>
                
             </div>
