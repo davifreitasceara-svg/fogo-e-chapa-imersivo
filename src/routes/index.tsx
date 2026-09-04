@@ -697,11 +697,83 @@ function Index() {
         {/* Drinks Section */}
         <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20">
           
-          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex items-center justify-center w-full h-full">
+          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
             
-            {/* Center Content - Generated Soda Cup Image */}
-            <div className="w-full flex justify-center items-center">
+            {/* Left Content - Title and Text */}
+            <div className="w-full md:w-[50%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
+              
+              <div className="relative w-full max-w-2xl pl-2 md:pl-8 pt-12">
+                {/* Sticker Badge */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+                  whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", delay: 0.2 }}
+                  className="absolute -top-4 left-4 md:-top-2 md:left-8 bg-white border-[3px] border-[#3D251C] rounded-full px-3 py-1 md:px-4 md:py-2 shadow-[2px_3px_0px_#3D251C] z-30 flex flex-col items-center"
+                >
+                  <span className="font-display font-black text-[10px] md:text-sm text-[#3D251C] leading-none tracking-tighter">BOM</span>
+                  <span className="font-display font-black text-[10px] md:text-sm text-[#3D251C] leading-none tracking-tighter">HUMOR</span>
+                </motion.div>
+                
+                {/* Main Tilted Title */}
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="relative z-20 flex flex-col"
+                >
+                  {/* Top Word (FRESHLY style) */}
+                  <h2 
+                    className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-[#A05C3A] uppercase tracking-tighter ml-6 md:ml-12" 
+                    style={{ 
+                      textShadow: "6px 6px 0px rgba(160, 92, 58, 0.15)"
+                    }}
+                  >
+                    NOSSOS
+                  </h2>
+                  
+                  {/* Bottom Word (BREWED style) - Inside a skewed brown box */}
+                  <div className="relative mt-2 md:mt-4 w-fit">
+                    {/* The skewed brown background box */}
+                    <div className="absolute inset-0 bg-[#A05C3A] transform -skew-y-3 -rotate-2 scale-105 origin-left" />
+                    
+                    {/* The text itself */}
+                    <h2 
+                      className="relative font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-white uppercase tracking-tighter px-4 py-2 transform -skew-y-3 -rotate-2" 
+                      style={{ 
+                        WebkitTextStroke: "2px #A05C3A"
+                      }}
+                    >
+                      DRINKS
+                    </h2>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Story Block */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
+              >
+                <h3 className="font-display font-black text-[#A05C3A] text-xl mb-3 tracking-tighter uppercase">NOSSA HISTÓRIA</h3>
+                <p className="text-[#6A4A36] text-sm leading-relaxed mb-8 font-medium">
+                  Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a nossa hamburgueria e aproveite uma experiência de sabor na brasa.
+                </p>
+                <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-6 text-sm transition-colors border-[3px] border-[#A05C3A] flex items-center gap-3 w-fit">
+                  PEDIR AGORA <ChevronRight className="size-5 bg-white text-[#B87333] rounded-full p-0.5" />
+                </Button>
+              </motion.div>
+
+            </div>
+
+            {/* Right Content - Generated Soda Cup Image */}
+            <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
                
+               {/* Main Soda Drink Image */}
                <motion.div
                  initial={{ opacity: 0, scale: 0.8 }}
                  whileInView={{ opacity: 1, scale: 1 }}
@@ -712,7 +784,8 @@ function Index() {
                    damping: 15,
                    duration: 1.2
                  }}
-                 className="relative z-20 w-full max-w-3xl"
+                 className="relative z-20 w-full max-w-[550px]"
+                 style={{ mixBlendMode: "multiply" }}
                >
                  <img 
                    src={sodaSplash} 
