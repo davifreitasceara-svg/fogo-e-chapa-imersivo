@@ -205,8 +205,9 @@ export function AppetizerSlider() {
                   className="w-full object-contain" 
                   style={{ 
                     mixBlendMode: 'multiply',
-                    // Safe filter to eliminate white without deep frying the image colors
-                    filter: 'contrast(1.1) brightness(1.05)' 
+                    // Extremely aggressive filter to force off-white noise to pure #FFFFFF
+                    // This ensures multiply blend mode creates NO bounding box over the two-tone wave background
+                    filter: 'contrast(2) brightness(1.2) saturate(1.2)' 
                   }} 
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
