@@ -204,21 +204,57 @@ function Index() {
         <section id="inicio" className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24">
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
-             {/* Animated Title - Each burger name */}
-             <div className="relative mt-12 sm:mt-0">
+             {/* Animated Title - Each burger name, line by line */}
+             <div className="relative mt-12 sm:mt-0 overflow-hidden">
                <AnimatePresence mode="wait">
-                 <motion.h1 
+                 <motion.div
                    key={currentSlide.id + "-title"}
-                   className={`font-display text-[20vw] sm:text-[18vw] leading-[0.8] font-black uppercase tracking-tighter drop-shadow-sm ${currentSlide.titleColor}`}
-                   initial={{ y: slideDirection * 80, opacity: 0, scale: 0.9 }}
-                   animate={{ y: 0, opacity: 1, scale: 1 }}
-                   exit={{ y: slideDirection * -80, opacity: 0, scale: 0.9 }}
-                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                   initial="hidden"
+                   animate="visible"
+                   exit="exit"
+                   variants={{
+                     hidden: {},
+                     visible: { transition: { staggerChildren: 0.08 } },
+                     exit: { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
+                   }}
                  >
-                   {currentSlide.titleLine1}
-                   <br/>
-                   {currentSlide.titleLine2}
-                 </motion.h1>
+                   {[currentSlide.titleLine1, currentSlide.titleLine2].map((line, i) => (
+                     <motion.h1
+                       key={i}
+                       className={`font-display text-[20vw] sm:text-[18vw] leading-[0.85] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
+                       variants={{
+                         hidden: { 
+                           y: slideDirection * 120, 
+                           opacity: 0, 
+                           scale: 0.85,
+                           filter: "blur(12px)",
+                         },
+                         visible: { 
+                           y: 0, 
+                           opacity: 1, 
+                           scale: 1,
+                           filter: "blur(0px)",
+                           transition: { 
+                             duration: 0.6, 
+                             ease: [0.16, 1, 0.3, 1],
+                           } 
+                         },
+                         exit: { 
+                           y: slideDirection * -100, 
+                           opacity: 0, 
+                           scale: 0.9,
+                           filter: "blur(8px)",
+                           transition: { 
+                             duration: 0.35, 
+                             ease: [0.55, 0, 1, 0.45],
+                           } 
+                         },
+                       }}
+                     >
+                       {line}
+                     </motion.h1>
+                   ))}
+                 </motion.div>
                </AnimatePresence>
              </div>
              
@@ -230,28 +266,35 @@ function Index() {
                     src={currentSlide.image} 
                     alt={currentSlide.titleLine1 + " " + currentSlide.titleLine2} 
                     initial={{ 
-                      x: slideDirection * 400, 
+                      x: slideDirection * 500, 
                       opacity: 0, 
-                      rotateY: slideDirection * 45,
-                      scale: 0.7 
+                      rotateY: slideDirection * 35,
+                      rotateZ: slideDirection * 8,
+                      scale: 0.5,
+                      filter: "blur(10px)",
                     }}
                     animate={{ 
                       x: 0, 
                       opacity: 1, 
                       rotateY: 0,
-                      scale: 1 
+                      rotateZ: 0,
+                      scale: 1,
+                      filter: "blur(0px)",
                     }}
                     exit={{ 
-                      x: slideDirection * -400, 
+                      x: slideDirection * -500, 
                       opacity: 0, 
-                      rotateY: slideDirection * -45,
-                      scale: 0.7 
+                      rotateY: slideDirection * -35,
+                      rotateZ: slideDirection * -8,
+                      scale: 0.5,
+                      filter: "blur(10px)",
                     }}
                     transition={{ 
                       type: "spring", 
-                      stiffness: 120, 
-                      damping: 18,
-                      mass: 0.8
+                      stiffness: 80, 
+                      damping: 14,
+                      mass: 0.6,
+                      filter: { duration: 0.3 },
                     }}
                     className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15 saturate-150' : ''}`}
                   />
