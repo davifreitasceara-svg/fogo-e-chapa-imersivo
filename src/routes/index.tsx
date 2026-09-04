@@ -87,7 +87,9 @@ function Index() {
 
   const carouselSlides = [
     {
-      id: "burger",
+      id: "classico",
+      titleLine1: "CHAPA",
+      titleLine2: "CLÁSSICO",
       image: heroBurger,
       bgClass: "bg-[#00A144]",
       titleColor: "text-[#006B2D]",
@@ -96,23 +98,52 @@ function Index() {
       badges: [
         { text: "Juicy", style: "top-[25%] left-[25%] -rotate-12" },
         { text: "Smash", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "Beefy", style: "top-[50%] left-[23%] rotate-6" },
+        { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
       ]
     },
     {
-      id: "hotdog",
-      image: heroBurger, // Placeholder until user uploads hotdog PNG
+      id: "brasa",
+      titleLine1: "BRASA",
+      titleLine2: "BACON",
+      image: heroBurger,
       bgClass: "bg-[#4B168C]",
       titleColor: "text-[#2B005F]",
       buttonBg: "bg-[#2B005F]",
       buttonText: "text-[#2B005F]",
-      badges: []
+      badges: [
+        { text: "Bacon", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Cheddar", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "180g", style: "top-[50%] left-[23%] rotate-6" },
+      ]
+    },
+    {
+      id: "inferno",
+      titleLine1: "INFERNO",
+      titleLine2: "PICANTE",
+      image: heroBurger,
+      bgClass: "bg-[#C41E00]",
+      titleColor: "text-[#7A1200]",
+      buttonBg: "bg-[#7A1200]",
+      buttonText: "text-[#7A1200]",
+      badges: [
+        { text: "Picante", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Jalapeño", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "180g", style: "top-[50%] left-[23%] rotate-6" },
+      ]
     }
   ];
 
   const [heroIndex, setHeroIndex] = useState(0);
-  const nextHero = () => setHeroIndex((prev) => (prev + 1) % carouselSlides.length);
-  const prevHero = () => setHeroIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+  const [slideDirection, setSlideDirection] = useState(1); // 1 = right, -1 = left
+
+  const nextHero = () => {
+    setSlideDirection(1);
+    setHeroIndex((prev) => (prev + 1) % carouselSlides.length);
+  };
+  const prevHero = () => {
+    setSlideDirection(-1);
+    setHeroIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+  };
   
   const currentSlide = carouselSlides[heroIndex];
 
@@ -173,24 +204,56 @@ function Index() {
         <section id="inicio" className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24">
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
-             <h1 className={`font-display text-[22vw] leading-[0.8] font-black uppercase tracking-tighter mt-12 sm:mt-0 drop-shadow-sm transition-colors duration-700 ease-in-out ${currentSlide.titleColor}`}>
-               WRAPPED
-               <br/>
-               IN FLAVOR
-             </h1>
+             {/* Animated Title - Each burger name */}
+             <div className="relative mt-12 sm:mt-0">
+               <AnimatePresence mode="wait">
+                 <motion.h1 
+                   key={currentSlide.id + "-title"}
+                   className={`font-display text-[20vw] sm:text-[18vw] leading-[0.8] font-black uppercase tracking-tighter drop-shadow-sm ${currentSlide.titleColor}`}
+                   initial={{ y: slideDirection * 80, opacity: 0, scale: 0.9 }}
+                   animate={{ y: 0, opacity: 1, scale: 1 }}
+                   exit={{ y: slideDirection * -80, opacity: 0, scale: 0.9 }}
+                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                 >
+                   {currentSlide.titleLine1}
+                   <br/>
+                   {currentSlide.titleLine2}
+                 </motion.h1>
+               </AnimatePresence>
+             </div>
              
-             {/* Center Image with Animation */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[70vw] sm:w-[45vw] max-w-[550px] pointer-events-none drop-shadow-2xl z-20">
-                <AnimatePresence mode="popLayout">
+             {/* Center Image with 3D Animation */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[70vw] sm:w-[45vw] max-w-[550px] pointer-events-none z-20" style={{ perspective: "1200px" }}>
+                <AnimatePresence mode="popLayout" initial={false}>
                   <motion.img 
                     key={currentSlide.id}
                     src={currentSlide.image} 
-                    alt="Delicious Food" 
-                    initial={{ x: 300, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -300, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                    className={`w-full h-auto object-contain ${heroIndex === 1 ? 'scale-x-[-1]' : ''}`}
+                    alt={currentSlide.titleLine1 + " " + currentSlide.titleLine2} 
+                    initial={{ 
+                      x: slideDirection * 400, 
+                      opacity: 0, 
+                      rotateY: slideDirection * 45,
+                      scale: 0.7 
+                    }}
+                    animate={{ 
+                      x: 0, 
+                      opacity: 1, 
+                      rotateY: 0,
+                      scale: 1 
+                    }}
+                    exit={{ 
+                      x: slideDirection * -400, 
+                      opacity: 0, 
+                      rotateY: slideDirection * -45,
+                      scale: 0.7 
+                    }}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 120, 
+                      damping: 18,
+                      mass: 0.8
+                    }}
+                    className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15 saturate-150' : ''}`}
                   />
                 </AnimatePresence>
              </div>
