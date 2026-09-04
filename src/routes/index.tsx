@@ -205,7 +205,7 @@ function Index() {
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
              {/* Animated Title - Each burger name, line by line */}
-             <div className="relative mt-12 sm:mt-0 overflow-hidden">
+             <div className="relative mt-12 sm:mt-0">
                <AnimatePresence mode="wait">
                  <motion.div
                    key={currentSlide.id + "-title"}
@@ -214,64 +214,62 @@ function Index() {
                    exit="exit"
                    variants={{
                      hidden: {},
-                     visible: { transition: { staggerChildren: 0.08 } },
-                     exit: { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
+                     visible: { transition: { staggerChildren: 0.12 } },
+                     exit: { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
                    }}
                  >
                    {[currentSlide.titleLine1, currentSlide.titleLine2].map((line, i) => (
-                     <motion.h1
-                       key={i}
-                       className={`font-display text-[20vw] sm:text-[18vw] leading-[0.85] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
-                       variants={{
-                         hidden: { 
-                           y: slideDirection * 120, 
-                           opacity: 0, 
-                           scale: 0.85,
-                           filter: "blur(12px)",
-                         },
-                         visible: { 
-                           y: 0, 
-                           opacity: 1, 
-                           scale: 1,
-                           filter: "blur(0px)",
-                           transition: { 
-                             duration: 0.6, 
-                             ease: [0.16, 1, 0.3, 1],
-                           } 
-                         },
-                         exit: { 
-                           y: slideDirection * -100, 
-                           opacity: 0, 
-                           scale: 0.9,
-                           filter: "blur(8px)",
-                           transition: { 
-                             duration: 0.35, 
-                             ease: [0.55, 0, 1, 0.45],
-                           } 
-                         },
-                       }}
-                     >
-                       {line}
-                     </motion.h1>
+                     <div key={i} className="overflow-hidden">
+                       <motion.h1
+                         className={`font-display text-[20vw] sm:text-[18vw] leading-[0.85] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
+                         variants={{
+                           hidden: { 
+                             y: "100%",
+                             opacity: 0,
+                             skewY: slideDirection * 6,
+                           },
+                           visible: { 
+                             y: "0%",
+                             opacity: 1,
+                             skewY: 0,
+                             transition: { 
+                               duration: 0.7, 
+                               ease: [0.16, 1, 0.3, 1],
+                             } 
+                           },
+                           exit: { 
+                             y: "-100%",
+                             opacity: 0,
+                             skewY: slideDirection * -4,
+                             transition: { 
+                               duration: 0.4, 
+                               ease: [0.55, 0, 1, 0.45],
+                             } 
+                           },
+                         }}
+                       >
+                         {line}
+                       </motion.h1>
+                     </div>
                    ))}
                  </motion.div>
                </AnimatePresence>
              </div>
              
-             {/* Center Image with 3D Animation */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[70vw] sm:w-[45vw] max-w-[550px] pointer-events-none z-20" style={{ perspective: "1200px" }}>
+             {/* Center Image - perfectly centered on title */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] sm:w-[42vw] max-w-[520px] pointer-events-none z-20" style={{ perspective: "1200px" }}>
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.img 
                     key={currentSlide.id}
                     src={currentSlide.image} 
                     alt={currentSlide.titleLine1 + " " + currentSlide.titleLine2} 
                     initial={{ 
-                      x: slideDirection * 500, 
+                      x: slideDirection * 600, 
                       opacity: 0, 
-                      rotateY: slideDirection * 35,
-                      rotateZ: slideDirection * 8,
-                      scale: 0.5,
-                      filter: "blur(10px)",
+                      rotateY: slideDirection * 40,
+                      rotateZ: slideDirection * 10,
+                      scale: 0.4,
+                      filter: "blur(12px)",
                     }}
                     animate={{ 
                       x: 0, 
@@ -280,21 +278,29 @@ function Index() {
                       rotateZ: 0,
                       scale: 1,
                       filter: "blur(0px)",
+                      y: [0, -8, 0],
                     }}
                     exit={{ 
-                      x: slideDirection * -500, 
+                      x: slideDirection * -600, 
                       opacity: 0, 
-                      rotateY: slideDirection * -35,
-                      rotateZ: slideDirection * -8,
-                      scale: 0.5,
-                      filter: "blur(10px)",
+                      rotateY: slideDirection * -40,
+                      rotateZ: slideDirection * -10,
+                      scale: 0.4,
+                      filter: "blur(12px)",
                     }}
                     transition={{ 
                       type: "spring", 
-                      stiffness: 80, 
-                      damping: 14,
-                      mass: 0.6,
-                      filter: { duration: 0.3 },
+                      stiffness: 70, 
+                      damping: 12,
+                      mass: 0.5,
+                      filter: { duration: 0.25 },
+                      y: {
+                        duration: 3,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut",
+                        delay: 0.8,
+                      },
                     }}
                     className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15 saturate-150' : ''}`}
                   />
