@@ -41,6 +41,7 @@ import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
 import coffeeSplash from "@/assets/coffee-splash.jpg";
+import sodaSplash from "@/assets/soda-splash.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -710,8 +711,8 @@ function Index() {
                   transition={{ type: "spring", delay: 0.2 }}
                   className="absolute top-0 left-6 md:top-2 md:left-12 bg-white border-[3px] border-[#3D251C] rounded-3xl px-3 py-1 md:px-4 md:py-1.5 shadow-[2px_3px_0px_#3D251C] z-30 flex flex-col items-center"
                 >
-                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">GOOD</span>
-                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">MOOD</span>
+                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">BOM</span>
+                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">HUMOR</span>
                 </motion.div>
                 
                 {/* Main Tilted Title */}
@@ -729,7 +730,7 @@ function Index() {
                       WebkitTextStroke: "2px #3D251C"
                     }}
                   >
-                    FRESHLY
+                    BEM
                   </h2>
                   <h2 
                     className="font-display text-[18vw] md:text-[10vw] leading-[0.82] font-black text-[#F5F2ED] uppercase tracking-tighter transform -skew-y-4 -rotate-2 ml-4 md:ml-10" 
@@ -738,7 +739,7 @@ function Index() {
                       WebkitTextStroke: "3px #965A38"
                     }}
                   >
-                    BREWED
+                    GELADO
                   </h2>
                 </motion.div>
               </div>
@@ -751,21 +752,21 @@ function Index() {
                 transition={{ delay: 0.4, duration: 0.8 }}
                 className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
               >
-                <h3 className="font-display font-black text-[#965A38] text-xl mb-3 tracking-tighter uppercase">OUR STORY</h3>
+                <h3 className="font-display font-black text-[#965A38] text-xl mb-3 tracking-tighter uppercase">PARA ACOMPANHAR</h3>
                 <p className="text-[#6A4A36] text-sm leading-relaxed mb-8 font-medium">
-                  Specialty coffee, and drinks made to brighten every day. Find your nearest café and enjoy warm hospitality, seasonal drinks.
+                  Refrigerantes e bebidas geladas perfeitas para acompanhar o sabor marcante do seu Fogo e Chapa. Peça já e refresque seu dia.
                 </p>
                 <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-6 text-sm transition-colors border-[3px] border-[#3D251C] shadow-[4px_4px_0px_#3D251C] flex items-center gap-3 w-fit">
-                  ORDER NOW <ChevronRight className="size-5 bg-white text-[#B87333] rounded-full p-0.5" />
+                  PEDIR AGORA <ChevronRight className="size-5 bg-white text-[#B87333] rounded-full p-0.5" />
                 </Button>
               </motion.div>
 
             </div>
 
-            {/* Right Content - Generated Coffee Cup Image */}
+            {/* Right Content - Generated Soda Cup Image */}
             <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
                
-               {/* Main Coffee Drink Image */}
+               {/* Main Soda Drink Image */}
                <motion.div
                  initial={{ opacity: 0, scale: 0.8 }}
                  whileInView={{ opacity: 1, scale: 1 }}
@@ -779,7 +780,7 @@ function Index() {
                  className="relative z-20 w-full max-w-[550px]"
                  style={{ mixBlendMode: "multiply" }}
                >
-                 <img src={coffeeSplash} alt="Freshly Brewed Coffee" className="w-full h-auto object-contain" />
+                 <img src={sodaSplash} alt="Refrigerante Gelado" className="w-full h-auto object-contain" />
                </motion.div>
                
             </div>
