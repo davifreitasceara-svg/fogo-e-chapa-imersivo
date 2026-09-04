@@ -33,6 +33,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Gallery } from "@/components/Gallery";
+import { Drinks } from "@/components/Drinks";
+import { Embers } from "@/components/Embers";
+import { AppetizerSlider } from "@/components/AppetizerSlider";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
@@ -663,6 +667,9 @@ function Index() {
             </motion.div>
           </div>
         </section>
+
+        {/* Appetizer Slider Section */}
+        <AppetizerSlider />
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
         <section className="relative overflow-hidden border-y border-border py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
