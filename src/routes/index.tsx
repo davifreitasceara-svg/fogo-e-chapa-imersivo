@@ -398,28 +398,28 @@ function Index() {
           {/* Section Header */}
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
             <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black text-[#FBF5E9] tracking-tighter uppercase mb-4">
-              Flavor that speaks loud <span className="inline-block align-middle text-4xl sm:text-5xl md:text-6xl -mt-2">🔥</span>
+              Sabor que fala alto <span className="inline-block align-middle text-4xl sm:text-5xl md:text-6xl -mt-2">🔥</span>
             </h2>
             <p className="text-[#FBF5E9]/80 text-lg sm:text-xl font-medium tracking-wide">
-              Bold street flavors served fresh daily.
+              Sabores autênticos servidos frescos todos os dias.
             </p>
           </div>
 
           {/* Menu Card Container */}
           <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <motion.div 
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 80 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="bg-[#FBF5E9] rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl"
             >
               {/* Menu Card Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-[#2D150D]/10 pb-6">
-                <h3 className="font-display text-5xl sm:text-6xl font-black text-[#2D150D] tracking-tighter">MENU</h3>
+                <h3 className="font-display text-5xl sm:text-6xl font-black text-[#2D150D] tracking-tighter">CARDÁPIO</h3>
                 <div className="flex gap-3">
-                  <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-amber-500 text-sm">★</span> 4.9 Rating</span>
-                  <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-red-500 text-sm">♥</span> Loved Locally</span>
+                  <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-amber-500 text-sm">★</span> Avaliação 4.9</span>
+                  <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-red-500 text-sm">♥</span> Favorito Local</span>
                 </div>
               </div>
 
@@ -430,82 +430,82 @@ function Index() {
                 <div className="flex flex-col gap-12">
                   
                   {/* Category: PIZZA */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">PIZZA</h4>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
+                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">PIZZAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "PEPPERONI", price: "12.00", spicy: true },
-                        { name: "MARGHERITA", price: "11.75" },
-                        { name: "BBQ CHICKEN", price: "14.25" },
-                        { name: "FOUR CHEESE", price: "13.00" },
-                        { name: "SPICY SALAMI", price: "15.50", spicy: true },
-                        { name: "TRUFFLE MUSHROOM", price: "16.00" },
-                        { name: "VEGGIE", price: "13.00" }
+                        { name: "PEPPERONI", price: "12,00", spicy: true },
+                        { name: "MARGHERITA", price: "11,75" },
+                        { name: "FRANGO BBQ", price: "14,25" },
+                        { name: "QUATRO QUEIJOS", price: "13,00" },
+                        { name: "SALAME PICANTE", price: "15,50", spicy: true },
+                        { name: "COGUMELO TRUFADO", price: "16,00" },
+                        { name: "VEGETARIANA", price: "13,00" }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Spicy">🌶️</span>}
+                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
                   </motion.div>
 
                   {/* Category: BURGERS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">BURGERS</h4>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
+                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">HAMBÚRGUERES</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "CLASSIC", price: "10.50" },
-                        { name: "DOUBLE CHEESE", price: "13.00" },
-                        { name: "SMASH", price: "13.75" },
-                        { name: "BBQ BACON", price: "14.00" },
-                        { name: "CRISPY CHICKEN", price: "12.00", spicy: true }
+                        { name: "CLÁSSICO", price: "10,50" },
+                        { name: "DUPLO QUEIJO", price: "13,00" },
+                        { name: "SMASH", price: "13,75" },
+                        { name: "BACON BBQ", price: "14,00" },
+                        { name: "FRANGO CROCANTE", price: "12,00", spicy: true }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Spicy">🌶️</span>}
+                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
                   </motion.div>
 
                   {/* Category: HOT DOGS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">HOT DOGS</h4>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
+                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">CACHORRO-QUENTE</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "CLASSIC", price: "7.25" },
-                        { name: "CHILI CHEESE", price: "8.25" },
-                        { name: "BACON CHEESE", price: "11.00" }
+                        { name: "CLÁSSICO", price: "7,25" },
+                        { name: "CHILI COM QUEIJO", price: "8,25" },
+                        { name: "BACON E QUEIJO", price: "11,00" }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
                   </motion.div>
 
                   {/* Category: WRAPS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
                     <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">WRAPS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "CHICKEN", price: "8.50" },
-                        { name: "CAESAR", price: "11.25" },
-                        { name: "SPICY CRISPY", price: "11.00", spicy: true },
-                        { name: "GARLIC CHICKEN", price: "12.50" }
+                        { name: "FRANGO", price: "8,50" },
+                        { name: "CAESAR", price: "11,25" },
+                        { name: "CROCANTE APIMENTADO", price: "11,00", spicy: true },
+                        { name: "FRANGO COM ALHO", price: "12,50" }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Spicy">🌶️</span>}
+                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -518,40 +518,40 @@ function Index() {
                 <div className="flex flex-col gap-12">
                   
                   {/* Category: WINGS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">WINGS</h4>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
+                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">ASINHAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "BUFFALO", price: "12.00", spicy: true },
-                        { name: "BBQ", price: "11.00" },
-                        { name: "HONEY GLAZED", price: "14.50" },
-                        { name: "HOT HONEY", price: "14.00", spicy: true },
-                        { name: "LEMON PEPPER", price: "13.00" }
+                        { name: "BUFFALO", price: "12,00", spicy: true },
+                        { name: "BBQ", price: "11,00" },
+                        { name: "MEL GLAÇADO", price: "14,50" },
+                        { name: "MEL APIMENTADO", price: "14,00", spicy: true },
+                        { name: "LEMON PEPPER", price: "13,00" }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Spicy">🌶️</span>}
+                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
                   </motion.div>
 
                   {/* Category: RINGS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">RINGS</h4>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
+                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">ANÉIS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "ONION", price: "4.25" },
-                        { name: "JALAPEÑO", price: "9.00", spicy: true },
-                        { name: "CRISPY", price: "7.75" }
+                        { name: "CEBOLA", price: "4,25" },
+                        { name: "JALAPEÑO", price: "9,00", spicy: true },
+                        { name: "CROCANTE", price: "7,75" }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Spicy">🌶️</span>}
+                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -559,37 +559,37 @@ function Index() {
 
                   {/* Special Promo Card */}
                   <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 100, delay: 0.2 }}
                     className="bg-orange-600 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden group"
                   >
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/20 transition-colors"></div>
-                    <span className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold tracking-wider mb-4 border border-white/20">JUN 15 – JUN 18</span>
-                    <h4 className="font-display text-2xl sm:text-3xl font-black leading-tight mb-6">WRAP COMBO WITH FRIES FOR ONLY $15</h4>
+                    <span className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold tracking-wider mb-4 border border-white/20">15 JUN – 18 JUN</span>
+                    <h4 className="font-display text-2xl sm:text-3xl font-black leading-tight mb-6">COMBO WRAP + BATATA POR APENAS R$ 35</h4>
                     <motion.button whileTap={{ scale: 0.95 }} className="bg-[#2D150D] text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-black transition-colors w-full sm:w-auto">
-                      Find Us
+                      Onde Estamos
                     </motion.button>
                   </motion.div>
 
                   {/* Category: DRINKS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">DRINKS</h4>
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.15 } } }}>
+                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">BEBIDAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "COLA", price: "2.25" },
-                        { name: "LEMONADE", price: "3.00" },
-                        { name: "ICED TEA", price: "3.75" },
-                        { name: "ORANGE SODA", price: "2.00" },
-                        { name: "MILKSHAKE", price: "5.50" },
-                        { name: "FRESH MOJITO", price: "4.00" },
-                        { name: "COLD BREW", price: "2.00" }
+                        { name: "COCA-COLA", price: "2,25" },
+                        { name: "LIMONADA", price: "3,00" },
+                        { name: "CHÁ GELADO", price: "3,75" },
+                        { name: "REFRIGERANTE DE LARANJA", price: "2,00" },
+                        { name: "MILKSHAKE", price: "5,50" },
+                        { name: "MOJITO", price: "4,00" },
+                        { name: "COLD BREW", price: "2,00" }
                       ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="flex items-center w-full group">
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, y: 30, scale: 0.95 }, visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 100 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">${item.price}</span>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
