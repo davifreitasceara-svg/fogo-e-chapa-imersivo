@@ -693,77 +693,119 @@ function Index() {
         </section>
 
         {/* Drinks Section */}
-        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[80vh] overflow-hidden bg-[#FBF5E9] pt-20 pb-20 border-y border-border">
-          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 flex flex-col md:flex-row items-center justify-between w-full h-full gap-12">
+        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-[#F8F5F0] py-20">
+          
+          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
             
-            {/* Left Content */}
-            <div className="w-full md:w-1/2 flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1">
-              <div className="absolute -top-16 -left-2 bg-white border-2 border-[#8B4513] rounded-full px-5 py-2 rotate-[-8deg] shadow-md z-30 flex flex-col items-center">
-                <span className="font-display font-black text-lg sm:text-xl text-[#8B4513] leading-none">SEMPRE</span>
-                <span className="font-display font-black text-lg sm:text-xl text-[#8B4513] leading-none">GELADAS</span>
-              </div>
+            {/* Left Content - Title and Text */}
+            <div className="w-full md:w-[55%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
               
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="relative"
-              >
-                <h2 className="font-display text-[16vw] md:text-[9vw] leading-[0.8] font-black text-[#8B4513] uppercase tracking-tighter text-shadow-sm">
-                  MUITO
-                  <br />
-                  FRESCO
-                </h2>
+              <div className="relative w-full max-w-2xl">
+                {/* Sticker Badge */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+                  whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", delay: 0.2 }}
+                  className="absolute -top-12 left-4 md:-top-16 md:left-8 bg-white border-[3px] border-[#3D251C] rounded-full px-4 py-1.5 md:px-5 md:py-2 shadow-[4px_4px_0px_#3D251C] z-30 flex flex-col items-center"
+                >
+                  <span className="font-display font-black text-sm md:text-lg text-[#3D251C] leading-none tracking-tighter">BOM</span>
+                  <span className="font-display font-black text-sm md:text-lg text-[#3D251C] leading-none tracking-tighter">HUMOR</span>
+                </motion.div>
                 
-                <div className="mt-8 sm:mt-12 max-w-md">
-                  <h3 className="font-display font-bold text-[#8B4513] text-xl sm:text-2xl mb-2 sm:mb-3 uppercase tracking-wide">Nossa História</h3>
-                  <p className="text-[#5A3A22] text-sm sm:text-base leading-relaxed mb-6 font-medium">
-                    Bebidas artesanais e geladas feitas para refrescar o seu dia. Encontre a loja mais próxima e aproveite nossa hospitalidade calorosa com bebidas da estação.
-                  </p>
-                  <Button className="rounded-full bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg transition-colors border-none flex items-center gap-2 shadow-lg w-full sm:w-auto justify-center">
-                    PEDIR AGORA <ChevronRight className="size-5 bg-white text-[#CD853F] rounded-full p-0.5" />
-                  </Button>
-                </div>
+                {/* Main Tilted Title */}
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="relative z-20"
+                >
+                  <h2 
+                    className="font-display text-[18vw] md:text-[11vw] leading-[0.85] font-black text-[#A05C3A] uppercase tracking-tighter transform -skew-y-6 -rotate-3" 
+                    style={{ 
+                      textShadow: "6px 6px 0px rgba(61, 37, 28, 0.15), -1px -1px 0 #3D251C, 1px -1px 0 #3D251C, -1px 1px 0 #3D251C, 1px 1px 0 #3D251C",
+                      WebkitTextStroke: "2px #3D251C"
+                    }}
+                  >
+                    MUITO
+                  </h2>
+                  <h2 
+                    className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-[#F8F5F0] uppercase tracking-tighter transform -skew-y-6 -rotate-3 ml-4 md:ml-8" 
+                    style={{ 
+                      textShadow: "6px 6px 0px rgba(61, 37, 28, 0.15)",
+                      WebkitTextStroke: "3px #A05C3A"
+                    }}
+                  >
+                    FRESCO
+                  </h2>
+                </motion.div>
+              </div>
+
+              {/* Story Block */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="mt-16 md:mt-24 max-w-sm pl-4 md:pl-8"
+              >
+                <h3 className="font-display font-black text-[#8B4513] text-xl mb-3 tracking-wide uppercase">Nossa História</h3>
+                <p className="text-[#6A4A36] text-sm md:text-base leading-relaxed mb-6 font-medium">
+                  Bebidas geladas artesanais feitas para refrescar. Encontre a loja mais próxima e aproveite nossa hospitalidade, bebidas da estação e sabor sem igual.
+                </p>
+                <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-5 text-sm transition-colors border-none flex items-center gap-2 shadow-lg w-fit">
+                  PEDIR AGORA <ChevronRight className="size-4 bg-white text-[#B87333] rounded-full p-0.5" />
+                </Button>
               </motion.div>
+
             </div>
 
             {/* Right Content - 3D Drink Image */}
-            <div className="w-full md:w-1/2 relative min-h-[350px] sm:min-h-[400px] md:min-h-[500px] flex justify-center items-center order-1 md:order-2">
+            <div className="w-full md:w-[45%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
+               
+               {/* Main Drink */}
                <motion.div
-                 initial={{ y: 100, opacity: 0, rotateZ: 10 }}
-                 whileInView={{ y: 0, opacity: 1, rotateZ: -5 }}
+                 initial={{ y: 150, opacity: 0, rotateZ: 25 }}
+                 whileInView={{ y: 0, opacity: 1, rotateZ: 12 }}
                  viewport={{ once: true }}
                  transition={{ 
                    type: "spring", 
-                   stiffness: 60,
-                   damping: 15,
-                   duration: 1
+                   stiffness: 40,
+                   damping: 12,
+                   duration: 1.2
                  }}
-                 className="relative z-20 w-[60%] sm:w-[70%] max-w-[320px]"
+                 className="relative z-20 w-[65%] sm:w-[70%] max-w-[380px] drop-shadow-2xl"
+                 style={{ mixBlendMode: "multiply" }}
                >
-                 <img src={bebidaCola} alt="Bebida Cola Gelada" className="w-full h-auto object-cover rounded-[30px] sm:rounded-[40px] shadow-2xl rotate-6 sm:rotate-12 border-4 border-white" />
+                 <img src={bebidaCola} alt="Bebida Refrescante" className="w-full h-auto object-contain rounded-2xl" />
                </motion.div>
                
-               {/* Floating elements */}
+               {/* Floating elements simulating the beans/splashes with multiply blend mode so they don't look like square images */}
                <motion.div
-                 animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
-                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                 className="absolute top-[10%] sm:top-[20%] left-[0%] sm:left-[10%] z-10 w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg border-4 border-white"
+                 initial={{ opacity: 0, scale: 0 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
+                 viewport={{ once: true }}
+                 animate={{ y: [0, -20, 0], rotate: [0, 15, 0] }}
+                 transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" }, rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }, opacity: { duration: 0.5 }, scale: { duration: 0.5 } }}
+                 className="absolute top-[15%] left-[5%] md:-left-[10%] z-30 w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden"
+                 style={{ mixBlendMode: "multiply" }}
                >
-                 <img src={bebidaLimonada} alt="Limonada" className="w-full h-full object-cover" />
+                 <img src={bebidaLimonada} alt="Ingrediente 1" className="w-full h-full object-cover scale-150 rotate-45" />
                </motion.div>
                
                <motion.div
-                 animate={{ y: [0, 20, 0], rotate: [0, -15, 0] }}
-                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                 className="absolute bottom-[10%] sm:bottom-[20%] right-[0%] sm:right-[5%] z-30 w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-xl border-4 border-white"
+                 initial={{ opacity: 0, scale: 0 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
+                 viewport={{ once: true }}
+                 animate={{ y: [0, 25, 0], rotate: [0, -20, 0] }}
+                 transition={{ y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }, opacity: { delay: 0.2, duration: 0.5 }, scale: { delay: 0.2, duration: 0.5 } }}
+                 className="absolute bottom-[20%] right-[0%] md:-right-[10%] z-30 w-28 h-28 sm:w-40 sm:h-40 rounded-full overflow-hidden"
+                 style={{ mixBlendMode: "multiply" }}
                >
-                 <img src={bebidaCerveja} alt="Cerveja" className="w-full h-full object-cover" />
+                 <img src={bebidaCerveja} alt="Ingrediente 2" className="w-full h-full object-cover scale-150 -rotate-12" />
                </motion.div>
                
-               {/* Background splash effect */}
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-gradient-to-tr from-[#DEB887]/40 to-transparent rounded-full blur-3xl -z-10"></div>
             </div>
             
           </div>
