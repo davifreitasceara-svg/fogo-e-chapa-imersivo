@@ -7,7 +7,7 @@ const appetizers = [
     id: 1,
     name: 'Batatas Fritas',
     desc: 'Crocantes e Douradas',
-    image: '/user_appetizer2.png',
+    image: '/fries_appetizer.jpg',
     bgColor: '#DFB06C', // Warm golden
     textColor: '#ffffff',
   },
@@ -15,7 +15,7 @@ const appetizers = [
     id: 2,
     name: 'Coxas de Frango',
     desc: 'Sabor na Brasa',
-    image: '/user_app5.png',
+    image: '/chicken_wings_appetizer.jpg',
     bgColor: '#E26D5C', // Warm orange/red
     textColor: '#ffffff',
   },
@@ -23,7 +23,7 @@ const appetizers = [
     id: 3,
     name: 'Onion Rings',
     desc: 'Perfeição em Anéis',
-    image: '/user_app4.png',
+    image: '/onion_rings_appetizer.jpg',
     bgColor: '#966B53', // Brownish
     textColor: '#ffffff',
   },
@@ -31,7 +31,7 @@ const appetizers = [
     id: 4,
     name: 'Queijo Crocante',
     desc: 'Derretimento Absoluto',
-    image: '/user_appetizer1.png',
+    image: '/cheese_sticks_appetizer.jpg',
     bgColor: '#D49A89', // Muted peach
     textColor: '#ffffff',
   },
@@ -58,14 +58,6 @@ export function AppetizerSlider() {
         animate={{ backgroundColor: currentApp.bgColor }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
       />
-
-      {/* Smooth SVG Wave Background */}
-      <div className="absolute bottom-0 left-0 w-full h-[45%] z-10 pointer-events-none">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-[120px] text-[#FDF8F2]" style={{ transform: 'translateY(-98%)' }}>
-          <path fill="currentColor" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-        </svg>
-        <div className="absolute bottom-0 left-0 w-full h-full bg-[#FDF8F2]"></div>
-      </div>
 
       {/* Top Navbar */}
       <div className="absolute top-6 w-full px-8 flex justify-between items-center z-50">
@@ -202,7 +194,8 @@ export function AppetizerSlider() {
                 <motion.img 
                   src={app.image} 
                   alt={app.name} 
-                  className="w-full object-contain drop-shadow-2xl" 
+                  className="w-full object-contain" 
+                  style={{ mixBlendMode: 'multiply', filter: 'contrast(1.1) brightness(1.1)' }}
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
