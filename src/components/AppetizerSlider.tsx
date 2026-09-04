@@ -147,18 +147,6 @@ export function AppetizerSlider() {
             <button className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-colors shadow-xl">
               PEDIR AGORA
             </button>
-            
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-3">
-                <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=1')] bg-cover"></div>
-                <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=2')] bg-cover"></div>
-                <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=3')] bg-cover"></div>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-[#2B1B15] text-sm">10K+ Avaliações</span>
-                <span className="text-[#2B1B15]/60 text-xs font-medium">★★★★★ 4.9/5</span>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -182,22 +170,22 @@ export function AppetizerSlider() {
             if (offset === 0) {
               x = 0;
               y = 0;
-              scale = 1.1;
+              scale = 1.35;
               zIndex = 30;
             } else if (offset === 1) {
-              x = 220;
-              y = -100;
-              scale = 0.6;
+              x = 240;
+              y = -110;
+              scale = 0.75;
               zIndex = 20;
             } else if (offset === 2) {
-              x = 400;
-              y = -180;
-              scale = 0.4;
+              x = 420;
+              y = -190;
+              scale = 0.5;
               zIndex = 10;
             } else if (offset === -1) {
-              x = -220;
-              y = 120;
-              scale = 0.6;
+              x = -240;
+              y = 130;
+              scale = 0.75;
               zIndex = 15;
             }
 
@@ -246,22 +234,50 @@ export function AppetizerSlider() {
             );
           })}
 
-          {/* Navigation Controls under the center item */}
-          <div className="absolute bottom-[5%] left-1/2 -translate-x-1/2 flex gap-3 z-40">
+        </div>
+      </div>
+
+      {/* Footer / Wave Area */}
+      <div className="absolute bottom-0 left-0 w-full z-40">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="w-full h-[100px] sm:h-[150px] text-[#FDF8F2] block mb-[-2px]">
+          <path fill="currentColor" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+        <div className="w-full bg-[#FDF8F2] h-[100px] flex items-center justify-between px-8 sm:px-16 pb-6">
+          {/* Left: Reviews */}
+          <div className="flex items-center gap-4">
+            <div className="flex -space-x-3">
+              <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=1')] bg-cover shadow-sm"></div>
+              <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=2')] bg-cover shadow-sm"></div>
+              <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=3')] bg-cover shadow-sm"></div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-[#2B1B15] text-sm">10K+ Avaliações</span>
+              <span className="text-[#2B1B15]/60 text-[10px] font-bold uppercase tracking-wider">Aprovado por clientes</span>
+            </div>
+          </div>
+
+          {/* Center: Navigation Controls */}
+          <div className="flex gap-4">
             <button 
               onClick={slideLeft} 
-              className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-[#2B1B15]"
+              className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:scale-110 transition-transform text-[#2B1B15] border border-gray-100"
             >
               <ChevronLeft className="size-5" strokeWidth={3} />
             </button>
             <button 
               onClick={slideRight} 
-              className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-[#2B1B15]"
+              className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:scale-110 transition-transform text-[#2B1B15] border border-gray-100"
             >
               <ChevronRight className="size-5" strokeWidth={3} />
             </button>
           </div>
 
+          {/* Right: Dots (like the image) */}
+          <div className="hidden md:flex gap-2 items-center">
+             <div className="w-2.5 h-2.5 rounded-full bg-[#2B1B15]"></div>
+             <div className="w-2 h-2 rounded-full bg-[#2B1B15]/30"></div>
+             <div className="w-2 h-2 rounded-full bg-[#2B1B15]/30"></div>
+          </div>
         </div>
       </div>
     </section>
