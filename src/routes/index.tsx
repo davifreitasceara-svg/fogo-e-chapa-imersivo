@@ -602,6 +602,63 @@ function Index() {
           </div>
         </section>
 
+        {/* Galeria Section */}
+        <section className="relative overflow-hidden border-y border-border bg-[#1A0A05] py-20 sm:py-28 flex flex-col items-center">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#3D1E16]/40 via-[#1A0A05] to-[#1A0A05] opacity-80 pointer-events-none"></div>
+          
+          <div className="relative z-10 w-full mb-12 flex justify-center text-center">
+            <div className="flex flex-col items-center max-w-3xl px-5">
+              <h2 className="font-display text-3xl sm:text-5xl font-black text-[#FBF5E9] uppercase leading-[1.1]">
+                Feito para devorar<br/> <span className="text-amber-500">com os olhos</span>
+              </h2>
+              <p className="mt-4 text-[#FBF5E9]/60 max-w-xl text-sm sm:text-base">Nossa missão é simples: chapa quente, ingredientes frescos e uma mordida que você nunca vai esquecer.</p>
+              <div className="flex flex-wrap justify-center gap-4 mt-8">
+                <Button variant="fire" size="lg" className="px-8 font-bold uppercase tracking-wider">Ver Cardápio <Flame className="ml-2 size-4" /></Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 w-full flex overflow-hidden py-10 group">
+            <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-[#1A0A05] to-transparent z-20 pointer-events-none"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-[#1A0A05] to-transparent z-20 pointer-events-none"></div>
+            
+            <motion.div 
+              className="flex gap-4 sm:gap-6 px-4 cursor-grab active:cursor-grabbing w-fit"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ ease: "linear", duration: 40, repeat: Infinity }}
+              style={{ paddingRight: "1rem" }}
+            >
+              {[
+                { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
+                { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
+                { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
+                { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
+                { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
+                { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" },
+                { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
+                { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
+                { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
+                { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
+                { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
+                { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" }
+              ].map((item, idx) => (
+                <div key={idx} className="relative w-56 h-[380px] sm:w-72 sm:h-[480px] shrink-0 rounded-3xl overflow-hidden border border-white/10 shadow-2xl transition-transform duration-500 hover:-translate-y-2 hover:scale-[1.02]">
+                  <img src={item.img} alt={item.alt} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <span className="text-white font-bold tracking-wider uppercase text-sm">O Sabor</span>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="relative z-10 flex flex-wrap justify-center gap-6 sm:gap-10 mt-8 px-5">
+            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Sabor Incomparável</span>
+            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Ingredientes Frescos</span>
+            <span className="flex items-center gap-2 text-[#FBF5E9]/80 text-xs sm:text-sm font-bold uppercase tracking-widest"><Check className="size-4 text-amber-500" /> Fogo na Chapa</span>
+          </div>
+        </section>
+
         <section id="sobre" className="border-y border-border bg-background py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:items-center lg:px-8">
             <div><p className="eyebrow">Manifesto da chapa</p><h2 className="section-title">O sabor começa<br /><span>no fogo</span></h2></div>
