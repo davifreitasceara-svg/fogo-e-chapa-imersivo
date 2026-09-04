@@ -40,6 +40,7 @@ import burgerInferno from "@/assets/burger-inferno.jpg";
 import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
+import coffeeSplash from "@/assets/coffee-splash.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -693,24 +694,24 @@ function Index() {
         </section>
 
         {/* Drinks Section */}
-        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-[#F8F5F0] py-20">
+        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-[#F5F2ED] py-20">
           
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
             
             {/* Left Content - Title and Text */}
-            <div className="w-full md:w-[55%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
+            <div className="w-full md:w-[50%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
               
-              <div className="relative w-full max-w-2xl">
+              <div className="relative w-full max-w-2xl pl-2 md:pl-8 pt-8">
                 {/* Sticker Badge */}
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
                   whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
                   viewport={{ once: true }}
                   transition={{ type: "spring", delay: 0.2 }}
-                  className="absolute -top-12 left-4 md:-top-16 md:left-8 bg-white border-[3px] border-[#3D251C] rounded-full px-4 py-1.5 md:px-5 md:py-2 shadow-[4px_4px_0px_#3D251C] z-30 flex flex-col items-center"
+                  className="absolute top-0 left-6 md:top-2 md:left-12 bg-white border-[3px] border-[#3D251C] rounded-3xl px-3 py-1 md:px-4 md:py-1.5 shadow-[2px_3px_0px_#3D251C] z-30 flex flex-col items-center"
                 >
-                  <span className="font-display font-black text-sm md:text-lg text-[#3D251C] leading-none tracking-tighter">BOM</span>
-                  <span className="font-display font-black text-sm md:text-lg text-[#3D251C] leading-none tracking-tighter">HUMOR</span>
+                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">GOOD</span>
+                  <span className="font-display font-black text-xs md:text-sm text-[#3D251C] leading-none tracking-tighter">MOOD</span>
                 </motion.div>
                 
                 {/* Main Tilted Title */}
@@ -722,22 +723,22 @@ function Index() {
                   className="relative z-20"
                 >
                   <h2 
-                    className="font-display text-[18vw] md:text-[11vw] leading-[0.85] font-black text-[#A05C3A] uppercase tracking-tighter transform -skew-y-6 -rotate-3" 
+                    className="font-display text-[19vw] md:text-[10.5vw] leading-[0.82] font-black text-[#965A38] uppercase tracking-tighter" 
                     style={{ 
                       textShadow: "6px 6px 0px rgba(61, 37, 28, 0.15), -1px -1px 0 #3D251C, 1px -1px 0 #3D251C, -1px 1px 0 #3D251C, 1px 1px 0 #3D251C",
                       WebkitTextStroke: "2px #3D251C"
                     }}
                   >
-                    MUITO
+                    FRESHLY
                   </h2>
                   <h2 
-                    className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-[#F8F5F0] uppercase tracking-tighter transform -skew-y-6 -rotate-3 ml-4 md:ml-8" 
+                    className="font-display text-[18vw] md:text-[10vw] leading-[0.82] font-black text-[#F5F2ED] uppercase tracking-tighter transform -skew-y-4 -rotate-2 ml-4 md:ml-10" 
                     style={{ 
                       textShadow: "6px 6px 0px rgba(61, 37, 28, 0.15)",
-                      WebkitTextStroke: "3px #A05C3A"
+                      WebkitTextStroke: "3px #965A38"
                     }}
                   >
-                    FRESCO
+                    BREWED
                   </h2>
                 </motion.div>
               </div>
@@ -748,62 +749,37 @@ function Index() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4, duration: 0.8 }}
-                className="mt-16 md:mt-24 max-w-sm pl-4 md:pl-8"
+                className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
               >
-                <h3 className="font-display font-black text-[#8B4513] text-xl mb-3 tracking-wide uppercase">Nossa História</h3>
-                <p className="text-[#6A4A36] text-sm md:text-base leading-relaxed mb-6 font-medium">
-                  Bebidas geladas artesanais feitas para refrescar. Encontre a loja mais próxima e aproveite nossa hospitalidade, bebidas da estação e sabor sem igual.
+                <h3 className="font-display font-black text-[#965A38] text-xl mb-3 tracking-tighter uppercase">OUR STORY</h3>
+                <p className="text-[#6A4A36] text-sm leading-relaxed mb-8 font-medium">
+                  Specialty coffee, and drinks made to brighten every day. Find your nearest café and enjoy warm hospitality, seasonal drinks.
                 </p>
-                <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-5 text-sm transition-colors border-none flex items-center gap-2 shadow-lg w-fit">
-                  PEDIR AGORA <ChevronRight className="size-4 bg-white text-[#B87333] rounded-full p-0.5" />
+                <Button className="rounded-full bg-[#B87333] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-6 text-sm transition-colors border-[3px] border-[#3D251C] shadow-[4px_4px_0px_#3D251C] flex items-center gap-3 w-fit">
+                  ORDER NOW <ChevronRight className="size-5 bg-white text-[#B87333] rounded-full p-0.5" />
                 </Button>
               </motion.div>
 
             </div>
 
-            {/* Right Content - 3D Drink Image */}
-            <div className="w-full md:w-[45%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
+            {/* Right Content - Generated Coffee Cup Image */}
+            <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
                
-               {/* Main Drink */}
+               {/* Main Coffee Drink Image */}
                <motion.div
-                 initial={{ y: 150, opacity: 0, rotateZ: 25 }}
-                 whileInView={{ y: 0, opacity: 1, rotateZ: 12 }}
+                 initial={{ opacity: 0, scale: 0.8 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
                  viewport={{ once: true }}
                  transition={{ 
                    type: "spring", 
                    stiffness: 40,
-                   damping: 12,
+                   damping: 15,
                    duration: 1.2
                  }}
-                 className="relative z-20 w-[65%] sm:w-[70%] max-w-[380px] drop-shadow-2xl"
+                 className="relative z-20 w-full max-w-[550px]"
                  style={{ mixBlendMode: "multiply" }}
                >
-                 <img src={bebidaCola} alt="Bebida Refrescante" className="w-full h-auto object-contain rounded-2xl" />
-               </motion.div>
-               
-               {/* Floating elements simulating the beans/splashes with multiply blend mode so they don't look like square images */}
-               <motion.div
-                 initial={{ opacity: 0, scale: 0 }}
-                 whileInView={{ opacity: 1, scale: 1 }}
-                 viewport={{ once: true }}
-                 animate={{ y: [0, -20, 0], rotate: [0, 15, 0] }}
-                 transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" }, rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }, opacity: { duration: 0.5 }, scale: { duration: 0.5 } }}
-                 className="absolute top-[15%] left-[5%] md:-left-[10%] z-30 w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden"
-                 style={{ mixBlendMode: "multiply" }}
-               >
-                 <img src={bebidaLimonada} alt="Ingrediente 1" className="w-full h-full object-cover scale-150 rotate-45" />
-               </motion.div>
-               
-               <motion.div
-                 initial={{ opacity: 0, scale: 0 }}
-                 whileInView={{ opacity: 1, scale: 1 }}
-                 viewport={{ once: true }}
-                 animate={{ y: [0, 25, 0], rotate: [0, -20, 0] }}
-                 transition={{ y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }, opacity: { delay: 0.2, duration: 0.5 }, scale: { delay: 0.2, duration: 0.5 } }}
-                 className="absolute bottom-[20%] right-[0%] md:-right-[10%] z-30 w-28 h-28 sm:w-40 sm:h-40 rounded-full overflow-hidden"
-                 style={{ mixBlendMode: "multiply" }}
-               >
-                 <img src={bebidaCerveja} alt="Ingrediente 2" className="w-full h-full object-cover scale-150 -rotate-12" />
+                 <img src={coffeeSplash} alt="Freshly Brewed Coffee" className="w-full h-auto object-contain" />
                </motion.div>
                
             </div>
