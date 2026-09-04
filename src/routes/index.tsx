@@ -28,9 +28,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import heroBurger1 from "@/assets/hero-burger-1.jpg";
-import heroBurger2 from "@/assets/hero-burger-2.jpg";
-import heroBurger3 from "@/assets/hero-burger-3.jpg";
+import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
 import burgerInferno from "@/assets/burger-inferno.jpg";
@@ -86,7 +84,7 @@ function Index() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [addedId, setAddedId] = useState<number | null>(null);
 
-  const heroImages = [heroBurger1, heroBurger2, heroBurger3];
+  const heroImages = [heroBurger, heroBurger, heroBurger];
   const [heroIndex, setHeroIndex] = useState(0);
 
   const nextHero = () => setHeroIndex((prev) => (prev + 1) % heroImages.length);
@@ -151,10 +149,10 @@ function Index() {
       </header>
 
       <main>
-        <section id="inicio" className="relative flex min-h-[94svh] items-center justify-center overflow-hidden bg-brown-brand pt-24">
+        <section id="inicio" className="relative flex min-h-[94svh] items-center justify-center overflow-hidden bg-[#009A44] pt-24">
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
-             <h1 className="font-display text-[22vw] leading-[0.8] font-black uppercase text-orange-brand text-3d tracking-tighter mt-12 sm:mt-0">
+             <h1 className="font-display text-[22vw] leading-[0.8] font-black uppercase text-[#006028] tracking-tighter mt-12 sm:mt-0 drop-shadow-sm">
                WRAPPED
                <br/>
                IN FLAVOR
@@ -162,13 +160,17 @@ function Index() {
              
              {/* Center Burger Image */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[85vw] sm:w-[65vw] max-w-[800px] pointer-events-none drop-shadow-2xl z-20">
-                <img src={heroImages[heroIndex]} alt="Delicious Burger" className="w-full h-auto object-contain rounded-full shadow-2xl transition-all duration-500 ease-out" />
+                <img 
+                  src={heroImages[heroIndex]} 
+                  alt="Delicious Burger" 
+                  className={`w-full h-auto object-contain transition-all duration-500 ease-out ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15' : ''}`}
+                />
              </div>
 
              {/* Floating Elements (Badges and Emojis) */}
-             <div className="hidden sm:block absolute top-[25%] left-[25%] -rotate-12 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Juicy</div>
-             <div className="hidden sm:block absolute top-[35%] left-[20%] -rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Smash</div>
-             <div className="hidden sm:block absolute top-[50%] left-[23%] rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Artisan</div>
+             <div className="hidden sm:block absolute top-[25%] left-[25%] -rotate-12 bg-white border-2 border-[#006028] text-[#006028] px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Juicy</div>
+             <div className="hidden sm:block absolute top-[35%] left-[20%] -rotate-6 bg-white border-2 border-[#006028] text-[#006028] px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Smash</div>
+             <div className="hidden sm:block absolute top-[50%] left-[23%] rotate-6 bg-white border-2 border-[#006028] text-[#006028] px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Artisan</div>
 
              <div className="hidden sm:block absolute top-[60%] right-[32%] text-4xl z-30 drop-shadow-lg">😋</div>
              <div className="hidden sm:flex absolute top-[75%] right-[25%] bg-brown-light rounded-full p-4 border border-orange-brand z-30 shadow-xl items-center justify-center size-20">
