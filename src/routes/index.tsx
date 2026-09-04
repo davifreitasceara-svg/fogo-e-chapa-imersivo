@@ -849,6 +849,7 @@ function Index() {
                     src={cocaCola} 
                     alt="Cola Tradicional" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
                 </div>
               </motion.div>
@@ -870,6 +871,7 @@ function Index() {
                     src={orangeJuice} 
                     alt="Suco de Laranja" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
                 </div>
               </motion.div>
@@ -891,6 +893,7 @@ function Index() {
                     src={lemonade} 
                     alt="Limonada Suíça" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
                 </div>
               </motion.div>
