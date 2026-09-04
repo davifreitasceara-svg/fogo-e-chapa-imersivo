@@ -159,7 +159,7 @@ function Index() {
              </h1>
              
              {/* Center Burger Image */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[85vw] sm:w-[65vw] max-w-[800px] pointer-events-none drop-shadow-2xl z-20">
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[70vw] sm:w-[45vw] max-w-[550px] pointer-events-none drop-shadow-2xl z-20">
                 <img 
                   src={heroImages[heroIndex]} 
                   alt="Delicious Burger" 
