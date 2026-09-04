@@ -84,6 +84,7 @@ function Index() {
   const [tab, setTab] = useState<"burger" | "drink">("burger");
   const [cart, setCart] = useState<Record<number, number>>({});
   const [addedId, setAddedId] = useState<number | null>(null);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
   const carouselSlides = [
     {
@@ -193,41 +194,43 @@ function Index() {
           </motion.div>
 
           <motion.nav 
-            className="hidden md:flex items-center gap-8 text-sm font-bold text-white"
+            className="hidden md:flex items-center gap-1 text-sm font-bold text-white bg-white/10 backdrop-blur-sm rounded-full px-2 py-2"
             initial="hidden"
             animate="visible"
             variants={{
               hidden: {},
               visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
             }}
+            onMouseLeave={() => setHoveredNav(null)}
           >
              {[
                { href: "#about", label: "About" },
                { href: "#menu", label: "Menu" },
                { href: "#gallery", label: "Gallery" },
                { href: "#delivery", label: "Delivery" },
-             ].map((link, i) => (
+             ].map((link) => (
                <motion.a 
                  key={link.href}
                  href={link.href} 
-                 className="relative py-2 group"
+                 className="relative px-5 py-2 rounded-full z-10"
                  variants={{
-                   hidden: { opacity: 0, y: -30, filter: "blur(6px)" },
+                   hidden: { opacity: 0, y: -20, filter: "blur(6px)" },
                    visible: { 
                      opacity: 1, y: 0, filter: "blur(0px)", 
                      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } 
                    },
                  }}
-                 whileHover={{ y: -2 }}
                  whileTap={{ scale: 0.95 }}
+                 onMouseEnter={() => setHoveredNav(link.href)}
                >
-                 {link.label}
-                 <motion.span 
-                   className="absolute bottom-0 left-0 right-0 h-[2px] bg-white rounded-full origin-left" 
-                   initial={{ scaleX: 0 }}
-                   whileHover={{ scaleX: 1 }}
-                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                 />
+                 {hoveredNav === link.href && (
+                   <motion.span
+                     layoutId="navPill"
+                     className="absolute inset-0 bg-white/20 rounded-full"
+                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                   />
+                 )}
+                 <span className="relative z-10">{link.label}</span>
                </motion.a>
              ))}
           </motion.nav>
