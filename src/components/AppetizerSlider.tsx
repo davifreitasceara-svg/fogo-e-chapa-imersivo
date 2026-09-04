@@ -5,34 +5,38 @@ import { ChevronLeft, ChevronRight, Search, ShoppingBag } from 'lucide-react';
 const appetizers = [
   {
     id: 1,
+    title1: 'BATATA',
+    title2: 'FRITA',
     name: 'Batatas Fritas',
-    desc: 'Crocantes e Douradas',
-    image: '/fries_appetizer.jpg',
-    bgColor: '#DFB06C', // Warm golden
+    image: 'fries_appetizer_1788549611092.jpg',
+    bgColor: '#DFB06C',
     textColor: '#ffffff',
   },
   {
     id: 2,
+    title1: 'ASINHA',
+    title2: 'DE FRANGO',
     name: 'Coxas de Frango',
-    desc: 'Sabor na Brasa',
-    image: '/chicken_wings_appetizer.jpg',
-    bgColor: '#E26D5C', // Warm orange/red
+    image: 'chicken_wings_appetizer_1788549622436.jpg',
+    bgColor: '#E26D5C',
     textColor: '#ffffff',
   },
   {
     id: 3,
+    title1: 'ANÉIS',
+    title2: 'DE CEBOLA',
     name: 'Onion Rings',
-    desc: 'Perfeição em Anéis',
-    image: '/onion_rings_appetizer.jpg',
-    bgColor: '#966B53', // Brownish
+    image: 'onion_rings_appetizer_1788549633318.jpg',
+    bgColor: '#966B53',
     textColor: '#ffffff',
   },
   {
     id: 4,
+    title1: 'PALITOS',
+    title2: 'DE QUEIJO',
     name: 'Queijo Crocante',
-    desc: 'Derretimento Absoluto',
-    image: '/cheese_sticks_appetizer.jpg',
-    bgColor: '#D49A89', // Muted peach
+    image: 'cheese_sticks_appetizer_1788549643677.jpg',
+    bgColor: '#D49A89',
     textColor: '#ffffff',
   },
 ];
