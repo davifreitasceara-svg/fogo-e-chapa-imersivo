@@ -7,7 +7,7 @@ const appetizers = [
     id: 1,
     name: 'Batatas Fritas',
     desc: 'Crocantes e Douradas',
-    image: '/fries_appetizer.jpg',
+    image: '/user_appetizer2.png',
     bgColor: '#DFB06C', // Warm golden
     textColor: '#ffffff',
   },
@@ -15,7 +15,7 @@ const appetizers = [
     id: 2,
     name: 'Coxas de Frango',
     desc: 'Sabor na Brasa',
-    image: '/chicken_wings_appetizer.jpg',
+    image: '/user_app5.png',
     bgColor: '#E26D5C', // Warm orange/red
     textColor: '#ffffff',
   },
@@ -23,7 +23,7 @@ const appetizers = [
     id: 3,
     name: 'Onion Rings',
     desc: 'Perfeição em Anéis',
-    image: '/onion_rings_appetizer.jpg',
+    image: '/user_app4.png',
     bgColor: '#966B53', // Brownish
     textColor: '#ffffff',
   },
@@ -31,7 +31,7 @@ const appetizers = [
     id: 4,
     name: 'Queijo Crocante',
     desc: 'Derretimento Absoluto',
-    image: '/cheese_sticks_appetizer.jpg',
+    image: '/user_appetizer1.png',
     bgColor: '#D49A89', // Muted peach
     textColor: '#ffffff',
   },
@@ -202,13 +202,7 @@ export function AppetizerSlider() {
                 <motion.img 
                   src={app.image} 
                   alt={app.name} 
-                  className="w-full object-contain" 
-                  style={{ 
-                    mixBlendMode: 'multiply',
-                    // Extremely aggressive filter to force off-white noise to pure #FFFFFF
-                    // This ensures multiply blend mode creates NO bounding box over the two-tone wave background
-                    filter: 'contrast(2) brightness(1.2) saturate(1.2)' 
-                  }} 
+                  className="w-full object-contain drop-shadow-2xl" 
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
