@@ -121,29 +121,26 @@ export function AppetizerSlider() {
         </div>
       </div>
 
-      {/* Main Content Area */}
       <div className="relative z-20 w-full max-w-[1400px] mx-auto h-full flex flex-col md:flex-row items-center pt-20">
         
-        {/* Left Typography Area */}
         <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center h-full z-30 mt-10 md:mt-0">
-          <motion.h1 
-            key={currentApp.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+          <motion.div
+            key={currentApp.title1}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="font-display text-6xl sm:text-[80px] leading-[0.9] font-black tracking-tighter mb-6 text-white drop-shadow-md whitespace-pre-line"
+            className="flex flex-col mb-10"
           >
-            {currentApp.title}
-          </motion.h1>
-          <motion.p 
-            key={currentApp.desc}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-white/90 text-lg sm:text-xl font-medium mb-10 max-w-sm"
-          >
-            {currentApp.desc}
-          </motion.p>
+            <span 
+              className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-transparent"
+              style={{ WebkitTextStroke: "3px white" }}
+            >
+              {currentApp.title1}
+            </span>
+            <span className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-white drop-shadow-xl mt-2">
+              {currentApp.title2}
+            </span>
+          </motion.div>
           
           <div className="flex flex-col gap-8">
             <button className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-colors shadow-xl">
@@ -152,7 +149,6 @@ export function AppetizerSlider() {
           </div>
         </div>
 
-        {/* Right Slider Area */}
         <div className="w-full md:w-7/12 relative h-[400px] sm:h-[600px] flex items-center justify-center perspective-[1200px]">
           
           {appetizers.map((app, index) => {
