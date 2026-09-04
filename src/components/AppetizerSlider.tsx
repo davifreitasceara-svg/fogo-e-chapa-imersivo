@@ -195,7 +195,12 @@ export function AppetizerSlider() {
                   src={app.image} 
                   alt={app.name} 
                   className="w-full object-contain" 
-                  style={{ mixBlendMode: 'multiply', filter: 'contrast(1.1) brightness(1.1)' }}
+                  style={{ 
+                    mixBlendMode: 'multiply', 
+                    filter: 'contrast(1.1) brightness(1.1)',
+                    WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 70%)',
+                    maskImage: 'radial-gradient(circle at center, black 50%, transparent 70%)'
+                  }}
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
