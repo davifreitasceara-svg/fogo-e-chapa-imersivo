@@ -168,27 +168,32 @@ export function AppetizerSlider() {
             let y = 0;
             let scale = 1;
             let zIndex = 20;
+            let rotate = 0;
 
             if (offset === 0) {
               x = 0;
               y = 0;
               scale = 1.35;
               zIndex = 30;
+              rotate = 0;
             } else if (offset === 1) {
               x = 240;
               y = -110;
               scale = 0.75;
               zIndex = 20;
+              rotate = 15;
             } else if (offset === 2) {
               x = 420;
               y = -190;
               scale = 0.5;
               zIndex = 10;
+              rotate = 35;
             } else if (offset === -1) {
               x = -240;
               y = 130;
               scale = 0.75;
               zIndex = 15;
+              rotate = -25;
             }
 
             // Adjust for mobile screens
@@ -206,14 +211,16 @@ export function AppetizerSlider() {
                   x: `calc(-50% + ${x}px)`,
                   y: `calc(-55% + ${y}px)`,
                   scale,
+                  rotate,
                   zIndex,
                   opacity: offset === 2 ? 0.2 : (offset === -1 ? 0 : 1) // Fades out strongly on the left
                 }}
                 transition={{
                   type: "spring",
-                  stiffness: 85,
-                  damping: 15,
-                  mass: 0.8
+                  stiffness: 70,
+                  damping: 10,
+                  mass: 0.9,
+                  velocity: 2 // Gives an initial push to feel more dynamic
                 }}
                 onClick={() => {
                   if (offset === 1) slideLeft();
