@@ -28,7 +28,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import heroPizza from "@/assets/hero-pizza.jpg";
+import heroBurger1 from "@/assets/hero-burger-1.jpg";
+import heroBurger2 from "@/assets/hero-burger-2.jpg";
+import heroBurger3 from "@/assets/hero-burger-3.jpg";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
 import burgerInferno from "@/assets/burger-inferno.jpg";
@@ -83,6 +85,12 @@ function Index() {
   const [tab, setTab] = useState<"burger" | "drink">("burger");
   const [cart, setCart] = useState<Record<number, number>>({});
   const [addedId, setAddedId] = useState<number | null>(null);
+
+  const heroImages = [heroBurger1, heroBurger2, heroBurger3];
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  const nextHero = () => setHeroIndex((prev) => (prev + 1) % heroImages.length);
+  const prevHero = () => setHeroIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
 
   const cartCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
   const visibleProducts = useMemo(() => products.filter((product) => product.category === tab), [tab]);
@@ -152,15 +160,15 @@ function Index() {
                IN FLAVOR
              </h1>
              
-             {/* Center Pizza Image */}
+             {/* Center Burger Image */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[85vw] sm:w-[65vw] max-w-[800px] pointer-events-none drop-shadow-2xl z-20">
-                <img src={heroPizza} alt="Delicious Pizza" className="w-full h-auto object-contain rounded-full shadow-2xl" />
+                <img src={heroImages[heroIndex]} alt="Delicious Burger" className="w-full h-auto object-contain rounded-full shadow-2xl transition-all duration-500 ease-out" />
              </div>
 
              {/* Floating Elements (Badges and Emojis) */}
-             <div className="hidden sm:block absolute top-[25%] left-[25%] -rotate-12 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Stretchy</div>
-             <div className="hidden sm:block absolute top-[35%] left-[20%] -rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Cheesy</div>
-             <div className="hidden sm:block absolute top-[50%] left-[23%] rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Crispy</div>
+             <div className="hidden sm:block absolute top-[25%] left-[25%] -rotate-12 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Juicy</div>
+             <div className="hidden sm:block absolute top-[35%] left-[20%] -rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Smash</div>
+             <div className="hidden sm:block absolute top-[50%] left-[23%] rotate-6 bg-brown-light border border-orange-brand text-orange-brand px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Artisan</div>
 
              <div className="hidden sm:block absolute top-[60%] right-[32%] text-4xl z-30 drop-shadow-lg">😋</div>
              <div className="hidden sm:flex absolute top-[75%] right-[25%] bg-brown-light rounded-full p-4 border border-orange-brand z-30 shadow-xl items-center justify-center size-20">
@@ -169,10 +177,10 @@ function Index() {
              
              {/* Carousel arrows */}
              <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
-                <Button size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronLeft className="size-6" /></Button>
+                <Button onClick={prevHero} size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronLeft className="size-6" /></Button>
              </div>
              <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
-                <Button size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronRight className="size-6" /></Button>
+                <Button onClick={nextHero} size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronRight className="size-6" /></Button>
              </div>
 
              <p className="mt-16 sm:mt-24 text-white/90 text-lg md:text-2xl font-medium tracking-wide z-30 relative px-4 text-center">
