@@ -450,7 +450,7 @@ function Index() {
 
         {/* Torn paper edge divider */}
         <div className="relative -mt-1 z-10">
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[60px] sm:h-[90px] md:h-[120px]" style={{ fill: "#3D1E16" }}>
+          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[60px] sm:h-[90px] md:h-[120px] transition-colors duration-700" style={{ fill: currentTheme.bgDark }}>
             <path d="M0,0 C20,15 40,8 60,20 C80,32 95,10 120,25 C145,40 155,18 180,30 C205,42 220,15 240,28 C260,41 280,12 300,22 C320,32 340,8 360,18 C380,28 400,5 420,15 C440,25 460,10 480,20 C500,30 520,8 540,22 C560,36 575,12 600,25 C625,38 640,10 660,20 C680,30 700,8 720,18 C740,28 760,5 780,15 C800,25 820,10 840,22 C860,34 880,8 900,20 C920,32 940,12 960,25 C980,38 1000,10 1020,22 C1040,34 1060,8 1080,18 C1100,28 1120,5 1140,15 C1160,25 1180,10 1200,22 C1220,34 1240,8 1260,20 C1280,32 1300,12 1320,25 C1340,38 1360,15 1380,22 C1400,29 1420,10 1440,18 L1440,120 L0,120 Z" />
           </svg>
         </div>
