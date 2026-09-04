@@ -37,6 +37,46 @@ const appetizers = [
   },
 ];
 
+const TransparentImage = ({ src, alt, className }: { src: string, alt: string, className?: string }) => {
+  const [dataUrl, setDataUrl] = useState<string>('');
+
+  React.useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i+1];
+        const b = data[i+2];
+        
+        // Remove white/light grey pixels
+        // By checking if the pixel is very bright, we make it transparent
+        if (r > 230 && g > 230 && b > 230) {
+          data[i+3] = 0; // Alpha to 0
+        } else if (r > 210 && g > 210 && b > 210) {
+          // Feathering for anti-aliasing
+          data[i+3] = 100;
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+      setDataUrl(canvas.toDataURL('image/png'));
+    };
+    img.src = src;
+  }, [src]);
+
+  if (!dataUrl) return null;
+  return <img src={dataUrl} alt={alt} className={className} />;
+};
+
 export function AppetizerSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -191,17 +231,17 @@ export function AppetizerSlider() {
                 }}
                 style={{ width: "360px" }}
               >
-                <motion.img 
-                  src={app.image} 
-                  alt={app.name} 
-                  className="w-full object-contain" 
-                  style={{ 
-                    mixBlendMode: 'multiply', 
-                    filter: 'contrast(1.5) brightness(1.1)'
-                  }}
+                <motion.div
+                  className="w-full h-full"
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
-                />
+                >
+                  <TransparentImage 
+                    src={app.image} 
+                    alt={app.name} 
+                    className="w-full object-contain drop-shadow-2xl" 
+                  />
+                </motion.div>
               </motion.div>
             );
           })}
