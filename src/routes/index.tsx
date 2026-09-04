@@ -168,30 +168,42 @@ function Index() {
       case 0: // CHAPA CLÁSSICO - Green
         return {
           bgLight: "#F0FAF4", // very light green
+          bgDark: "#0B1F13",
+          bgVeryDark: "#040B07",
           primary: "#006B2D",
           secondary: "#00A144",
           secondaryAlpha: "rgba(0, 161, 68, 0.15)",
+          textDark: "#05140B",
         };
       case 1: // BRASA BACON - Purple
         return {
           bgLight: "#F5F0FA", // very light purple
+          bgDark: "#150824",
+          bgVeryDark: "#0B0414",
           primary: "#2B005F",
           secondary: "#4B168C",
           secondaryAlpha: "rgba(75, 22, 140, 0.15)",
+          textDark: "#10031F",
         };
       case 2: // INFERNO PICANTE - Red
         return {
           bgLight: "#FAF0F0", // very light red
+          bgDark: "#260602",
+          bgVeryDark: "#120301",
           primary: "#7A1200",
           secondary: "#C41E00",
           secondaryAlpha: "rgba(196, 30, 0, 0.15)",
+          textDark: "#1F0400",
         };
       default:
         return {
           bgLight: "#F0FAF4",
+          bgDark: "#0B1F13",
+          bgVeryDark: "#040B07",
           primary: "#006B2D",
           secondary: "#00A144",
           secondaryAlpha: "rgba(0, 161, 68, 0.15)",
+          textDark: "#05140B",
         };
     }
   }, [heroIndex]);
@@ -443,13 +455,13 @@ function Index() {
           </svg>
         </div>
 
-        <section id="menu" className="relative border-border bg-[#3D1E16] py-20 sm:py-28 overflow-hidden">
+        <section id="menu" className="relative border-border py-20 sm:py-28 overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
           {/* Section Header */}
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
-            <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black text-[#FBF5E9] tracking-tighter uppercase mb-4">
+            <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-4 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
               Sabor que fala alto <span className="inline-block align-middle text-4xl sm:text-5xl md:text-6xl -mt-2">🔥</span>
             </h2>
-            <p className="text-[#FBF5E9]/80 text-lg sm:text-xl font-medium tracking-wide">
+            <p className="text-lg sm:text-xl font-medium tracking-wide opacity-80 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
               Sabores autênticos servidos frescos todos os dias.
             </p>
           </div>
@@ -461,11 +473,12 @@ function Index() {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.05 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-[#FBF5E9] rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom"
+              className="rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700"
+              style={{ backgroundColor: currentTheme.bgLight }}
             >
               {/* Menu Card Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-[#2D150D]/10 pb-6">
-                <h3 className="font-display text-5xl sm:text-6xl font-black text-[#2D150D] tracking-tighter">CARDÁPIO</h3>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-black/10 pb-6 transition-colors duration-700">
+                <h3 className="font-display text-5xl sm:text-6xl font-black tracking-tighter transition-colors duration-700" style={{ color: currentTheme.textDark }}>CARDÁPIO</h3>
                 <div className="flex gap-3">
                   <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-amber-500 text-sm">★</span> Avaliação 4.9</span>
                   <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-red-500 text-sm">♥</span> Favorito Local</span>
@@ -480,7 +493,7 @@ function Index() {
                   
                   {/* Category: PIZZA */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">PIZZAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>PIZZAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "PEPPERONI", price: "12,00", spicy: true },
@@ -503,7 +516,7 @@ function Index() {
 
                   {/* Category: BURGERS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">HAMBÚRGUERES</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>HAMBÚRGUERES</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CLÁSSICO", price: "10,50" },
@@ -524,7 +537,7 @@ function Index() {
 
                   {/* Category: HOT DOGS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">CACHORRO-QUENTE</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>CACHORRO-QUENTE</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CLÁSSICO", price: "7,25" },
@@ -542,7 +555,7 @@ function Index() {
 
                   {/* Category: WRAPS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">WRAPS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>WRAPS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "FRANGO", price: "8,50" },
@@ -568,7 +581,7 @@ function Index() {
                   
                   {/* Category: WINGS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">ASINHAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>ASINHAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "BUFFALO", price: "12,00", spicy: true },
@@ -589,7 +602,7 @@ function Index() {
 
                   {/* Category: RINGS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">ANÉIS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>ANÉIS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CEBOLA", price: "4,25" },
@@ -624,7 +637,7 @@ function Index() {
 
                   {/* Category: DRINKS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black text-[#2D150D] mb-6 tracking-tight">BEBIDAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>BEBIDAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "COCA-COLA", price: "2,25" },
@@ -652,20 +665,20 @@ function Index() {
         </section>
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
-        <section className="relative overflow-hidden border-y border-border bg-[#0D0503] py-24 flex flex-col items-center">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#D14F26]/10 via-[#0D0503] to-[#0D0503] opacity-60 pointer-events-none"></div>
+        <section className="relative overflow-hidden border-y border-border py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
+          <div className="absolute inset-0 opacity-60 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 100%)` }}></div>
           
           <div className="relative z-10 w-full mb-8 flex justify-center text-center">
             <div className="flex flex-col items-center max-w-3xl px-5">
-              <h2 className="font-display text-2xl sm:text-3xl font-medium text-[#FBF5E9]/70 mb-6">
+              <h2 className="font-display text-2xl sm:text-3xl font-medium mb-6 opacity-70 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
                 Criado para atrair, despertar fome e surpreender seu paladar.
               </h2>
               
               <div className="flex flex-wrap justify-center gap-4">
-                <button className="flex items-center gap-2 bg-[#D14F26] text-white px-7 py-3 rounded-full font-bold text-sm hover:bg-[#b0401f] transition-colors shadow-[0_0_15px_rgba(209,79,38,0.3)]">
+                <button className="flex items-center gap-2 text-white px-7 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5" style={{ backgroundColor: currentTheme.secondary }}>
                   Fazer Pedido <ArrowUpRight className="size-4" />
                 </button>
-                <button className="flex items-center gap-2 bg-[#2D1A13] border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm hover:bg-[#3D251C] transition-colors">
+                <button className="flex items-center gap-2 border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm transition-all hover:bg-white/10" style={{ backgroundColor: currentTheme.bgDark }}>
                   Ver Cardápio
                 </button>
               </div>
