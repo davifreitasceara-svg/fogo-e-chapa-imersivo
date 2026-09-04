@@ -771,12 +771,12 @@ function Index() {
             </div>
 
             {/* Right Content - Generated Soda Cup Image */}
-            <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-center items-center order-1 md:order-2">
+            <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-end items-center order-1 md:order-2">
                
                {/* Main Soda Drink Image */}
                <motion.div
-                 initial={{ opacity: 0, scale: 0.8 }}
-                 whileInView={{ opacity: 1, scale: 1 }}
+                 initial={{ opacity: 0, x: 100 }}
+                 whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
                  transition={{ 
                    type: "spring", 
@@ -784,13 +784,13 @@ function Index() {
                    damping: 15,
                    duration: 1.2
                  }}
-                 className="relative z-20 w-full max-w-[550px]"
+                 className="relative z-20 w-full max-w-[700px] md:max-w-[900px] lg:max-w-[1000px] flex justify-end md:-mr-12 lg:-mr-32 xl:-mr-48"
                  style={{ mixBlendMode: "multiply" }}
                >
                  <img 
                    src={sodaSplash} 
                    alt="Refrigerante Gelado" 
-                   className="w-full h-auto object-contain"
+                   className="w-full h-auto object-contain scale-110 md:scale-125 lg:scale-150 origin-right"
                  />
                </motion.div>
                
