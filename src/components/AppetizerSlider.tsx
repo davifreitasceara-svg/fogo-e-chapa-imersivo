@@ -109,11 +109,8 @@ export function AppetizerSlider() {
       <div className="absolute top-6 w-full px-8 flex justify-between items-center z-50">
         <div className="font-display font-black text-2xl tracking-tighter" style={{ color: currentApp.textColor }}>Entradas</div>
         
-        <div className="hidden md:flex bg-[#1A1A1A] rounded-full px-8 py-2.5 gap-8 shadow-xl">
-          <span className="text-white text-xs font-bold tracking-wider cursor-pointer hover:text-white/80">HOME</span>
-          <span className="text-white/60 text-xs font-bold tracking-wider cursor-pointer hover:text-white">ABOUT</span>
-          <span className="text-white/60 text-xs font-bold tracking-wider cursor-pointer hover:text-white">CONTACT</span>
-        </div>
+        {/* Navigation removed as per user request */}
+        <div></div>
 
         <div className="flex gap-4">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center cursor-pointer backdrop-blur-sm">
@@ -252,18 +249,8 @@ export function AppetizerSlider() {
           <path fill="currentColor" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
         </svg>
         <div className="w-full bg-[#FDF8F2] h-[100px] flex items-center justify-between px-8 sm:px-16 pb-6">
-          {/* Left: Reviews */}
-          <div className="flex items-center gap-4">
-            <div className="flex -space-x-3">
-              <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=1')] bg-cover shadow-sm"></div>
-              <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=2')] bg-cover shadow-sm"></div>
-              <div className="w-10 h-10 rounded-full border-2 border-[#FDF8F2] bg-gray-300 bg-[url('https://i.pravatar.cc/100?img=3')] bg-cover shadow-sm"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-[#2B1B15] text-sm">10K+ Avaliações</span>
-              <span className="text-[#2B1B15]/60 text-[10px] font-bold uppercase tracking-wider">Aprovado por clientes</span>
-            </div>
-          </div>
+          {/* Left: Empty space to keep arrows centered */}
+          <div className="flex items-center gap-4 w-48"></div>
 
           {/* Center: Navigation Controls */}
           <div className="flex gap-4">
