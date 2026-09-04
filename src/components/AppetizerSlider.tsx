@@ -127,13 +127,13 @@ export function AppetizerSlider() {
         {/* Left Typography Area */}
         <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center h-full z-30 mt-10 md:mt-0">
           <motion.h1 
-            key={currentApp.name}
+            key={currentApp.title}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="font-display text-6xl sm:text-[80px] leading-[0.9] font-black tracking-tighter mb-6 text-white drop-shadow-md"
+            className="font-display text-6xl sm:text-[80px] leading-[0.9] font-black tracking-tighter mb-6 text-white drop-shadow-md whitespace-pre-line"
           >
-            Sabor Perfeito em Cada Mordida
+            {currentApp.title}
           </motion.h1>
           <motion.p 
             key={currentApp.desc}
@@ -142,7 +142,7 @@ export function AppetizerSlider() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-white/90 text-lg sm:text-xl font-medium mb-10 max-w-sm"
           >
-            Você não pode comprar a felicidade, mas pode pedir nossas {currentApp.name.toLowerCase()} crocantes, que é quase a mesma coisa.
+            {currentApp.desc}
           </motion.p>
           
           <div className="flex flex-col gap-8">
