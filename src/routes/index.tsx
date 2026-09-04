@@ -212,6 +212,7 @@ function Index() {
                { href: "#menu", label: "Menu" },
                { href: "#gallery", label: "Gallery" },
                { href: "#delivery", label: "Delivery" },
+               { href: "#drinks", label: "Drinks" },
              ].map((link) => (
                <motion.a 
                  key={link.href}
@@ -688,6 +689,83 @@ function Index() {
             <span className="flex items-center gap-2 text-[#FBF5E9]/90 text-xs sm:text-sm font-medium"><Layers className="size-4 opacity-70" /> Ingredientes Frescos</span>
             <span className="text-[#D14F26] text-xs">◆</span>
             <span className="flex items-center gap-2 text-[#FBF5E9]/90 text-xs sm:text-sm font-medium"><TrendingUp className="size-4 opacity-70" /> Fogo na Chapa</span>
+          </div>
+        </section>
+
+        {/* Drinks Section */}
+        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[80vh] overflow-hidden bg-[#FBF5E9] pt-20 pb-20 border-y border-border">
+          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 flex flex-col md:flex-row items-center justify-between w-full h-full gap-12">
+            
+            {/* Left Content */}
+            <div className="w-full md:w-1/2 flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1">
+              <div className="absolute -top-16 -left-2 bg-white border-2 border-[#8B4513] rounded-full px-5 py-2 rotate-[-8deg] shadow-md z-30 flex flex-col items-center">
+                <span className="font-display font-black text-lg sm:text-xl text-[#8B4513] leading-none">SEMPRE</span>
+                <span className="font-display font-black text-lg sm:text-xl text-[#8B4513] leading-none">GELADAS</span>
+              </div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative"
+              >
+                <h2 className="font-display text-[16vw] md:text-[9vw] leading-[0.8] font-black text-[#8B4513] uppercase tracking-tighter text-shadow-sm">
+                  MUITO
+                  <br />
+                  FRESCO
+                </h2>
+                
+                <div className="mt-8 sm:mt-12 max-w-md">
+                  <h3 className="font-display font-bold text-[#8B4513] text-xl sm:text-2xl mb-2 sm:mb-3 uppercase tracking-wide">Nossa História</h3>
+                  <p className="text-[#5A3A22] text-sm sm:text-base leading-relaxed mb-6 font-medium">
+                    Bebidas artesanais e geladas feitas para refrescar o seu dia. Encontre a loja mais próxima e aproveite nossa hospitalidade calorosa com bebidas da estação.
+                  </p>
+                  <Button className="rounded-full bg-[#CD853F] hover:bg-[#8B4513] text-white font-bold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg transition-colors border-none flex items-center gap-2 shadow-lg w-full sm:w-auto justify-center">
+                    PEDIR AGORA <ChevronRight className="size-5 bg-white text-[#CD853F] rounded-full p-0.5" />
+                  </Button>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Content - 3D Drink Image */}
+            <div className="w-full md:w-1/2 relative min-h-[350px] sm:min-h-[400px] md:min-h-[500px] flex justify-center items-center order-1 md:order-2">
+               <motion.div
+                 initial={{ y: 100, opacity: 0, rotateZ: 10 }}
+                 whileInView={{ y: 0, opacity: 1, rotateZ: -5 }}
+                 viewport={{ once: true }}
+                 transition={{ 
+                   type: "spring", 
+                   stiffness: 60,
+                   damping: 15,
+                   duration: 1
+                 }}
+                 className="relative z-20 w-[60%] sm:w-[70%] max-w-[320px]"
+               >
+                 <img src={bebidaCola} alt="Bebida Cola Gelada" className="w-full h-auto object-cover rounded-[30px] sm:rounded-[40px] shadow-2xl rotate-6 sm:rotate-12 border-4 border-white" />
+               </motion.div>
+               
+               {/* Floating elements */}
+               <motion.div
+                 animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
+                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                 className="absolute top-[10%] sm:top-[20%] left-[0%] sm:left-[10%] z-10 w-20 h-20 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-lg border-4 border-white"
+               >
+                 <img src={bebidaLimonada} alt="Limonada" className="w-full h-full object-cover" />
+               </motion.div>
+               
+               <motion.div
+                 animate={{ y: [0, 20, 0], rotate: [0, -15, 0] }}
+                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                 className="absolute bottom-[10%] sm:bottom-[20%] right-[0%] sm:right-[5%] z-30 w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-xl border-4 border-white"
+               >
+                 <img src={bebidaCerveja} alt="Cerveja" className="w-full h-full object-cover" />
+               </motion.div>
+               
+               {/* Background splash effect */}
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[100%] bg-gradient-to-tr from-[#DEB887]/40 to-transparent rounded-full blur-3xl -z-10"></div>
+            </div>
+            
           </div>
         </section>
 
