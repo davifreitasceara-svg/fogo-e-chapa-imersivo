@@ -59,12 +59,9 @@ export function AppetizerSlider() {
         transition={{ duration: 0.8, ease: "easeInOut" }}
       />
 
-      {/* Wavy Cream Bottom Background */}
-      <div className="absolute bottom-0 left-0 w-full h-[40%] sm:h-[45%] z-10 bg-[#F5E6D3]" style={{ clipPath: 'polygon(0% 20%, 10% 15%, 20% 25%, 30% 10%, 40% 20%, 50% 5%, 60% 25%, 70% 15%, 80% 20%, 90% 10%, 100% 25%, 100% 100%, 0% 100%)' }}></div>
-      
-      {/* Smooth SVG Wave Alternative for exact match */}
+      {/* Smooth SVG Wave Background */}
       <div className="absolute bottom-0 left-0 w-full h-[45%] z-10 pointer-events-none">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full text-[#FDF8F2]" style={{ transform: 'translateY(-40%)' }}>
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-[120px] text-[#FDF8F2]" style={{ transform: 'translateY(-98%)' }}>
           <path fill="currentColor" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
         </svg>
         <div className="absolute bottom-0 left-0 w-full h-full bg-[#FDF8F2]"></div>
@@ -181,25 +178,25 @@ export function AppetizerSlider() {
             return (
               <motion.div
                 key={app.id}
-                className="absolute top-1/2 left-1/2 -translate-y-[55%] -translate-x-1/2 cursor-pointer drop-shadow-2xl"
+                className="absolute top-1/2 left-1/2 -translate-y-[50%] -translate-x-1/2 cursor-pointer"
                 initial={false}
                 animate={{
                   x: x + "-50%",
                   scale,
                   zIndex,
-                  opacity: offset === 2 ? 0.3 : 1
+                  opacity: offset === 2 || offset === -1 ? 0.4 : 1
                 }}
                 transition={{
                   type: "spring",
-                  stiffness: 80,
-                  damping: 14,
+                  stiffness: 70,
+                  damping: 12,
                   mass: 0.8
                 }}
                 onClick={() => {
                   if (offset === 1) slideRight();
                   if (offset === -1) slideLeft();
                 }}
-                style={{ width: "380px" }}
+                style={{ width: "360px" }}
               >
                 <motion.img 
                   src={app.image} 
@@ -207,10 +204,10 @@ export function AppetizerSlider() {
                   className="w-full object-contain" 
                   style={{ 
                     mixBlendMode: 'multiply',
-                    // Extremely strong filter to destroy white background artifacts completely
-                    filter: 'contrast(1.3) brightness(1.1) saturate(1.1)' 
+                    // Safe filter to eliminate white without deep frying the image colors
+                    filter: 'contrast(1.1) brightness(1.05)' 
                   }} 
-                  animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
+                  animate={offset === 0 ? { y: [0, -20, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
               </motion.div>
