@@ -81,11 +81,13 @@ export function AppetizerSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const slideLeft = () => {
-    setCurrentIndex((prev) => (prev === 0 ? appetizers.length - 1 : prev - 1));
+    // To move items LEFT (down-left), currentIndex must INCREASE.
+    setCurrentIndex((prev) => (prev === appetizers.length - 1 ? 0 : prev + 1));
   };
 
   const slideRight = () => {
-    setCurrentIndex((prev) => (prev === appetizers.length - 1 ? 0 : prev + 1));
+    // To move items RIGHT (up-right), currentIndex must DECREASE.
+    setCurrentIndex((prev) => (prev === 0 ? appetizers.length - 1 : prev - 1));
   };
 
   const currentApp = appetizers[currentIndex];
@@ -214,8 +216,8 @@ export function AppetizerSlider() {
                   mass: 0.8
                 }}
                 onClick={() => {
-                  if (offset === 1) slideRight();
-                  if (offset === -1) slideLeft();
+                  if (offset === 1) slideLeft();
+                  if (offset === -1) slideRight();
                 }}
                 style={{ width: "360px" }}
               >
