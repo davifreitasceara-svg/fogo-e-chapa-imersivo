@@ -163,7 +163,7 @@ function Index() {
   const currentSlide = carouselSlides[heroIndex];
 
   // Dynamic theme based on the currently selected burger
-  const currentTheme = React.useMemo(() => {
+  const currentTheme = useMemo(() => {
     switch (heroIndex) {
       case 0: // CHAPA CLÁSSICO - Green
         return {
