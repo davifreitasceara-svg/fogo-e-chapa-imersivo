@@ -106,8 +106,8 @@ export function AppetizerSlider() {
       />
 
       {/* Top Navbar */}
-      <div className="absolute top-6 w-full px-8 flex justify-between items-center z-50">
-        <div className="font-display font-black text-2xl tracking-tighter" style={{ color: currentApp.textColor }}>Entradas</div>
+      <div className="absolute top-8 w-full px-8 sm:px-16 flex justify-between items-center z-50 max-w-[1400px] left-1/2 -translate-x-1/2">
+        <div className="font-display font-black text-4xl sm:text-5xl tracking-tighter text-white drop-shadow-md">Entradas</div>
         
         {/* Navigation removed as per user request */}
         <div></div>
