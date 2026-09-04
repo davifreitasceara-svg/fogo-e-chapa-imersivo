@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowDown,
   Check,
@@ -84,11 +85,36 @@ function Index() {
   const [cart, setCart] = useState<Record<number, number>>({});
   const [addedId, setAddedId] = useState<number | null>(null);
 
-  const heroImages = [heroBurger, heroBurger, heroBurger];
-  const [heroIndex, setHeroIndex] = useState(0);
+  const carouselSlides = [
+    {
+      id: "burger",
+      image: heroBurger,
+      bgClass: "bg-[#00A144]",
+      titleColor: "text-[#006B2D]",
+      buttonBg: "bg-[#006B2D]",
+      buttonText: "text-[#006B2D]",
+      badges: [
+        { text: "Juicy", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Smash", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "Beefy", style: "top-[50%] left-[23%] rotate-6" },
+      ]
+    },
+    {
+      id: "hotdog",
+      image: heroBurger, // Placeholder until user uploads hotdog PNG
+      bgClass: "bg-[#4B168C]",
+      titleColor: "text-[#2B005F]",
+      buttonBg: "bg-[#2B005F]",
+      buttonText: "text-[#2B005F]",
+      badges: []
+    }
+  ];
 
-  const nextHero = () => setHeroIndex((prev) => (prev + 1) % heroImages.length);
-  const prevHero = () => setHeroIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const nextHero = () => setHeroIndex((prev) => (prev + 1) % carouselSlides.length);
+  const prevHero = () => setHeroIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+  
+  const currentSlide = carouselSlides[heroIndex];
 
   const cartCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
   const visibleProducts = useMemo(() => products.filter((product) => product.category === tab), [tab]);
@@ -122,72 +148,85 @@ function Index() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-brown-brand text-foreground">
-      <header className="fixed inset-x-0 top-0 z-40 bg-brown-brand">
-        <div className="bg-orange-brand py-1.5 text-[11px] sm:text-xs font-semibold text-brown-brand flex items-center justify-center gap-4 sm:gap-6 w-full text-center px-4">
-          <span>18 Urban Lane, Chicago</span>
-          <span className="hidden sm:inline">🍕 Open Daily - 10AM to 11PM</span>
-          <span className="hidden sm:inline">🍔 Pickup & Delivery Available</span>
-        </div>
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+    <div className={`min-h-screen overflow-x-hidden transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
+      <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
+        <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
           <div className="flex items-center gap-2">
-            <span className="text-2xl sm:text-3xl">🍔</span>
+            <span className="text-2xl sm:text-3xl">🔥</span>
             <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">HOTBITE</span>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8 bg-brown-light px-8 py-3 rounded-full text-sm font-semibold text-white/90">
-             <a href="#about" className="hover:text-orange-brand transition-colors">About</a>
-             <a href="#menu" className="hover:text-orange-brand transition-colors">Menu</a>
-             <a href="#gallery" className="hover:text-orange-brand transition-colors">Gallery</a>
-             <a href="#delivery" className="hover:text-orange-brand transition-colors">Delivery</a>
+          <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-white">
+             <a href="#about" className="hover:opacity-80 transition-opacity">About</a>
+             <a href="#menu" className="hover:opacity-80 transition-opacity">Menu</a>
+             <a href="#gallery" className="hover:opacity-80 transition-opacity">Gallery</a>
+             <a href="#delivery" className="hover:opacity-80 transition-opacity">Delivery</a>
           </nav>
 
-          <Button className="rounded-full bg-orange-brand text-brown-brand hover:bg-orange-brand/90 font-bold px-6">
+          <Button className="rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
              Contact Us
           </Button>
         </div>
       </header>
 
       <main>
-        <section id="inicio" className="relative flex min-h-[94svh] items-center justify-center overflow-hidden bg-[#009A44] pt-24">
+        <section id="inicio" className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24">
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
-             <h1 className="font-display text-[22vw] leading-[0.8] font-black uppercase text-[#006028] tracking-tighter mt-12 sm:mt-0 drop-shadow-sm">
+             <h1 className={`font-display text-[22vw] leading-[0.8] font-black uppercase tracking-tighter mt-12 sm:mt-0 drop-shadow-sm transition-colors duration-700 ease-in-out ${currentSlide.titleColor}`}>
                WRAPPED
                <br/>
                IN FLAVOR
              </h1>
              
-             {/* Center Burger Image */}
+             {/* Center Image with Animation */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-[70vw] sm:w-[45vw] max-w-[550px] pointer-events-none drop-shadow-2xl z-20">
-                <img 
-                  src={heroImages[heroIndex]} 
-                  alt="Delicious Burger" 
-                  className={`w-full h-auto object-contain transition-all duration-500 ease-out ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15' : ''}`}
-                />
+                <AnimatePresence mode="popLayout">
+                  <motion.img 
+                    key={currentSlide.id}
+                    src={currentSlide.image} 
+                    alt="Delicious Food" 
+                    initial={{ x: 300, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: -300, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                    className={`w-full h-auto object-contain ${heroIndex === 1 ? 'scale-x-[-1]' : ''}`}
+                  />
+                </AnimatePresence>
              </div>
 
-             {/* Floating Elements (Badges and Emojis) */}
-             <div className="hidden sm:block absolute top-[25%] left-[25%] -rotate-12 bg-white border-2 border-[#006028] text-[#006028] px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Juicy</div>
-             <div className="hidden sm:block absolute top-[35%] left-[20%] -rotate-6 bg-white border-2 border-[#006028] text-[#006028] px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Smash</div>
-             <div className="hidden sm:block absolute top-[50%] left-[23%] rotate-6 bg-white border-2 border-[#006028] text-[#006028] px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg">Artisan</div>
+             {/* Floating Badges */}
+             {currentSlide.badges.map((badge, idx) => (
+                <motion.div 
+                  key={currentSlide.id + idx}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.3 + (idx * 0.1), type: "spring" }}
+                  className={`hidden sm:block absolute ${badge.style} bg-white border-2 px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg transition-colors duration-700 border-current ${currentSlide.buttonText}`}
+                >
+                  {badge.text}
+                </motion.div>
+             ))}
 
              <div className="hidden sm:block absolute top-[60%] right-[32%] text-4xl z-30 drop-shadow-lg">😋</div>
-             <div className="hidden sm:flex absolute top-[75%] right-[25%] bg-brown-light rounded-full p-4 border border-orange-brand z-30 shadow-xl items-center justify-center size-20">
-                <span className="text-4xl">🔥</span>
-             </div>
              
              {/* Carousel arrows */}
              <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
-                <Button onClick={prevHero} size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronLeft className="size-6" /></Button>
+                <Button onClick={prevHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronLeft className="size-8" /></Button>
              </div>
              <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
-                <Button onClick={nextHero} size="icon" variant="outline" className="bg-white text-brown-brand hover:bg-white/90 rounded-xl size-12 shadow-xl border-0"><ChevronRight className="size-6" /></Button>
+                <Button onClick={nextHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronRight className="size-8" /></Button>
              </div>
 
-             <p className="mt-16 sm:mt-24 text-white/90 text-lg md:text-2xl font-medium tracking-wide z-30 relative px-4 text-center">
+             <p className="mt-16 sm:mt-24 text-white text-lg md:text-2xl font-medium tracking-wide z-30 relative px-4 text-center">
                Crispy, juicy street food made the right way.
              </p>
+
+             {/* Action Buttons */}
+             <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>View Menu</Button>
+                <Button className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Find Us</Button>
+             </div>
            </div>
         </section>
 
