@@ -40,8 +40,12 @@ import burgerInferno from "@/assets/burger-inferno.jpg";
 import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
+import friesImage from '../assets/fries.jpg'
+import sodaSplash from '../assets/soda-splash.jpg'
+import cocaCola from '../assets/coca-cola.jpg'
+import orangeJuice from '../assets/orange-juice.jpg'
+import lemonade from '../assets/lemonade.jpg'
 import coffeeSplash from "@/assets/coffee-splash.jpg";
-import sodaSplash from "@/assets/soda-splash.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -796,6 +800,102 @@ function Index() {
                
             </div>
             
+          </div>
+        </section>
+
+        {/* Drinks Grid Section */}
+        <section className="w-full bg-[#F5F2ED] py-16 md:py-24 border-t border-[#E8E1D5]">
+          <div className="mx-auto max-w-[1400px] px-5 lg:px-12">
+            
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 md:gap-0">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="font-display font-black text-[#A05C3A] text-5xl md:text-6xl lg:text-[5.5rem] leading-[0.85] uppercase tracking-tighter max-w-xl"
+              >
+                DRINKS FOR<br/>EVERYDAY
+              </motion.h2>
+              
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <Button className="rounded-full bg-[#A05C3A] hover:bg-[#8B4513] text-white font-black uppercase px-6 py-5 text-sm transition-colors border-[3px] border-[#A05C3A] flex items-center gap-3">
+                  VIEW ALL MENU <ChevronRight className="size-5 bg-white text-[#A05C3A] rounded-full p-0.5" />
+                </Button>
+              </motion.div>
+            </div>
+
+            {/* Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0">
+              
+              {/* Item 1 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="flex flex-col md:border-r border-[#E8E1D5] pr-0 md:pr-8 lg:pr-12"
+              >
+                <div className="flex items-baseline justify-between mb-8">
+                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">COLA<br/>TRADICIONAL</h3>
+                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                  <img 
+                    src={cocaCola} 
+                    alt="Cola Tradicional" 
+                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                  />
+                </div>
+              </motion.div>
+
+              {/* Item 2 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="flex flex-col md:border-r border-[#E8E1D5] px-0 md:px-8 lg:px-12 mt-12 md:mt-0"
+              >
+                <div className="flex items-baseline justify-between mb-8">
+                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">SUCO DE<br/>LARANJA</h3>
+                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                  <img 
+                    src={orangeJuice} 
+                    alt="Suco de Laranja" 
+                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                  />
+                </div>
+              </motion.div>
+
+              {/* Item 3 */}
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0"
+              >
+                <div className="flex items-baseline justify-between mb-8">
+                  <h3 className="font-display font-black text-[#A05C3A] text-2xl lg:text-3xl leading-none uppercase">LIMONADA<br/>SUÍÇA</h3>
+                  <button className="text-[#A05C3A] font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4">ORDER NOW +</button>
+                </div>
+                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                  <img 
+                    src={lemonade} 
+                    alt="Limonada Suíça" 
+                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
+                  />
+                </div>
+              </motion.div>
+
+            </div>
           </div>
         </section>
 
