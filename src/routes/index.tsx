@@ -784,7 +784,6 @@ function Index() {
                    src={sodaSplash} 
                    alt="Refrigerante Gelado" 
                    className="w-full h-auto object-contain"
-                   style={{ filter: "brightness(1.1) contrast(1.2) grayscale(0.1)" }}
                  />
                </motion.div>
                
