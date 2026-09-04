@@ -141,31 +141,30 @@ export function AppetizerSlider() {
             const isVisible = offset >= -1 && offset <= 2;
             if (!isVisible) return null;
 
-            // Positioning logic exactly like the video
-            // offset 0 = center (large)
-            // offset 1 = right (medium)
-            // offset 2 = far right (small)
-            // offset -1 = left (medium, behind text slightly)
-            
+            // Positioning logic exactly like the video: Diagonal from top-right to bottom-left
             let x = 0;
+            let y = 0;
             let scale = 1;
             let zIndex = 20;
-            let rotate = 0;
 
             if (offset === 0) {
               x = 0;
+              y = 0;
               scale = 1.1;
               zIndex = 30;
             } else if (offset === 1) {
-              x = 300;
+              x = 220;
+              y = -100;
               scale = 0.6;
               zIndex = 20;
             } else if (offset === 2) {
-              x = 500;
+              x = 400;
+              y = -180;
               scale = 0.4;
               zIndex = 10;
             } else if (offset === -1) {
-              x = -250;
+              x = -220;
+              y = 120;
               scale = 0.6;
               zIndex = 15;
             }
@@ -173,23 +172,25 @@ export function AppetizerSlider() {
             // Adjust for mobile screens
             if (typeof window !== 'undefined' && window.innerWidth < 768) {
               x = x * 0.5; 
+              y = y * 0.5;
             }
 
             return (
               <motion.div
                 key={app.id}
-                className="absolute top-1/2 left-1/2 -translate-y-[50%] -translate-x-1/2 cursor-pointer"
+                className="absolute top-1/2 left-1/2 cursor-pointer"
                 initial={false}
                 animate={{
-                  x: x + "-50%",
+                  x: `calc(-50% + ${x}px)`,
+                  y: `calc(-55% + ${y}px)`,
                   scale,
                   zIndex,
-                  opacity: offset === 2 || offset === -1 ? 0.4 : 1
+                  opacity: offset === 2 ? 0.2 : (offset === -1 ? 0 : 1) // Fades out strongly on the left
                 }}
                 transition={{
                   type: "spring",
-                  stiffness: 70,
-                  damping: 12,
+                  stiffness: 85,
+                  damping: 15,
                   mass: 0.8
                 }}
                 onClick={() => {
@@ -207,7 +208,7 @@ export function AppetizerSlider() {
                     // Safe filter to eliminate white without deep frying the image colors
                     filter: 'contrast(1.1) brightness(1.05)' 
                   }} 
-                  animate={offset === 0 ? { y: [0, -20, 0] } : { y: 0 }}
+                  animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
               </motion.div>
