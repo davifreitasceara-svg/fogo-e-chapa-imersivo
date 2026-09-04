@@ -182,21 +182,57 @@ function Index() {
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
       <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
-          <div className="flex items-center gap-2">
+          <motion.div 
+            className="flex items-center gap-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
             <span className="text-2xl sm:text-3xl">🔥</span>
             <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">HOTBITE</span>
-          </div>
+          </motion.div>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-white">
-             <a href="#about" className="hover:opacity-80 transition-opacity">About</a>
-             <a href="#menu" className="hover:opacity-80 transition-opacity">Menu</a>
-             <a href="#gallery" className="hover:opacity-80 transition-opacity">Gallery</a>
-             <a href="#delivery" className="hover:opacity-80 transition-opacity">Delivery</a>
-          </nav>
+          <motion.nav 
+            className="hidden md:flex items-center gap-8 text-sm font-bold text-white"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+            }}
+          >
+             {[
+               { href: "#about", label: "About" },
+               { href: "#menu", label: "Menu" },
+               { href: "#gallery", label: "Gallery" },
+               { href: "#delivery", label: "Delivery" },
+             ].map((link) => (
+               <motion.a 
+                 key={link.href}
+                 href={link.href} 
+                 className="relative py-1 group"
+                 variants={{
+                   hidden: { opacity: 0, y: -20, filter: "blur(4px)" },
+                   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+                 }}
+                 whileHover={{ scale: 1.05 }}
+                 whileTap={{ scale: 0.95 }}
+               >
+                 {link.label}
+                 <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-white rounded-full transition-all duration-300 group-hover:w-full" />
+               </motion.a>
+             ))}
+          </motion.nav>
 
-          <Button className="rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
-             Contact Us
-          </Button>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Button className="rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
+               Contact Us
+            </Button>
+          </motion.div>
         </div>
       </header>
 
