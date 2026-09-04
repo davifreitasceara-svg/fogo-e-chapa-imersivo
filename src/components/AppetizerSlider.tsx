@@ -110,65 +110,63 @@ export function AppetizerSlider() {
 
         {/* Carousel Images */}
         <div className="w-full md:w-2/3 relative h-[300px] sm:h-[500px] flex items-center justify-center mt-12 md:mt-0 perspective-[1000px]">
-          
-          {/* Previous Image */}
-          <div className="absolute left-[-10%] sm:left-0 top-1/2 -translate-y-1/2 w-[150px] sm:w-[250px] z-10 opacity-50 blur-[2px] transition-all duration-700 ease-in-out cursor-pointer hover:opacity-80" onClick={slideLeft}>
-            <img 
-              src={appetizers[prevIndex].image} 
-              alt="Previous" 
-              className="w-full object-contain drop-shadow-xl filter brightness-[1.08] contrast-[1.15]" 
-              style={{ mixBlendMode: 'multiply' }} 
-            />
-          </div>
+          {appetizers.map((app, index) => {
+            // Calculate relative position (-1, 0, 1, or hidden)
+            let offset = index - currentIndex;
+            if (offset < -1) offset += appetizers.length;
+            if (offset > 1) offset -= appetizers.length;
 
-          {/* Current Center Image */}
-          <div className="relative z-30 w-[250px] sm:w-[400px]">
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.img
-                key={currentIndex}
-                src={currentApp.image}
-                alt={currentApp.name}
-                initial={{ 
-                  x: direction * 300, 
-                  opacity: 0,
-                  scale: 0.5,
-                  rotateY: direction * 45
+            // Determine if the item should be visible
+            const isVisible = offset >= -1 && offset <= 1;
+            
+            // Animation values based on offset
+            const xPos = offset * 250; // Distance between items
+            const scale = offset === 0 ? 1 : 0.6;
+            const opacity = offset === 0 ? 1 : (isVisible ? 0.5 : 0);
+            const zIndex = offset === 0 ? 30 : 10;
+            const blur = offset === 0 ? "blur(0px)" : "blur(2px)";
+
+            return (
+              <motion.div
+                key={app.id}
+                className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 cursor-pointer"
+                initial={false}
+                animate={{
+                  x: xPos + "-50%",
+                  scale,
+                  opacity,
+                  zIndex,
+                  filter: blur,
                 }}
-                animate={{ 
-                  x: 0, 
-                  opacity: 1,
-                  scale: 1,
-                  rotateY: 0,
-                  y: [0, -10, 0] // Floating effect
-                }}
-                exit={{ 
-                  x: direction * -300, 
-                  opacity: 0,
-                  scale: 0.5,
-                  rotateY: direction * -45
-                }}
-                transition={{ 
+                transition={{
                   type: "spring",
-                  stiffness: 100,
-                  damping: 15,
-                  y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                  stiffness: 120,
+                  damping: 18,
+                  mass: 0.8
                 }}
-                className="w-full object-contain drop-shadow-2xl filter brightness-[1.08] contrast-[1.15]"
-                style={{ mixBlendMode: 'multiply' }}
-              />
-            </AnimatePresence>
-          </div>
-
-          {/* Next Image */}
-          <div className="absolute right-[-10%] sm:right-0 top-1/2 -translate-y-1/2 w-[150px] sm:w-[250px] z-10 opacity-50 blur-[2px] transition-all duration-700 ease-in-out cursor-pointer hover:opacity-80" onClick={slideRight}>
-            <img 
-              src={appetizers[nextIndex].image} 
-              alt="Next" 
-              className="w-full object-contain drop-shadow-xl filter brightness-[1.08] contrast-[1.15]" 
-              style={{ mixBlendMode: 'multiply' }} 
-            />
-          </div>
-
+                onClick={() => {
+                  if (offset === 1) slideRight();
+                  if (offset === -1) slideLeft();
+                }}
+                style={{ width: offset === 0 ? "400px" : "250px" }}
+              >
+                <motion.img 
+                  src={app.image} 
+                  alt={app.name} 
+                  className="w-full object-contain drop-shadow-2xl" 
+                  style={{ 
+                    mixBlendMode: 'multiply',
+                    // Aggressive filter to destroy white background noise
+                    filter: 'brightness(1.15) contrast(1.4) saturate(1.1)' 
+                  }} 
+                  animate={offset === 0 ? { y: [0, -10, 0] } : { y: 0 }}
+                  transition={{ 
+                    y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                  }}
+                />
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
