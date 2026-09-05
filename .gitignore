@@ -1,0 +1,14 @@
+﻿# Backup files
+*.bak
+*.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Temp
+*.temp
