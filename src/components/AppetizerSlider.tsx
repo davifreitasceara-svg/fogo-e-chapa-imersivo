@@ -9,7 +9,7 @@ const appetizers = [
     title2: 'FRITA',
     name: 'Batatas Fritas',
     image: '/fries_appetizer.jpg',
-    bgColor: '#DFB06C',
+    bgColor: '#ECA02A', // Vibrant Mustard Yellow
     textColor: '#ffffff',
   },
   {
@@ -18,7 +18,7 @@ const appetizers = [
     title2: 'DE FRANGO',
     name: 'Coxas de Frango',
     image: '/chicken_wings_appetizer.jpg',
-    bgColor: '#E26D5C',
+    bgColor: '#C6311E', // Deep Fiery Red
     textColor: '#ffffff',
   },
   {
@@ -27,7 +27,7 @@ const appetizers = [
     title2: 'DE CEBOLA',
     name: 'Onion Rings',
     image: '/onion_rings_appetizer.jpg',
-    bgColor: '#966B53',
+    bgColor: '#C86218', // Warm Golden Orange
     textColor: '#ffffff',
   },
   {
@@ -36,7 +36,7 @@ const appetizers = [
     title2: 'DE QUEIJO',
     name: 'Queijo Crocante',
     image: '/cheese_sticks_appetizer.jpg',
-    bgColor: '#D49A89',
+    bgColor: '#D75B29', // Rich Cheddar Orange
     textColor: '#ffffff',
   },
 ];
