@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Search, ShoppingBag } from 'lucide-react';
-
+import { useIsMobile } from '@/hooks/use-mobile';
 const appetizers = [
   {
     id: 1,
@@ -44,6 +44,7 @@ const appetizers = [
 
 export function AppetizerSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isMobile = useIsMobile();
 
   const slideLeft = () => {
     // To move items LEFT (down-left), currentIndex must INCREASE.
@@ -154,8 +155,8 @@ export function AppetizerSlider() {
               rotate = -25;
             }
 
-            // Adjust for mobile screens
-            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            // Adjust for mobile screens safely using the useIsMobile hook
+            if (isMobile) {
               x = x * 0.5; 
               y = y * 0.5;
             }
