@@ -7,39 +7,7 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  nitro: {
-    preset: (process.env['VERCEL'] ? "vercel" : undefined) as any,
-    externals: {
-      inline: [
-        '@tanstack/start-server-core',
-        '@tanstack/react-start',
-        '@tanstack/start-client-core',
-        '@tanstack/react-router',
-        '@tanstack/router-core',
-        '@tanstack/router-plugin',
-        '@tanstack/react-query',
-        'framer-motion'
-      ]
-    }
-  },
-  vite: {
-    plugins: [
-      {
-        name: 'force-inline-tanstack',
-        enforce: 'post',
-        config(config) {
-          config.ssr = config.ssr || {};
-          // Força o Vite a não externalizar os pacotes do TanStack,
-          // contornando qualquer override do config do Lovable
-          config.ssr.noExternal = [
-            ...(Array.isArray(config.ssr.noExternal) ? config.ssr.noExternal : []),
-            /@tanstack\/.*/,
-            'framer-motion'
-          ];
-        }
-      }
-    ]
-  },
+  // Sem configurações agressivas manuais aqui. Deixaremos o Vercel detectar nativamente.
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
