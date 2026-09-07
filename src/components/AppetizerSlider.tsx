@@ -56,7 +56,7 @@ export function AppetizerSlider() {
     setCurrentIndex((prev) => (prev === 0 ? appetizers.length - 1 : prev - 1));
   };
 
-  const currentApp = appetizers[currentIndex];
+  const currentApp = appetizers[currentIndex]!;
 
   return (
     <section className="relative w-full h-[700px] sm:h-[850px] overflow-hidden">

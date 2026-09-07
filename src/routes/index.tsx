@@ -33,8 +33,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Gallery } from "@/components/Gallery";
-import { Drinks } from "@/components/Drinks";
 import { Embers } from "@/components/Embers";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
 import heroBurger from "@/assets/hero-burger.png";
@@ -164,7 +162,7 @@ function Index() {
     setHeroIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
   };
   
-  const currentSlide = carouselSlides[heroIndex];
+  const currentSlide = carouselSlides[heroIndex]!;
 
   // Dynamic theme based on the currently selected burger
   const currentTheme = useMemo(() => {
