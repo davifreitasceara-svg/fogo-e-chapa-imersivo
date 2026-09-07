@@ -7,6 +7,9 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  nitro: {
+    preset: process.env.VERCEL ? "vercel" : undefined
+  },
   vite: {
     ssr: {
       noExternal: ['@tanstack/start-server-core', '@tanstack/react-start', '@tanstack/start-client-core']
