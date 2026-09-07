@@ -299,11 +299,87 @@ function Index() {
           </motion.nav>
 
           <motion.div
+            className="flex items-center gap-4"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Button className="rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative rounded-full text-white hover:bg-white/20 transition-colors">
+                  <ShoppingBag className="size-5" />
+                  {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="flex w-full flex-col border-border bg-surface-deep sm:max-w-md">
+                <SheetHeader>
+                  <SheetTitle className="font-display text-2xl font-black uppercase text-foreground">Sua Sacola</SheetTitle>
+                </SheetHeader>
+                
+                {cartCount > 0 ? (
+                  <div className="flex flex-1 flex-col justify-between overflow-hidden">
+                    <div className="overflow-y-auto py-4 pr-2">
+                      <div className="space-y-4">
+                        {Object.entries(cart).map(([idStr, quantity]) => {
+                          const product = products.find((p) => p.id === parseInt(idStr));
+                          if (!product) return null;
+                          return (
+                            <div key={product.id} className="flex items-center gap-4 border-b border-border pb-4">
+                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-border">
+                                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-display text-base font-bold uppercase leading-none text-foreground">{product.name}</h4>
+                                <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
+                              </div>
+                              <div className="flex items-center gap-2 rounded-sm border border-border bg-background p-1">
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-foreground" onClick={() => updateQuantity(product.id, -1)}>
+                                  <Minus className="size-3" />
+                                </Button>
+                                <span className="w-4 text-center text-xs font-bold text-foreground">{quantity}</span>
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-foreground" onClick={() => updateQuantity(product.id, 1)}>
+                                  <Plus className="size-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    
+                    <div className="border-t border-border pt-4">
+                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase text-foreground">
+                        <span>Total</span>
+                        <span className="text-gold">
+                          R$ {Object.entries(cart).reduce((total, [id, qty]) => {
+                            const product = products.find(p => p.id === parseInt(id));
+                            return total + (product ? product.price * qty : 0);
+                          }, 0).toFixed(2).replace(".", ",")}
+                        </span>
+                      </div>
+                      <Button size="lg" className="w-full text-base" onClick={() => window.alert("Checkout não implementado na demonstração.")}>
+                        Finalizar Pedido
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-1 flex-col items-center justify-center text-center">
+                    <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <ShoppingBag className="size-8" />
+                    </div>
+                    <h3 className="font-display text-xl font-bold uppercase text-foreground">Sua sacola está vazia</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">Adicione alguns itens do cardápio para começar seu pedido.</p>
+                    <SheetTrigger asChild>
+                      <Button className="mt-6" variant="outline" size="sm">
+                        Ver cardápio
+                      </Button>
+                    </SheetTrigger>
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
+
+            <Button className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
                Contact Us
             </Button>
           </motion.div>
