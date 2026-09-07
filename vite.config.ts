@@ -11,14 +11,20 @@ export default defineConfig({
     preset: (process.env['VERCEL'] ? "vercel" : undefined) as any,
     externals: {
       inline: [
-        /@tanstack\/.*/,
+        '@tanstack/start-server-core',
+        '@tanstack/react-start',
+        '@tanstack/start-client-core',
+        '@tanstack/react-router',
+        '@tanstack/router-core',
+        '@tanstack/router-plugin',
+        '@tanstack/react-query',
         'framer-motion'
       ]
     }
   },
   vite: {
     ssr: {
-      noExternal: [/@tanstack\/.*/, 'framer-motion']
+      noExternal: true
     }
   },
   tanstackStart: {
