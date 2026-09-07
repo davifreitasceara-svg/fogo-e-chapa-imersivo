@@ -23,9 +23,22 @@ export default defineConfig({
     }
   },
   vite: {
-    ssr: {
-      noExternal: true
-    }
+    plugins: [
+      {
+        name: 'force-inline-tanstack',
+        enforce: 'post',
+        config(config) {
+          config.ssr = config.ssr || {};
+          // Força o Vite a não externalizar os pacotes do TanStack,
+          // contornando qualquer override do config do Lovable
+          config.ssr.noExternal = [
+            ...(Array.isArray(config.ssr.noExternal) ? config.ssr.noExternal : []),
+            /@tanstack\/.*/,
+            'framer-motion'
+          ];
+        }
+      }
+    ]
   },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
