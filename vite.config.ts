@@ -11,9 +11,8 @@ export default defineConfig({
     preset: (process.env['VERCEL'] ? "vercel" : undefined) as any,
     externals: {
       inline: [
-        '@tanstack/start-server-core',
-        '@tanstack/react-start',
-        '@tanstack/start-client-core'
+        /@tanstack\/.*/,
+        'framer-motion'
       ]
     }
   },
