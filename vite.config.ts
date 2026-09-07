@@ -18,7 +18,7 @@ export default defineConfig({
   },
   vite: {
     ssr: {
-      noExternal: ['@tanstack/start-server-core', '@tanstack/react-start', '@tanstack/start-client-core']
+      noExternal: [/@tanstack\/.*/, 'framer-motion']
     }
   },
   tanstackStart: {
