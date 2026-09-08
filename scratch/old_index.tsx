@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+﻿import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -42,6 +42,7 @@ import burgerInferno from "@/assets/burger-inferno.jpg";
 import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
+import friesImage from '../assets/fries.jpg'
 import sodaSplash from '../assets/soda-splash.jpg'
 import cocaCola from '../assets/coca-cola.jpg'
 import orangeJuice from '../assets/orange-juice.jpg'
@@ -68,58 +69,12 @@ export const Route = createFileRoute("/")({
 type Product = { id: number; name: string; description: string; price: number; image: string; badge?: string; category: "burger" | "drink" };
 
 const products: Product[] = [
-  // Burgers
   { id: 1, name: "Chapa Clássico", description: "Blend 160g, cheddar inglês, picles agridoce e molho da casa no brioche tostado.", price: 34.9, image: burgerClassico, badge: "Mais pedido", category: "burger" },
   { id: 2, name: "Brasa Bacon", description: "Blend 180g, queijo meia cura, bacon crocante, cebola caramelizada e barbecue de rapadura.", price: 42.9, image: burgerBrasa, badge: "Assinatura", category: "burger" },
   { id: 3, name: "Inferno", description: "Blend 180g, cheddar, jalapeño, cebola crispy e molho vermelho picante da casa.", price: 39.9, image: burgerInferno, badge: "Picante", category: "burger" },
-  // Appetizers
-  { id: 101, name: "Batatas Fritas", description: "Batatas fritas crocantes com tempero especial.", price: 19.9, image: "/fries_appetizer.jpg", category: "burger" },
-  { id: 102, name: "Coxas de Frango", description: "Asinhas e coxas de frango fritas e temperadas.", price: 29.9, image: burgerClassico, category: "burger" }, // using a placeholder if we don't have the exact image
-  { id: 103, name: "Onion Rings", description: "Anéis de cebola empanados e fritos.", price: 24.9, image: burgerBrasa, category: "burger" }, // placeholder
-  { id: 104, name: "Queijo Crocante", description: "Palitos de queijo crocantes por fora e derretidos por dentro.", price: 26.9, image: burgerInferno, category: "burger" }, // placeholder
-  // Drinks
-  { id: 201, name: "Cola Tradicional", description: "Refrigerante de cola tradicional.", price: 8.9, image: cocaCola, category: "drink" },
-  { id: 202, name: "Suco de Laranja", description: "Suco natural de laranja espremida na hora.", price: 10.9, image: orangeJuice, category: "drink" },
-  { id: 203, name: "Limonada Suíça", description: "Limonada refrescante.", price: 12.9, image: lemonade, category: "drink" },
-  { id: 204, name: "Cerveja Pilsen", description: "Cerveja clara e refrescante.", price: 14.9, image: beer, category: "drink" },
-  { id: 205, name: "Chá Gelado", description: "Chá mate gelado com limão.", price: 9.9, image: icedTea, category: "drink" },
-  { id: 206, name: "Guaraná Natural", description: "Refrigerante de guaraná tradicional.", price: 8.9, image: guarana, category: "drink" },
-
-  // Text Menu Items
-  { id: 301, name: "PEPPERONI", description: "PEPPERONI", price: 12.0, image: burgerClassico, category: "burger" },
-  { id: 302, name: "MARGHERITA", description: "MARGHERITA", price: 11.75, image: burgerClassico, category: "burger" },
-  { id: 303, name: "FRANGO BBQ", description: "FRANGO BBQ", price: 14.25, image: burgerClassico, category: "burger" },
-  { id: 304, name: "QUATRO QUEIJOS", description: "QUATRO QUEIJOS", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 305, name: "SALAME PICANTE", description: "SALAME PICANTE", price: 15.5, image: burgerClassico, category: "burger" },
-  { id: 306, name: "COGUMELO TRUFADO", description: "COGUMELO TRUFADO", price: 16.0, image: burgerClassico, category: "burger" },
-  { id: 307, name: "VEGETARIANA", description: "VEGETARIANA", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 308, name: "CLÁSSICO", description: "CLÁSSICO", price: 10.5, image: burgerClassico, category: "burger" },
-  { id: 309, name: "DUPLO QUEIJO", description: "DUPLO QUEIJO", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 310, name: "SMASH", description: "SMASH", price: 13.75, image: burgerClassico, category: "burger" },
-  { id: 311, name: "BACON BBQ", description: "BACON BBQ", price: 14.0, image: burgerClassico, category: "burger" },
-  { id: 312, name: "FRANGO CROCANTE", description: "FRANGO CROCANTE", price: 12.0, image: burgerClassico, category: "burger" },
-  { id: 313, name: "CLÁSSICO", description: "CLÁSSICO", price: 7.25, image: burgerClassico, category: "burger" },
-  { id: 314, name: "CHILI COM QUEIJO", description: "CHILI COM QUEIJO", price: 8.25, image: burgerClassico, category: "burger" },
-  { id: 315, name: "BACON E QUEIJO", description: "BACON E QUEIJO", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 316, name: "FRANGO", description: "FRANGO", price: 8.5, image: burgerClassico, category: "burger" },
-  { id: 317, name: "CAESAR", description: "CAESAR", price: 11.25, image: burgerClassico, category: "burger" },
-  { id: 318, name: "CROCANTE APIMENTADO", description: "CROCANTE APIMENTADO", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 319, name: "FRANGO COM ALHO", description: "FRANGO COM ALHO", price: 12.5, image: burgerClassico, category: "burger" },
-  { id: 320, name: "BUFFALO", description: "BUFFALO", price: 12.0, image: burgerClassico, category: "burger" },
-  { id: 321, name: "BBQ", description: "BBQ", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 322, name: "MEL GLAÇADO", description: "MEL GLAÇADO", price: 14.5, image: burgerClassico, category: "burger" },
-  { id: 323, name: "MEL APIMENTADO", description: "MEL APIMENTADO", price: 14.0, image: burgerClassico, category: "burger" },
-  { id: 324, name: "LEMON PEPPER", description: "LEMON PEPPER", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 325, name: "CEBOLA", description: "CEBOLA", price: 4.25, image: burgerClassico, category: "burger" },
-  { id: 326, name: "JALAPEÑO", description: "JALAPEÑO", price: 9.0, image: burgerClassico, category: "burger" },
-  { id: 327, name: "CROCANTE", description: "CROCANTE", price: 7.75, image: burgerClassico, category: "burger" },
-  { id: 328, name: "COCA-COLA", description: "COCA-COLA", price: 2.25, image: burgerClassico, category: "burger" },
-  { id: 329, name: "LIMONADA", description: "LIMONADA", price: 3.0, image: burgerClassico, category: "burger" },
-  { id: 330, name: "CHÁ GELADO", description: "CHÁ GELADO", price: 3.75, image: burgerClassico, category: "burger" },
-  { id: 331, name: "REFRIGERANTE DE LARANJA", description: "REFRIGERANTE DE LARANJA", price: 2.0, image: burgerClassico, category: "burger" },
-  { id: 332, name: "MILKSHAKE", description: "MILKSHAKE", price: 5.5, image: burgerClassico, category: "burger" },
-  { id: 333, name: "MOJITO", description: "MOJITO", price: 4.0, image: burgerClassico, category: "burger" },
-  { id: 334, name: "COLD BREW", description: "COLD BREW", price: 2.0, image: burgerClassico, category: "burger" },
+  { id: 4, name: "Cola Artesanal", description: "Cola de especiarias, gelada e servida com gelo cristalino.", price: 12.9, image: bebidaCola, category: "drink" },
+  { id: 5, name: "Limonada Rubi", description: "Frutas vermelhas, limão, hortelã e um toque de laranja.", price: 15.9, image: bebidaLimonada, badge: "Da casa", category: "drink" },
+  { id: 6, name: "IPA da Chapa", description: "Cerveja artesanal âmbar, aromática e equilibrada. 473 ml.", price: 18.9, image: bebidaCerveja, category: "drink" },
 ];
 
 const sparks = Array.from({ length: 18 }, (_, index) => ({
@@ -255,10 +210,7 @@ function Index() {
     }
   }, [heroIndex]);
 
-  const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
-    if (products.some(p => p.id === parseInt(id))) return sum + count;
-    return sum;
-  }, 0);
+  const cartCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
   const visibleProducts = useMemo(() => products.filter((product) => product.category === tab), [tab]);
 
   useEffect(() => {
@@ -271,28 +223,6 @@ function Index() {
       document.body.style.overflow = "";
     };
   }, [authOpen]);
-
-
-  const handleCheckout = () => {
-    if (Object.keys(cart).length === 0) return;
-    
-    const totalStr = Object.entries(cart).reduce((total, [id, qty]) => {
-      const product = products.find(p => p.id === parseInt(id));
-      return total + (product ? product.price * qty : 0);
-    }, 0).toFixed(2).replace('.', ',');
-    
-    let text = "Olá! Gostaria de fazer o seguinte pedido:\n\n";
-    Object.entries(cart).forEach(([id, qty]) => {
-      const product = products.find(p => p.id === parseInt(id));
-      if (product) {
-         text += `${qty}x ${product.name} - R$ ${(product.price * qty).toFixed(2).replace('.', ',')}\n`;
-      }
-    });
-    text += `\n*Total: R$ ${totalStr}*\n\nForma de pagamento:`;
-    
-    const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, '_blank');
-  };
 
   function updateQuantity(id: number, delta: number) {
     setCart((current) => {
@@ -381,9 +311,9 @@ function Index() {
                   {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
                 </Button>
               </SheetTrigger>
-              <SheetContent style={{ backgroundColor: currentTheme.bgDark, color: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }} className="flex w-full flex-col sm:max-w-md border-l-[1px]">
+              <SheetContent className="flex w-full flex-col border-border bg-surface-deep sm:max-w-md">
                 <SheetHeader>
-                  <SheetTitle className="font-display text-2xl font-black uppercase" style={{ color: currentTheme.bgLight }}>Sua Sacola</SheetTitle>
+                  <SheetTitle className="font-display text-2xl font-black uppercase text-foreground">Sua Sacola</SheetTitle>
                 </SheetHeader>
                 
                 {cartCount > 0 ? (
@@ -394,20 +324,20 @@ function Index() {
                           const product = products.find((p) => p.id === parseInt(idStr));
                           if (!product) return null;
                           return (
-                            <div key={product.id} className="flex items-center gap-4 border-b border-white/10 pb-4">
-                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-white/10">
+                            <div key={product.id} className="flex items-center gap-4 border-b border-border pb-4">
+                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-border">
                                 <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
                               </div>
                               <div className="flex-1">
-                                <h4 className="font-display text-base font-bold uppercase leading-none" style={{ color: currentTheme.bgLight }}>{product.name}</h4>
+                                <h4 className="font-display text-base font-bold uppercase leading-none text-foreground">{product.name}</h4>
                                 <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
                               </div>
-                              <div className="flex items-center gap-2 rounded-sm border border-white/10 bg-background p-1">
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, -1)}>
+                              <div className="flex items-center gap-2 rounded-sm border border-border bg-background p-1">
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-foreground" onClick={() => updateQuantity(product.id, -1)}>
                                   <Minus className="size-3" />
                                 </Button>
-                                <span className="w-4 text-center text-xs font-bold" style={{ color: currentTheme.bgDark }}>{quantity}</span>
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, 1)}>
+                                <span className="w-4 text-center text-xs font-bold text-foreground">{quantity}</span>
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-foreground" onClick={() => updateQuantity(product.id, 1)}>
                                   <Plus className="size-3" />
                                 </Button>
                               </div>
@@ -417,8 +347,8 @@ function Index() {
                       </div>
                     </div>
                     
-                    <div className="border-t border-white/10 pt-4">
-                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>
+                    <div className="border-t border-border pt-4">
+                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase text-foreground">
                         <span>Total</span>
                         <span className="text-gold">
                           R$ {Object.entries(cart).reduce((total, [id, qty]) => {
@@ -427,7 +357,7 @@ function Index() {
                           }, 0).toFixed(2).replace(".", ",")}
                         </span>
                       </div>
-                      <Button size="lg" className="w-full text-base" onClick={handleCheckout}>
+                      <Button size="lg" className="w-full text-base" onClick={() => window.alert("Checkout não implementado na demonstração.")}>
                         Finalizar Pedido
                       </Button>
                     </div>
@@ -437,8 +367,8 @@ function Index() {
                     <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <ShoppingBag className="size-8" />
                     </div>
-                    <h3 className="font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>Sua sacola está vazia</h3>
-                    <p className="mt-2 text-sm opacity-70">Adicione alguns itens do cardápio para começar seu pedido.</p>
+                    <h3 className="font-display text-xl font-bold uppercase text-foreground">Sua sacola está vazia</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">Adicione alguns itens do cardápio para começar seu pedido.</p>
                     <SheetTrigger asChild>
                       <Button className="mt-6" variant="outline" size="sm">
                         Ver cardápio
@@ -603,7 +533,7 @@ function Index() {
           </svg>
         </div>
 
-        <section id="menu" className="relative border-white/10 py-20 sm:py-28 overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
+        <section id="menu" className="relative border-border py-20 sm:py-28 overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
           {/* Section Header */}
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
             <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-4 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
@@ -656,7 +586,7 @@ function Index() {
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -677,7 +607,7 @@ function Index() {
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -695,7 +625,7 @@ function Index() {
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -715,7 +645,7 @@ function Index() {
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -742,7 +672,7 @@ function Index() {
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -761,7 +691,7 @@ function Index() {
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -799,7 +729,7 @@ function Index() {
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
                           <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:scale-105 transition-transform origin-right">R$ {item.price}</span>
                         </motion.div>
                       ))}
                     </div>
@@ -813,10 +743,10 @@ function Index() {
         </section>
 
         {/* Appetizer Slider Section */}
-        <AppetizerSlider onAddToCart={addToCart} />
+        <AppetizerSlider />
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
-        <section className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
+        <section className="relative overflow-hidden border-y border-border py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
           <div className="absolute inset-0 opacity-60 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 100%)` }}></div>
           
           <div className="relative z-10 w-full mb-8 flex justify-center text-center">
@@ -1050,7 +980,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COLA<br/>TRADICIONAL</h3>
-                  <button onClick={() => addToCart(201)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1073,7 +1003,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SUCO DE<br/>LARANJA</h3>
-                  <button onClick={() => addToCart(202)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1096,7 +1026,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>LIMONADA<br/>SUÍÇA</h3>
-                  <button onClick={() => addToCart(203)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1119,7 +1049,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHOPP<br/>GELADO</h3>
-                  <button onClick={() => addToCart(204)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1142,7 +1072,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHÁ<br/>GELADO</h3>
-                  <button onClick={() => addToCart(205)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1164,7 +1094,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GUARANÁ<br/>NATURAL</h3>
-                  <button onClick={() => addToCart(206)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1180,11 +1110,11 @@ function Index() {
           </div>
         </section>
 
-        <section id="sobre" className="border-y border-white/10 bg-background py-20 sm:py-28">
+        <section id="sobre" className="border-y border-border bg-background py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:items-center lg:px-8">
             <div><p className="eyebrow">Manifesto da chapa</p><h2 className="section-title">O sabor começa<br /><span>no fogo</span></h2></div>
             <div className="grid gap-7 sm:grid-cols-2">
-              {[{n:"01", title:"Blend autoral", text:"Cortes selecionados, moídos todos os dias e moldados à mão."}, {n:"02", title:"Calor de verdade", text:"Chapa de ferro em alta temperatura para a crosta perfeita."}, {n:"03", title:"Origem local", text:"Pães, hortaliças e queijos de pequenos produtores parceiros."}, {n:"04", title:"Sem atalhos", text:"Molhos, picles e acompanhamentos feitos dentro de casa."}].map((item) => <div key={item.n} className="border-t border-white/10 pt-4"><span className="font-mono text-xs text-primary">{item.n}</span><h3 className="mt-3 font-display text-xl font-bold uppercase">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p></div>)}
+              {[{n:"01", title:"Blend autoral", text:"Cortes selecionados, moídos todos os dias e moldados à mão."}, {n:"02", title:"Calor de verdade", text:"Chapa de ferro em alta temperatura para a crosta perfeita."}, {n:"03", title:"Origem local", text:"Pães, hortaliças e queijos de pequenos produtores parceiros."}, {n:"04", title:"Sem atalhos", text:"Molhos, picles e acompanhamentos feitos dentro de casa."}].map((item) => <div key={item.n} className="border-t border-border pt-4"><span className="font-mono text-xs text-primary">{item.n}</span><h3 className="mt-3 font-display text-xl font-bold uppercase">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p></div>)}
             </div>
           </div>
         </section>
@@ -1197,7 +1127,7 @@ function Index() {
           <div><h3 className="footer-title">Horários</h3><p className="footer-line"><Clock3 className="size-4 text-primary" /> Ter–Qui: 18h às 23h<br />Sex–Dom: 12h às 00h</p></div>
           <div><h3 className="footer-title">Atalhos</h3><div className="space-y-3 text-sm text-muted-foreground"><a className="block hover:text-primary" href="#cardapio">Cardápio</a><a className="block hover:text-primary" href="#sobre">Nossa história</a><a className="block hover:text-primary" href="mailto:oi@fogoechapa.com.br">Fale com a gente</a><button className="hover:text-primary" onClick={() => setAuthOpen(true)}>Minha conta</button></div></div>
         </div>
-        <div className="border-t border-white/10 py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 text-xs text-muted-foreground sm:flex-row sm:justify-between lg:px-8"><span>© 2026 Fogo e Chapa. Todos os direitos reservados.</span><span>Feito com fogo, ferro e respeito.</span></div></div>
+        <div className="border-t border-border py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 text-xs text-muted-foreground sm:flex-row sm:justify-between lg:px-8"><span>© 2026 Fogo e Chapa. Todos os direitos reservados.</span><span>Feito com fogo, ferro e respeito.</span></div></div>
       </footer>
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
@@ -1213,13 +1143,13 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
   }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-modal-backdrop p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="auth-title" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <div className="glass-panel relative w-full max-w-md overflow-hidden border border-white/10 p-6 shadow-modal sm:p-8">
+      <div className="glass-panel relative w-full max-w-md overflow-hidden border border-border p-6 shadow-modal sm:p-8">
         <Button size="icon" variant="ghost" className="absolute right-3 top-3" aria-label="Fechar" onClick={onClose}><X className="size-5" /></Button>
         <div className="mb-6 flex size-12 items-center justify-center rounded-full bg-primary/15 text-primary"><Flame className="size-6 fill-current" /></div>
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Acesso à mesa</p>
         <h2 id="auth-title" className="mt-2 font-display text-3xl font-black uppercase">{mode === "login" ? "Bem-vindo de volta" : "Entre para a brasa"}</h2>
-        <p className="mt-2 text-sm opacity-70">{mode === "login" ? "Acesse sua conta para acompanhar seus pedidos." : "Crie seu acesso e agilize os próximos pedidos."}</p>
-        <div className="mt-6 grid grid-cols-2 gap-2 rounded-sm border border-white/10 bg-background/50 p-1">
+        <p className="mt-2 text-sm text-muted-foreground">{mode === "login" ? "Acesse sua conta para acompanhar seus pedidos." : "Crie seu acesso e agilize os próximos pedidos."}</p>
+        <div className="mt-6 grid grid-cols-2 gap-2 rounded-sm border border-border bg-background/50 p-1">
           <Button variant={mode === "login" ? "fire" : "ghost"} size="sm" onClick={() => { setMode("login"); setMessage(""); }}>Entrar</Button>
           <Button variant={mode === "signup" ? "fire" : "ghost"} size="sm" onClick={() => { setMode("signup"); setMessage(""); }}>Cadastrar</Button>
         </div>
