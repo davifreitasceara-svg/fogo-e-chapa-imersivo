@@ -69,12 +69,22 @@ export const Route = createFileRoute("/")({
 type Product = { id: number; name: string; description: string; price: number; image: string; badge?: string; category: "burger" | "drink" };
 
 const products: Product[] = [
+  // Burgers
   { id: 1, name: "Chapa Clássico", description: "Blend 160g, cheddar inglês, picles agridoce e molho da casa no brioche tostado.", price: 34.9, image: burgerClassico, badge: "Mais pedido", category: "burger" },
   { id: 2, name: "Brasa Bacon", description: "Blend 180g, queijo meia cura, bacon crocante, cebola caramelizada e barbecue de rapadura.", price: 42.9, image: burgerBrasa, badge: "Assinatura", category: "burger" },
   { id: 3, name: "Inferno", description: "Blend 180g, cheddar, jalapeño, cebola crispy e molho vermelho picante da casa.", price: 39.9, image: burgerInferno, badge: "Picante", category: "burger" },
-  { id: 4, name: "Cola Artesanal", description: "Cola de especiarias, gelada e servida com gelo cristalino.", price: 12.9, image: bebidaCola, category: "drink" },
-  { id: 5, name: "Limonada Rubi", description: "Frutas vermelhas, limão, hortelã e um toque de laranja.", price: 15.9, image: bebidaLimonada, badge: "Da casa", category: "drink" },
-  { id: 6, name: "IPA da Chapa", description: "Cerveja artesanal âmbar, aromática e equilibrada. 473 ml.", price: 18.9, image: bebidaCerveja, category: "drink" },
+  // Appetizers
+  { id: 101, name: "Batatas Fritas", description: "Batatas fritas crocantes com tempero especial.", price: 19.9, image: friesImage, category: "burger" },
+  { id: 102, name: "Coxas de Frango", description: "Asinhas e coxas de frango fritas e temperadas.", price: 29.9, image: burgerClassico, category: "burger" }, // using a placeholder if we don't have the exact image
+  { id: 103, name: "Onion Rings", description: "Anéis de cebola empanados e fritos.", price: 24.9, image: burgerBrasa, category: "burger" }, // placeholder
+  { id: 104, name: "Queijo Crocante", description: "Palitos de queijo crocantes por fora e derretidos por dentro.", price: 26.9, image: burgerInferno, category: "burger" }, // placeholder
+  // Drinks
+  { id: 201, name: "Cola Tradicional", description: "Refrigerante de cola tradicional.", price: 8.9, image: cocaCola, category: "drink" },
+  { id: 202, name: "Suco de Laranja", description: "Suco natural de laranja espremida na hora.", price: 10.9, image: orangeJuice, category: "drink" },
+  { id: 203, name: "Limonada Suíça", description: "Limonada refrescante.", price: 12.9, image: lemonade, category: "drink" },
+  { id: 204, name: "Cerveja Pilsen", description: "Cerveja clara e refrescante.", price: 14.9, image: beer, category: "drink" },
+  { id: 205, name: "Chá Gelado", description: "Chá mate gelado com limão.", price: 9.9, image: icedTea, category: "drink" },
+  { id: 206, name: "Guaraná Natural", description: "Refrigerante de guaraná tradicional.", price: 8.9, image: guarana, category: "drink" },
 ];
 
 const sparks = Array.from({ length: 18 }, (_, index) => ({
@@ -743,7 +753,7 @@ function Index() {
         </section>
 
         {/* Appetizer Slider Section */}
-        <AppetizerSlider />
+        <AppetizerSlider onAddToCart={addToCart} />
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
         <section className="relative overflow-hidden border-y border-border py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
@@ -980,7 +990,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COLA<br/>TRADICIONAL</h3>
-                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={() => addToCart(201)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1003,7 +1013,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SUCO DE<br/>LARANJA</h3>
-                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={() => addToCart(202)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1026,7 +1036,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>LIMONADA<br/>SUÍÇA</h3>
-                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={() => addToCart(203)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1049,7 +1059,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHOPP<br/>GELADO</h3>
-                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={() => addToCart(204)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1072,7 +1082,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHÁ<br/>GELADO</h3>
-                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={() => addToCart(205)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1094,7 +1104,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GUARANÁ<br/>NATURAL</h3>
-                  <button className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={() => addToCart(206)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 

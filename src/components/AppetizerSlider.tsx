@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Search, ShoppingBag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 const appetizers = [
   {
-    id: 1,
+    id: 101,
     title1: 'BATATA',
     title2: 'FRITA',
     name: 'Batatas Fritas',
@@ -13,7 +13,7 @@ const appetizers = [
     textColor: '#ffffff',
   },
   {
-    id: 2,
+    id: 102,
     title1: 'ASINHA',
     title2: 'DE FRANGO',
     name: 'Coxas de Frango',
@@ -22,7 +22,7 @@ const appetizers = [
     textColor: '#ffffff',
   },
   {
-    id: 3,
+    id: 103,
     title1: 'ANÉIS',
     title2: 'DE CEBOLA',
     name: 'Onion Rings',
@@ -31,7 +31,7 @@ const appetizers = [
     textColor: '#ffffff',
   },
   {
-    id: 4,
+    id: 104,
     title1: 'PALITOS',
     title2: 'DE QUEIJO',
     name: 'Queijo Crocante',
@@ -42,7 +42,7 @@ const appetizers = [
 ];
 
 
-export function AppetizerSlider() {
+export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) => void }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isMobile = useIsMobile();
 
@@ -106,7 +106,10 @@ export function AppetizerSlider() {
           </motion.div>
           
           <div className="flex flex-col gap-8">
-            <button className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-colors shadow-xl">
+            <button 
+              onClick={() => onAddToCart && onAddToCart(currentApp.id)}
+              className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-colors shadow-xl"
+            >
               PEDIR AGORA
             </button>
           </div>
