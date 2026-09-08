@@ -17,7 +17,7 @@ const appetizers = [
     title1: 'ASINHA',
     title2: 'DE FRANGO',
     name: 'Coxas de Frango',
-    image: '/chicken_wings_appetizer.jpg',
+    image: '/frango_transparente.png',
     bgColor: '#C6311E', // Deep Fiery Red
     textColor: '#ffffff',
   },
