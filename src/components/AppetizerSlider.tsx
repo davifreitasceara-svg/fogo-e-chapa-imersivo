@@ -8,7 +8,7 @@ const appetizers = [
     title1: 'BATATA',
     title2: 'FRITA',
     name: 'Batatas Fritas',
-    image: '/fries_appetizer.jpg',
+    image: '/fries_appetizer_transparente.png',
     bgColor: '#ECA02A', // Vibrant Mustard Yellow
     textColor: '#ffffff',
   },
@@ -26,7 +26,7 @@ const appetizers = [
     title1: 'ANÉIS',
     title2: 'DE CEBOLA',
     name: 'Onion Rings',
-    image: '/onion_rings_appetizer.jpg',
+    image: '/onion_rings_appetizer_transparente.png',
     bgColor: '#C86218', // Warm Golden Orange
     textColor: '#ffffff',
   },
@@ -35,7 +35,7 @@ const appetizers = [
     title1: 'PALITOS',
     title2: 'DE QUEIJO',
     name: 'Queijo Crocante',
-    image: '/cheese_sticks_appetizer.jpg',
+    image: '/cheese_sticks_appetizer_transparente.png',
     bgColor: '#D75B29', // Rich Cheddar Orange
     textColor: '#ffffff',
   },
