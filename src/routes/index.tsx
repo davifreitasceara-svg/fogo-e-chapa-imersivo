@@ -269,6 +269,28 @@ function Index() {
     };
   }, [authOpen]);
 
+
+  const handleCheckout = () => {
+    if (Object.keys(cart).length === 0) return;
+    
+    const totalStr = Object.entries(cart).reduce((total, [id, qty]) => {
+      const product = products.find(p => p.id === parseInt(id));
+      return total + (product ? product.price * qty : 0);
+    }, 0).toFixed(2).replace('.', ',');
+    
+    let text = "Olá! Gostaria de fazer o seguinte pedido:\n\n";
+    Object.entries(cart).forEach(([id, qty]) => {
+      const product = products.find(p => p.id === parseInt(id));
+      if (product) {
+         text += `${qty}x ${product.name} - R$ ${(product.price * qty).toFixed(2).replace('.', ',')}\n`;
+      }
+    });
+    text += `\n*Total: R$ ${totalStr}*\n\nForma de pagamento:`;
+    
+    const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   function updateQuantity(id: number, delta: number) {
     setCart((current) => {
       const newQty = (current[id] || 0) + delta;
@@ -356,9 +378,9 @@ function Index() {
                   {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="flex w-full flex-col border-border bg-surface-deep sm:max-w-md">
+              <SheetContent style={{ backgroundColor: currentTheme.bgVeryDark, color: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }} className="flex w-full flex-col sm:max-w-md border-l-[1px]">
                 <SheetHeader>
-                  <SheetTitle className="font-display text-2xl font-black uppercase text-foreground">Sua Sacola</SheetTitle>
+                  <SheetTitle className="font-display text-2xl font-black uppercase" style={{ color: currentTheme.bgLight }}>Sua Sacola</SheetTitle>
                 </SheetHeader>
                 
                 {cartCount > 0 ? (
@@ -369,20 +391,20 @@ function Index() {
                           const product = products.find((p) => p.id === parseInt(idStr));
                           if (!product) return null;
                           return (
-                            <div key={product.id} className="flex items-center gap-4 border-b border-border pb-4">
-                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-border">
+                            <div key={product.id} className="flex items-center gap-4 border-b border-white/10 pb-4">
+                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-white/10">
                                 <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
                               </div>
                               <div className="flex-1">
-                                <h4 className="font-display text-base font-bold uppercase leading-none text-foreground">{product.name}</h4>
+                                <h4 className="font-display text-base font-bold uppercase leading-none" style={{ color: currentTheme.bgLight }}>{product.name}</h4>
                                 <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
                               </div>
-                              <div className="flex items-center gap-2 rounded-sm border border-border bg-background p-1">
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-foreground" onClick={() => updateQuantity(product.id, -1)}>
+                              <div className="flex items-center gap-2 rounded-sm border border-white/10 bg-background p-1">
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, -1)}>
                                   <Minus className="size-3" />
                                 </Button>
-                                <span className="w-4 text-center text-xs font-bold text-foreground">{quantity}</span>
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-foreground" onClick={() => updateQuantity(product.id, 1)}>
+                                <span className="w-4 text-center text-xs font-bold" style={{ color: currentTheme.bgDark }}>{quantity}</span>
+                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, 1)}>
                                   <Plus className="size-3" />
                                 </Button>
                               </div>
@@ -392,8 +414,8 @@ function Index() {
                       </div>
                     </div>
                     
-                    <div className="border-t border-border pt-4">
-                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase text-foreground">
+                    <div className="border-t border-white/10 pt-4">
+                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>
                         <span>Total</span>
                         <span className="text-gold">
                           R$ {Object.entries(cart).reduce((total, [id, qty]) => {
@@ -402,7 +424,7 @@ function Index() {
                           }, 0).toFixed(2).replace(".", ",")}
                         </span>
                       </div>
-                      <Button size="lg" className="w-full text-base" onClick={() => window.alert("Checkout não implementado na demonstração.")}>
+                      <Button size="lg" className="w-full text-base" onClick={handleCheckout}>
                         Finalizar Pedido
                       </Button>
                     </div>
@@ -412,8 +434,8 @@ function Index() {
                     <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <ShoppingBag className="size-8" />
                     </div>
-                    <h3 className="font-display text-xl font-bold uppercase text-foreground">Sua sacola está vazia</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">Adicione alguns itens do cardápio para começar seu pedido.</p>
+                    <h3 className="font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>Sua sacola está vazia</h3>
+                    <p className="mt-2 text-sm opacity-70">Adicione alguns itens do cardápio para começar seu pedido.</p>
                     <SheetTrigger asChild>
                       <Button className="mt-6" variant="outline" size="sm">
                         Ver cardápio
@@ -578,7 +600,7 @@ function Index() {
           </svg>
         </div>
 
-        <section id="menu" className="relative border-border py-20 sm:py-28 overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
+        <section id="menu" className="relative border-white/10 py-20 sm:py-28 overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
           {/* Section Header */}
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
             <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-4 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
@@ -791,7 +813,7 @@ function Index() {
         <AppetizerSlider onAddToCart={addToCart} />
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
-        <section className="relative overflow-hidden border-y border-border py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
+        <section className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
           <div className="absolute inset-0 opacity-60 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 100%)` }}></div>
           
           <div className="relative z-10 w-full mb-8 flex justify-center text-center">
@@ -1155,11 +1177,11 @@ function Index() {
           </div>
         </section>
 
-        <section id="sobre" className="border-y border-border bg-background py-20 sm:py-28">
+        <section id="sobre" className="border-y border-white/10 bg-background py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:items-center lg:px-8">
             <div><p className="eyebrow">Manifesto da chapa</p><h2 className="section-title">O sabor começa<br /><span>no fogo</span></h2></div>
             <div className="grid gap-7 sm:grid-cols-2">
-              {[{n:"01", title:"Blend autoral", text:"Cortes selecionados, moídos todos os dias e moldados à mão."}, {n:"02", title:"Calor de verdade", text:"Chapa de ferro em alta temperatura para a crosta perfeita."}, {n:"03", title:"Origem local", text:"Pães, hortaliças e queijos de pequenos produtores parceiros."}, {n:"04", title:"Sem atalhos", text:"Molhos, picles e acompanhamentos feitos dentro de casa."}].map((item) => <div key={item.n} className="border-t border-border pt-4"><span className="font-mono text-xs text-primary">{item.n}</span><h3 className="mt-3 font-display text-xl font-bold uppercase">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p></div>)}
+              {[{n:"01", title:"Blend autoral", text:"Cortes selecionados, moídos todos os dias e moldados à mão."}, {n:"02", title:"Calor de verdade", text:"Chapa de ferro em alta temperatura para a crosta perfeita."}, {n:"03", title:"Origem local", text:"Pães, hortaliças e queijos de pequenos produtores parceiros."}, {n:"04", title:"Sem atalhos", text:"Molhos, picles e acompanhamentos feitos dentro de casa."}].map((item) => <div key={item.n} className="border-t border-white/10 pt-4"><span className="font-mono text-xs text-primary">{item.n}</span><h3 className="mt-3 font-display text-xl font-bold uppercase">{item.title}</h3><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p></div>)}
             </div>
           </div>
         </section>
@@ -1172,7 +1194,7 @@ function Index() {
           <div><h3 className="footer-title">Horários</h3><p className="footer-line"><Clock3 className="size-4 text-primary" /> Ter–Qui: 18h às 23h<br />Sex–Dom: 12h às 00h</p></div>
           <div><h3 className="footer-title">Atalhos</h3><div className="space-y-3 text-sm text-muted-foreground"><a className="block hover:text-primary" href="#cardapio">Cardápio</a><a className="block hover:text-primary" href="#sobre">Nossa história</a><a className="block hover:text-primary" href="mailto:oi@fogoechapa.com.br">Fale com a gente</a><button className="hover:text-primary" onClick={() => setAuthOpen(true)}>Minha conta</button></div></div>
         </div>
-        <div className="border-t border-border py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 text-xs text-muted-foreground sm:flex-row sm:justify-between lg:px-8"><span>© 2026 Fogo e Chapa. Todos os direitos reservados.</span><span>Feito com fogo, ferro e respeito.</span></div></div>
+        <div className="border-t border-white/10 py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 text-xs text-muted-foreground sm:flex-row sm:justify-between lg:px-8"><span>© 2026 Fogo e Chapa. Todos os direitos reservados.</span><span>Feito com fogo, ferro e respeito.</span></div></div>
       </footer>
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
@@ -1188,13 +1210,13 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
   }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-modal-backdrop p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="auth-title" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <div className="glass-panel relative w-full max-w-md overflow-hidden border border-border p-6 shadow-modal sm:p-8">
+      <div className="glass-panel relative w-full max-w-md overflow-hidden border border-white/10 p-6 shadow-modal sm:p-8">
         <Button size="icon" variant="ghost" className="absolute right-3 top-3" aria-label="Fechar" onClick={onClose}><X className="size-5" /></Button>
         <div className="mb-6 flex size-12 items-center justify-center rounded-full bg-primary/15 text-primary"><Flame className="size-6 fill-current" /></div>
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Acesso à mesa</p>
         <h2 id="auth-title" className="mt-2 font-display text-3xl font-black uppercase">{mode === "login" ? "Bem-vindo de volta" : "Entre para a brasa"}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{mode === "login" ? "Acesse sua conta para acompanhar seus pedidos." : "Crie seu acesso e agilize os próximos pedidos."}</p>
-        <div className="mt-6 grid grid-cols-2 gap-2 rounded-sm border border-border bg-background/50 p-1">
+        <p className="mt-2 text-sm opacity-70">{mode === "login" ? "Acesse sua conta para acompanhar seus pedidos." : "Crie seu acesso e agilize os próximos pedidos."}</p>
+        <div className="mt-6 grid grid-cols-2 gap-2 rounded-sm border border-white/10 bg-background/50 p-1">
           <Button variant={mode === "login" ? "fire" : "ghost"} size="sm" onClick={() => { setMode("login"); setMessage(""); }}>Entrar</Button>
           <Button variant={mode === "signup" ? "fire" : "ghost"} size="sm" onClick={() => { setMode("signup"); setMessage(""); }}>Cadastrar</Button>
         </div>
