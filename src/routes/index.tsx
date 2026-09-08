@@ -42,7 +42,6 @@ import burgerInferno from "@/assets/burger-inferno.jpg";
 import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
-import friesImage from '../assets/fries.jpg'
 import sodaSplash from '../assets/soda-splash.jpg'
 import cocaCola from '../assets/coca-cola.jpg'
 import orangeJuice from '../assets/orange-juice.jpg'
@@ -74,7 +73,7 @@ const products: Product[] = [
   { id: 2, name: "Brasa Bacon", description: "Blend 180g, queijo meia cura, bacon crocante, cebola caramelizada e barbecue de rapadura.", price: 42.9, image: burgerBrasa, badge: "Assinatura", category: "burger" },
   { id: 3, name: "Inferno", description: "Blend 180g, cheddar, jalapeño, cebola crispy e molho vermelho picante da casa.", price: 39.9, image: burgerInferno, badge: "Picante", category: "burger" },
   // Appetizers
-  { id: 101, name: "Batatas Fritas", description: "Batatas fritas crocantes com tempero especial.", price: 19.9, image: friesImage, category: "burger" },
+  { id: 101, name: "Batatas Fritas", description: "Batatas fritas crocantes com tempero especial.", price: 19.9, image: "/fries_appetizer.jpg", category: "burger" },
   { id: 102, name: "Coxas de Frango", description: "Asinhas e coxas de frango fritas e temperadas.", price: 29.9, image: burgerClassico, category: "burger" }, // using a placeholder if we don't have the exact image
   { id: 103, name: "Onion Rings", description: "Anéis de cebola empanados e fritos.", price: 24.9, image: burgerBrasa, category: "burger" }, // placeholder
   { id: 104, name: "Queijo Crocante", description: "Palitos de queijo crocantes por fora e derretidos por dentro.", price: 26.9, image: burgerInferno, category: "burger" }, // placeholder
