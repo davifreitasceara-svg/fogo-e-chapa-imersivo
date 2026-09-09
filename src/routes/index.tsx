@@ -323,7 +323,7 @@ function Index() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="text-2xl sm:text-3xl">🔥</span>
-            <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">HOTBITE</span>
+            <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">FOGO E CHAPA</span>
           </motion.div>
 
           <motion.nav 
