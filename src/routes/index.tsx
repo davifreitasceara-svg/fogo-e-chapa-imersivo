@@ -591,8 +591,8 @@ function Index() {
 
              {/* Action Buttons */}
              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>View Menu</Button>
-                <Button className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Find Us</Button>
+                <Button className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
+                <Button className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
              </div>
            </div>
         </section>
