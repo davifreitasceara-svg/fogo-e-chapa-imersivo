@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/sheet";
 import { Embers } from "@/components/Embers";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
+import { CreditCardForm, type CardState, type CardValidity } from "@/components/ui/credit-card-form";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
@@ -146,6 +147,7 @@ function Index() {
   const [addedId, setAddedId] = useState<number | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [showCreditCard, setShowCreditCard] = useState(false);
 
   const carouselSlides = [
     {
@@ -314,6 +316,46 @@ function Index() {
 
   return (
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
+      
+      {/* Credit Card Fullscreen Modal */}
+      <AnimatePresence>
+        {showCreditCard && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-4"
+          >
+            <div className="absolute top-4 right-4 z-50">
+               <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white hover:text-black rounded-full" onClick={() => setShowCreditCard(false)}>
+                 <X className="size-6" />
+               </Button>
+            </div>
+            
+            <motion.div 
+               className="w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl relative"
+               layoutId="creditCardContainer"
+            >
+              <div className="p-6 md:p-8">
+                 <h2 className="text-2xl font-bold mb-2 text-center text-black">Pagamento Seguro</h2>
+                 <p className="text-center text-gray-500 mb-8">Valor total: R$ {Object.entries(cart).reduce((total, [id, qty]) => {
+                    const product = products.find(p => p.id === parseInt(id));
+                    return total + (product ? product.price * qty : 0);
+                  }, 0).toFixed(2).replace(".", ",")}</p>
+                 <CreditCardForm
+                  onSubmit={(state, validity) => {
+                    alert("Pagamento processado com sucesso!");
+                    setCart({});
+                    setShowCreditCard(false);
+                  }}
+                 />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
           <motion.div 
@@ -428,9 +470,19 @@ function Index() {
                           }, 0).toFixed(2).replace(".", ",")}
                         </span>
                       </div>
-                      <Button size="lg" className="w-full text-base" onClick={handleCheckout}>
-                        Finalizar Pedido
-                      </Button>
+                      <div className="flex flex-col gap-3">
+                        <Button size="lg" className="w-full text-base" onClick={handleCheckout}>
+                          Pedir pelo WhatsApp
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="lg" 
+                          className="w-full text-base bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white" 
+                          onClick={() => setShowCreditCard(true)}
+                        >
+                          Pagar com Cartão
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ) : (
