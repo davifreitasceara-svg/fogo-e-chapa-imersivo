@@ -1,3 +1,4 @@
+import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -35,7 +36,6 @@ import {
 } from "@/components/ui/sheet";
 import { Embers } from "@/components/Embers";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
-import { CreditCardForm, type CardState, type CardValidity } from "@/components/ui/credit-card-form";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.jpg";
 import burgerBrasa from "@/assets/burger-brasa.jpg";
@@ -147,7 +147,6 @@ function Index() {
   const [addedId, setAddedId] = useState<number | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [showCreditCard, setShowCreditCard] = useState(false);
 
   const carouselSlides = [
     {
@@ -316,46 +315,6 @@ function Index() {
 
   return (
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
-      
-      {/* Credit Card Fullscreen Modal */}
-      <AnimatePresence>
-        {showCreditCard && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-4"
-          >
-            <div className="absolute top-4 right-4 z-50">
-               <Button variant="ghost" size="icon" className="text-white bg-black/50 hover:bg-white hover:text-black rounded-full" onClick={() => setShowCreditCard(false)}>
-                 <X className="size-6" />
-               </Button>
-            </div>
-            
-            <motion.div 
-               className="w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl relative"
-               layoutId="creditCardContainer"
-            >
-              <div className="p-6 md:p-8">
-                 <h2 className="text-2xl font-bold mb-2 text-center text-black">Pagamento Seguro</h2>
-                 <p className="text-center text-gray-500 mb-8">Valor total: R$ {Object.entries(cart).reduce((total, [id, qty]) => {
-                    const product = products.find(p => p.id === parseInt(id));
-                    return total + (product ? product.price * qty : 0);
-                  }, 0).toFixed(2).replace(".", ",")}</p>
-                 <CreditCardForm
-                  onSubmit={(state, validity) => {
-                    alert("Pagamento processado com sucesso!");
-                    setCart({});
-                    setShowCreditCard(false);
-                  }}
-                 />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
           <motion.div 
@@ -424,85 +383,10 @@ function Index() {
                   {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
                 </Button>
               </SheetTrigger>
-              <SheetContent style={{ backgroundColor: currentTheme.bgDark, color: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }} className="flex w-full flex-col sm:max-w-md border-l-[1px]">
-                <SheetHeader>
-                  <SheetTitle className="font-display text-2xl font-black uppercase" style={{ color: currentTheme.bgLight }}>Sua Sacola</SheetTitle>
-                </SheetHeader>
-                
-                {cartCount > 0 ? (
-                  <div className="flex flex-1 flex-col justify-between overflow-hidden">
-                    <div className="overflow-y-auto py-4 pr-2">
-                      <div className="space-y-4">
-                        {Object.entries(cart).map(([idStr, quantity]) => {
-                          const product = products.find((p) => p.id === parseInt(idStr));
-                          if (!product) return null;
-                          return (
-                            <div key={product.id} className="flex items-center gap-4 border-b border-white/10 pb-4">
-                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-white/10">
-                                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
-                              </div>
-                              <div className="flex-1">
-                                <h4 className="font-display text-base font-bold uppercase leading-none" style={{ color: currentTheme.bgLight }}>{product.name}</h4>
-                                <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
-                              </div>
-                              <div className="flex items-center gap-2 rounded-sm border border-white/10 bg-background p-1">
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, -1)}>
-                                  <Minus className="size-3" />
-                                </Button>
-                                <span className="w-4 text-center text-xs font-bold" style={{ color: currentTheme.bgDark }}>{quantity}</span>
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, 1)}>
-                                  <Plus className="size-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    
-                    <div className="border-t border-white/10 pt-4">
-                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>
-                        <span>Total</span>
-                        <span className="text-gold">
-                          R$ {Object.entries(cart).reduce((total, [id, qty]) => {
-                            const product = products.find(p => p.id === parseInt(id));
-                            return total + (product ? product.price * qty : 0);
-                          }, 0).toFixed(2).replace(".", ",")}
-                        </span>
-                      </div>
-                      <div className="flex flex-col gap-3">
-                        <Button size="lg" className="w-full text-base" onClick={handleCheckout}>
-                          Pedir pelo WhatsApp
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="lg" 
-                          className="w-full text-base bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white" 
-                          onClick={() => setShowCreditCard(true)}
-                        >
-                          Pagar com Cartão
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-1 flex-col items-center justify-center text-center">
-                    <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <ShoppingBag className="size-8" />
-                    </div>
-                    <h3 className="font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>Sua sacola está vazia</h3>
-                    <p className="mt-2 text-sm opacity-70">Adicione alguns itens do cardápio para começar seu pedido.</p>
-                    <SheetTrigger asChild>
-                      <Button className="mt-6" variant="outline" size="sm">
-                        Ver cardápio
-                      </Button>
-                    </SheetTrigger>
-                  </div>
-                )}
-              </SheetContent>
+              <CartCheckoutSheet cart={cart} products={products} updateQuantity={updateQuantity} handleCheckout={handleCheckout} currentTheme={currentTheme} />
             </Sheet>
 
-            <Button onClick={() => window.location.href = "mailto:oi@fogoechapa.com.br"} className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
+            <Button className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
                Contact Us
             </Button>
           </motion.div>
@@ -643,8 +527,8 @@ function Index() {
 
              {/* Action Buttons */}
              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button onClick={() => document.getElementById('cardapio')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
-                <Button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
+                <Button className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
+                <Button className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
              </div>
            </div>
         </section>
@@ -1024,7 +908,7 @@ function Index() {
                 <p className="text-sm leading-relaxed mb-8 font-medium transition-colors duration-700 opacity-80" style={{ color: currentTheme.primary }}>
                   Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a nossa hamburgueria e aproveite uma experiência de sabor na brasa.
                 </p>
-                <Button onClick={() => document.getElementById('cardapio')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
+                <Button className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
                   style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
                   PEDIR AGORA <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
                 </Button>
@@ -1082,7 +966,7 @@ function Index() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                <Button onClick={() => document.getElementById('cardapio')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
+                <Button className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
                   style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
                   VIEW ALL MENU <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
                 </Button>
@@ -1291,3 +1175,5 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
     </div>
   );
 }
+
+
