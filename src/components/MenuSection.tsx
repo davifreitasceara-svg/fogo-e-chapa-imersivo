@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react";`nimport { useCart } from "@/context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Flame } from "lucide-react";
 import { toast } from "sonner";
@@ -196,3 +196,4 @@ export function MenuSection({ onAdd }: { onAdd: () => void }) {
     </section>
   );
 }
+

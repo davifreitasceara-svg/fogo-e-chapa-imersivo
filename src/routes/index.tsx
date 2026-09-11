@@ -1,3 +1,4 @@
+import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -382,72 +383,7 @@ function Index() {
                   {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
                 </Button>
               </SheetTrigger>
-              <SheetContent style={{ backgroundColor: currentTheme.bgDark, color: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }} className="flex w-full flex-col sm:max-w-md border-l-[1px]">
-                <SheetHeader>
-                  <SheetTitle className="font-display text-2xl font-black uppercase" style={{ color: currentTheme.bgLight }}>Sua Sacola</SheetTitle>
-                </SheetHeader>
-                
-                {cartCount > 0 ? (
-                  <div className="flex flex-1 flex-col justify-between overflow-hidden">
-                    <div className="overflow-y-auto py-4 pr-2">
-                      <div className="space-y-4">
-                        {Object.entries(cart).map(([idStr, quantity]) => {
-                          const product = products.find((p) => p.id === parseInt(idStr));
-                          if (!product) return null;
-                          return (
-                            <div key={product.id} className="flex items-center gap-4 border-b border-white/10 pb-4">
-                              <div className="size-16 shrink-0 overflow-hidden rounded-md border border-white/10">
-                                <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
-                              </div>
-                              <div className="flex-1">
-                                <h4 className="font-display text-base font-bold uppercase leading-none" style={{ color: currentTheme.bgLight }}>{product.name}</h4>
-                                <span className="mt-1 block text-sm font-semibold text-gold">R$ {product.price.toFixed(2).replace(".", ",")}</span>
-                              </div>
-                              <div className="flex items-center gap-2 rounded-sm border border-white/10 bg-background p-1">
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, -1)}>
-                                  <Minus className="size-3" />
-                                </Button>
-                                <span className="w-4 text-center text-xs font-bold" style={{ color: currentTheme.bgDark }}>{quantity}</span>
-                                <Button variant="ghost" size="icon" className="size-6 rounded-sm text-[#0B1F13]" onClick={() => updateQuantity(product.id, 1)}>
-                                  <Plus className="size-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    
-                    <div className="border-t border-white/10 pt-4">
-                      <div className="mb-4 flex items-center justify-between font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>
-                        <span>Total</span>
-                        <span className="text-gold">
-                          R$ {Object.entries(cart).reduce((total, [id, qty]) => {
-                            const product = products.find(p => p.id === parseInt(id));
-                            return total + (product ? product.price * qty : 0);
-                          }, 0).toFixed(2).replace(".", ",")}
-                        </span>
-                      </div>
-                      <Button size="lg" className="w-full text-base" onClick={handleCheckout}>
-                        Finalizar Pedido
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-1 flex-col items-center justify-center text-center">
-                    <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <ShoppingBag className="size-8" />
-                    </div>
-                    <h3 className="font-display text-xl font-bold uppercase" style={{ color: currentTheme.bgLight }}>Sua sacola está vazia</h3>
-                    <p className="mt-2 text-sm opacity-70">Adicione alguns itens do cardápio para começar seu pedido.</p>
-                    <SheetTrigger asChild>
-                      <Button className="mt-6" variant="outline" size="sm">
-                        Ver cardápio
-                      </Button>
-                    </SheetTrigger>
-                  </div>
-                )}
-              </SheetContent>
+              <CartCheckoutSheet cart={cart} products={products} updateQuantity={updateQuantity} handleCheckout={handleCheckout} currentTheme={currentTheme} />
             </Sheet>
 
             <Button className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
@@ -1239,3 +1175,5 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
     </div>
   );
 }
+
+
