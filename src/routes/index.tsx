@@ -1174,5 +1174,4 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
       </div>
     </div>
   );
-
-
+}
