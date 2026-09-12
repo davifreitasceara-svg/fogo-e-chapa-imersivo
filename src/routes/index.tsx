@@ -149,6 +149,7 @@ function Index() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [trackingOpen, setTrackingOpen] = useState(false);
+  const [activeOrderTime, setActiveOrderTime] = useState<number | null>(null);
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [tab, setTab] = useState<"burger" | "drink">("burger");
   const [cart, setCart] = useState<Record<number, number>>({});
@@ -288,6 +289,7 @@ function Index() {
     // In a real app, this would send an API request.
     // For demonstration, we just clear the cart and open the tracking modal!
     setCart({});
+    setActiveOrderTime(Date.now());
     setTrackingOpen(true);
   };
 
@@ -1245,7 +1247,7 @@ function Index() {
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
       <AnimatePresence>
-        {trackingOpen && <DeliveryTrackingModal onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
+        {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
       </AnimatePresence>
     </div>
   );
@@ -1285,8 +1287,8 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
   );
 }
 
-function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void, currentTheme: any }) {
-  const [stage, setStage] = useState<"picking_up" | "delivering">("picking_up");
+function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onClose: () => void, currentTheme: any, activeOrderTime: number }) {
+  const [stage, setStage] = useState<"picking_up" | "delivering" | "delivered">("picking_up");
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
 
@@ -1366,7 +1368,6 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
       const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
 
       // Simple animation loop along the route
-      let startTime = Date.now();
       const duration1 = 8000;
       const duration2 = 12000;
       
@@ -1374,24 +1375,41 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
       function animate() {
         if (!mapInstanceRef.current) return;
         const now = Date.now();
-        const elapsed = now - startTime;
+        let elapsed = now - activeOrderTime;
         
+        let isDone = false;
+        if (elapsed >= duration1 + duration2) {
+           elapsed = duration1 + duration2;
+           isDone = true;
+        }
+
         if (elapsed < duration1) {
            setStage("picking_up");
            const progress = elapsed / duration1;
            const pt = getPointAlongPath(route1, progress);
            driverMarker.setLatLng(pt);
            map.panTo(pt, { animate: false });
-        } else if (elapsed < duration1 + duration2) {
-           setStage("delivering");
+        } else {
+           if (isDone) {
+             setStage("delivered");
+           } else {
+             setStage("delivering");
+           }
            const progress = (elapsed - duration1) / duration2;
            const pt = getPointAlongPath(route2, progress);
            driverMarker.setLatLng(pt);
-           map.panTo(pt, { animate: false });
-        } else {
-           startTime = Date.now();
+           
+           if (!isDone) {
+             map.panTo(pt, { animate: false });
+           } else {
+             // Center on customer when delivered
+             map.panTo(customer, { animate: false });
+           }
         }
-        reqId = requestAnimationFrame(animate);
+        
+        if (!isDone) {
+           reqId = requestAnimationFrame(animate);
+        }
       }
       
       reqId = requestAnimationFrame(animate);
@@ -1407,7 +1425,7 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
         mapInstanceRef.current = null;
       }
     };
-  }, [currentTheme]);
+  }, [currentTheme, activeOrderTime]);
 
   // Helper
   function getPointAlongPath(path: number[][], progress: number) {
@@ -1451,20 +1469,22 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900">
-                  {stage === "picking_up" ? "Indo para a loja" : "A caminho do destino"}
+                  {stage === "delivered" ? "Pedido Entregue!" : stage === "picking_up" ? "Indo para a loja" : "A caminho do destino"}
                 </h2>
                 <p className="text-sm font-medium opacity-70 text-gray-600 mt-1">
-                  {stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
+                  {stage === "delivered" ? "Aproveite seu lanche quente e suculento!" : stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
                 </p>
               </div>
-              <div className="text-right">
-                 <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
-                   {stage === "picking_up" ? "3 min" : "18:45"}
-                 </div>
-                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-gray-500">
-                   {stage === "picking_up" ? "Distância" : "Chegada"}
-                 </p>
-              </div>
+              {stage !== "delivered" && (
+                <div className="text-right">
+                   <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
+                     {stage === "picking_up" ? "3 min" : "18:45"}
+                   </div>
+                   <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-gray-500">
+                     {stage === "picking_up" ? "Distância" : "Chegada"}
+                   </p>
+                </div>
+              )}
             </div>
             
             <div className="bg-gray-50 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-gray-100 shadow-sm">
