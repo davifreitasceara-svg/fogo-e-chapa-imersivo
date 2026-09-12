@@ -24,7 +24,8 @@ import {
   PlaySquare,
   Layers,
   TrendingUp,
-  Bike
+  Bike,
+  Navigation
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -1303,17 +1304,29 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
       className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
-      <div className="relative flex-1 overflow-hidden">
-        {/* Fake Map Background (Light mode for 99 style) */}
-        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200" alt="Map" className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale brightness-125 contrast-75" />
-        <div className="absolute inset-0 bg-blue-50/30" />
+      <div className="relative flex-1 overflow-hidden bg-[#e8eaed]">
+        {/* Real Neighborhood Map Background (Google Maps via iframe) */}
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14628.74!2d-46.66!3d-23.56!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMzJzM2LjAiUyA0NsKwMzknMzYuMCJX!5e0!3m2!1sen!2sbr!4v1700000000000!5m2!1sen!2sbr"
+          className="absolute inset-0 w-full h-full pointer-events-none scale-150 transform-origin-center opacity-80"
+          style={{ border: 0 }}
+        />
+        {/* Slight blue tint overlay for 99 style */}
+        <div className="absolute inset-0 bg-blue-100/20 mix-blend-multiply pointer-events-none" />
 
-        {/* Route Line (SVG) - 99 style thick blue line */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+        {/* Route Line (SVG) - 99 style thick blue line with white border */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" preserveAspectRatio="none">
+           {/* White Stroke (Outer) */}
            {stage === "picking_up" ? (
-             <path d="M 20% 95% L 20% 70% L 40% 70%" fill="none" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" className="opacity-90 drop-shadow-md" />
+             <path d="M 20% 95% L 20% 65% L 45% 65%" fill="none" stroke="white" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-sm" />
            ) : (
-             <path d="M 40% 70% L 40% 30% L 80% 30%" fill="none" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" className="opacity-90 drop-shadow-md" />
+             <path d="M 45% 65% L 45% 30% L 80% 30%" fill="none" stroke="white" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-sm" />
+           )}
+           {/* Blue Stroke (Inner) */}
+           {stage === "picking_up" ? (
+             <path d="M 20% 95% L 20% 65% L 45% 65%" fill="none" stroke="#00A2FF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+           ) : (
+             <path d="M 45% 65% L 45% 30% L 80% 30%" fill="none" stroke="#00A2FF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
            )}
         </svg>
         
@@ -1322,34 +1335,36 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
            className="absolute size-10 flex items-center justify-center z-20 -translate-x-1/2 -translate-y-1/2"
            animate={
              stage === "picking_up" 
-               ? { left: ["20%", "20%", "40%"], top: ["95%", "70%", "70%"] }
-               : { left: ["40%", "40%", "80%"], top: ["70%", "30%", "30%"] }
+               ? { left: ["20%", "20%", "45%"], top: ["95%", "65%", "65%"] }
+               : { left: ["45%", "45%", "80%"], top: ["65%", "30%", "30%"] }
            }
-           transition={{ duration: 8, ease: "linear", repeat: Infinity }}
+           transition={{ duration: 10, ease: "linear", repeat: Infinity }}
         >
           {/* Cyan Glow Pulse */}
-          <div className="absolute inset-0 bg-[#06b6d4] rounded-full opacity-40 animate-ping" />
+          <div className="absolute inset-0 bg-[#00A2FF] rounded-full opacity-40 animate-ping" />
           {/* White border, cyan center, small inner dot */}
-          <div className="relative size-6 bg-[#06b6d4] rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-             <div className="size-2 bg-white rounded-full" />
+          <div className="relative size-8 bg-white rounded-full shadow-lg flex items-center justify-center">
+             <div className="size-6 bg-[#00A2FF] rounded-full flex items-center justify-center text-white">
+                <Navigation className="size-3.5 fill-white stroke-white rotate-45" />
+             </div>
           </div>
         </motion.div>
 
         {/* Destination Marker */}
         {stage === "delivering" && (
-          <div className="absolute left-[80%] top-[30%] -translate-x-1/2 -translate-y-1/2 size-8 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
-             <MapPin className="size-4 text-white" />
+          <div className="absolute left-[80%] top-[30%] -translate-x-1/2 -translate-y-1/2 size-8 bg-white rounded-full flex items-center justify-center shadow-xl border-4 z-10" style={{ borderColor: currentTheme.secondary }}>
+             <MapPin className="size-4" style={{ color: currentTheme.secondary }} />
           </div>
         )}
         
         {/* Restaurant Marker */}
-        <div className="absolute left-[40%] top-[70%] -translate-x-1/2 -translate-y-1/2 size-10 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
-           <Flame className="size-5 text-white" />
+        <div className="absolute left-[45%] top-[65%] -translate-x-1/2 -translate-y-1/2 size-10 bg-white rounded-full flex items-center justify-center shadow-xl border-4 z-10" style={{ borderColor: currentTheme.secondary }}>
+           <Flame className="size-5" style={{ color: currentTheme.secondary }} />
         </div>
 
         {/* Close Button */}
-        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-black/20 hover:bg-black/40 text-black hover:text-white rounded-full z-30 backdrop-blur-md">
-           <X className="size-6" />
+        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-30">
+           <X className="size-5" />
         </Button>
       </div>
 
