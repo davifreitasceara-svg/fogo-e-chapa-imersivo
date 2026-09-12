@@ -1162,7 +1162,7 @@ function Index() {
       <footer id="contato" className="pt-20 bg-background transition-colors duration-700 relative overflow-hidden text-white" style={{ backgroundColor: currentTheme.bgVeryDark }}>
         <div className="mx-auto max-w-7xl px-5 lg:px-8 relative z-10 flex flex-col gap-12">
           {/* Top Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-10 border-b border-white/10">
             <div className="flex gap-6 font-display font-black text-lg">
               <a href="#cardapio" className="hover:text-white/80 transition-colors">MENU</a>
               <a href="#promocoes" className="hover:text-white/80 transition-colors">PROMOÇÕES</a>
@@ -1170,15 +1170,15 @@ function Index() {
               <a href="#contato" className="hover:text-white/80 transition-colors">LOCAL</a>
             </div>
             <div className="text-4xl font-black font-display tracking-tighter uppercase flex items-center gap-1">
-              FOGO<span style={{ color: currentTheme.secondary }} className="rounded-full bg-white text-black size-8 flex items-center justify-center text-2xl -mt-1">&</span>CHAPA
+              FOGO<span style={{ backgroundColor: currentTheme.secondary }} className="rounded-full text-white size-8 flex items-center justify-center text-2xl -mt-1">&</span>CHAPA
             </div>
-            <Button variant="outline" className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors" style={{ borderColor: currentTheme.secondary, color: 'white', backgroundColor: 'transparent' }}>
+            <Button variant="outline" className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-8" style={{ borderColor: currentTheme.secondary, color: 'white', backgroundColor: 'transparent' }}>
               PEDIR AGORA
             </Button>
           </div>
 
-          {/* Grid Layout */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 pb-12">
+          {/* Main Grid Layout */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12">
             <div className="space-y-4 font-bold text-sm uppercase">
               <a href="#cardapio" className="block hover:text-white/70 transition-colors">MENU</a>
               <a href="#promocoes" className="block hover:text-white/70 transition-colors">PROMOÇÕES</a>
@@ -1205,46 +1205,50 @@ function Index() {
               </a>
             </div>
             
-            <div className="col-span-2 md:col-span-1 h-52 lg:h-64 rounded-xl overflow-hidden bg-white/5 order-first md:order-none mb-8 md:mb-0">
-               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3657.197368023192!2d-46.689364!3d-23.559385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce57a6020c6a51%3A0xc3928ebaf298e8!2sVila%20Madalena%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1714522804561!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"></iframe>
+            <div className="col-span-2 lg:col-span-1 h-48 lg:h-56 rounded-xl overflow-hidden order-first md:order-none relative">
+               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800" alt="Map" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+               <div className="absolute inset-0 bg-blue-500/20 mix-blend-overlay pointer-events-none"></div>
             </div>
 
-            <div className="col-span-2 md:col-span-1 space-y-6 flex flex-col justify-between">
-              <div className="space-y-6">
-                <div className="flex gap-3">
-                  <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><MapPin className="size-5" /></div>
-                  <div className="text-sm font-bold">Rua das Brasas, 217<br/><span className="text-xs font-normal opacity-70">São Paulo, SP 05414, Brasil</span></div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><Clock3 className="size-5" /></div>
-                  <div className="text-sm font-bold">+55 11 9999-9999<br/><span className="text-xs font-normal opacity-70">Ter-Dom, 18h - 23h</span></div>
-                </div>
+            <div className="col-span-2 lg:col-span-1 space-y-6 flex flex-col justify-start">
+              <div className="flex gap-3">
+                <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><MapPin className="size-5" /></div>
+                <div className="text-sm font-bold">Rua das Brasas, 217<br/><span className="text-xs font-normal opacity-70">São Paulo, SP 05414, Brasil</span></div>
               </div>
-              <div className="flex items-center gap-3 pt-6 md:pt-0">
-                <span className="text-sm font-bold mr-2">Siga-nos:</span>
-                <a href="#" className="size-9 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}><Instagram className="size-5" /></a>
-                <a href="#" className="size-9 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}>T</a>
+              <div className="flex gap-3">
+                <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><Clock3 className="size-5" /></div>
+                <div className="text-sm font-bold">+55 11 9999-9999<br/><span className="text-xs font-normal opacity-70">Ter-Dom, 18h - 23h</span></div>
               </div>
             </div>
           </div>
 
-          {/* Newsletter section */}
-          <div className="relative pt-6">
-            <div className="max-w-md">
+          {/* Bottom Grid Layout for Newsletter and Socials */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 mt-4 items-end">
+            <div className="lg:col-span-3">
               <h3 className="font-display font-black text-xl mb-4 uppercase tracking-wide" style={{ color: currentTheme.secondary }}>NUNCA PERCA UMA PROMOÇÃO</h3>
-              <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); }}>
-                <input type="email" placeholder="nome@email.com" className="flex-1 bg-transparent border border-white/20 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-white transition-colors" />
-                <Button type="submit" className="font-bold hover:brightness-110 transition-all text-white" style={{ backgroundColor: currentTheme.secondary }}>ASSINAR</Button>
+              <form className="flex max-w-sm h-12" onSubmit={(e) => { e.preventDefault(); }}>
+                <input type="email" placeholder="nome@email.com" className="flex-1 bg-transparent border border-white/30 rounded-l-md px-4 text-sm focus:outline-none focus:border-white transition-colors" />
+                <Button type="submit" className="font-bold hover:brightness-110 transition-all text-white rounded-l-none h-full px-6" style={{ backgroundColor: currentTheme.secondary }}>ASSINAR</Button>
               </form>
               <p className="text-xs mt-3 opacity-70 leading-relaxed">Receba combos exclusivos direto no seu e-mail.<br/>Sem spam, prometemos.</p>
+            </div>
+            
+            <div className="lg:col-span-2 flex justify-start lg:justify-end items-center gap-3">
+              <span className="text-sm font-bold mr-2">Siga-nos:</span>
+              <a href="#" className="size-10 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}><Instagram className="size-5" /></a>
+              <a href="#" className="size-10 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}>T</a>
             </div>
           </div>
         </div>
 
         {/* Giant Cutoff Text Bottom Edge */}
-        <div className="w-full relative h-[15vw] min-h-[120px] max-h-[300px] mt-10 overflow-hidden select-none pointer-events-none flex justify-center items-end opacity-90 transition-colors duration-700">
-           <div className="font-display font-black uppercase text-[26vw] leading-[0.7] tracking-tighter whitespace-nowrap translate-y-[20%]" style={{ color: 'white' }}>
-             FOGO<span style={{ color: currentTheme.secondary }}>&</span>CHAPA
+        <div className="w-full relative h-[25vw] min-h-[150px] max-h-[350px] mt-10 overflow-hidden select-none pointer-events-none flex justify-center items-end opacity-95 transition-colors duration-700">
+           <div className="font-display font-black uppercase text-[24vw] leading-[0.75] tracking-tighter whitespace-nowrap translate-y-[22%] flex items-center" style={{ color: 'white' }}>
+             FOGO
+             <span className="inline-flex items-center justify-center rounded-full text-white bg-secondary aspect-square w-[20vw] mx-[1vw] leading-none pb-[1vw]" style={{ backgroundColor: currentTheme.secondary }}>
+               &
+             </span>
+             CHAPA
            </div>
         </div>
       </footer>
