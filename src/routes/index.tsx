@@ -1116,6 +1116,63 @@ function Index() {
           </div>
         </section>
 
+        <section id="avaliacoes" className="relative border-y border-white/10 bg-surface-deep py-20 sm:py-32 overflow-hidden">
+          <div className="text-center mb-16 relative z-20">
+            <p className="eyebrow text-primary">A voz da rua</p>
+            <h2 className="section-title text-foreground">O que dizem<br/><span>sobre nós</span></h2>
+          </div>
+
+          <div className="relative">
+            {/* Sticky central image */}
+            <div className="sticky top-[20vh] h-[60vh] w-full flex justify-center pointer-events-none z-0 opacity-20 sm:opacity-90">
+              <motion.img 
+                src={heroBurger}
+                alt="Fogo e Chapa Burger"
+                className="h-full object-contain drop-shadow-2xl"
+                initial={{ y: 0, rotate: -2 }}
+                animate={{ y: [0, -15, 0], rotate: [0, 2, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </div>
+
+            {/* Comments */}
+            <div className="relative z-10 flex flex-col gap-12 sm:gap-32 -mt-[50vh] pb-[10vh] max-w-5xl mx-auto px-5">
+              {[
+                { name: "João Pedro", role: "Cliente Fiel", text: "O melhor hambúrguer artesanal da cidade. O ponto da carne é perfeito, e a crosta que o fogo deixa é absurda!", side: "left" },
+                { name: "Mariana Souza", role: "Foodie", text: "Ambiente incrível, atendimento rápido e o Brasa Bacon... Sem palavras. O molho de rapadura é um espetáculo à parte.", side: "right" },
+                { name: "Carlos Eduardo", role: "Amante de pimenta", text: "Fui no Inferno Picante e não me arrependi. Sabor intenso, jalapeño na medida certa. Tudo muito fresco.", side: "left" },
+                { name: "Ana Clara", role: "Sempre pede delivery", text: "Pedi em casa e chegou super quente. A batata continuava crocante e o lanche não desmanchou. Nota 10!", side: "right" },
+              ].map((review, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: review.side === "left" ? -80 : 80, y: 50 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: true, margin: "-20%" }}
+                  transition={{ duration: 0.7, type: "spring", bounce: 0.4 }}
+                  className={`flex w-full ${review.side === "left" ? "justify-start" : "justify-end"}`}
+                >
+                  <div className="glass-panel p-6 sm:p-8 max-w-md border border-white/10 rounded-3xl shadow-2xl bg-background/90 sm:bg-background/80 backdrop-blur-xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+                    <div className="flex items-center gap-1 text-primary mb-4 text-xl">
+                      {"★★★★★".split("").map((star, j) => <span key={j}>{star}</span>)}
+                    </div>
+                    <p className="text-lg font-medium text-foreground/90 mb-6 italic leading-relaxed">"{review.text}"</p>
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black uppercase text-lg border border-primary/30">
+                        {review.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold font-display uppercase tracking-wider text-sm">{review.name}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{review.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section id="sobre" className="border-y border-white/10 bg-background py-20 sm:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:items-center lg:px-8">
             <div><p className="eyebrow">Manifesto da chapa</p><h2 className="section-title">O sabor começa<br /><span>no fogo</span></h2></div>
