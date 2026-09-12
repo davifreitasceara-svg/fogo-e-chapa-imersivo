@@ -206,10 +206,10 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
 
       {/* Footer / Wave Area */}
       <div className="absolute bottom-0 left-0 w-full z-40">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="w-full h-[100px] sm:h-[150px] block mb-[-2px] transition-colors duration-700" style={{ color: currentTheme?.bgLight || '#FDF8F2' }}>
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="w-full h-[100px] sm:h-[150px] block mb-[-2px] transition-colors duration-700" style={{ color: currentTheme?.secondary || '#FDF8F2' }}>
           <path fill="currentColor" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
         </svg>
-        <div className="w-full h-[100px] flex items-center justify-between px-8 sm:px-16 pb-6 transition-colors duration-700" style={{ backgroundColor: currentTheme?.bgLight || '#FDF8F2' }}>
+        <div className="w-full h-[100px] flex items-center justify-between px-8 sm:px-16 pb-6 transition-colors duration-700" style={{ backgroundColor: currentTheme?.secondary || '#FDF8F2' }}>
           {/* Left: Empty space to keep arrows centered */}
           <div className="flex items-center gap-4 w-48"></div>
 
