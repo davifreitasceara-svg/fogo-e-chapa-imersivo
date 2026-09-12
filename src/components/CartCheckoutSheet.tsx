@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Trash2, Plus, Minus, ArrowLeft, Store, Truck, CreditCard, Banknote, QrCode, CheckCircle2 } from "lucide-react";
 import { CreditCardForm } from "./ui/credit-card-form";
@@ -8,6 +8,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [step, setStep] = useState<"cart" | "type" | "details" | "payment" | "credit_card" | "pix">("cart");
   const [orderType, setOrderType] = useState<"delivery" | "pickup" | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [address, setAddress] = useState("");
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
     if (products.some((p: any) => p.id === parseInt(id))) return sum + (count as number);
@@ -41,6 +42,13 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
     }
   };
 
+  const finishOrder = () => {
+    handleCheckout(address);
+    setStep("cart");
+    setPaymentMethod(null);
+    setOrderType(null);
+  };
+
   const handleBack = () => {
     if (step === "credit_card" || step === "pix") {
       setStep("payment");
@@ -51,13 +59,6 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
     } else if (step === "type") {
       setStep("cart");
     }
-  };
-
-  const finishOrder = () => {
-    handleCheckout();
-    setStep("cart");
-    setPaymentMethod(null);
-    setOrderType(null);
   };
 
   return (
@@ -167,7 +168,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             </div>
             <div>
               <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">ENDERECO</label>
-              <input type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Rua, Avenida..." />
+              <input value={address} onChange={e => setAddress(e.target.value)} type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Rua, Avenida..." />
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-1">
@@ -311,7 +312,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
         ) : (
           <button 
             onClick={handleNext} 
-            disabled={cartCount === 0 || (step === "type" && !orderType)}
+            disabled={cartCount === 0 || (step === "type" && !orderType) || (step === "details" && orderType === "delivery" && address.trim().length < 5)}
             className="w-full py-5 rounded-2xl text-lg font-bold bg-white text-black hover:bg-white/90 hover:scale-[1.02] transition-all duration-300 ease-out disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed"
           >
             Continuar

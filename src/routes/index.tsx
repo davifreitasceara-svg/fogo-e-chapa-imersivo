@@ -145,7 +145,36 @@ function Brand({ color }: { color?: string }) {
   );
 }
 
+const MOCK_DRIVERS = [
+  { name: "Carlos S.", vehicle: "Honda CG 160", plate: "ABC-1234", avatar: "https://i.pravatar.cc/150?u=carlos" },
+  { name: "Marcos T.", vehicle: "Yamaha YBR 125", plate: "XYZ-9876", avatar: "https://i.pravatar.cc/150?u=marcos" },
+  { name: "Rafael M.", vehicle: "Honda Biz", plate: "QWE-4567", avatar: "https://i.pravatar.cc/150?u=rafael" }
+];
+
+const MOCK_ROUTES = [
+  {
+    start: [-23.568, -46.658],
+    customer: [-23.555, -46.650],
+    route1: [[-23.568, -46.658], [-23.568, -46.655], [-23.565, -46.655], [-23.562, -46.655]], // To Restaurant
+    route2: [[-23.562, -46.655], [-23.562, -46.652], [-23.559, -46.652], [-23.559, -46.650], [-23.555, -46.650]] // To Customer
+  },
+  {
+    start: [-23.565, -46.660],
+    customer: [-23.560, -46.645],
+    route1: [[-23.565, -46.660], [-23.565, -46.655], [-23.562, -46.655]], // To Restaurant
+    route2: [[-23.562, -46.655], [-23.560, -46.655], [-23.560, -46.650], [-23.560, -46.645]] // To Customer
+  },
+  {
+    start: [-23.559, -46.662],
+    customer: [-23.550, -46.660],
+    route1: [[-23.559, -46.662], [-23.559, -46.655], [-23.562, -46.655]], // To Restaurant
+    route2: [[-23.562, -46.655], [-23.562, -46.660], [-23.550, -46.660]] // To Customer
+  }
+];
+
 function Index() {
+  const [activeDriver, setActiveDriver] = useState<number>(0);
+  const [activeRoute, setActiveRoute] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [trackingOpen, setTrackingOpen] = useState(false);
@@ -283,13 +312,15 @@ function Index() {
   }, [authOpen]);
 
 
-  const handleCheckout = () => {
+  const handleCheckout = (address: string) => {
     if (Object.keys(cart).length === 0) return;
     
     // In a real app, this would send an API request.
     // For demonstration, we just clear the cart and open the tracking modal!
     setCart({});
     setActiveOrderTime(Date.now());
+    setActiveDriver(Math.floor(Math.random() * MOCK_DRIVERS.length));
+    setActiveRoute(Math.floor(Math.random() * MOCK_ROUTES.length));
     setTrackingOpen(true);
   };
 
@@ -1253,7 +1284,7 @@ function Index() {
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
       <AnimatePresence>
-        {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
+        {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} activeDriver={activeDriver} activeRoute={activeRoute} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
       </AnimatePresence>
     </div>
   );
@@ -1293,7 +1324,7 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
   );
 }
 
-function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onClose: () => void, currentTheme: any, activeOrderTime: number }) {
+function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeDriver, activeRoute }: { onClose: () => void, currentTheme: any, activeOrderTime: number, activeDriver: number, activeRoute: number }) {
   const [stage, setStage] = useState<"picking_up" | "delivering" | "delivered">("picking_up");
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -1331,19 +1362,15 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
       }).addTo(map);
 
       // Coordinates (more detailed to simulate street turns)
-      const driverStart = [-23.568, -46.658];
-      const p1 = [-23.568, -46.655];
-      const p2 = [-23.565, -46.655];
+      const mockRoute = MOCK_ROUTES[activeRoute];
+      const driverStart = mockRoute.start;
       const restaurant = [-23.562, -46.655];
-      const p3 = [-23.562, -46.652];
-      const p4 = [-23.559, -46.652];
-      const p5 = [-23.559, -46.650];
-      const customer = [-23.555, -46.650];
+      const customer = mockRoute.customer;
 
       // Route 1 (Picking Up)
-      const route1 = [driverStart, p1, p2, restaurant];
+      const route1 = mockRoute.route1;
       // Route 2 (Delivering)
-      const route2 = [restaurant, p3, p4, p5, customer];
+      const route2 = mockRoute.route2;
       const fullRoute = [...route1, ...route2];
 
       // Gray background line (full route)
@@ -1527,12 +1554,12 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
             
             <div className="bg-gray-50 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-gray-100 shadow-sm">
                <div className="size-14 sm:size-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
-                  <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200" alt="Entregador" className="w-full h-full object-cover" />
+                  <img src={MOCK_DRIVERS[activeDriver].avatar} alt="Entregador" className="w-full h-full object-cover" />
                </div>
                <div className="flex-1">
-                  <h4 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">Carlos S.</h4>
+                  <h4 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">{MOCK_DRIVERS[activeDriver].name}</h4>
                   <p className="text-xs sm:text-sm opacity-70 text-gray-600 flex items-center gap-1.5 mt-0.5">
-                     <Bike className="size-3 sm:size-4" /> Honda CG 160 • ABC-1234
+                     <Bike className="size-3 sm:size-4" /> {MOCK_DRIVERS[activeDriver].vehicle} • {MOCK_DRIVERS[activeDriver].plate}
                   </p>
                </div>
                <div className="flex gap-2">
