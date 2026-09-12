@@ -1120,23 +1120,20 @@ function Index() {
           {/* Sticky pinned background (Burger & Title) */}
           <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden pointer-events-none z-0">
             <div className="absolute top-24 sm:top-32 text-center z-20">
-              <p className="eyebrow text-primary">A voz da rua</p>
-              <h2 className="section-title text-foreground">O que dizem<br/><span>sobre nós</span></h2>
+              <p className="eyebrow text-primary tracking-[0.2em] font-bold">A VOZ DA RUA</p>
+              <h2 className="section-title text-foreground uppercase">O que dizem<br/><span>sobre nós</span></h2>
             </div>
             
-            <motion.img 
+            <img 
               src={heroBurger}
               alt="Fogo e Chapa Burger"
-              className="h-[50vh] sm:h-[65vh] object-contain drop-shadow-2xl opacity-20 sm:opacity-90 mt-20"
-              initial={{ y: 0, rotate: -2 }}
-              animate={{ y: [0, -15, 0], rotate: [0, 2, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="h-[40vh] sm:h-[55vh] object-contain drop-shadow-2xl opacity-40 sm:opacity-90 mt-20"
             />
           </div>
 
           {/* Scrolling Comments Overlay */}
-          <div className="relative z-10 w-full max-w-5xl mx-auto px-5 -mt-[100vh]">
-            <div className="pt-[90vh] pb-[40vh] flex flex-col gap-[35vh]">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 -mt-[100vh]">
+            <div className="pt-[90vh] pb-[60vh] flex flex-col relative w-full">
               {[
                 { name: "João Pedro", role: "Cliente Fiel", text: "O melhor hambúrguer artesanal da cidade. O ponto da carne é perfeito, e a crosta que o fogo deixa é absurda!", side: "left" },
                 { name: "Mariana Souza", role: "Foodie", text: "Ambiente incrível, atendimento rápido e o Brasa Bacon... Sem palavras. O molho de rapadura é um espetáculo à parte.", side: "right" },
@@ -1145,27 +1142,27 @@ function Index() {
               ].map((review, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 150, scale: 0.9, rotate: review.side === "left" ? -4 : 4 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
-                  viewport={{ once: false, margin: "-10% 0px -20% 0px" }}
-                  transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-                  className={`flex w-full ${review.side === "left" ? "justify-start" : "justify-end"}`}
+                  initial={{ opacity: 0, y: 100 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ margin: "-10% 0px -10% 0px" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className={`w-full max-w-[90%] sm:max-w-md ${review.side === "left" ? "mr-auto" : "ml-auto"} ${i !== 0 ? "-mt-10 sm:-mt-32" : ""}`}
                 >
-                  <div className="glass-panel p-6 sm:p-8 max-w-md border border-white/10 rounded-3xl shadow-2xl bg-background/90 sm:bg-background/80 backdrop-blur-xl relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
-                    <div className="flex items-center gap-1 text-primary mb-4 text-xl">
-                      {"★★★★★".split("").map((star, j) => <span key={j}>{star}</span>)}
-                    </div>
-                    <p className="text-lg font-medium text-foreground/90 mb-6 italic leading-relaxed">"{review.text}"</p>
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black uppercase text-lg border border-primary/30">
+                  <div className="p-6 sm:p-8 border border-white/5 rounded-2xl shadow-2xl bg-[#110D0B] relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
+                    <div className="absolute top-4 right-4 text-primary/20 text-6xl font-serif leading-none rotate-180">"</div>
+                    <div className="flex items-center gap-4 mb-6 relative z-10">
+                      <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black uppercase text-xl border border-primary/30 shrink-0">
                         {review.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-bold font-display uppercase tracking-wider text-sm">{review.name}</p>
+                        <div className="flex items-center gap-1 text-primary text-sm mb-1">
+                          {"★★★★★".split("").map((star, j) => <span key={j}>{star}</span>)}
+                        </div>
+                        <p className="font-bold font-display uppercase tracking-wider text-sm text-white">{review.name}</p>
                         <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{review.role}</p>
                       </div>
                     </div>
+                    <p className="text-lg font-medium text-foreground/80 italic leading-relaxed relative z-10">{review.text}</p>
                   </div>
                 </motion.div>
               ))}
