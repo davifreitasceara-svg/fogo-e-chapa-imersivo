@@ -1333,6 +1333,30 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
   const mapInstanceRef = useRef<any>(null);
 
   useEffect(() => {
+    let reqId: number;
+    const duration1 = 30000;
+    const duration2 = 45000;
+
+    function updateStage() {
+      const elapsed = Date.now() - activeOrderTime;
+      if (elapsed < duration1) {
+        setStage("picking_up");
+      } else if (elapsed < duration1 + duration2) {
+        setStage("delivering");
+      } else {
+        setStage("delivered");
+      }
+      
+      if (elapsed < duration1 + duration2) {
+        reqId = requestAnimationFrame(updateStage);
+      }
+    }
+    
+    reqId = requestAnimationFrame(updateStage);
+    return () => cancelAnimationFrame(reqId);
+  }, [activeOrderTime]);
+
+  useEffect(() => {
     // Load Leaflet CSS
     if (!document.getElementById("leaflet-css")) {
       const link = document.createElement("link");
@@ -1356,11 +1380,11 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
       if (activeOrderType === "pickup" || mapInstanceRef.current || !mapRef.current) return;
       const L = (window as any).L;
       
-      const map = L.map(mapRef.current, { zoomControl: false, attributionControl: false }).setView([-23.562, -46.655], 17);
+      const map = L.map(mapRef.current, { zoomControl: false, attributionControl: false }).setView([-23.562, -46.655], 16);
       mapInstanceRef.current = map;
 
-      // CartoDB Voyager tiles (light map, great for 99 style)
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      // Google Maps standard tiles (no API key required overlay)
+      L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
         maxZoom: 19
       }).addTo(map);
 
@@ -1462,18 +1486,12 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
         let currentPt, currentBearing, currentRemaining;
 
         if (elapsed < duration1) {
-           setStage("picking_up");
            const progress = elapsed / duration1;
            const data = getPathData(route1, progress);
            currentPt = data.pt;
            currentBearing = data.bearing;
            currentRemaining = [...data.remaining, ...route2.slice(1)];
         } else {
-           if (isDone) {
-             setStage("delivered");
-           } else {
-             setStage("delivering");
-           }
            const progress = (elapsed - duration1) / duration2;
            const data = getPathData(route2, progress);
            currentPt = data.pt;
@@ -1490,10 +1508,10 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
         }
 
         if (!isDone) {
-          map.setView(currentPt as any, 17, { animate: false });
+          map.setView(currentPt as any, 16, { animate: false });
           reqId = requestAnimationFrame(animate);
         } else {
-          map.setView(customer as any, 17, { animate: false });
+          map.setView(customer as any, 16, { animate: false });
         }
       }
       
@@ -1565,6 +1583,16 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                      <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>2</div>
                      <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>3</div>
                   </div>
+
+                  {stage === "delivered" && (
+                    <Button 
+                       className="w-full mt-8 text-lg font-bold h-14 rounded-xl text-white shadow-lg"
+                       style={{ backgroundColor: currentTheme.secondary }}
+                       onClick={onClose}
+                    >
+                      Pedido Recebido
+                    </Button>
+                  )}
                </div>
             ) : (
                <>
@@ -1603,6 +1631,16 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                         <Button size="icon" className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-900 shrink-0 shadow-sm"><Mail className="size-5" /></Button>
                      </div>
                   </div>
+
+                  {stage === "delivered" && (
+                    <Button 
+                       className="w-full mt-6 text-lg font-bold h-14 rounded-xl text-white shadow-lg"
+                       style={{ backgroundColor: currentTheme.secondary }}
+                       onClick={onClose}
+                    >
+                      Pedido Recebido
+                    </Button>
+                  )}
                </>
             )}
          </div>
