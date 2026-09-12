@@ -221,17 +221,17 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
           <div className="flex gap-4">
             <button 
               onClick={slideLeft} 
-              className="group h-14 px-5 sm:px-7 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-2 border-2 border-transparent hover:border-amber-500/50"
+              className="group h-14 px-4 sm:px-6 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-1 sm:gap-1.5 border-2 border-transparent hover:border-amber-500/50"
             >
-              <ChevronLeft className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1.5" strokeWidth={3} />
+              <ChevronLeft className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1" strokeWidth={3} />
               <span className="font-bold text-xs sm:text-sm tracking-wider uppercase hidden sm:block">Anterior</span>
             </button>
             <button 
               onClick={slideRight} 
-              className="group h-14 px-5 sm:px-7 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-2 border-2 border-transparent hover:border-amber-500/50"
+              className="group h-14 px-4 sm:px-6 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-1 sm:gap-1.5 border-2 border-transparent hover:border-amber-500/50"
             >
               <span className="font-bold text-xs sm:text-sm tracking-wider uppercase hidden sm:block">Próximo</span>
-              <ChevronRight className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={3} />
+              <ChevronRight className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={3} />
             </button>
           </div>
 
