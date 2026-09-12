@@ -1129,11 +1129,12 @@ function Index() {
             loop 
             muted 
             playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-[0.25] pointer-events-none mix-blend-screen"
+            className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none mix-blend-screen"
           >
             <source src="https://assets.mixkit.co/videos/preview/mixkit-fire-flames-burning-in-the-dark-2460-large.mp4" type="video/mp4" />
+            <source src="https://cdn.pixabay.com/video/2020/05/26/40149-425114093_large.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, ${currentTheme.bgDark} 100%)`, opacity: 0.9 }}></div>
+          <div className="absolute inset-0 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 80%)` }}></div>
           <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:items-center lg:px-8 relative z-10">
             <motion.div 
               initial={{ opacity: 0, x: -30 }} 
