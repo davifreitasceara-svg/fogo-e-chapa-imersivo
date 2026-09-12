@@ -68,12 +68,7 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
       />
 
       {/* Top Navbar */}
-      <div className="absolute top-8 w-full px-8 sm:px-16 flex justify-between items-center z-50 max-w-[1400px] left-1/2 -translate-x-1/2">
-        <div className="font-display font-black text-4xl sm:text-5xl tracking-tighter text-white drop-shadow-md">Entradas</div>
-        
-        {/* Navigation removed as per user request */}
-        <div></div>
-
+      <div className="absolute top-8 w-full px-8 sm:px-16 flex justify-end items-center z-50 max-w-[1400px] left-1/2 -translate-x-1/2">
         <div className="flex gap-4">
           <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center cursor-pointer backdrop-blur-sm">
             <Search className="text-white size-4" />
@@ -84,7 +79,7 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
         </div>
       </div>
 
-      <div className="relative z-20 w-full max-w-[1400px] mx-auto h-full flex flex-col md:flex-row items-center pt-20">
+      <div className="relative z-20 w-full max-w-[1400px] mx-auto h-full flex flex-col md:flex-row items-center pt-10 sm:pt-20">
         
         <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center h-full z-30 mt-10 md:mt-0">
           <motion.div
@@ -94,6 +89,7 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex flex-col mb-10"
           >
+            <div className="font-display font-black text-2xl sm:text-3xl tracking-widest text-white/90 uppercase mb-2 drop-shadow-md">Entradas</div>
             <span 
               className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-transparent"
               style={{ WebkitTextStroke: "3px white" }}
