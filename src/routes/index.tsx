@@ -179,6 +179,7 @@ function Index() {
   const [authOpen, setAuthOpen] = useState(false);
   const [trackingOpen, setTrackingOpen] = useState(false);
   const [activeOrderTime, setActiveOrderTime] = useState<number | null>(null);
+  const [activeOrderType, setActiveOrderType] = useState<"delivery" | "pickup" | null>(null);
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [tab, setTab] = useState<"burger" | "drink">("burger");
   const [cart, setCart] = useState<Record<number, number>>({});
@@ -312,13 +313,14 @@ function Index() {
   }, [authOpen]);
 
 
-  const handleCheckout = (address: string) => {
+  const handleCheckout = (address: string, orderType?: "delivery" | "pickup" | null) => {
     if (Object.keys(cart).length === 0) return;
     
     // In a real app, this would send an API request.
     // For demonstration, we just clear the cart and open the tracking modal!
     setCart({});
     setActiveOrderTime(Date.now());
+    setActiveOrderType(orderType || "delivery");
     setActiveDriver(Math.floor(Math.random() * MOCK_DRIVERS.length));
     setActiveRoute(Math.floor(Math.random() * MOCK_ROUTES.length));
     setTrackingOpen(true);
@@ -1284,7 +1286,7 @@ function Index() {
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
       <AnimatePresence>
-        {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} activeDriver={activeDriver} activeRoute={activeRoute} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
+        {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} activeOrderType={activeOrderType} activeDriver={activeDriver} activeRoute={activeRoute} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
       </AnimatePresence>
     </div>
   );
@@ -1324,8 +1326,9 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
   );
 }
 
-function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeDriver, activeRoute }: { onClose: () => void, currentTheme: any, activeOrderTime: number, activeDriver: number, activeRoute: number }) {
+function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeOrderType, activeDriver, activeRoute }: { onClose: () => void, currentTheme: any, activeOrderTime: number, activeOrderType?: "delivery" | "pickup" | null, activeDriver: number, activeRoute: number }) {
   const [stage, setStage] = useState<"picking_up" | "delivering" | "delivered">("picking_up");
+  const pickupCode = useMemo(() => Math.floor(1000 + Math.random() * 9000).toString(), []);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
 
@@ -1350,7 +1353,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeD
     }
 
     function initMap() {
-      if (mapInstanceRef.current || !mapRef.current) return;
+      if (activeOrderType === "pickup" || mapInstanceRef.current || !mapRef.current) return;
       const L = (window as any).L;
       
       const map = L.map(mapRef.current, { zoomControl: false, attributionControl: false }).setView([-23.562, -46.655], 17);
@@ -1517,9 +1520,21 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeD
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
       className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
-      <div className="relative flex-1 overflow-hidden">
+      <div className={`relative flex-1 overflow-hidden ${activeOrderType === "pickup" ? "bg-background flex flex-col items-center justify-center" : ""}`}>
         {/* Real Leaflet Map Container */}
-        <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
+        {activeOrderType !== "pickup" && <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />}
+        
+        {activeOrderType === "pickup" && (
+           <div className="text-center z-10 px-4">
+              <h1 className="text-7xl font-black font-display uppercase tracking-tighter" style={{ color: currentTheme.secondary }}>#{pickupCode}</h1>
+              <p className="text-xl font-bold mt-2 uppercase tracking-widest text-foreground">Código de Retirada</p>
+              <div className="mt-8 flex items-center justify-center">
+                 <div className="w-16 h-16 rounded-full border-4 flex items-center justify-center animate-bounce" style={{ borderColor: currentTheme.secondary }}>
+                    <ShoppingBag className="size-8" style={{ color: currentTheme.secondary }} />
+                 </div>
+              </div>
+           </div>
+        )}
 
         {/* Close Button */}
         <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-[9999]">
@@ -1531,41 +1546,65 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeD
       <div className="bg-white border-t border-gray-200 p-6 sm:p-8 rounded-t-3xl -mt-6 relative z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
          <div className="max-w-2xl mx-auto">
             <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6" />
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900">
-                  {stage === "delivered" ? "Pedido Entregue!" : stage === "picking_up" ? "Indo para a loja" : "A caminho do destino"}
-                </h2>
-                <p className="text-sm font-medium opacity-70 text-gray-600 mt-1">
-                  {stage === "delivered" ? "Aproveite seu lanche quente e suculento!" : stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
-                </p>
-              </div>
-              {stage !== "delivered" && (
-                <div className="text-right">
-                   <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
-                     {stage === "picking_up" ? "3 min" : "18:45"}
-                   </div>
-                   <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-gray-500">
-                     {stage === "picking_up" ? "Distância" : "Chegada"}
-                   </p>
-                </div>
-              )}
-            </div>
             
-            <div className="bg-gray-50 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-gray-100 shadow-sm">
-               <div className="size-14 sm:size-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
-                  <img src={MOCK_DRIVERS[activeDriver].avatar} alt="Entregador" className="w-full h-full object-cover" />
-               </div>
-               <div className="flex-1">
-                  <h4 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">{MOCK_DRIVERS[activeDriver].name}</h4>
-                  <p className="text-xs sm:text-sm opacity-70 text-gray-600 flex items-center gap-1.5 mt-0.5">
-                     <Bike className="size-3 sm:size-4" /> {MOCK_DRIVERS[activeDriver].vehicle} • {MOCK_DRIVERS[activeDriver].plate}
+            {activeOrderType === "pickup" ? (
+               <div className="text-center pb-4">
+                  <h2 className="text-3xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">
+                    {stage === "picking_up" ? "Preparando seu pedido..." : stage === "delivering" ? "Quase pronto!" : "Pronto para retirar!"}
+                  </h2>
+                  <p className="text-base font-medium opacity-70 text-gray-600">
+                    {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
                   </p>
+                  
+                  {/* Progress Bar */}
+                  <div className="mt-8 flex justify-between items-center relative">
+                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -z-10 -translate-y-1/2 rounded-full"></div>
+                     <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded-full transition-all duration-1000" style={{ width: stage === "picking_up" ? "0%" : stage === "delivering" ? "50%" : "100%", backgroundColor: currentTheme.secondary }}></div>
+                     
+                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: currentTheme.secondary }}>1</div>
+                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>2</div>
+                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>3</div>
+                  </div>
                </div>
-               <div className="flex gap-2">
-                  <Button size="icon" className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-900 shrink-0 shadow-sm"><Mail className="size-5" /></Button>
-               </div>
-            </div>
+            ) : (
+               <>
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900">
+                        {stage === "delivered" ? "Pedido Entregue!" : stage === "picking_up" ? "Indo para a loja" : "A caminho do destino"}
+                      </h2>
+                      <p className="text-sm font-medium opacity-70 text-gray-600 mt-1">
+                        {stage === "delivered" ? "Aproveite seu lanche quente e suculento!" : stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
+                      </p>
+                    </div>
+                    {stage !== "delivered" && (
+                      <div className="text-right">
+                         <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
+                           {stage === "picking_up" ? "3 min" : "18:45"}
+                         </div>
+                         <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-gray-500">
+                           {stage === "picking_up" ? "Distância" : "Chegada"}
+                         </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-gray-100 shadow-sm">
+                     <div className="size-14 sm:size-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
+                        <img src={MOCK_DRIVERS[activeDriver].avatar} alt="Entregador" className="w-full h-full object-cover" />
+                     </div>
+                     <div className="flex-1">
+                        <h4 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">{MOCK_DRIVERS[activeDriver].name}</h4>
+                        <p className="text-xs sm:text-sm opacity-70 text-gray-600 flex items-center gap-1.5 mt-0.5">
+                           <Bike className="size-3 sm:size-4" /> {MOCK_DRIVERS[activeDriver].vehicle} • {MOCK_DRIVERS[activeDriver].plate}
+                        </p>
+                     </div>
+                     <div className="flex gap-2">
+                        <Button size="icon" className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-900 shrink-0 shadow-sm"><Mail className="size-5" /></Button>
+                     </div>
+                  </div>
+               </>
+            )}
          </div>
       </div>
     </motion.div>

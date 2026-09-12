@@ -43,7 +43,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   };
 
   const finishOrder = () => {
-    handleCheckout(address);
+    handleCheckout(address, orderType);
     setStep("cart");
     setPaymentMethod(null);
     setOrderType(null);
