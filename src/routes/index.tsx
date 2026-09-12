@@ -344,6 +344,12 @@ function Index() {
                <motion.a 
                  key={link.href}
                  href={link.href} 
+                 onClick={(e) => {
+                   if (link.label === "Delivery" && activeOrderTime) {
+                     e.preventDefault();
+                     setTrackingOpen(true);
+                   }
+                 }}
                  className="relative px-5 py-2 rounded-full z-10"
                  variants={{
                    hidden: { opacity: 0, y: -20, filter: "blur(6px)" },
