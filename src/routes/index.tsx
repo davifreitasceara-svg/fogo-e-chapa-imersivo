@@ -1322,7 +1322,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
       if (mapInstanceRef.current || !mapRef.current) return;
       const L = (window as any).L;
       
-      const map = L.map(mapRef.current, { zoomControl: false, attributionControl: false }).setView([-23.562, -46.655], 16);
+      const map = L.map(mapRef.current, { zoomControl: false, attributionControl: false }).setView([-23.562, -46.655], 17);
       mapInstanceRef.current = map;
 
       // CartoDB Voyager tiles (light map, great for 99 style)
@@ -1330,19 +1330,28 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
         maxZoom: 19
       }).addTo(map);
 
-      // Coordinates
+      // Coordinates (more detailed to simulate street turns)
       const driverStart = [-23.568, -46.658];
+      const p1 = [-23.568, -46.655];
+      const p2 = [-23.565, -46.655];
       const restaurant = [-23.562, -46.655];
+      const p3 = [-23.562, -46.652];
+      const p4 = [-23.559, -46.652];
+      const p5 = [-23.559, -46.650];
       const customer = [-23.555, -46.650];
 
       // Route 1 (Picking Up)
-      const route1 = [driverStart, [-23.568, -46.655], restaurant];
+      const route1 = [driverStart, p1, p2, restaurant];
       // Route 2 (Delivering)
-      const route2 = [restaurant, [-23.562, -46.650], customer];
+      const route2 = [restaurant, p3, p4, p5, customer];
+      const fullRoute = [...route1, ...route2];
 
-      // Draw thick blue line with white glow (using 2 polylines)
-      L.polyline([...route1, ...route2], { color: 'white', weight: 12, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
-      L.polyline([...route1, ...route2], { color: '#00A2FF', weight: 6, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+      // Gray background line (full route)
+      L.polyline(fullRoute, { color: '#D1D5DB', weight: 8, opacity: 0.8, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+      
+      // Blue active line (will be updated dynamically to show remaining path)
+      const activeLineBg = L.polyline([], { color: 'white', weight: 12, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+      const activeLine = L.polyline([], { color: '#00A2FF', weight: 6, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
 
       // Markers
       const createDot = (color: string, icon: string) => L.divIcon({
@@ -1358,17 +1367,17 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
       // Animated Driver Marker
       const driverIcon = L.divIcon({
         className: 'custom-div-icon',
-        html: `<div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-                 <div style="position: absolute; inset: 0; background-color: #00A2FF; border-radius: 50%; opacity: 0.4; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-                 <div style="width: 28px; height: 28px; background-color: white; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 10;">
-                   <div style="width: 18px; height: 18px; background-color: #00A2FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(45deg);"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        html: `<div style="position: relative; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                 <div style="position: absolute; inset: 0; background-color: #00A2FF; border-radius: 50%; opacity: 0.2; animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
+                 <div style="width: 32px; height: 32px; background-color: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 10;">
+                   <div id="driver-icon-rotation" style="width: 22px; height: 22px; background-color: #00A2FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s linear;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><path d="M12 2L22 20L12 16L2 20L12 2Z"/></svg>
                    </div>
                  </div>
                </div>
-               <style>@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }</style>`,
-        iconSize: [44, 44],
-        iconAnchor: [22, 22]
+               <style>@keyframes pulse-ring { 0% { transform: scale(0.5); opacity: 0.6; } 100% { transform: scale(1.5); opacity: 0; } }</style>`,
+        iconSize: [60, 60],
+        iconAnchor: [30, 30]
       });
 
       const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
@@ -1377,6 +1386,37 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
       const duration1 = 30000; // 30s to pick up
       const duration2 = 45000; // 45s to deliver
       
+      // Helper to compute position, bearing, and remaining path
+      function getPathData(path: number[][], progress: number) {
+        if (path.length < 2) return { pt: path[0], bearing: 0, remaining: path };
+        const segments = path.length - 1;
+        const scaledProg = progress * segments;
+        const idx = Math.min(Math.floor(scaledProg), segments - 1);
+        const segmentProg = scaledProg - idx;
+        
+        const p1 = path[idx];
+        const p2 = path[idx + 1];
+        
+        const pt = [
+          p1[0] + (p2[0] - p1[0]) * segmentProg,
+          p1[1] + (p2[1] - p1[1]) * segmentProg
+        ];
+
+        // Bearing calculation: Note that Lat is Y, Lng is X
+        // Math.atan2(dx, dy) gives angle from North clockwise
+        const dy = p2[0] - p1[0]; // Lat difference
+        const dx = p2[1] - p1[1]; // Lng difference
+        const bearing = Math.atan2(dx, dy) * (180 / Math.PI);
+        
+        const remaining = [pt, ...path.slice(idx + 1)];
+        return { pt, bearing, remaining };
+      }
+
+      function updateActiveLine(currentPath: number[][]) {
+        activeLineBg.setLatLngs(currentPath as any);
+        activeLine.setLatLngs(currentPath as any);
+      }
+
       let reqId: number;
       function animate() {
         if (!mapInstanceRef.current) return;
@@ -1389,12 +1429,15 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
            isDone = true;
         }
 
+        let currentPt, currentBearing, currentRemaining;
+
         if (elapsed < duration1) {
            setStage("picking_up");
            const progress = elapsed / duration1;
-           const pt = getPointAlongPath(route1, progress);
-           driverMarker.setLatLng(pt);
-           map.panTo(pt, { animate: false });
+           const data = getPathData(route1, progress);
+           currentPt = data.pt;
+           currentBearing = data.bearing;
+           currentRemaining = [...data.remaining, ...route2.slice(1)];
         } else {
            if (isDone) {
              setStage("delivered");
@@ -1402,19 +1445,25 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
              setStage("delivering");
            }
            const progress = (elapsed - duration1) / duration2;
-           const pt = getPointAlongPath(route2, progress);
-           driverMarker.setLatLng(pt);
-           
-           if (!isDone) {
-             map.panTo(pt, { animate: false });
-           } else {
-             // Center on customer when delivered
-             map.panTo(customer, { animate: false });
-           }
+           const data = getPathData(route2, progress);
+           currentPt = data.pt;
+           currentBearing = data.bearing;
+           currentRemaining = data.remaining;
         }
-        
+
+        driverMarker.setLatLng(currentPt as any);
+        updateActiveLine(currentRemaining as any);
+
+        const rotIcon = document.getElementById("driver-icon-rotation");
+        if (rotIcon) {
+          rotIcon.style.transform = `rotate(${currentBearing}deg)`;
+        }
+
         if (!isDone) {
-           reqId = requestAnimationFrame(animate);
+          map.setView(currentPt as any, 17, { animate: false });
+          reqId = requestAnimationFrame(animate);
+        } else {
+          map.setView(customer as any, 17, { animate: false });
         }
       }
       
@@ -1432,23 +1481,6 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
       }
     };
   }, [currentTheme, activeOrderTime]);
-
-  // Helper
-  function getPointAlongPath(path: number[][], progress: number) {
-    if (path.length < 2) return path[0];
-    const segments = path.length - 1;
-    const totalLen = segments; 
-    const scaledProg = progress * totalLen;
-    const idx = Math.min(Math.floor(scaledProg), segments - 1);
-    const segmentProg = scaledProg - idx;
-    
-    const p1 = path[idx];
-    const p2 = path[idx + 1];
-    return [
-      p1[0] + (p2[0] - p1[0]) * segmentProg,
-      p1[1] + (p2[1] - p1[1]) * segmentProg
-    ];
-  }
 
   return (
     <motion.div 
