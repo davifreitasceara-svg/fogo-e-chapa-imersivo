@@ -1119,52 +1119,59 @@ function Index() {
         <section id="avaliacoes" className="relative border-y border-white/10 bg-surface-deep">
           {/* Sticky pinned background (Burger & Title) */}
           <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden pointer-events-none z-0">
-            <div className="absolute top-24 sm:top-32 text-center z-20">
-              <p className="eyebrow text-primary tracking-[0.2em] font-bold">A VOZ DA RUA</p>
-              <h2 className="section-title text-foreground uppercase">O que dizem<br/><span>sobre nós</span></h2>
+            <div className="absolute top-16 sm:top-24 text-center z-20">
+              <p className="eyebrow text-primary tracking-[0.2em] font-bold mb-2">A VOZ DA RUA</p>
+              <h2 className="section-title text-foreground uppercase text-4xl sm:text-6xl lg:text-7xl">O que dizem<br/><span>sobre nós</span></h2>
             </div>
             
             <img 
               src={heroBurger}
               alt="Fogo e Chapa Burger"
-              className="h-[40vh] sm:h-[55vh] object-contain drop-shadow-2xl opacity-40 sm:opacity-90 mt-20"
+              className="h-[50vh] sm:h-[65vh] object-contain drop-shadow-2xl mt-32"
             />
           </div>
 
           {/* Scrolling Comments Overlay */}
           <div className="relative z-10 w-full max-w-7xl mx-auto px-5 -mt-[100vh]">
-            <div className="pt-[90vh] pb-[60vh] flex flex-col relative w-full">
+            <div className="pt-[110vh] pb-[50vh] flex flex-col relative w-full items-center">
+              
+              {/* Dotted Path Background */}
+              <div className="absolute inset-0 top-[110vh] flex justify-center pointer-events-none opacity-60">
+                <svg className="w-full h-full max-w-5xl" viewBox="0 0 1000 2000" preserveAspectRatio="none">
+                  <path 
+                    d="M 200 0 C 400 300, 800 500, 800 800 C 800 1100, 200 1300, 200 1600 C 200 1800, 400 1900, 500 2000" 
+                    fill="none" stroke="#ea580c" strokeWidth="4" strokeDasharray="1 30" strokeLinecap="round" 
+                  />
+                </svg>
+              </div>
+
               {[
-                { name: "João Pedro", role: "Cliente Fiel", text: "O melhor hambúrguer artesanal da cidade. O ponto da carne é perfeito, e a crosta que o fogo deixa é absurda!", side: "left" },
-                { name: "Mariana Souza", role: "Foodie", text: "Ambiente incrível, atendimento rápido e o Brasa Bacon... Sem palavras. O molho de rapadura é um espetáculo à parte.", side: "right" },
-                { name: "Carlos Eduardo", role: "Amante de pimenta", text: "Fui no Inferno Picante e não me arrependi. Sabor intenso, jalapeño na medida certa. Tudo muito fresco.", side: "left" },
-                { name: "Ana Clara", role: "Sempre pede delivery", text: "Pedi em casa e chegou super quente. A batata continuava crocante e o lanche não desmanchou. Nota 10!", side: "right" },
+                { name: "João Pedro", role: "Cliente Fiel", text: "O melhor hambúrguer artesanal da cidade. O ponto da carne é perfeito, e a crosta que o fogo deixa é absurda!", side: "left", mt: "mt-0" },
+                { name: "Mariana Souza", role: "Foodie", text: "Ambiente incrível, atendimento rápido e o Brasa Bacon... Sem palavras. O molho de rapadura é um espetáculo à parte.", side: "right", mt: "-mt-32 sm:-mt-64" },
+                { name: "Carlos Eduardo", role: "Amante de pimenta", text: "Fui no Inferno Picante e não me arrependi. Sabor intenso, jalapeño na medida certa. Tudo muito fresco.", side: "left", mt: "-mt-10 sm:-mt-20" },
+                { name: "Ana Clara", role: "Sempre pede delivery", text: "Pedi em casa e chegou super quente. A batata continuava crocante e o lanche não desmanchou. Nota 10!", side: "right", mt: "-mt-32 sm:-mt-64" },
               ].map((review, i) => (
-                <motion.div
+                <div
                   key={i}
-                  initial={{ opacity: 0, y: 100 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ margin: "-10% 0px -10% 0px" }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className={`w-full max-w-[90%] sm:max-w-md ${review.side === "left" ? "mr-auto" : "ml-auto"} ${i !== 0 ? "-mt-10 sm:-mt-32" : ""}`}
+                  className={`w-full max-w-[95%] sm:max-w-md lg:max-w-lg ${review.side === "left" ? "mr-auto sm:ml-10 lg:ml-20" : "ml-auto sm:mr-10 lg:mr-20"} ${review.mt} relative z-10 mb-32 sm:mb-64`}
                 >
-                  <div className="p-6 sm:p-8 border border-white/5 rounded-2xl shadow-2xl bg-[#110D0B] relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
-                    <div className="absolute top-4 right-4 text-primary/20 text-6xl font-serif leading-none rotate-180">"</div>
+                  <div className="p-6 sm:p-8 border border-white/5 rounded-3xl shadow-2xl bg-[#0a0807] relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
+                    <div className="absolute top-4 right-6 text-primary/10 text-8xl font-serif leading-none rotate-180">"</div>
                     <div className="flex items-center gap-4 mb-6 relative z-10">
-                      <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black uppercase text-xl border border-primary/30 shrink-0">
+                      <div className="h-14 w-14 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black uppercase text-2xl border border-primary/30 shrink-0">
                         {review.name.charAt(0)}
                       </div>
                       <div>
                         <div className="flex items-center gap-1 text-primary text-sm mb-1">
                           {"★★★★★".split("").map((star, j) => <span key={j}>{star}</span>)}
                         </div>
-                        <p className="font-bold font-display uppercase tracking-wider text-sm text-white">{review.name}</p>
+                        <p className="font-bold font-display uppercase tracking-wider text-base text-white">{review.name}</p>
                         <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{review.role}</p>
                       </div>
                     </div>
-                    <p className="text-lg font-medium text-foreground/80 italic leading-relaxed relative z-10">{review.text}</p>
+                    <p className="text-lg font-medium text-foreground/80 italic leading-relaxed relative z-10">"{review.text}"</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
