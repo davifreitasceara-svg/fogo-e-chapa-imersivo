@@ -1122,19 +1122,14 @@ function Index() {
         </section>
 
 
-        <section id="sobre" className="border-y border-white/10 py-20 sm:py-28 relative overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
-          {/* Video Background */}
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none mix-blend-screen"
-          >
-            <source src="/chapa.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 80%)` }}></div>
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-2 lg:items-center lg:px-8 relative z-10">
+        <section id="sobre" className="border-y border-white/10 py-24 sm:py-32 relative overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
+          
+          {/* Premium Glowing Background Effects */}
+          <div className="absolute top-0 left-1/4 w-[30rem] h-[30rem] rounded-full blur-[120px] opacity-30 pointer-events-none mix-blend-screen transition-colors duration-700 animate-pulse" style={{ backgroundColor: currentTheme.secondary }}></div>
+          <div className="absolute -bottom-32 right-1/4 w-[25rem] h-[25rem] rounded-full blur-[100px] opacity-20 pointer-events-none mix-blend-screen transition-colors duration-700 animate-pulse" style={{ backgroundColor: currentTheme.secondary, animationDelay: '2s' }}></div>
+          <div className="absolute inset-0 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, transparent 30%, ${currentTheme.bgDark} 100%)` }}></div>
+          
+          <div className="mx-auto grid max-w-7xl gap-16 px-5 lg:grid-cols-2 lg:items-center lg:px-8 relative z-10">
             <motion.div 
               initial={{ opacity: 0, x: -30 }} 
               whileInView={{ opacity: 1, x: 0 }} 
