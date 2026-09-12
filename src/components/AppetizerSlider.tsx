@@ -63,7 +63,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
       {/* Animated Background Color */}
       <motion.div 
         className="absolute inset-0 z-0"
-        animate={{ backgroundColor: currentApp.bgColor }}
+        animate={{ backgroundColor: currentTheme?.secondary || currentApp.bgColor }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
       />
 
