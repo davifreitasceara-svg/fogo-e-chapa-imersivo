@@ -1205,9 +1205,8 @@ function Index() {
               </a>
             </div>
             
-            <div className="col-span-2 lg:col-span-1 h-48 lg:h-56 rounded-xl overflow-hidden order-first md:order-none relative">
-               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800" alt="Map" className="absolute inset-0 w-full h-full object-cover opacity-80" />
-               <div className="absolute inset-0 bg-blue-500/20 mix-blend-overlay pointer-events-none"></div>
+            <div className="col-span-2 lg:col-span-1 h-48 lg:h-56 rounded-xl overflow-hidden order-first md:order-none relative bg-white/5 shadow-inner">
+               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3657.197368023192!2d-46.689364!3d-23.559385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce57a6020c6a51%3A0xc3928ebaf298e8!2sVila%20Madalena%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1714522804561!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="opacity-90 hover:opacity-100 transition-opacity"></iframe>
             </div>
 
             <div className="col-span-2 lg:col-span-1 space-y-6 flex flex-col justify-start">
@@ -1242,10 +1241,10 @@ function Index() {
         </div>
 
         {/* Giant Cutoff Text Bottom Edge */}
-        <div className="w-full relative h-[25vw] min-h-[150px] max-h-[350px] mt-10 overflow-hidden select-none pointer-events-none flex justify-center items-end opacity-95 transition-colors duration-700">
-           <div className="font-display font-black uppercase text-[24vw] leading-[0.75] tracking-tighter whitespace-nowrap translate-y-[22%] flex items-center" style={{ color: 'white' }}>
+        <div className="w-full relative h-[30vw] min-h-[160px] max-h-[400px] mt-10 overflow-hidden select-none pointer-events-none flex justify-center items-end opacity-95 transition-colors duration-700">
+           <div className="font-display font-black uppercase text-[24vw] leading-[0.75] tracking-tighter whitespace-nowrap translate-y-[20%] flex items-center" style={{ color: 'white' }}>
              FOGO
-             <span className="inline-flex items-center justify-center rounded-full text-white bg-secondary aspect-square w-[20vw] mx-[1vw] leading-none pb-[1vw]" style={{ backgroundColor: currentTheme.secondary }}>
+             <span className="inline-flex items-center justify-center rounded-full text-white bg-secondary aspect-square w-[20vw] mx-[1vw] leading-none pb-[1vw] shadow-2xl" style={{ backgroundColor: currentTheme.secondary }}>
                &
              </span>
              CHAPA
