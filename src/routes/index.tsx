@@ -1440,13 +1440,37 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
       const duration1 = 30000; // 30s to pick up
       const duration2 = 45000; // 45s to deliver
       
-      // Helper to compute position, bearing, and remaining path
-      function getPathData(path: number[][], progress: number) {
+      const computeDistances = (path: number[][]) => {
+        const dists = [0];
+        let total = 0;
+        for (let i = 0; i < path.length - 1; i++) {
+          const dx = path[i+1][1] - path[i][1];
+          const dy = path[i+1][0] - path[i][0];
+          total += Math.sqrt(dx*dx + dy*dy);
+          dists.push(total);
+        }
+        return { dists, total };
+      };
+      
+      const r1Data = computeDistances(route1);
+      const r2Data = computeDistances(route2);
+
+      // Helper to compute position, bearing, and remaining path based on true distance
+      function getPathData(path: number[][], pathInfo: {dists: number[], total: number}, progress: number) {
         if (path.length < 2) return { pt: path[0], bearing: 0, remaining: path };
-        const segments = path.length - 1;
-        const scaledProg = progress * segments;
-        const idx = Math.min(Math.floor(scaledProg), segments - 1);
-        const segmentProg = scaledProg - idx;
+        
+        const targetDist = progress * pathInfo.total;
+        let idx = 0;
+        for (let i = 0; i < pathInfo.dists.length - 1; i++) {
+           if (targetDist >= pathInfo.dists[i] && targetDist <= pathInfo.dists[i+1]) {
+             idx = i;
+             break;
+           }
+        }
+        if (targetDist >= pathInfo.total) idx = path.length - 2;
+        
+        const segmentLen = pathInfo.dists[idx+1] - pathInfo.dists[idx];
+        const segmentProg = segmentLen === 0 ? 0 : (targetDist - pathInfo.dists[idx]) / segmentLen;
         
         const p1 = path[idx];
         const p2 = path[idx + 1];
@@ -1456,10 +1480,8 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
           p1[1] + (p2[1] - p1[1]) * segmentProg
         ];
 
-        // Bearing calculation: Note that Lat is Y, Lng is X
-        // Math.atan2(dx, dy) gives angle from North clockwise
-        const dy = p2[0] - p1[0]; // Lat difference
-        const dx = p2[1] - p1[1]; // Lng difference
+        const dy = p2[0] - p1[0]; 
+        const dx = p2[1] - p1[1]; 
         const bearing = Math.atan2(dx, dy) * (180 / Math.PI);
         
         const remaining = [pt, ...path.slice(idx + 1)];
@@ -1487,13 +1509,13 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
 
         if (elapsed < duration1) {
            const progress = elapsed / duration1;
-           const data = getPathData(route1, progress);
+           const data = getPathData(route1, r1Data, progress);
            currentPt = data.pt;
            currentBearing = data.bearing;
            currentRemaining = [...data.remaining, ...route2.slice(1)];
         } else {
            const progress = (elapsed - duration1) / duration2;
-           const data = getPathData(route2, progress);
+           const data = getPathData(route2, r2Data, progress);
            currentPt = data.pt;
            currentBearing = data.bearing;
            currentRemaining = data.remaining;
