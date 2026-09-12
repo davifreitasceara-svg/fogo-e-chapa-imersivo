@@ -1159,14 +1159,94 @@ function Index() {
         </section>
       </main>
 
-      <footer id="contato" className="pt-16 transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
-        <div className="mx-auto grid max-w-7xl gap-12 px-5 pb-14 md:grid-cols-2 lg:grid-cols-4 lg:px-8 relative z-10">
-          <div><Brand color={currentTheme.secondary} /><p className="mt-5 max-w-xs text-sm leading-relaxed text-muted-foreground">Hambúrguer artesanal, fogo alto e hospitalidade para quem leva sabor a sério.</p><div className="mt-5 flex gap-2"><Button size="icon" variant="outline" aria-label="Instagram" className="hover:text-white"><Instagram className="size-4" /></Button><Button size="icon" variant="outline" aria-label="TikTok" className="text-base font-black hover:text-white">T</Button></div></div>
-          <div><h3 className="footer-title">Onde estamos</h3><p className="footer-line"><MapPin className="size-4 transition-colors duration-700" style={{ color: currentTheme.secondary }} /> Rua das Brasas, 217<br />Vila Madalena, São Paulo — SP</p></div>
-          <div><h3 className="footer-title">Horários</h3><p className="footer-line"><Clock3 className="size-4 transition-colors duration-700" style={{ color: currentTheme.secondary }} /> Ter — Qui: 18h às 23h<br />Sex — Dom: 12h às 00h</p></div>
-          <div><h3 className="footer-title">Atalhos</h3><div className="space-y-3 text-sm text-muted-foreground"><a className="block hover:text-white transition-colors" href="#cardapio">Cardápio</a><a className="block hover:text-white transition-colors" href="#sobre">Nossa história</a><a className="block hover:text-white transition-colors" href="mailto:oi@fogoechapa.com.br">Fale com a gente</a><button className="hover:text-white transition-colors" onClick={() => setAuthOpen(true)}>Minha conta</button></div></div>
+      <footer id="contato" className="pt-20 bg-background transition-colors duration-700 relative overflow-hidden text-white" style={{ backgroundColor: currentTheme.bgVeryDark }}>
+        <div className="mx-auto max-w-7xl px-5 lg:px-8 relative z-10 flex flex-col gap-12">
+          {/* Top Bar */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0">
+            <div className="flex gap-6 font-display font-black text-lg">
+              <a href="#cardapio" className="hover:text-white/80 transition-colors">MENU</a>
+              <a href="#promocoes" className="hover:text-white/80 transition-colors">PROMOÇÕES</a>
+              <a href="#avaliacoes" className="hover:text-white/80 transition-colors">AVALIAÇÕES</a>
+              <a href="#contato" className="hover:text-white/80 transition-colors">LOCAL</a>
+            </div>
+            <div className="text-4xl font-black font-display tracking-tighter uppercase flex items-center gap-1">
+              FOGO<span style={{ color: currentTheme.secondary }} className="rounded-full bg-white text-black size-8 flex items-center justify-center text-2xl -mt-1">&</span>CHAPA
+            </div>
+            <Button variant="outline" className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors" style={{ borderColor: currentTheme.secondary, color: 'white', backgroundColor: 'transparent' }}>
+              PEDIR AGORA
+            </Button>
+          </div>
+
+          {/* Grid Layout */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 pb-12">
+            <div className="space-y-4 font-bold text-sm uppercase">
+              <a href="#cardapio" className="block hover:text-white/70 transition-colors">MENU</a>
+              <a href="#promocoes" className="block hover:text-white/70 transition-colors">PROMOÇÕES</a>
+              <a href="#avaliacoes" className="block hover:text-white/70 transition-colors">AVALIAÇÕES</a>
+              <a href="#contato" className="block hover:text-white/70 transition-colors">ONDE ESTAMOS</a>
+            </div>
+            <div className="space-y-4 font-bold text-sm uppercase">
+              <a href="#" className="block hover:text-white/70 transition-colors">POLÍTICA DE PRIVACIDADE</a>
+              <a href="#" className="block hover:text-white/70 transition-colors">TERMOS DE SERVIÇO</a>
+              <a href="#" className="block hover:text-white/70 transition-colors">POLÍTICA DE REEMBOLSO</a>
+            </div>
+            <div className="space-y-6">
+              <a href="#" className="flex items-center gap-3 group">
+                <div className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105" style={{ backgroundColor: currentTheme.secondary }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 11.454c-.015-3.084 2.52-4.557 2.634-4.627-1.436-2.102-3.659-2.387-4.453-2.417-1.895-.19-3.704 1.115-4.664 1.115-.961 0-2.454-1.09-4.004-1.061-2.02.028-3.882 1.173-4.919 3.003-2.096 3.651-.537 9.07 1.503 12.032 1.002 1.455 2.179 3.086 3.754 3.031 1.498-.057 2.062-.962 3.865-.962 1.787 0 2.308.962 3.865.932 1.614-.029 2.63-1.47 3.616-2.918 1.144-1.671 1.614-3.29 1.642-3.376-.037-.014-3.153-1.214-3.138-4.32z"/><path d="M10.985 5.566c.82-.99 1.373-2.368 1.222-3.74-.112.005-.23.012-.34.012-1.353 0-2.825-.85-3.67-1.859-.757-.9-1.391-2.327-1.21-3.67 1.464.113 2.802.99 3.658 1.956.76.85 1.326 2.197 1.19 3.51-.1.006-.21.006-.31.006-1.39.006-2.784-.81-3.64-1.78z"/></svg>
+                </div>
+                <div className="text-xs">Baixar na<br/><span className="font-bold text-sm">App Store</span></div>
+              </a>
+              <a href="#" className="flex items-center gap-3 group">
+                <div className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105" style={{ backgroundColor: currentTheme.secondary }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.685 1.298c-.4.2-.785.643-.785 1.306v18.791c0 .663.385 1.106.785 1.306.4.2.97.106 1.442-.17L21.36 12.91c.471-.277.74-.75.74-1.16 0-.41-.269-.882-.74-1.158L6.127 1.469c-.472-.277-1.042-.371-1.442-.17z"/></svg>
+                </div>
+                <div className="text-xs">Baixar no<br/><span className="font-bold text-sm">Google Play</span></div>
+              </a>
+            </div>
+            
+            <div className="col-span-2 md:col-span-1 h-52 lg:h-64 rounded-xl overflow-hidden bg-white/5 order-first md:order-none mb-8 md:mb-0">
+               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3657.197368023192!2d-46.689364!3d-23.559385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce57a6020c6a51%3A0xc3928ebaf298e8!2sVila%20Madalena%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1714522804561!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"></iframe>
+            </div>
+
+            <div className="col-span-2 md:col-span-1 space-y-6 flex flex-col justify-between">
+              <div className="space-y-6">
+                <div className="flex gap-3">
+                  <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><MapPin className="size-5" /></div>
+                  <div className="text-sm font-bold">Rua das Brasas, 217<br/><span className="text-xs font-normal opacity-70">São Paulo, SP 05414, Brasil</span></div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><Clock3 className="size-5" /></div>
+                  <div className="text-sm font-bold">+55 11 9999-9999<br/><span className="text-xs font-normal opacity-70">Ter-Dom, 18h - 23h</span></div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 pt-6 md:pt-0">
+                <span className="text-sm font-bold mr-2">Siga-nos:</span>
+                <a href="#" className="size-9 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}><Instagram className="size-5" /></a>
+                <a href="#" className="size-9 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}>T</a>
+              </div>
+            </div>
+          </div>
+
+          {/* Newsletter section */}
+          <div className="relative pt-6">
+            <div className="max-w-md">
+              <h3 className="font-display font-black text-xl mb-4 uppercase tracking-wide" style={{ color: currentTheme.secondary }}>NUNCA PERCA UMA PROMOÇÃO</h3>
+              <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); }}>
+                <input type="email" placeholder="nome@email.com" className="flex-1 bg-transparent border border-white/20 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-white transition-colors" />
+                <Button type="submit" className="font-bold hover:brightness-110 transition-all text-white" style={{ backgroundColor: currentTheme.secondary }}>ASSINAR</Button>
+              </form>
+              <p className="text-xs mt-3 opacity-70 leading-relaxed">Receba combos exclusivos direto no seu e-mail.<br/>Sem spam, prometemos.</p>
+            </div>
+          </div>
         </div>
-        <div className="border-t border-white/10 py-5"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 text-xs text-muted-foreground sm:flex-row sm:justify-between lg:px-8"><span>© 2026 Fogo e Chapa. Todos os direitos reservados.</span><span>Feito com fogo, ferro e respeito.</span></div></div>
+
+        {/* Giant Cutoff Text Bottom Edge */}
+        <div className="w-full relative h-[15vw] min-h-[120px] max-h-[300px] mt-10 overflow-hidden select-none pointer-events-none flex justify-center items-end opacity-90 transition-colors duration-700">
+           <div className="font-display font-black uppercase text-[26vw] leading-[0.7] tracking-tighter whitespace-nowrap translate-y-[20%]" style={{ color: 'white' }}>
+             FOGO<span style={{ color: currentTheme.secondary }}>&</span>CHAPA
+           </div>
+        </div>
       </footer>
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
