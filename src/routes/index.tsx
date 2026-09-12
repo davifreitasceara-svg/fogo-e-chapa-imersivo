@@ -743,13 +743,10 @@ function Index() {
 
                 </div>
 
-              </div>
-            </motion.div>
-          </div>
         </section>
 
         {/* Appetizer Slider Section */}
-        <AppetizerSlider onAddToCart={addToCart} />
+        <AppetizerSlider onAddToCart={addToCart} currentTheme={currentTheme} />
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
         <section className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
