@@ -1368,8 +1368,8 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
       const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
 
       // Simple animation loop along the route
-      const duration1 = 8000;
-      const duration2 = 12000;
+      const duration1 = 30000; // 30s to pick up
+      const duration2 = 45000; // 45s to deliver
       
       let reqId: number;
       function animate() {
@@ -1457,7 +1457,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime }: { onC
         <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
 
         {/* Close Button */}
-        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-30">
+        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-[9999]">
            <X className="size-5" />
         </Button>
       </div>
