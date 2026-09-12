@@ -108,11 +108,11 @@ const products: Product[] = [
   { id: 319, name: "FRANGO COM ALHO", description: "FRANGO COM ALHO", price: 12.5, image: burgerClassico, category: "burger" },
   { id: 320, name: "BUFFALO", description: "BUFFALO", price: 12.0, image: burgerClassico, category: "burger" },
   { id: 321, name: "BBQ", description: "BBQ", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 322, name: "MEL GLA!ADO", description: "MEL GLA!ADO", price: 14.5, image: burgerClassico, category: "burger" },
+  { id: 322, name: "MEL GLAÇADO", description: "MEL GLAÇADO", price: 14.5, image: burgerClassico, category: "burger" },
   { id: 323, name: "MEL APIMENTADO", description: "MEL APIMENTADO", price: 14.0, image: burgerClassico, category: "burger" },
   { id: 324, name: "LEMON PEPPER", description: "LEMON PEPPER", price: 13.0, image: burgerClassico, category: "burger" },
   { id: 325, name: "CEBOLA", description: "CEBOLA", price: 4.25, image: burgerClassico, category: "burger" },
-  { id: 326, name: "JALAPEO", description: "JALAPEO", price: 9.0, image: burgerClassico, category: "burger" },
+  { id: 326, name: "JALAPEÑO", description: "JALAPEÑO", price: 9.0, image: burgerClassico, category: "burger" },
   { id: 327, name: "CROCANTE", description: "CROCANTE", price: 7.75, image: burgerClassico, category: "burger" },
   { id: 328, name: "COCA-COLA", description: "COCA-COLA", price: 2.25, image: burgerClassico, category: "burger" },
   { id: 329, name: "LIMONADA", description: "LIMONADA", price: 3.0, image: burgerClassico, category: "burger" },
@@ -131,7 +131,7 @@ const sparks = Array.from({ length: 18 }, (_, index) => ({
 
 function Brand() {
   return (
-    <a href="#inicio" className="group flex items-center gap-3" aria-label="Fogo e Chapa  início">
+    <a href="#inicio" className="group flex items-center gap-3" aria-label="Fogo e Chapa   início">
       <span className="flex size-10 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-primary transition-transform group-hover:rotate-6"><Flame className="size-5 fill-current" /></span>
       <span className="font-display text-xl font-black uppercase leading-none text-foreground">Fogo <span className="text-primary">&</span> Chapa</span>
     </a>
@@ -323,7 +323,6 @@ function Index() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="text-2xl sm:text-3xl">x</span>
             <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">FOGO E CHAPA</span>
           </motion.div>
 
@@ -544,7 +543,7 @@ function Index() {
           {/* Section Header */}
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
             <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-4 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
-              Sabor que fala alto <span className="inline-block align-middle text-4xl sm:text-5xl md:text-6xl -mt-2">x</span>
+              Sabor que fala alto
             </h2>
             <p className="text-lg sm:text-xl font-medium tracking-wide opacity-80 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
               Sabores autênticos servidos frescos todos os dias.
@@ -671,7 +670,7 @@ function Index() {
                       {[
                         { name: "BUFFALO", price: "12,00", spicy: true },
                         { name: "BBQ", price: "11,00" },
-                        { name: "MEL GLA!ADO", price: "14,50" },
+                        { name: "MEL GLAÇADO", price: "14,50" },
                         { name: "MEL APIMENTADO", price: "14,00", spicy: true },
                         { name: "LEMON PEPPER", price: "13,00" }
                       ].map(item => (
@@ -691,7 +690,7 @@ function Index() {
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CEBOLA", price: "4,25" },
-                        { name: "JALAPEO", price: "9,00", spicy: true },
+                        { name: "JALAPEÑO", price: "9,00", spicy: true },
                         { name: "CROCANTE", price: "7,75" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
@@ -1163,13 +1162,13 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
         <form onSubmit={submit} className="mt-6 space-y-4">
           {mode === "signup" && <label className="field"><span>Nome</span><div><UserRound /><input required maxLength={80} autoComplete="name" placeholder="Seu nome" /></div></label>}
           <label className="field"><span>E-mail</span><div><Mail /><input required type="email" maxLength={255} autoComplete="email" placeholder="voce@email.com" /></div></label>
-          <label className="field"><span>Senha</span><div><LockKeyhole /><input required type="password" minLength={6} maxLength={72} autoComplete={mode === "login" ? "current-password" : "new-password"} placeholder="⬢⬢⬢⬢⬢⬢⬢⬢" /></div></label>
+          <label className="field"><span>Senha</span><div><LockKeyhole /><input required type="password" minLength={6} maxLength={72} autoComplete={mode === "login" ? "current-password" : "new-password"} placeholder="••••••••" /></div></label>
           {mode === "login" && <button type="button" className="ml-auto block text-xs text-gold hover:text-primary" onClick={() => setMessage("Recuperação de senha disponível quando o acesso real for ativado.")}>Esqueci minha senha</button>}
           <Button className="w-full" size="lg" type="submit">{mode === "login" ? "Entrar" : "Criar conta"}</Button>
         </form>
         {message && <p className="mt-3 rounded-sm border border-gold/30 bg-gold/10 p-3 text-xs text-gold" role="status">{message}</p>}
         <div className="my-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground"><span className="h-px flex-1 bg-border" /> ou continue com <span className="h-px flex-1 bg-border" /></div>
-        <div className="grid grid-cols-2 gap-3"><Button variant="outline" onClick={() => setMessage("Google é apenas demonstrativo nesta versão.")}><span className="font-bold">G</span> Google</Button><Button variant="outline" onClick={() => setMessage("Apple é apenas demonstrativo nesta versão.")}><span className="text-lg"></span> Apple</Button></div>
+        <div className="grid grid-cols-2 gap-3"><Button variant="outline" onClick={() => setMessage("Google é apenas demonstrativo nesta versão.")}><span className="font-bold">G</span> Google</Button><Button variant="outline" onClick={() => setMessage("Apple é apenas demonstrativo nesta versão.")}>Apple</Button></div>
         <p className="mt-5 text-center text-[11px] leading-relaxed text-muted-foreground">Demonstração visual. Nenhum dado é enviado ou armazenado.</p>
       </div>
     </div>
