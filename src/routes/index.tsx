@@ -743,6 +743,9 @@ function Index() {
 
                 </div>
 
+              </div>
+            </motion.div>
+          </div>
         </section>
 
         {/* Appetizer Slider Section */}
