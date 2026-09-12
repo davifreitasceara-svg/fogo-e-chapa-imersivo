@@ -1116,27 +1116,27 @@ function Index() {
           </div>
         </section>
 
-        <section id="avaliacoes" className="relative border-y border-white/10 bg-surface-deep py-20 sm:py-32 overflow-hidden">
-          <div className="text-center mb-16 relative z-20">
-            <p className="eyebrow text-primary">A voz da rua</p>
-            <h2 className="section-title text-foreground">O que dizem<br/><span>sobre nós</span></h2>
+        <section id="avaliacoes" className="relative border-y border-white/10 bg-surface-deep">
+          {/* Sticky pinned background (Burger & Title) */}
+          <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden pointer-events-none z-0">
+            <div className="absolute top-24 sm:top-32 text-center z-20">
+              <p className="eyebrow text-primary">A voz da rua</p>
+              <h2 className="section-title text-foreground">O que dizem<br/><span>sobre nós</span></h2>
+            </div>
+            
+            <motion.img 
+              src={heroBurger}
+              alt="Fogo e Chapa Burger"
+              className="h-[50vh] sm:h-[65vh] object-contain drop-shadow-2xl opacity-20 sm:opacity-90 mt-20"
+              initial={{ y: 0, rotate: -2 }}
+              animate={{ y: [0, -15, 0], rotate: [0, 2, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
           </div>
 
-          <div className="relative">
-            {/* Sticky central image */}
-            <div className="sticky top-[20vh] h-[60vh] w-full flex justify-center pointer-events-none z-0 opacity-20 sm:opacity-90">
-              <motion.img 
-                src={heroBurger}
-                alt="Fogo e Chapa Burger"
-                className="h-full object-contain drop-shadow-2xl"
-                initial={{ y: 0, rotate: -2 }}
-                animate={{ y: [0, -15, 0], rotate: [0, 2, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </div>
-
-            {/* Comments */}
-            <div className="relative z-10 flex flex-col gap-12 sm:gap-32 -mt-[50vh] pb-[10vh] max-w-5xl mx-auto px-5">
+          {/* Scrolling Comments Overlay */}
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-5 -mt-[100vh]">
+            <div className="pt-[90vh] pb-[40vh] flex flex-col gap-[35vh]">
               {[
                 { name: "João Pedro", role: "Cliente Fiel", text: "O melhor hambúrguer artesanal da cidade. O ponto da carne é perfeito, e a crosta que o fogo deixa é absurda!", side: "left" },
                 { name: "Mariana Souza", role: "Foodie", text: "Ambiente incrível, atendimento rápido e o Brasa Bacon... Sem palavras. O molho de rapadura é um espetáculo à parte.", side: "right" },
@@ -1145,10 +1145,10 @@ function Index() {
               ].map((review, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: review.side === "left" ? -80 : 80, y: 50 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={{ once: true, margin: "-20%" }}
-                  transition={{ duration: 0.7, type: "spring", bounce: 0.4 }}
+                  initial={{ opacity: 0, y: 150, scale: 0.9, rotate: review.side === "left" ? -4 : 4 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0 }}
+                  viewport={{ once: false, margin: "-10% 0px -20% 0px" }}
+                  transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
                   className={`flex w-full ${review.side === "left" ? "justify-start" : "justify-end"}`}
                 >
                   <div className="glass-panel p-6 sm:p-8 max-w-md border border-white/10 rounded-3xl shadow-2xl bg-background/90 sm:bg-background/80 backdrop-blur-xl relative overflow-hidden">
