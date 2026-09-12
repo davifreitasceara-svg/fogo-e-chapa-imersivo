@@ -1285,81 +1285,109 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
 }
 
 function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void, currentTheme: any }) {
+  const [stage, setStage] = useState<"picking_up" | "delivering">("picking_up");
+
+  useEffect(() => {
+    // Transition to delivering after 8 seconds for demonstration
+    const timer = setTimeout(() => {
+      setStage("delivering");
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
-      className="fixed inset-0 z-[100] flex flex-col bg-background" 
-      style={{ backgroundColor: currentTheme.bgDark }}
+      className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
       <div className="relative flex-1 overflow-hidden">
-        {/* Fake Map Background */}
-        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200" alt="Map" className="absolute inset-0 w-full h-full object-cover opacity-30 grayscale" />
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Fake Map Background (Light mode for 99 style) */}
+        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200" alt="Map" className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale brightness-125 contrast-75" />
+        <div className="absolute inset-0 bg-blue-50/30" />
 
-        {/* Route Line (SVG) */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100">
-           <path d="M 20 80 Q 40 20, 80 50" fill="none" stroke={currentTheme.secondary} strokeWidth="1" strokeDasharray="2 2" className="opacity-60" />
+        {/* Route Line (SVG) - 99 style thick blue line */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+           {stage === "picking_up" ? (
+             <path d="M 20% 95% L 20% 70% L 40% 70%" fill="none" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" className="opacity-90 drop-shadow-md" />
+           ) : (
+             <path d="M 40% 70% L 40% 30% L 80% 30%" fill="none" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" className="opacity-90 drop-shadow-md" />
+           )}
         </svg>
         
-        {/* Animated Bike Marker */}
+        {/* Animated 99-style Marker */}
         <motion.div 
-           className="absolute size-14 bg-white rounded-full flex items-center justify-center shadow-2xl border-4 z-20"
-           style={{ borderColor: currentTheme.secondary, color: currentTheme.secondary }}
-           animate={{
-             left: ["20%", "30%", "50%", "65%", "80%"],
-             top: ["80%", "45%", "25%", "35%", "50%"],
-           }}
-           transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+           className="absolute size-10 flex items-center justify-center z-20 -translate-x-1/2 -translate-y-1/2"
+           animate={
+             stage === "picking_up" 
+               ? { left: ["20%", "20%", "40%"], top: ["95%", "70%", "70%"] }
+               : { left: ["40%", "40%", "80%"], top: ["70%", "30%", "30%"] }
+           }
+           transition={{ duration: 8, ease: "linear", repeat: Infinity }}
         >
-          <Bike className="size-7" />
+          {/* Cyan Glow Pulse */}
+          <div className="absolute inset-0 bg-[#06b6d4] rounded-full opacity-40 animate-ping" />
+          {/* White border, cyan center, small inner dot */}
+          <div className="relative size-6 bg-[#06b6d4] rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+             <div className="size-2 bg-white rounded-full" />
+          </div>
         </motion.div>
 
         {/* Destination Marker */}
-        <div className="absolute left-[80%] top-[50%] -translate-x-1/2 -translate-y-1/2 size-12 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
-           <MapPin className="size-6 text-white" />
-        </div>
+        {stage === "delivering" && (
+          <div className="absolute left-[80%] top-[30%] -translate-x-1/2 -translate-y-1/2 size-8 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
+             <MapPin className="size-4 text-white" />
+          </div>
+        )}
         
         {/* Restaurant Marker */}
-        <div className="absolute left-[20%] top-[80%] -translate-x-1/2 -translate-y-1/2 size-12 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
-           <Flame className="size-6 text-white" />
+        <div className="absolute left-[40%] top-[70%] -translate-x-1/2 -translate-y-1/2 size-10 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
+           <Flame className="size-5 text-white" />
         </div>
 
         {/* Close Button */}
-        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-black/50 hover:bg-black/80 text-white rounded-full z-30">
+        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-black/20 hover:bg-black/40 text-black hover:text-white rounded-full z-30 backdrop-blur-md">
            <X className="size-6" />
         </Button>
       </div>
 
       {/* Status Card (Bottom sheet style) */}
-      <div className="bg-black/40 backdrop-blur-2xl border-t border-white/10 p-6 sm:p-8 rounded-t-3xl -mt-6 relative z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="bg-white border-t border-gray-200 p-6 sm:p-8 rounded-t-3xl -mt-6 relative z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
          <div className="max-w-2xl mx-auto">
-            <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6" />
+            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6" />
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-black font-display uppercase tracking-tight text-white">Pedido a caminho!</h2>
-                <p className="text-sm font-medium opacity-70 text-white mt-1">Previsão de entrega: 15-20 min</p>
+                <h2 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900">
+                  {stage === "picking_up" ? "Indo para a loja" : "A caminho do destino"}
+                </h2>
+                <p className="text-sm font-medium opacity-70 text-gray-600 mt-1">
+                  {stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
+                </p>
               </div>
               <div className="text-right">
-                 <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>18:45</div>
-                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-white">Chegada</p>
+                 <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
+                   {stage === "picking_up" ? "3 min" : "18:45"}
+                 </div>
+                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-gray-500">
+                   {stage === "picking_up" ? "Distância" : "Chegada"}
+                 </p>
               </div>
             </div>
             
-            <div className="bg-white/5 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-white/10">
-               <div className="size-14 sm:size-16 rounded-full bg-white/10 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
+            <div className="bg-gray-50 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-gray-100 shadow-sm">
+               <div className="size-14 sm:size-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
                   <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200" alt="Entregador" className="w-full h-full object-cover" />
                </div>
                <div className="flex-1">
-                  <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">Carlos S.</h4>
-                  <p className="text-xs sm:text-sm opacity-70 text-white flex items-center gap-1.5 mt-0.5">
+                  <h4 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">Carlos S.</h4>
+                  <p className="text-xs sm:text-sm opacity-70 text-gray-600 flex items-center gap-1.5 mt-0.5">
                      <Bike className="size-3 sm:size-4" /> Honda CG 160 • ABC-1234
                   </p>
                </div>
                <div className="flex gap-2">
-                  <Button size="icon" className="rounded-full bg-white/10 hover:bg-white/20 text-white shrink-0"><Mail className="size-5" /></Button>
+                  <Button size="icon" className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-900 shrink-0 shadow-sm"><Mail className="size-5" /></Button>
                </div>
             </div>
          </div>
