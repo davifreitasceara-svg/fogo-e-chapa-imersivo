@@ -218,20 +218,20 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
           <div className="flex items-center gap-4 w-48"></div>
 
           {/* Center: Navigation Controls */}
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <button 
               onClick={slideLeft} 
-              className="group h-14 px-4 sm:px-6 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-1 sm:gap-1.5 border-2 border-transparent hover:border-amber-500/50"
+              className="group h-12 sm:h-14 px-4 sm:px-5 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-0 border-2 border-transparent hover:border-amber-500/50"
             >
-              <ChevronLeft className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1" strokeWidth={3} />
-              <span className="font-bold text-xs sm:text-sm tracking-wider uppercase hidden sm:block">Anterior</span>
+              <ChevronLeft className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1 -mr-1" strokeWidth={3} />
+              <span className="font-bold text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block">Anterior</span>
             </button>
             <button 
               onClick={slideRight} 
-              className="group h-14 px-4 sm:px-6 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-1 sm:gap-1.5 border-2 border-transparent hover:border-amber-500/50"
+              className="group h-12 sm:h-14 px-4 sm:px-5 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-0 border-2 border-transparent hover:border-amber-500/50"
             >
-              <span className="font-bold text-xs sm:text-sm tracking-wider uppercase hidden sm:block">Próximo</span>
-              <ChevronRight className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={3} />
+              <span className="font-bold text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block">Próximo</span>
+              <ChevronRight className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1 -ml-1" strokeWidth={3} />
             </button>
           </div>
 
