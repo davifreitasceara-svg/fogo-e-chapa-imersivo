@@ -23,7 +23,8 @@ import {
   ArrowUpRight,
   PlaySquare,
   Layers,
-  TrendingUp
+  TrendingUp,
+  Bike
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -144,8 +145,9 @@ function Brand({ color }: { color?: string }) {
 }
 
 function Index() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [trackingOpen, setTrackingOpen] = useState(false);
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [tab, setTab] = useState<"burger" | "drink">("burger");
   const [cart, setCart] = useState<Record<number, number>>({});
@@ -282,22 +284,10 @@ function Index() {
   const handleCheckout = () => {
     if (Object.keys(cart).length === 0) return;
     
-    const totalStr = Object.entries(cart).reduce((total, [id, qty]) => {
-      const product = products.find(p => p.id === parseInt(id));
-      return total + (product ? product.price * qty : 0);
-    }, 0).toFixed(2).replace('.', ',');
-    
-    let text = "Olá! Gostaria de fazer o seguinte pedido:\n\n";
-    Object.entries(cart).forEach(([id, qty]) => {
-      const product = products.find(p => p.id === parseInt(id));
-      if (product) {
-         text += `${qty}x ${product.name} - R$ ${(product.price * qty).toFixed(2).replace('.', ',')}\n`;
-      }
-    });
-    text += `\n*Total: R$ ${totalStr}*\n\nForma de pagamento:`;
-    
-    const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, '_blank');
+    // In a real app, this would send an API request.
+    // For demonstration, we just clear the cart and open the tracking modal!
+    setCart({});
+    setTrackingOpen(true);
   };
 
   function updateQuantity(id: number, delta: number) {
@@ -1253,6 +1243,9 @@ function Index() {
       </footer>
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
+      <AnimatePresence>
+        {trackingOpen && <DeliveryTrackingModal onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
+      </AnimatePresence>
     </div>
   );
 }
@@ -1290,3 +1283,88 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
     </div>
   );
 }
+
+function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void, currentTheme: any }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      className="fixed inset-0 z-[100] flex flex-col bg-background" 
+      style={{ backgroundColor: currentTheme.bgDark }}
+    >
+      <div className="relative flex-1 overflow-hidden">
+        {/* Fake Map Background */}
+        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200" alt="Map" className="absolute inset-0 w-full h-full object-cover opacity-30 grayscale" />
+        <div className="absolute inset-0 bg-black/40" />
+
+        {/* Route Line (SVG) */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100">
+           <path d="M 20 80 Q 40 20, 80 50" fill="none" stroke={currentTheme.secondary} strokeWidth="1" strokeDasharray="2 2" className="opacity-60" />
+        </svg>
+        
+        {/* Animated Bike Marker */}
+        <motion.div 
+           className="absolute size-14 bg-white rounded-full flex items-center justify-center shadow-2xl border-4 z-20"
+           style={{ borderColor: currentTheme.secondary, color: currentTheme.secondary }}
+           animate={{
+             left: ["20%", "30%", "50%", "65%", "80%"],
+             top: ["80%", "45%", "25%", "35%", "50%"],
+           }}
+           transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+        >
+          <Bike className="size-7" />
+        </motion.div>
+
+        {/* Destination Marker */}
+        <div className="absolute left-[80%] top-[50%] -translate-x-1/2 -translate-y-1/2 size-12 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
+           <MapPin className="size-6 text-white" />
+        </div>
+        
+        {/* Restaurant Marker */}
+        <div className="absolute left-[20%] top-[80%] -translate-x-1/2 -translate-y-1/2 size-12 bg-black rounded-full flex items-center justify-center shadow-xl border-2 z-10" style={{ borderColor: currentTheme.secondary }}>
+           <Flame className="size-6 text-white" />
+        </div>
+
+        {/* Close Button */}
+        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-black/50 hover:bg-black/80 text-white rounded-full z-30">
+           <X className="size-6" />
+        </Button>
+      </div>
+
+      {/* Status Card (Bottom sheet style) */}
+      <div className="bg-black/40 backdrop-blur-2xl border-t border-white/10 p-6 sm:p-8 rounded-t-3xl -mt-6 relative z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+         <div className="max-w-2xl mx-auto">
+            <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-6" />
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-black font-display uppercase tracking-tight text-white">Pedido a caminho!</h2>
+                <p className="text-sm font-medium opacity-70 text-white mt-1">Previsão de entrega: 15-20 min</p>
+              </div>
+              <div className="text-right">
+                 <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>18:45</div>
+                 <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-white">Chegada</p>
+              </div>
+            </div>
+            
+            <div className="bg-white/5 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-white/10">
+               <div className="size-14 sm:size-16 rounded-full bg-white/10 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
+                  <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200" alt="Entregador" className="w-full h-full object-cover" />
+               </div>
+               <div className="flex-1">
+                  <h4 className="text-base sm:text-lg font-bold text-white tracking-tight">Carlos S.</h4>
+                  <p className="text-xs sm:text-sm opacity-70 text-white flex items-center gap-1.5 mt-0.5">
+                     <Bike className="size-3 sm:size-4" /> Honda CG 160 • ABC-1234
+                  </p>
+               </div>
+               <div className="flex gap-2">
+                  <Button size="icon" className="rounded-full bg-white/10 hover:bg-white/20 text-white shrink-0"><Mail className="size-5" /></Button>
+               </div>
+            </div>
+         </div>
+      </div>
+    </motion.div>
+  );
+}
+
