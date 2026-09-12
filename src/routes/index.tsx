@@ -1116,63 +1116,75 @@ function Index() {
           </div>
         </section>
 
-        <section id="avaliacoes" className="relative border-y border-white/10 bg-surface-deep">
-          {/* Sticky pinned background (Burger & Title) */}
-          <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden pointer-events-none z-0">
-            <div className="absolute top-16 sm:top-24 text-center z-20">
-              <p className="eyebrow text-primary tracking-[0.2em] font-bold mb-2">A VOZ DA RUA</p>
-              <h2 className="section-title text-foreground uppercase text-4xl sm:text-6xl lg:text-7xl">O que dizem<br/><span>sobre nós</span></h2>
+        <section id="avaliacoes" className="relative w-full overflow-hidden bg-[#160d08]">
+          {/* Sticky Background (Burger & Title) */}
+          <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center pointer-events-none z-0">
+            <div className="absolute top-12 sm:top-20 text-center z-20">
+              <p className="text-[#ea580c] text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase mb-3 sm:mb-4">The Crowd</p>
+              <h2 className="text-[#f5f5f0] text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tighter">Heard in the loud room</h2>
             </div>
+            
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#3a1d10_0%,_#160d08_60%)] opacity-40"></div>
             
             <img 
               src={heroBurger}
               alt="Fogo e Chapa Burger"
-              className="h-[50vh] sm:h-[65vh] object-contain drop-shadow-2xl mt-32"
+              className="relative z-10 h-[45vh] sm:h-[60vh] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] mt-20"
             />
           </div>
 
-          {/* Scrolling Comments Overlay */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-5 -mt-[100vh]">
-            <div className="pt-[110vh] pb-[50vh] flex flex-col relative w-full items-center">
-              
-              {/* Dotted Path Background */}
-              <div className="absolute inset-0 top-[110vh] flex justify-center pointer-events-none opacity-60">
-                <svg className="w-full h-full max-w-5xl" viewBox="0 0 1000 2000" preserveAspectRatio="none">
-                  <path 
-                    d="M 200 0 C 400 300, 800 500, 800 800 C 800 1100, 200 1300, 200 1600 C 200 1800, 400 1900, 500 2000" 
-                    fill="none" stroke="#ea580c" strokeWidth="4" strokeDasharray="1 30" strokeLinecap="round" 
-                  />
-                </svg>
-              </div>
+          {/* Scrolling Content Container */}
+          <div className="relative z-10 w-full max-w-7xl mx-auto h-[350vh] -mt-[100vh] pointer-events-none">
+            
+            {/* SVG Dotted Path Background */}
+            <div className="absolute inset-0 top-[100vh] bottom-[50vh] w-full pointer-events-none hidden sm:block">
+               <svg width="100%" height="100%" viewBox="0 0 1000 2000" preserveAspectRatio="none">
+                 <path d="M 150 250 C 350 400, 850 650, 800 1100 C 750 1550, 250 1450, 150 1850" fill="none" stroke="#ea580c" strokeWidth="2" strokeDasharray="4 20" strokeLinecap="round" opacity="0.6" />
+                 
+                 <circle cx="150" cy="250" r="4" fill="#ea580c" />
+                 <circle cx="850" cy="650" r="4" fill="#ea580c" />
+                 <circle cx="200" cy="1150" r="4" fill="#ea580c" />
+                 <circle cx="800" cy="1550" r="4" fill="#ea580c" />
+                 <circle cx="150" cy="1850" r="4" fill="#ea580c" />
+               </svg>
+            </div>
 
+            {/* Absolutely Positioned Cards */}
+            <div className="absolute top-[100vh] w-full h-[250vh]">
               {[
-                { name: "João Pedro", role: "Cliente Fiel", text: "O melhor hambúrguer artesanal da cidade. O ponto da carne é perfeito, e a crosta que o fogo deixa é absurda!", side: "left", mt: "mt-0" },
-                { name: "Mariana Souza", role: "Foodie", text: "Ambiente incrível, atendimento rápido e o Brasa Bacon... Sem palavras. O molho de rapadura é um espetáculo à parte.", side: "right", mt: "-mt-32 sm:-mt-64" },
-                { name: "Carlos Eduardo", role: "Amante de pimenta", text: "Fui no Inferno Picante e não me arrependi. Sabor intenso, jalapeño na medida certa. Tudo muito fresco.", side: "left", mt: "-mt-10 sm:-mt-20" },
-                { name: "Ana Clara", role: "Sempre pede delivery", text: "Pedi em casa e chegou super quente. A batata continuava crocante e o lanche não desmanchou. Nota 10!", side: "right", mt: "-mt-32 sm:-mt-64" },
+                { name: "Dani R", role: "Downtown", stars: 5, text: "The crust CRACKLES. I heard my burger before I tasted it.", pos: "top-[5%] left-[5%] sm:top-[10%] sm:left-[5%]" },
+                { name: "Joel F", role: "Regular", stars: 5, text: "The pickles deserve a statue in the town square.", pos: "top-[20%] right-[5%] sm:top-[25%] sm:right-[5%]" },
+                { name: "Priya K", role: "Late Night", stars: 5, text: "Ordered ahead, walked past thirty people. Felt like royalty.", pos: "top-[35%] left-[5%] sm:top-[45%] sm:left-[10%]" },
+                { name: "Marco T", role: "Riverside", stars: 5, text: "Came for 50% off, stayed till the marquee burned into my eyes.", pos: "top-[55%] right-[5%] sm:top-[65%] sm:right-[10%]" },
+                { name: "Amara O", role: "First Date", stars: 5, text: "Shake so thick the straw stood to attention. Ten out of five.", pos: "top-[75%] left-[5%] sm:top-[80%] sm:left-[5%]" },
+                { name: "Sam W", role: "No Regrets", stars: 5, text: "My cardiologist follows them on principle. Worth it.", pos: "top-[90%] right-[5%] sm:top-[90%] sm:right-[5%]" }
               ].map((review, i) => (
-                <div
-                  key={i}
-                  className={`w-full max-w-[95%] sm:max-w-md lg:max-w-lg ${review.side === "left" ? "mr-auto sm:ml-10 lg:ml-20" : "ml-auto sm:mr-10 lg:mr-20"} ${review.mt} relative z-10 mb-32 sm:mb-64`}
-                >
-                  <div className="p-6 sm:p-8 border border-white/5 rounded-3xl shadow-2xl bg-[#0a0807] relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
-                    <div className="absolute top-4 right-6 text-primary/10 text-8xl font-serif leading-none rotate-180">"</div>
-                    <div className="flex items-center gap-4 mb-6 relative z-10">
-                      <div className="h-14 w-14 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black uppercase text-2xl border border-primary/30 shrink-0">
-                        {review.name.charAt(0)}
+                <div key={i} className={`absolute ${review.pos} w-[90%] sm:w-[400px] pointer-events-auto`}>
+                  <div className="p-6 border border-[#3a2010] rounded-2xl bg-[#110804] text-left relative overflow-hidden shadow-2xl">
+                    <div className="absolute top-4 right-6 text-[#4a2511] font-serif text-8xl leading-none rotate-180 select-none">"</div>
+                    <div className="flex items-center gap-4 mb-4 relative z-10">
+                      <div className="h-12 w-12 rounded-full border-2 border-[#ea580c] bg-zinc-800 flex items-center justify-center overflow-hidden shrink-0">
+                         <span className="text-white font-bold text-xl">{review.name.charAt(0)}</span>
                       </div>
                       <div>
-                        <div className="flex items-center gap-1 text-primary text-sm mb-1">
-                          {"★★★★★".split("").map((star, j) => <span key={j}>{star}</span>)}
+                        <div className="flex gap-1 mb-1">
+                           {[...Array(review.stars)].map((_,j) => <span key={j} className="text-[#ea580c] text-[10px]">★</span>)}
                         </div>
-                        <p className="font-bold font-display uppercase tracking-wider text-base text-white">{review.name}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{review.role}</p>
+                        <p className="text-[#f5f5f0] font-black uppercase text-sm tracking-wider leading-none mb-1">{review.name}</p>
+                        <p className="text-[#888] text-[10px] uppercase tracking-[0.1em]">{review.role}</p>
                       </div>
                     </div>
-                    <p className="text-lg font-medium text-foreground/80 italic leading-relaxed relative z-10">"{review.text}"</p>
+                    <p className="text-[#d5d5d0] text-lg font-medium relative z-10 leading-snug">
+                      {review.text}
+                    </p>
                   </div>
                 </div>
               ))}
+            </div>
+            
+            {/* Scroll Footer */}
+            <div className="absolute bottom-10 w-full text-center">
+              <p className="text-[#888] text-[10px] tracking-[0.2em] uppercase">Keep scrolling — the room keeps talking</p>
             </div>
           </div>
         </section>
