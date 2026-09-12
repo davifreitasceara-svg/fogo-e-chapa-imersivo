@@ -139,23 +139,23 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
               zIndex = 30;
               rotate = 0;
             } else if (offset === 1) {
-              x = 240;
-              y = -110;
-              scale = 0.75;
+              x = 160;
+              y = -60;
+              scale = 0.8;
               zIndex = 20;
-              rotate = 15;
+              rotate = 10;
             } else if (offset === 2) {
-              x = 420;
-              y = -190;
-              scale = 0.5;
+              x = 300;
+              y = -120;
+              scale = 0.6;
               zIndex = 10;
-              rotate = 35;
+              rotate = 20;
             } else if (offset === -1) {
-              x = -240;
-              y = 130;
-              scale = 0.75;
+              x = -160;
+              y = 70;
+              scale = 0.8;
               zIndex = 15;
-              rotate = -25;
+              rotate = -15;
             }
 
             // Adjust for mobile screens safely using the useIsMobile hook
@@ -221,15 +221,17 @@ export function AppetizerSlider({ onAddToCart }: { onAddToCart?: (id: number) =>
           <div className="flex gap-4">
             <button 
               onClick={slideLeft} 
-              className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:scale-110 transition-transform text-[#2B1B15] border border-gray-100"
+              className="group h-14 px-5 sm:px-7 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-2 border-2 border-transparent hover:border-amber-500/50"
             >
-              <ChevronLeft className="size-5" strokeWidth={3} />
+              <ChevronLeft className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1.5" strokeWidth={3} />
+              <span className="font-bold text-xs sm:text-sm tracking-wider uppercase hidden sm:block">Anterior</span>
             </button>
             <button 
               onClick={slideRight} 
-              className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.05)] hover:scale-110 transition-transform text-[#2B1B15] border border-gray-100"
+              className="group h-14 px-5 sm:px-7 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-2 border-2 border-transparent hover:border-amber-500/50"
             >
-              <ChevronRight className="size-5" strokeWidth={3} />
+              <span className="font-bold text-xs sm:text-sm tracking-wider uppercase hidden sm:block">Próximo</span>
+              <ChevronRight className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1.5" strokeWidth={3} />
             </button>
           </div>
 
