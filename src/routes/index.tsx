@@ -1,6 +1,6 @@
 import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowDown,
@@ -1287,14 +1287,144 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
 
 function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void, currentTheme: any }) {
   const [stage, setStage] = useState<"picking_up" | "delivering">("picking_up");
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
 
   useEffect(() => {
-    // Transition to delivering after 8 seconds for demonstration
-    const timer = setTimeout(() => {
-      setStage("delivering");
-    }, 8000);
-    return () => clearTimeout(timer);
-  }, []);
+    // Load Leaflet CSS
+    if (!document.getElementById("leaflet-css")) {
+      const link = document.createElement("link");
+      link.id = "leaflet-css";
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+
+    // Load Leaflet JS
+    if (!(window as any).L) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = initMap;
+      document.head.appendChild(script);
+    } else {
+      initMap();
+    }
+
+    function initMap() {
+      if (mapInstanceRef.current || !mapRef.current) return;
+      const L = (window as any).L;
+      
+      const map = L.map(mapRef.current, { zoomControl: false, attributionControl: false }).setView([-23.562, -46.655], 16);
+      mapInstanceRef.current = map;
+
+      // CartoDB Voyager tiles (light map, great for 99 style)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19
+      }).addTo(map);
+
+      // Coordinates
+      const driverStart = [-23.568, -46.658];
+      const restaurant = [-23.562, -46.655];
+      const customer = [-23.555, -46.650];
+
+      // Route 1 (Picking Up)
+      const route1 = [driverStart, [-23.568, -46.655], restaurant];
+      // Route 2 (Delivering)
+      const route2 = [restaurant, [-23.562, -46.650], customer];
+
+      // Draw thick blue line with white glow (using 2 polylines)
+      L.polyline([...route1, ...route2], { color: 'white', weight: 12, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+      L.polyline([...route1, ...route2], { color: '#00A2FF', weight: 6, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+
+      // Markers
+      const createDot = (color: string, icon: string) => L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="background-color: white; width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 4px solid ${color}; display: flex; align-items: center; justify-content: center; font-size: 16px;">${icon}</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+      });
+
+      L.marker(restaurant, { icon: createDot(currentTheme.secondary, '🍔') }).addTo(map);
+      L.marker(customer, { icon: createDot('black', '📍') }).addTo(map);
+
+      // Animated Driver Marker
+      const driverIcon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                 <div style="position: absolute; inset: 0; background-color: #00A2FF; border-radius: 50%; opacity: 0.4; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+                 <div style="width: 28px; height: 28px; background-color: white; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 10;">
+                   <div style="width: 18px; height: 18px; background-color: #00A2FF; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(45deg);"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                   </div>
+                 </div>
+               </div>
+               <style>@keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }</style>`,
+        iconSize: [44, 44],
+        iconAnchor: [22, 22]
+      });
+
+      const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
+
+      // Simple animation loop along the route
+      let startTime = Date.now();
+      const duration1 = 8000;
+      const duration2 = 12000;
+      
+      let reqId: number;
+      function animate() {
+        if (!mapInstanceRef.current) return;
+        const now = Date.now();
+        const elapsed = now - startTime;
+        
+        if (elapsed < duration1) {
+           setStage("picking_up");
+           const progress = elapsed / duration1;
+           const pt = getPointAlongPath(route1, progress);
+           driverMarker.setLatLng(pt);
+           map.panTo(pt, { animate: false });
+        } else if (elapsed < duration1 + duration2) {
+           setStage("delivering");
+           const progress = (elapsed - duration1) / duration2;
+           const pt = getPointAlongPath(route2, progress);
+           driverMarker.setLatLng(pt);
+           map.panTo(pt, { animate: false });
+        } else {
+           startTime = Date.now();
+        }
+        reqId = requestAnimationFrame(animate);
+      }
+      
+      reqId = requestAnimationFrame(animate);
+      (map as any)._animateReqId = reqId;
+    }
+
+    return () => {
+      if (mapInstanceRef.current) {
+        if ((mapInstanceRef.current as any)._animateReqId) {
+          cancelAnimationFrame((mapInstanceRef.current as any)._animateReqId);
+        }
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [currentTheme]);
+
+  // Helper
+  function getPointAlongPath(path: number[][], progress: number) {
+    if (path.length < 2) return path[0];
+    const segments = path.length - 1;
+    const totalLen = segments; 
+    const scaledProg = progress * totalLen;
+    const idx = Math.min(Math.floor(scaledProg), segments - 1);
+    const segmentProg = scaledProg - idx;
+    
+    const p1 = path[idx];
+    const p2 = path[idx + 1];
+    return [
+      p1[0] + (p2[0] - p1[0]) * segmentProg,
+      p1[1] + (p2[1] - p1[1]) * segmentProg
+    ];
+  }
 
   return (
     <motion.div 
@@ -1304,63 +1434,9 @@ function DeliveryTrackingModal({ onClose, currentTheme }: { onClose: () => void,
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
       className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
-      <div className="relative flex-1 overflow-hidden bg-[#e8eaed]">
-        {/* Real Neighborhood Map Background (Google Maps via iframe) */}
-        <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14628.74!2d-46.66!3d-23.56!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMzJzM2LjAiUyA0NsKwMzknMzYuMCJX!5e0!3m2!1sen!2sbr!4v1700000000000!5m2!1sen!2sbr"
-          className="absolute inset-0 w-full h-full pointer-events-none scale-150 transform-origin-center opacity-80"
-          style={{ border: 0 }}
-        />
-        {/* Slight blue tint overlay for 99 style */}
-        <div className="absolute inset-0 bg-blue-100/20 mix-blend-multiply pointer-events-none" />
-
-        {/* Route Line (SVG) - 99 style thick blue line with white border */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" preserveAspectRatio="none">
-           {/* White Stroke (Outer) */}
-           {stage === "picking_up" ? (
-             <path d="M 20% 95% L 20% 65% L 45% 65%" fill="none" stroke="white" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-sm" />
-           ) : (
-             <path d="M 45% 65% L 45% 30% L 80% 30%" fill="none" stroke="white" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-sm" />
-           )}
-           {/* Blue Stroke (Inner) */}
-           {stage === "picking_up" ? (
-             <path d="M 20% 95% L 20% 65% L 45% 65%" fill="none" stroke="#00A2FF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-           ) : (
-             <path d="M 45% 65% L 45% 30% L 80% 30%" fill="none" stroke="#00A2FF" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-           )}
-        </svg>
-        
-        {/* Animated 99-style Marker */}
-        <motion.div 
-           className="absolute size-10 flex items-center justify-center z-20 -translate-x-1/2 -translate-y-1/2"
-           animate={
-             stage === "picking_up" 
-               ? { left: ["20%", "20%", "45%"], top: ["95%", "65%", "65%"] }
-               : { left: ["45%", "45%", "80%"], top: ["65%", "30%", "30%"] }
-           }
-           transition={{ duration: 10, ease: "linear", repeat: Infinity }}
-        >
-          {/* Cyan Glow Pulse */}
-          <div className="absolute inset-0 bg-[#00A2FF] rounded-full opacity-40 animate-ping" />
-          {/* White border, cyan center, small inner dot */}
-          <div className="relative size-8 bg-white rounded-full shadow-lg flex items-center justify-center">
-             <div className="size-6 bg-[#00A2FF] rounded-full flex items-center justify-center text-white">
-                <Navigation className="size-3.5 fill-white stroke-white rotate-45" />
-             </div>
-          </div>
-        </motion.div>
-
-        {/* Destination Marker */}
-        {stage === "delivering" && (
-          <div className="absolute left-[80%] top-[30%] -translate-x-1/2 -translate-y-1/2 size-8 bg-white rounded-full flex items-center justify-center shadow-xl border-4 z-10" style={{ borderColor: currentTheme.secondary }}>
-             <MapPin className="size-4" style={{ color: currentTheme.secondary }} />
-          </div>
-        )}
-        
-        {/* Restaurant Marker */}
-        <div className="absolute left-[45%] top-[65%] -translate-x-1/2 -translate-y-1/2 size-10 bg-white rounded-full flex items-center justify-center shadow-xl border-4 z-10" style={{ borderColor: currentTheme.secondary }}>
-           <Flame className="size-5" style={{ color: currentTheme.secondary }} />
-        </div>
+      <div className="relative flex-1 overflow-hidden">
+        {/* Real Leaflet Map Container */}
+        <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
 
         {/* Close Button */}
         <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-30">
