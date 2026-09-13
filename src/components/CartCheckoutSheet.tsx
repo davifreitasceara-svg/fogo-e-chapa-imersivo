@@ -8,6 +8,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [step, setStep] = useState<"cart" | "type" | "details" | "review" | "payment" | "credit_card" | "pix">("cart");
   const [orderType, setOrderType] = useState<"delivery" | "pickup" | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [changeAmount, setChangeAmount] = useState<string>("");
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
@@ -363,6 +364,33 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 </div>
               )}
             </button>
+            {paymentMethod === "money" && (
+              <div className="mt-3 p-4 rounded-xl border border-white/10 bg-white/5 animate-in slide-in-from-top-2 duration-300">
+                <label className="text-sm font-medium text-white/80 mb-2 block">
+                  Troco para quanto? (opcional)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50">R$</span>
+                  <input
+                    type="number"
+                    value={changeAmount}
+                    onChange={(e) => setChangeAmount(e.target.value)}
+                    placeholder="Ex: 50"
+                    className="w-full bg-black/20 border border-white/10 rounded-lg py-2.5 pl-9 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#ff9d00]/50 focus:ring-1 focus:ring-[#ff9d00]/50 transition-all"
+                  />
+                </div>
+                {changeAmount && parseFloat(changeAmount) >= totalPrice && (
+                  <p className="text-sm text-[#ff9d00] mt-3 font-medium">
+                    Troco: {formatPrice(parseFloat(changeAmount) - totalPrice)}
+                  </p>
+                )}
+                {changeAmount && parseFloat(changeAmount) < totalPrice && (
+                  <p className="text-xs text-red-400 mt-2 font-medium">
+                    Valor menor que o total
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
 
