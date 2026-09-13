@@ -1757,11 +1757,6 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                 </div>
              </div>
           )}
-        
-        {/* Close Button */}
-        <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-[9999]">
-           <X className="size-5" />
-        </Button>
       </div>
 
       {/* Status Card (Bottom sheet style) - PREMIUM DARK MODE */}
@@ -1953,6 +1948,10 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
             )}
          </div>
       </div>
+      {/* Close Button - Moved to root level of modal to prevent click blocking */}
+      <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.5)] text-white rounded-full z-[99999] border border-white/20 transition-all hover:scale-110 active:scale-95">
+        <X className="size-6 drop-shadow-md" />
+      </Button>
     </motion.div>
   );
 }
