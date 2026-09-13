@@ -9,6 +9,10 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [orderType, setOrderType] = useState<"delivery" | "pickup" | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [address, setAddress] = useState("");
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [complement, setComplement] = useState("");
+  const [detailsError, setDetailsError] = useState("");
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
     if (products.some((p: any) => p.id === parseInt(id))) return sum + (count as number);
@@ -30,7 +34,14 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
       if (orderType === "delivery") setStep("details");
       else if (orderType === "pickup") setStep("payment");
     }
-    else if (step === "details") setStep("payment");
+    else if (step === "details") {
+      if (!name.trim() || !address.trim() || !number.trim()) {
+        setDetailsError("Informacoes incompletas");
+        return;
+      }
+      setDetailsError("");
+        setStep("payment");
+    }
     else if (step === "payment") {
       if (paymentMethod === "credit_card") {
         setStep("credit_card");
@@ -164,7 +175,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
           <div className="space-y-6 mt-4 text-white">
             <div>
               <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">NOME COMPLETO</label>
-              <input type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Seu nome" />
+              <input value={name} onChange={e => setName(e.target.value)} type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Seu nome" />
             </div>
             <div>
               <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">ENDERECO</label>
@@ -173,11 +184,11 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-1">
                 <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">NUMERO</label>
-                <input type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="123" />
+                <input value={number} onChange={e => setNumber(e.target.value)} type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="123" />
               </div>
               <div className="col-span-2">
                 <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">COMPLEMENTO</label>
-                <input type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Apto, bloco (opcional)" />
+                <input value={complement} onChange={e => setComplement(e.target.value)} type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Apto, bloco (opcional)" />
               </div>
             </div>
           </div>
@@ -312,7 +323,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
         ) : (
           <button 
             onClick={handleNext} 
-            disabled={cartCount === 0 || (step === "type" && !orderType) || (step === "details" && orderType === "delivery" && address.trim().length < 5)}
+            disabled={cartCount === 0 || (step === "type" && !orderType)}
             className="w-full py-5 rounded-2xl text-lg font-bold bg-white text-black hover:bg-white/90 hover:scale-[1.02] transition-all duration-300 ease-out disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed"
           >
             Continuar
