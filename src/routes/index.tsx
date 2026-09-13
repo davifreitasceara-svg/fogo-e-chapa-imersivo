@@ -1,5 +1,4 @@
-import {
-  Star, CartCheckoutSheet } from "../components/CartCheckoutSheet";
+import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +18,7 @@ import {
   Plus,
   ShoppingBag,
   Sparkles,
+  Star,
   UserRound,
   X,
   ArrowUpRight,
