@@ -64,7 +64,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   return (
     <SheetContent 
       style={{ backgroundColor: currentTheme.bgDark, color: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }} 
-      className={`flex w-full flex-col ${step === "credit_card" || step === "pix" ? "sm:max-w-[100vw] !w-screen" : "sm:max-w-md"} border-l-[1px] p-0 font-sans shadow-2xl transition-all duration-500 ease-in-out`}
+      className={`flex w-full flex-col sm:max-w-md border-l-[1px] p-0 font-sans shadow-2xl transition-all duration-500 ease-in-out`}
     >
       <SheetHeader className="px-8 pt-10 pb-4 text-left flex flex-row items-center justify-between">
         <div className="flex items-center gap-4">
