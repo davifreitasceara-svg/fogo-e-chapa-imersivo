@@ -1,4 +1,5 @@
-import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
+import {
+  Star, CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1429,6 +1430,9 @@ function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMo
 
 function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeOrderType, activeDriver, activeRoute }: { onClose: () => void, currentTheme: any, activeOrderTime: number, activeOrderType?: "delivery" | "pickup" | null, activeDriver: number, activeRoute: number }) {
   const [stage, setStage] = useState<"picking_up" | "delivering" | "delivered">("picking_up");
+  const [ratingState, setRatingState] = useState<"driver" | "food" | "done" | null>(null);
+  const [driverRating, setDriverRating] = useState(0);
+  const [foodRating, setFoodRating] = useState(0);
   const pickupCode = useMemo(() => Math.floor(1000 + Math.random() * 9000).toString(), []);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -1763,14 +1767,80 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                      <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>3</div>
                   </div>
 
-                  {stage === "delivered" && (
+                  {stage === "delivered" && ratingState === null && (
                     <Button 
-                       className="w-full mt-8 text-lg font-bold h-14 rounded-xl text-white shadow-lg"
+                       className="w-full mt-8 text-lg font-bold h-14 rounded-xl text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
                        style={{ backgroundColor: currentTheme.secondary }}
-                       onClick={onClose}
+                       onClick={() => setRatingState(activeOrderType === "delivery" ? "driver" : "food")}
                     >
                       Pedido Recebido
                     </Button>
+                  )}
+
+                  {ratingState === "driver" && (
+                    <div className="mt-8 text-center animate-in fade-in slide-in-from-bottom-4">
+                      <h3 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">Avalie a Entrega</h3>
+                      <p className="text-sm font-medium opacity-70 text-gray-600 mb-6">Como foi o atendimento do entregador {MOCK_DRIVERS[activeDriver].name}?</p>
+                      
+                      <div className="flex justify-center gap-3 mb-8">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button key={star} onClick={() => setDriverRating(star)} className="focus:outline-none transition-transform hover:scale-125 hover:rotate-6">
+                            <Star className={`size-12 ${driverRating >= star ? 'fill-[#ff9d00] text-[#ff9d00]' : 'text-gray-300'}`} />
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <Button 
+                        disabled={driverRating === 0}
+                        className="w-full text-lg font-bold h-14 rounded-xl text-white shadow-lg disabled:opacity-50 disabled:hover:scale-100 transition-transform hover:scale-105"
+                        style={{ backgroundColor: currentTheme.secondary }}
+                        onClick={() => setRatingState("food")}
+                      >
+                        Continuar
+                      </Button>
+                    </div>
+                  )}
+
+                  {ratingState === "food" && (
+                    <div className="mt-8 text-center animate-in fade-in slide-in-from-right-4">
+                      <h3 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">Avalie o Sabor</h3>
+                      <p className="text-sm font-medium opacity-70 text-gray-600 mb-6">Como estava o seu pedido da Fogo & Chapa?</p>
+                      
+                      <div className="flex justify-center gap-3 mb-8">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button key={star} onClick={() => setFoodRating(star)} className="focus:outline-none transition-transform hover:scale-125 hover:rotate-6">
+                            <Star className={`size-12 ${foodRating >= star ? 'fill-[#ff9d00] text-[#ff9d00]' : 'text-gray-300'}`} />
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <Button 
+                        disabled={foodRating === 0}
+                        className="w-full text-lg font-bold h-14 rounded-xl text-white shadow-lg disabled:opacity-50 disabled:hover:scale-100 transition-transform hover:scale-105"
+                        style={{ backgroundColor: currentTheme.secondary }}
+                        onClick={() => setRatingState("done")}
+                      >
+                        Enviar Avaliação
+                      </Button>
+                    </div>
+                  )}
+
+                  {ratingState === "done" && (
+                    <div className="mt-8 text-center animate-in zoom-in duration-500">
+                      <div className="size-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                        <Star className="size-10 fill-green-500 text-green-500" />
+                      </div>
+                      <h3 className="text-3xl font-black font-display uppercase tracking-tight text-gray-900 mb-3">Muito Obrigado!</h3>
+                      <p className="text-base font-medium opacity-70 text-gray-600 mb-8 max-w-[250px] mx-auto">
+                        Sua opinião é o nosso ingrediente secreto para melhorar sempre.
+                      </p>
+                      <Button 
+                        className="w-full text-lg font-bold h-14 rounded-xl bg-gray-900 text-white hover:bg-gray-800 hover:scale-105 transition-transform"
+                        onClick={onClose}
+                      >
+                        Concluir e Fechar
+                      </Button>
+                    </div>
                   )}
                </div>
             ) : (
