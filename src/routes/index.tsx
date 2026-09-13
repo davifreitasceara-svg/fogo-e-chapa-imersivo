@@ -1666,13 +1666,31 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
         {activeOrderType !== "pickup" && <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />}
         
         {activeOrderType === "pickup" && (
-           <div className="text-center z-10 px-4">
-              <h1 className="text-7xl font-black font-display uppercase tracking-tighter" style={{ color: currentTheme.secondary }}>#{pickupCode}</h1>
-              <p className="text-xl font-bold mt-2 uppercase tracking-widest text-foreground">Código de Retirada</p>
-              <div className="mt-8 flex items-center justify-center">
-                 <div className="w-16 h-16 rounded-full border-4 flex items-center justify-center animate-bounce" style={{ borderColor: currentTheme.secondary }}>
-                    <ShoppingBag className="size-8" style={{ color: currentTheme.secondary }} />
-                 </div>
+           <div className="text-center z-10 px-4 flex flex-col items-center">
+              <div className="relative group animate-in fade-in zoom-in duration-700">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#ff9d00] to-[#ffaa22] rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+                <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 px-12 py-10 rounded-3xl shadow-2xl flex flex-col items-center transform transition-all hover:scale-105 duration-500">
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                  
+                  <h1 className="text-8xl md:text-9xl font-black font-display uppercase tracking-tighter drop-shadow-2xl" style={{ color: currentTheme.secondary, textShadow: `0 0 40px ${currentTheme.secondary}40` }}>
+                    #{pickupCode}
+                  </h1>
+                  
+                  <div className="flex items-center gap-3 mt-6">
+                    <div className="h-[1px] w-8 bg-white/20"></div>
+                    <p className="text-sm md:text-base font-bold uppercase tracking-[0.4em] text-white/80">Código de Retirada</p>
+                    <div className="h-[1px] w-8 bg-white/20"></div>
+                  </div>
+                  
+                  <div className="mt-10 flex items-center justify-center relative">
+                     <div className="absolute inset-0 bg-[#ff9d00]/30 rounded-full blur-2xl animate-pulse"></div>
+                     <div className="w-24 h-24 rounded-full border-2 bg-black/60 backdrop-blur-md flex items-center justify-center relative overflow-hidden group-hover:scale-110 transition-transform duration-500 shadow-[0_0_30px_rgba(255,157,0,0.3)]" style={{ borderColor: currentTheme.secondary }}>
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10"></div>
+                        <ShoppingBag className="size-10 relative z-10 drop-shadow-md animate-bounce" style={{ color: currentTheme.secondary }} />
+                     </div>
+                  </div>
+                </div>
               </div>
            </div>
         )}
