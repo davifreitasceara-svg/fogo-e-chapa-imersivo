@@ -1893,8 +1893,8 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                       </Button>
                     </div>
                   )}
-               </>
-            )}
+               </div>
+            ) : null}
          </div>
       </div>
     </motion.div>
