@@ -27,7 +27,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   }, 0);
 
   const deliveryFee = orderType === "delivery" ? 8 : 0;
-  const discountAmount = discountApplied ? subtotal * 0.5 : 0;
+  const discountAmount = discountApplied ? deliveryFee : 0;
   const totalPrice = subtotal - discountAmount + deliveryFee;
 
   const formatPrice = (price: number) => {
@@ -155,6 +155,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
               </div>
               <div className="text-left flex-1">
                 <h4 className={`font-bold text-xl tracking-tight transition-colors duration-300 ${orderType === "delivery" ? "text-[#ff9d00]" : "text-white"}`}>Receber em casa</h4>
+                <p className={`text-sm mt-1 font-medium ${orderType === "delivery" ? "text-[#ff9d00]/80" : "text-white/50"}`}>+ R$ 8,00 (Taxa de entrega)</p>
               </div>
               {orderType === "delivery" && (
                 <div className="absolute right-4 animate-in zoom-in duration-300">
@@ -271,7 +272,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
               </div>
               {discountApplied && (
                 <div className="flex justify-between text-sm text-green-400 font-bold">
-                  <span>Desconto (50%)</span>
+                  <span>Desconto (Frete Gratis)</span>
                   <span>-{formatPrice(discountAmount)}</span>
                 </div>
               )}
