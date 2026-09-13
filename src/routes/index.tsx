@@ -611,15 +611,14 @@ function Index() {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.05 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700"
-              style={{ backgroundColor: currentTheme.bgLight }}
+              className="rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700 bg-[#0a0a0a] text-white border border-white/10"
             >
               {/* Menu Card Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-black/10 pb-6 transition-colors duration-700">
-                <h3 className="font-display text-5xl sm:text-6xl font-black tracking-tighter transition-colors duration-700" style={{ color: currentTheme.textDark }}>CARDÁPIO</h3>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-white/10 pb-6 transition-colors duration-700">
+                <h3 className="font-display text-5xl sm:text-6xl font-black tracking-tighter transition-colors duration-700 text-white">CARDÁPIO</h3>
                 <div className="flex gap-3">
-                  <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-amber-500 text-sm">★</span> Avaliação 4.9</span>
-                  <span className="px-4 py-2 bg-white rounded-full text-xs font-bold text-[#2D150D] border border-[#2D150D]/10 shadow-sm flex items-center gap-1.5"><span className="text-red-500 text-sm">♥</span> Favorito Local</span>
+                  <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5"><span className="text-amber-500 text-sm">★</span> Avaliação 4.9</span>
+                  <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5"><span className="text-red-500 text-sm">♥</span> Favorito Local</span>
                 </div>
               </div>
 
@@ -631,7 +630,7 @@ function Index() {
                   
                   {/* Category: PIZZA */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>PIZZAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">PIZZAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "PEPPERONI", price: "12,00", spicy: true },
@@ -643,10 +642,10 @@ function Index() {
                         { name: "VEGETARIANA", price: "13,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -654,7 +653,7 @@ function Index() {
 
                   {/* Category: BURGERS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>HAMBÚRGUERES</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">HAMBÚRGUERES</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CLÁSSICO", price: "10,50" },
@@ -664,10 +663,10 @@ function Index() {
                         { name: "FRANGO CROCANTE", price: "12,00", spicy: true }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -675,7 +674,7 @@ function Index() {
 
                   {/* Category: HOT DOGS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>CACHORRO-QUENTE</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">CACHORRO-QUENTE</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CLÁSSICO", price: "7,25" },
@@ -683,9 +682,9 @@ function Index() {
                         { name: "BACON E QUEIJO", price: "11,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -693,7 +692,7 @@ function Index() {
 
                   {/* Category: WRAPS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>WRAPS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">WRAPS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "FRANGO", price: "8,50" },
@@ -702,10 +701,10 @@ function Index() {
                         { name: "FRANGO COM ALHO", price: "12,50" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -719,7 +718,7 @@ function Index() {
                   
                   {/* Category: WINGS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>ASINHAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">ASINHAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "BUFFALO", price: "12,00", spicy: true },
@@ -729,10 +728,10 @@ function Index() {
                         { name: "LEMON PEPPER", price: "13,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -740,7 +739,7 @@ function Index() {
 
                   {/* Category: RINGS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>ANÉIS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">ANÉIS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "CEBOLA", price: "4,25" },
@@ -748,10 +747,10 @@ function Index() {
                         { name: "CROCANTE", price: "7,75" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -760,7 +759,7 @@ function Index() {
 
                   {/* Category: DRINKS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>BEBIDAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BEBIDAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
                         { name: "COCA-COLA", price: "2,25" },
@@ -772,9 +771,9 @@ function Index() {
                         { name: "COLD BREW", price: "2,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-[#1A1A1A] text-lg sm:text-xl tracking-tight group-hover:text-amber-700 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-[#2D150D]/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-[#2D150D] border-[1.5px] border-amber-900/30 rounded-full px-3 py-1 text-sm bg-white shadow-sm group-hover:bg-amber-100 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -785,10 +784,10 @@ function Index() {
               </div>
 
               {/* COMBOS ESPECIAIS (Full Width Below Grid) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.2 } } }} className="mt-16 pt-16 border-t border-black/5">
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.2 } } }} className="mt-16 pt-16 border-t border-white/10">
                 <div className="flex flex-col items-center text-center mb-10">
-                  <h4 className="font-display text-4xl sm:text-5xl font-black tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>COMBOS ESPECIAIS</h4>
-                  <p className="mt-3 text-lg font-medium opacity-70" style={{ color: currentTheme.textDark }}>As combinações definitivas para matar qualquer fome.</p>
+                  <h4 className="font-display text-4xl sm:text-5xl font-black tracking-tight transition-colors duration-700 text-white">COMBOS ESPECIAIS</h4>
+                  <p className="mt-3 text-lg font-medium opacity-70 text-white/80">As combinações definitivas para matar qualquer fome.</p>
                 </div>
                 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
