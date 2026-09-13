@@ -1689,17 +1689,35 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10"></div>
                         
                         {/* Hamburger Build Animation */}
-                        <div className="relative z-10 flex flex-col items-center justify-center -space-y-[3px]">
+                        <div className="relative z-10 flex flex-col items-center justify-center -space-y-[2px]">
                           {/* Top Bun */}
-                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.266, 0.366, 0.7, 0.8, 1] }} className="w-10 h-4 rounded-t-[20px] bg-[#E29C45] shadow-sm z-50" />
+                          <motion.div animate={{ y: [-40, -40, 0, 0, 20, 20], opacity: [0, 0, 1, 1, 0, 0], scale: [0.9, 0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 2.5, repeat: Infinity, times: [0, 0.25, 0.4, 0.75, 0.85, 1], ease: "backOut" }} className="relative w-14 h-6 rounded-t-full bg-gradient-to-b from-[#F59E0B] to-[#D97706] shadow-sm z-50 overflow-hidden border border-[#B45309]/50">
+                            {/* Sesame Seeds */}
+                            <div className="absolute top-1.5 left-3 w-1 h-1.5 bg-white/70 rounded-full rotate-45"></div>
+                            <div className="absolute top-2.5 left-6 w-1 h-1.5 bg-white/70 rounded-full -rotate-12"></div>
+                            <div className="absolute top-1.5 right-4 w-1 h-1.5 bg-white/70 rounded-full rotate-12"></div>
+                            <div className="absolute top-3 right-8 w-1 h-1.5 bg-white/70 rounded-full rotate-45"></div>
+                            <div className="absolute top-3 left-9 w-1 h-1 bg-white/70 rounded-full rotate-45"></div>
+                          </motion.div>
+                          
+                          {/* Tomato */}
+                          <motion.div animate={{ y: [-40, -40, 0, 0, 20, 20], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, times: [0, 0.2, 0.35, 0.75, 0.85, 1], ease: "backOut" }} className="w-14 h-2 rounded-full bg-gradient-to-b from-red-500 to-red-700 shadow-sm z-40 border border-red-800" />
+                          
                           {/* Lettuce */}
-                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.2, 0.3, 0.7, 0.8, 1] }} className="w-12 h-1.5 rounded-full bg-[#4ADE80] shadow-sm z-40" />
+                          <motion.div animate={{ y: [-40, -40, 0, 0, 20, 20], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, times: [0, 0.15, 0.3, 0.75, 0.85, 1], ease: "backOut" }} className="relative w-16 h-2 rounded-full bg-gradient-to-b from-green-400 to-green-600 shadow-sm z-30 flex justify-between px-1">
+                             <div className="w-2 h-2 bg-green-500 rounded-full -mt-0.5"></div>
+                             <div className="w-2 h-2 bg-green-400 rounded-full -mt-0.5"></div>
+                             <div className="w-2 h-2 bg-green-600 rounded-full -mt-0.5"></div>
+                          </motion.div>
+                          
                           {/* Cheese */}
-                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.133, 0.233, 0.7, 0.8, 1] }} className="w-11 h-1.5 bg-[#FACC15] shadow-sm z-30" />
+                          <motion.div animate={{ y: [-40, -40, 0, 0, 20, 20], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, times: [0, 0.1, 0.25, 0.75, 0.85, 1], ease: "backOut" }} className="w-15 h-1.5 bg-gradient-to-b from-yellow-300 to-yellow-500 shadow-sm z-20 -rotate-2" style={{ width: '58px' }} />
+                          
                           {/* Patty */}
-                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.066, 0.166, 0.7, 0.8, 1] }} className="w-12 h-3 rounded-lg bg-[#5C3A21] shadow-sm z-20" />
+                          <motion.div animate={{ y: [-40, -40, 0, 0, 20, 20], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, times: [0, 0.05, 0.2, 0.75, 0.85, 1], ease: "backOut" }} className="w-15 h-3.5 rounded-lg bg-gradient-to-b from-[#5C3A21] to-[#3a2211] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.5)] z-10 border border-[#2d190b]" style={{ width: '60px' }} />
+                          
                           {/* Bottom Bun */}
-                          <motion.div animate={{ y: [-20, 0, 0, 10, 10], opacity: [0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.1, 0.7, 0.8, 1] }} className="w-10 h-3 rounded-b-[10px] bg-[#E29C45] shadow-sm z-10" />
+                          <motion.div animate={{ y: [-40, 0, 0, 20, 20], opacity: [0, 1, 1, 0, 0], scale: [0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 2.5, repeat: Infinity, times: [0, 0.15, 0.75, 0.85, 1], ease: "backOut" }} className="w-14 h-4 rounded-b-xl bg-gradient-to-t from-[#D97706] to-[#F59E0B] shadow-sm z-0 border border-[#B45309]/50" />
                         </div>
                      </div>
                   </div>
