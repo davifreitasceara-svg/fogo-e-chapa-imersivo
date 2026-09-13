@@ -155,7 +155,6 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
               </div>
               <div className="text-left flex-1">
                 <h4 className={`font-bold text-xl tracking-tight transition-colors duration-300 ${orderType === "delivery" ? "text-[#ff9d00]" : "text-white"}`}>Receber em casa</h4>
-                <p className={`text-sm mt-1 font-medium ${orderType === "delivery" ? "text-[#ff9d00]/80" : "text-white/50"}`}>+ R$ 8,00 (Taxa de entrega)</p>
               </div>
               {orderType === "delivery" && (
                 <div className="absolute right-4 animate-in zoom-in duration-300">
@@ -386,7 +385,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
       <div className="p-8 pt-6 border-t border-white/10 bg-black/20 backdrop-blur-md">
         <div className="flex justify-between items-baseline mb-6 text-white">
           <span className="text-base font-semibold opacity-70 tracking-tight">Total da compra</span>
-          <span className="text-3xl font-bold tracking-tighter" style={{ fontFamily: "'Barlow Condensed', 'Manrope', sans-serif" }}>{formatPrice(totalPrice)}</span>
+          <span className="text-3xl font-bold tracking-tighter" style={{ fontFamily: "'Barlow Condensed', 'Manrope', sans-serif" }}>{formatPrice(["review", "payment", "credit_card", "pix"].includes(step) ? totalPrice : subtotal)}</span>
         </div>
         
         {step === "credit_card" ? (
