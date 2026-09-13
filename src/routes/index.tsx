@@ -429,8 +429,8 @@ function Index() {
         </div>
       </header>
 
-      <main>
-        <section id="inicio" className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24">
+      <main className="relative">
+        <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
              {/* Animated Title - Each burger name, line by line */}
