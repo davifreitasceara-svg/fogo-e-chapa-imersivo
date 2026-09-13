@@ -1687,10 +1687,22 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                      <div className="absolute inset-0 bg-[#ff9d00]/30 rounded-full blur-2xl animate-pulse"></div>
                      <div className="w-24 h-24 rounded-full border-2 bg-black/60 backdrop-blur-md flex items-center justify-center relative overflow-hidden group-hover:scale-110 transition-transform duration-500 shadow-[0_0_30px_rgba(255,157,0,0.3)]" style={{ borderColor: currentTheme.secondary }}>
                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10"></div>
-                        <ShoppingBag className="size-10 relative z-10 drop-shadow-md animate-bounce" style={{ color: currentTheme.secondary }} />
+                        
+                        {/* Hamburger Build Animation */}
+                        <div className="relative z-10 flex flex-col items-center justify-center -space-y-[3px]">
+                          {/* Top Bun */}
+                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.266, 0.366, 0.7, 0.8, 1] }} className="w-10 h-4 rounded-t-[20px] bg-[#E29C45] shadow-sm z-50" />
+                          {/* Lettuce */}
+                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.2, 0.3, 0.7, 0.8, 1] }} className="w-12 h-1.5 rounded-full bg-[#4ADE80] shadow-sm z-40" />
+                          {/* Cheese */}
+                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.133, 0.233, 0.7, 0.8, 1] }} className="w-11 h-1.5 bg-[#FACC15] shadow-sm z-30" />
+                          {/* Patty */}
+                          <motion.div animate={{ y: [-20, -20, 0, 0, 10, 10], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.066, 0.166, 0.7, 0.8, 1] }} className="w-12 h-3 rounded-lg bg-[#5C3A21] shadow-sm z-20" />
+                          {/* Bottom Bun */}
+                          <motion.div animate={{ y: [-20, 0, 0, 10, 10], opacity: [0, 1, 1, 0, 0] }} transition={{ duration: 3, repeat: Infinity, times: [0, 0.1, 0.7, 0.8, 1] }} className="w-10 h-3 rounded-b-[10px] bg-[#E29C45] shadow-sm z-10" />
+                        </div>
                      </div>
                   </div>
-                </div>
               </div>
            </div>
         )}
