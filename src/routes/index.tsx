@@ -756,21 +756,6 @@ function Index() {
                     </div>
                   </motion.div>
 
-                  {/* Special Promo Card */}
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.9, y: 40, rotate: -2 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ type: 'spring', damping: 20, stiffness: 90, delay: 0.3 }}
-                    className="bg-orange-600 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
-                  >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/20 transition-colors"></div>
-                    <span className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold tracking-wider mb-4 border border-white/20 shadow-sm">15 JUN — 18 JUN</span>
-                    <h4 className="font-display text-2xl sm:text-3xl font-black leading-tight mb-6 drop-shadow-md">COMBO WRAP + BATATA POR APENAS R$ 35</h4>
-                    <motion.button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} whileTap={{ scale: 0.95 }} whileHover={{ y: -2 }} className="bg-[#2D150D] text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-black transition-all w-full sm:w-auto shadow-lg hover:shadow-xl">
-                      Onde Estamos
-                    </motion.button>
-                  </motion.div>
 
                   {/* Category: DRINKS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
@@ -797,6 +782,104 @@ function Index() {
                 </div>
 
               </div>
+
+              {/* COMBOS ESPECIAIS (Full Width Below Grid) */}
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.2 } } }} className="mt-16 pt-16 border-t border-black/5">
+                <div className="flex flex-col items-center text-center mb-10">
+                  <h4 className="font-display text-4xl sm:text-5xl font-black tracking-tight transition-colors duration-700" style={{ color: currentTheme.textDark }}>COMBOS ESPECIAIS</h4>
+                  <p className="mt-3 text-lg font-medium opacity-70" style={{ color: currentTheme.textDark }}>As combinações definitivas para matar qualquer fome.</p>
+                </div>
+                
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  
+                  {/* Combo 1 */}
+                  <motion.div 
+                    variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 90 } } }}
+                    className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-black opacity-90"></div>
+                    {/* Glow effect */}
+                    <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl group-hover:bg-amber-500/30 transition-colors duration-500"></div>
+                    <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl group-hover:bg-orange-600/20 transition-colors duration-500"></div>
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                      {/* Text Content */}
+                      <div className="flex-1 text-white flex flex-col justify-center h-full">
+                        <div>
+                          <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">MAIS VENDIDO • ECONOMIZE R$ 8</span>
+                          <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO BRASA</h4>
+                          <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">O suculento Brasa Bacon acompanhado da refrescante Coca-Cola bem gelada. A combinação definitiva.</p>
+                        </div>
+                        
+                        <div className="flex items-center gap-4 mt-auto">
+                          <span className="text-3xl font-black font-display text-amber-500">R$ 49,90</span>
+                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(2)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                            Adicionar
+                          </motion.button>
+                        </div>
+                      </div>
+
+                      {/* 3D Images */}
+                      <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
+                        <motion.img 
+                          src={cocaCola} 
+                          alt="Coca Cola" 
+                          className="absolute right-[15%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
+                        />
+                        <motion.img 
+                          src={burgerBrasa} 
+                          alt="Burger Brasa" 
+                          className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1a1a1a] shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Combo 2 */}
+                  <motion.div 
+                    variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 90 } } }}
+                    className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D0A0A] to-black opacity-90"></div>
+                    {/* Glow effect */}
+                    <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-3xl group-hover:bg-red-600/30 transition-colors duration-500"></div>
+                    <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                      {/* Text Content */}
+                      <div className="flex-1 text-white flex flex-col justify-center h-full">
+                        <div>
+                          <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">OUSADO • ECONOMIZE R$ 12</span>
+                          <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO INFERNO</h4>
+                          <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Para os fortes: Inferno Picante com Cerveja Pilsen trincando para apagar o fogo. Você aguenta?</p>
+                        </div>
+                        
+                        <div className="flex items-center gap-4 mt-auto">
+                          <span className="text-3xl font-black font-display text-red-500">R$ 51,90</span>
+                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(3)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                            Adicionar
+                          </motion.button>
+                        </div>
+                      </div>
+
+                      {/* 3D Images */}
+                      <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
+                        <motion.img 
+                          src={beer} 
+                          alt="Cerveja" 
+                          className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
+                        />
+                        <motion.img 
+                          src={burgerInferno} 
+                          alt="Burger Inferno" 
+                          className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#2D0A0A] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </section>
