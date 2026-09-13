@@ -563,8 +563,8 @@ function Index() {
 
              {/* Action Buttons */}
              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
-                <Button className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
+                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
+                <Button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
              </div>
            </div>
         </section>
@@ -751,7 +751,7 @@ function Index() {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-white/20 transition-colors"></div>
                     <span className="inline-block px-3 py-1 bg-black/20 rounded-full text-xs font-bold tracking-wider mb-4 border border-white/20 shadow-sm">15 JUN — 18 JUN</span>
                     <h4 className="font-display text-2xl sm:text-3xl font-black leading-tight mb-6 drop-shadow-md">COMBO WRAP + BATATA POR APENAS R$ 35</h4>
-                    <motion.button whileTap={{ scale: 0.95 }} whileHover={{ y: -2 }} className="bg-[#2D150D] text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-black transition-all w-full sm:w-auto shadow-lg hover:shadow-xl">
+                    <motion.button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} whileTap={{ scale: 0.95 }} whileHover={{ y: -2 }} className="bg-[#2D150D] text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-black transition-all w-full sm:w-auto shadow-lg hover:shadow-xl">
                       Onde Estamos
                     </motion.button>
                   </motion.div>
@@ -799,10 +799,10 @@ function Index() {
               </h2>
               
               <div className="flex flex-wrap justify-center gap-4">
-                <button className="flex items-center gap-2 text-white px-7 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5" style={{ backgroundColor: currentTheme.secondary }}>
+                <button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="flex items-center gap-2 text-white px-7 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5" style={{ backgroundColor: currentTheme.secondary }}>
                   Fazer Pedido <ArrowUpRight className="size-4" />
                 </button>
-                <button className="flex items-center gap-2 border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm transition-all hover:bg-white/10" style={{ backgroundColor: currentTheme.bgDark }}>
+                <button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="flex items-center gap-2 border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm transition-all hover:bg-white/10" style={{ backgroundColor: currentTheme.bgDark }}>
                   Ver Cardápio
                 </button>
               </div>
@@ -944,7 +944,7 @@ function Index() {
                 <p className="text-sm leading-relaxed mb-8 font-medium transition-colors duration-700 opacity-80" style={{ color: currentTheme.primary }}>
                   Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a nossa hamburgueria e aproveite uma experiência de sabor na brasa.
                 </p>
-                <Button className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
+                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
                   style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
                   PEDIR AGORA <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
                 </Button>
@@ -1002,7 +1002,7 @@ function Index() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                <Button className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
+                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
                   style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
                   VIEW ALL MENU <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
                 </Button>
@@ -1204,7 +1204,7 @@ function Index() {
             <div className="text-4xl font-black font-display tracking-tighter uppercase flex items-center gap-1">
               FOGO<span style={{ backgroundColor: currentTheme.secondary }} className="rounded-full text-white size-8 flex items-center justify-center text-2xl -mt-1">&</span>CHAPA
             </div>
-            <Button variant="outline" className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-8" style={{ borderColor: currentTheme.secondary, color: 'white', backgroundColor: 'transparent' }}>
+            <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-8" style={{ borderColor: currentTheme.secondary, color: 'white', backgroundColor: 'transparent' }}>
               PEDIR AGORA
             </Button>
           </div>
