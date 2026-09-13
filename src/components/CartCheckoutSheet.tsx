@@ -135,7 +135,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 <h4 className={`font-bold text-xl tracking-tight transition-colors duration-300 ${orderType === "delivery" ? "text-[#ff9d00]" : "text-white"}`}>Receber em casa</h4>
               </div>
               {orderType === "delivery" && (
-                <div className="absolute right-6 animate-in zoom-in duration-300">
+                <div className="absolute right-4 animate-in zoom-in duration-300">
                   <CheckCircle2 className="w-7 h-7 text-[#ff9d00]" />
                 </div>
               )}
@@ -152,7 +152,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 <h4 className={`font-bold text-xl tracking-tight transition-colors duration-300 ${orderType === "pickup" ? "text-[#ff9d00]" : "text-white"}`}>Pegue no local</h4>
               </div>
               {orderType === "pickup" && (
-                <div className="absolute right-6 animate-in zoom-in duration-300">
+                <div className="absolute right-4 animate-in zoom-in duration-300">
                   <CheckCircle2 className="w-7 h-7 text-[#ff9d00]" />
                 </div>
               )}
@@ -184,24 +184,24 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
         )}
 
         {step === "payment" && (
-          <div className="space-y-4 mt-6 text-white">
+          <div className="space-y-2.5 mt-4 text-white">
             <button 
               onClick={() => {
                 setPaymentMethod("pix");
                 setStep("pix");
               }}
-              className={`w-full relative overflow-hidden flex items-center gap-5 p-6 rounded-2xl border-2 transition-all duration-300 text-left group ${paymentMethod === "pix" ? "bg-[#ff9d00]/10 border-[#ff9d00]/50 shadow-[0_0_20px_rgba(255,157,0,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
+              className={`w-full relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all duration-300 text-left group ${paymentMethod === "pix" ? "bg-[#ff9d00]/10 border-[#ff9d00]/50 shadow-[0_0_20px_rgba(255,157,0,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "pix" ? "bg-[#ff9d00]" : "bg-white/10 group-hover:bg-white/20"}`}>
-                <QrCode className={`w-6 h-6 ${paymentMethod === "pix" ? "text-white" : "opacity-80 group-hover:opacity-100"}`} />
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "pix" ? "bg-[#ff9d00]" : "bg-white/10 group-hover:bg-white/20"}`}>
+                <QrCode className={`w-4 h-4 ${paymentMethod === "pix" ? "text-white" : "opacity-80 group-hover:opacity-100"}`} />
               </div>
               <div className="flex-1">
-                <h4 className={`font-bold text-lg tracking-tight ${paymentMethod === "pix" ? "text-[#ff9d00]" : ""}`}>Pix</h4>
-                <p className="text-sm opacity-60 font-medium mt-0.5">Aprovacao imediata</p>
+                <h4 className={`font-bold text-sm tracking-tight ${paymentMethod === "pix" ? "text-[#ff9d00]" : ""}`}>Pix</h4>
+                <p className="text-xs opacity-60 font-medium mt-0">Aprovacao imediata</p>
               </div>
               {paymentMethod === "pix" && (
-                <div className="absolute right-6 animate-in zoom-in duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-[#ff9d00]" />
+                <div className="absolute right-4 animate-in zoom-in duration-300">
+                  <CheckCircle2 className="w-5 h-5 text-[#ff9d00]" />
                 </div>
               )}
             </button>
@@ -211,54 +211,54 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 setPaymentMethod("credit_card");
                 setStep("credit_card"); // Maximiza na hora
               }}
-              className={`w-full relative overflow-hidden flex items-center gap-5 p-6 rounded-2xl border-2 transition-all duration-300 text-left group ${paymentMethod === "credit_card" ? "bg-[#ff9d00]/10 border-[#ff9d00]/50 shadow-[0_0_20px_rgba(255,157,0,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
+              className={`w-full relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all duration-300 text-left group ${paymentMethod === "credit_card" ? "bg-[#ff9d00]/10 border-[#ff9d00]/50 shadow-[0_0_20px_rgba(255,157,0,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "credit_card" ? "bg-[#ff9d00]" : "bg-white/10 group-hover:bg-white/20"}`}>
-                <CreditCard className={`w-6 h-6 ${paymentMethod === "credit_card" ? "text-white" : "opacity-80 group-hover:opacity-100"}`} />
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "credit_card" ? "bg-[#ff9d00]" : "bg-white/10 group-hover:bg-white/20"}`}>
+                <CreditCard className={`w-4 h-4 ${paymentMethod === "credit_card" ? "text-white" : "opacity-80 group-hover:opacity-100"}`} />
               </div>
               <div className="flex-1">
-                <h4 className={`font-bold text-lg tracking-tight ${paymentMethod === "credit_card" ? "text-[#ff9d00]" : ""}`}>Cartao de Credito</h4>
-                <p className="text-sm opacity-60 font-medium mt-0.5">Pague online com seguranca</p>
+                <h4 className={`font-bold text-sm tracking-tight ${paymentMethod === "credit_card" ? "text-[#ff9d00]" : ""}`}>Cartao de Credito</h4>
+                <p className="text-xs opacity-60 font-medium mt-0">Pague online com seguranca</p>
               </div>
               {paymentMethod === "credit_card" && (
-                <div className="absolute right-6 animate-in zoom-in duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-[#ff9d00]" />
+                <div className="absolute right-4 animate-in zoom-in duration-300">
+                  <CheckCircle2 className="w-5 h-5 text-[#ff9d00]" />
                 </div>
               )}
             </button>
 
             <button 
               onClick={() => setPaymentMethod("nubank")}
-              className={`w-full relative overflow-hidden flex items-center gap-5 p-6 rounded-2xl border-2 transition-all duration-300 text-left group ${paymentMethod === "nubank" ? "bg-[#8A05BE]/10 border-[#8A05BE]/50 shadow-[0_0_20px_rgba(138,5,190,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
+              className={`w-full relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all duration-300 text-left group ${paymentMethod === "nubank" ? "bg-[#8A05BE]/10 border-[#8A05BE]/50 shadow-[0_0_20px_rgba(138,5,190,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "nubank" ? "bg-[#8A05BE]" : "bg-[#8A05BE]/20 group-hover:bg-[#8A05BE]/30"}`}>
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "nubank" ? "bg-[#8A05BE]" : "bg-[#8A05BE]/20 group-hover:bg-[#8A05BE]/30"}`}>
                 <span className={`font-bold text-[14px] ${paymentMethod === "nubank" ? "text-white" : "text-[#8A05BE]"}`}>nu</span>
               </div>
               <div className="flex-1">
-                <h4 className={`font-bold text-lg tracking-tight ${paymentMethod === "nubank" ? "text-[#8A05BE]" : ""}`}>Nubank Pay</h4>
-                <p className="text-sm opacity-60 font-medium mt-0.5">Direto pelo app</p>
+                <h4 className={`font-bold text-sm tracking-tight ${paymentMethod === "nubank" ? "text-[#8A05BE]" : ""}`}>Nubank Pay</h4>
+                <p className="text-xs opacity-60 font-medium mt-0">Direto pelo app</p>
               </div>
               {paymentMethod === "nubank" && (
-                <div className="absolute right-6 animate-in zoom-in duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-[#8A05BE]" />
+                <div className="absolute right-4 animate-in zoom-in duration-300">
+                  <CheckCircle2 className="w-5 h-5 text-[#8A05BE]" />
                 </div>
               )}
             </button>
 
             <button 
               onClick={() => setPaymentMethod("money")}
-              className={`w-full relative overflow-hidden flex items-center gap-5 p-6 rounded-2xl border-2 transition-all duration-300 text-left group ${paymentMethod === "money" ? "bg-[#ff9d00]/10 border-[#ff9d00]/50 shadow-[0_0_20px_rgba(255,157,0,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
+              className={`w-full relative overflow-hidden flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all duration-300 text-left group ${paymentMethod === "money" ? "bg-[#ff9d00]/10 border-[#ff9d00]/50 shadow-[0_0_20px_rgba(255,157,0,0.15)]" : "bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10"}`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "money" ? "bg-[#ff9d00]" : "bg-white/10 group-hover:bg-white/20"}`}>
-                <Banknote className={`w-6 h-6 ${paymentMethod === "money" ? "text-white" : "opacity-80 group-hover:opacity-100"}`} />
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${paymentMethod === "money" ? "bg-[#ff9d00]" : "bg-white/10 group-hover:bg-white/20"}`}>
+                <Banknote className={`w-4 h-4 ${paymentMethod === "money" ? "text-white" : "opacity-80 group-hover:opacity-100"}`} />
               </div>
               <div className="flex-1">
-                <h4 className={`font-bold text-lg tracking-tight ${paymentMethod === "money" ? "text-[#ff9d00]" : ""}`}>Dinheiro</h4>
-                <p className="text-sm opacity-60 font-medium mt-0.5">Pagamento na entrega</p>
+                <h4 className={`font-bold text-sm tracking-tight ${paymentMethod === "money" ? "text-[#ff9d00]" : ""}`}>Dinheiro</h4>
+                <p className="text-xs opacity-60 font-medium mt-0">Pagamento na entrega</p>
               </div>
               {paymentMethod === "money" && (
-                <div className="absolute right-6 animate-in zoom-in duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-[#ff9d00]" />
+                <div className="absolute right-4 animate-in zoom-in duration-300">
+                  <CheckCircle2 className="w-5 h-5 text-[#ff9d00]" />
                 </div>
               )}
             </button>

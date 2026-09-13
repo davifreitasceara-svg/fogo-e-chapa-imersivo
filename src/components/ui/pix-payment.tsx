@@ -34,27 +34,27 @@ export const PixPayment = ({ totalPrice, onFinish }: Props) => {
   const formattedPrice = totalPrice.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   // Use a public QR code generator API for the mockup
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(mockPixCode)}&color=000000&bgcolor=ffffff`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(mockPixCode)}&color=000000&bgcolor=ffffff`;
 
   return (
-    <div className="w-full max-w-md mx-auto text-white flex flex-col items-center">
-      <div className="bg-[#ff9d00]/10 border border-[#ff9d00]/20 rounded-2xl p-6 w-full text-center flex flex-col items-center relative overflow-hidden">
+    <div className="w-full max-w-sm mx-auto text-white flex flex-col items-center">
+      <div className="bg-[#ff9d00]/10 border border-[#ff9d00]/20 rounded-xl p-4 w-full text-center flex flex-col items-center relative overflow-hidden">
         {/* Glow effect behind QR */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#ff9d00]/20 rounded-full blur-[60px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-[#ff9d00]/20 rounded-full blur-[40px]" />
         
-        <h3 className="text-xl font-bold mb-1 relative z-10">Escaneie o QR Code</h3>
-        <p className="text-white/60 text-sm mb-6 relative z-10">Abra o app do seu banco e escolha pagar via Pix QR Code.</p>
+        <h3 className="text-base font-bold mb-0.5 relative z-10">Escaneie o QR Code</h3>
+        <p className="text-white/60 text-xs mb-3 relative z-10">Abra o app do seu banco e escolha pagar via Pix QR Code.</p>
 
-        <div className="relative z-10 bg-white p-4 rounded-3xl shadow-[0_0_40px_rgba(255,157,0,0.2)] mb-6 animate-in zoom-in duration-500">
-          <img src={qrCodeUrl} alt="Pix QR Code" className="w-48 h-48 rounded-xl object-contain" />
-          <div className="absolute -inset-1 border-2 border-[#ff9d00]/30 rounded-[1.7rem] pointer-events-none animate-pulse" />
+        <div className="relative z-10 bg-white p-3 rounded-2xl shadow-[0_0_30px_rgba(255,157,0,0.2)] mb-4 animate-in zoom-in duration-500">
+          <img src={qrCodeUrl} alt="Pix QR Code" className="w-36 h-36 rounded-lg object-contain" />
+          <div className="absolute -inset-1 border-2 border-[#ff9d00]/30 rounded-[1.3rem] pointer-events-none animate-pulse" />
         </div>
 
-        <div className="flex flex-col items-center relative z-10 w-full mb-2">
+        <div className="flex flex-col items-center relative z-10 w-full mb-1">
           <p className="text-white/60 text-xs uppercase tracking-wider font-bold mb-2">Pix Copia e Cola</p>
           <button 
             onClick={handleCopy}
-            className="w-full flex items-center justify-between bg-black/40 border border-white/10 rounded-xl p-4 hover:border-[#ff9d00]/50 hover:bg-black/60 transition-all duration-300 group"
+            className="w-full flex items-center justify-between bg-black/40 border border-white/10 rounded-lg p-3 hover:border-[#ff9d00]/50 hover:bg-black/60 transition-all duration-300 group"
           >
             <span className="truncate text-sm opacity-80 font-mono mr-4">{mockPixCode.slice(0, 25)}...</span>
             {copied ? (
@@ -70,9 +70,9 @@ export const PixPayment = ({ totalPrice, onFinish }: Props) => {
         </div>
       </div>
 
-      <div className="mt-8 text-center flex flex-col items-center w-full">
+      <div className="mt-4 text-center flex flex-col items-center w-full">
         <p className="text-white/50 text-sm mb-1">Aguardando pagamento...</p>
-        <div className="text-3xl font-bold tracking-tighter tabular-nums text-[#ff9d00] mb-8" style={{ fontFamily: "'Barlow Condensed', 'Manrope', sans-serif" }}>
+        <div className="text-2xl font-bold tracking-tighter tabular-nums text-[#ff9d00] mb-4" style={{ fontFamily: "'Barlow Condensed', 'Manrope', sans-serif" }}>
           {formatTime(timeLeft)}
         </div>
       </div>
