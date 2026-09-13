@@ -1748,37 +1748,10 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
          <div className="max-w-2xl mx-auto">
             <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6" />
             
-            {activeOrderType === "pickup" ? (
-               <div className="text-center pb-4">
-                  <h2 className="text-3xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">
-                    {stage === "picking_up" ? "Preparando seu pedido..." : stage === "delivering" ? "Quase pronto!" : "Pronto para retirar!"}
-                  </h2>
-                  <p className="text-base font-medium opacity-70 text-gray-600">
-                    {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
-                  </p>
-                  
-                  {/* Progress Bar */}
-                  <div className="mt-8 flex justify-between items-center relative">
-                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -z-10 -translate-y-1/2 rounded-full"></div>
-                     <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded-full transition-all duration-1000" style={{ width: stage === "picking_up" ? "0%" : stage === "delivering" ? "50%" : "100%", backgroundColor: currentTheme.secondary }}></div>
-                     
-                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: currentTheme.secondary }}>1</div>
-                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>2</div>
-                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>3</div>
-                  </div>
-
-                  {stage === "delivered" && ratingState === null && (
-                    <Button 
-                       className="w-full mt-8 text-lg font-bold h-14 rounded-xl text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-                       style={{ backgroundColor: currentTheme.secondary }}
-                       onClick={() => setRatingState(activeOrderType === "delivery" ? "driver" : "food")}
-                    >
-                      Pedido Recebido
-                    </Button>
-                  )}
-
+            {ratingState !== null ? (
+               <div className="pb-4">
                   {ratingState === "driver" && (
-                    <div className="mt-8 text-center animate-in fade-in slide-in-from-bottom-4">
+                    <div className="mt-4 text-center animate-in fade-in slide-in-from-bottom-4">
                       <h3 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">Avalie a Entrega</h3>
                       <p className="text-sm font-medium opacity-70 text-gray-600 mb-6">Como foi o atendimento do entregador {MOCK_DRIVERS[activeDriver].name}?</p>
                       
@@ -1802,7 +1775,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                   )}
 
                   {ratingState === "food" && (
-                    <div className="mt-8 text-center animate-in fade-in slide-in-from-right-4">
+                    <div className="mt-4 text-center animate-in fade-in slide-in-from-right-4">
                       <h3 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">Avalie o Sabor</h3>
                       <p className="text-sm font-medium opacity-70 text-gray-600 mb-6">Como estava o seu pedido da Fogo & Chapa?</p>
                       
@@ -1826,7 +1799,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                   )}
 
                   {ratingState === "done" && (
-                    <div className="mt-8 text-center animate-in zoom-in duration-500">
+                    <div className="mt-4 text-center animate-in zoom-in duration-500">
                       <div className="size-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
                         <Star className="size-10 fill-green-500 text-green-500" />
                       </div>
@@ -1841,6 +1814,35 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                         Concluir e Fechar
                       </Button>
                     </div>
+                  )}
+               </div>
+            ) : activeOrderType === "pickup" ? (
+               <div className="text-center pb-4">
+                  <h2 className="text-3xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">
+                    {stage === "picking_up" ? "Preparando seu pedido..." : stage === "delivering" ? "Quase pronto!" : "Pronto para retirar!"}
+                  </h2>
+                  <p className="text-base font-medium opacity-70 text-gray-600">
+                    {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
+                  </p>
+                  
+                  {/* Progress Bar */}
+                  <div className="mt-8 flex justify-between items-center relative">
+                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -z-10 -translate-y-1/2 rounded-full"></div>
+                     <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded-full transition-all duration-1000" style={{ width: stage === "picking_up" ? "0%" : stage === "delivering" ? "50%" : "100%", backgroundColor: currentTheme.secondary }}></div>
+                     
+                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: currentTheme.secondary }}>1</div>
+                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>2</div>
+                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>3</div>
+                  </div>
+
+                  {stage === "delivered" && (
+                    <Button 
+                       className="w-full mt-8 text-lg font-bold h-14 rounded-xl text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+                       style={{ backgroundColor: currentTheme.secondary }}
+                       onClick={() => setRatingState("food")}
+                    >
+                      Pedido Recebido
+                    </Button>
                   )}
                </div>
             ) : (
@@ -1883,18 +1885,14 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
 
                   {stage === "delivered" && (
                     <Button 
-                       className="w-full mt-6 text-lg font-bold h-14 rounded-xl text-white shadow-lg"
+                       className="w-full mt-6 text-lg font-bold h-14 rounded-xl text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
                        style={{ backgroundColor: currentTheme.secondary }}
-                       onClick={onClose}
+                       onClick={() => setRatingState("driver")}
                     >
                       Pedido Recebido
                     </Button>
                   )}
                </>
             )}
-         </div>
-      </div>
-    </motion.div>
-  );
-}
+
 
