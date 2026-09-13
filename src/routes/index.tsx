@@ -1894,5 +1894,8 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                   )}
                </>
             )}
-
-
+         </div>
+      </div>
+    </motion.div>
+  );
+}
