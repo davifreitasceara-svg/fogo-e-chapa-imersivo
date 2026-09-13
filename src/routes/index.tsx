@@ -1703,6 +1703,8 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                         </div>
                      </div>
                   </div>
+                </div>
+              </div>
            </div>
         )}
 
