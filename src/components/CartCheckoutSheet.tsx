@@ -5,7 +5,7 @@ import { CreditCardForm } from "./ui/credit-card-form";
 import { PixPayment } from "./ui/pix-payment";
 
 export function CartCheckoutSheet({ cart, products, updateQuantity, handleCheckout, currentTheme }: any) {
-  const [step, setStep] = useState<"cart" | "type" | "details" | "payment" | "credit_card" | "pix">("cart");
+  const [step, setStep] = useState<"cart" | "type" | "details" | "review" | "payment" | "credit_card" | "pix">("cart");
   const [orderType, setOrderType] = useState<"delivery" | "pickup" | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [address, setAddress] = useState("");
@@ -13,16 +13,22 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
   const [detailsError, setDetailsError] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const [discountApplied, setDiscountApplied] = useState(false);
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
     if (products.some((p: any) => p.id === parseInt(id))) return sum + (count as number);
     return sum;
   }, 0);
 
-  const totalPrice = Object.entries(cart).reduce((total, [id, qty]) => {
+  const subtotal = Object.entries(cart).reduce((total, [id, qty]) => {
     const product = products.find((p: any) => p.id === parseInt(id));
     return total + (product ? product.price * (qty as number) : 0);
   }, 0);
+
+  const deliveryFee = orderType === "delivery" ? 8 : 0;
+  const discountAmount = discountApplied ? subtotal * 0.5 : 0;
+  const totalPrice = subtotal - discountAmount + deliveryFee;
 
   const formatPrice = (price: number) => {
     return price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -32,7 +38,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
     if (step === "cart") setStep("type");
     else if (step === "type") {
       if (orderType === "delivery") setStep("details");
-      else if (orderType === "pickup") setStep("payment");
+      else if (orderType === "pickup") setStep("review");
     }
     else if (step === "details") {
       if (!name.trim() || !address.trim() || !number.trim()) {
@@ -40,7 +46,10 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
         return;
       }
       setDetailsError("");
-        setStep("payment");
+        setStep("review");
+    }
+    else if (step === "review") {
+      setStep("payment");
     }
     else if (step === "payment") {
       if (paymentMethod === "credit_card") {
@@ -64,6 +73,8 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
     if (step === "credit_card" || step === "pix") {
       setStep("payment");
     } else if (step === "payment") {
+      setStep("review");
+    } else if (step === "review") {
       setStep(orderType === "delivery" ? "details" : "type");
     } else if (step === "details") {
       setStep("type");
@@ -85,7 +96,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             </button>
           )}
           <SheetTitle className="font-bold text-3xl tracking-tight m-0 text-white" style={{ fontFamily: "'Manrope', sans-serif" }}>
-            {step === "cart" ? "Carrinho" : step === "type" ? "Entrega ou Retirada?" : step === "details" ? "Onde entregar?" : step === "payment" ? "Pagamento" : step === "credit_card" ? "Cartao de Credito" : "Pagamento via Pix"}
+            {step === "cart" ? "Carrinho" : step === "type" ? "Entrega ou Retirada?" : step === "details" ? "Onde entregar?" : step === "review" ? "Conferir Pedido" : step === "payment" ? "Pagamento" : step === "credit_card" ? "Cartao de Credito" : "Pagamento via Pix"}
           </SheetTitle>
         </div>
       </SheetHeader>
@@ -189,6 +200,85 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
               <div className="col-span-2">
                 <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">COMPLEMENTO</label>
                 <input value={complement} onChange={e => setComplement(e.target.value)} type="text" className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal" placeholder="Apto, bloco (opcional)" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        
+        {step === "review" && (
+          <div className="space-y-6 mt-4 text-white">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+              <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">Resumo do Pedido</h3>
+              {Object.entries(cart).map(([idStr, quantity]) => {
+                const product = products.find((p: any) => p.id === parseInt(idStr));
+                if (!product) return null;
+                return (
+                  <div key={product.id} className="flex justify-between text-sm">
+                    <span>{quantity as number}x {product.name}</span>
+                    <span className="font-medium text-[#ff9d00]">{formatPrice(product.price * (quantity as number))}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+              <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">Cupom de Desconto</h3>
+              <div className="flex gap-2">
+                <input 
+                  value={couponCode} 
+                  onChange={e => setCouponCode(e.target.value.toUpperCase())} 
+                  disabled={discountApplied}
+                  type="text" 
+                  className="flex-1 bg-black/40 border-2 border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:border-white/40 focus:bg-black/60 focus:outline-none transition-all duration-300 placeholder:text-white/30 uppercase" 
+                  placeholder="DIGITE O CUPOM" 
+                />
+                {!discountApplied ? (
+                  <button 
+                    onClick={() => {
+                      if (couponCode.toUpperCase() === "DVSCODES") {
+                        setDiscountApplied(true);
+                      } else {
+                        alert("Cupom invalido");
+                      }
+                    }}
+                    className="bg-white/10 hover:bg-white/20 text-white font-bold px-4 rounded-xl transition-colors"
+                  >
+                    Aplicar
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      setDiscountApplied(false);
+                      setCouponCode("");
+                    }}
+                    className="bg-red-500/20 text-red-400 hover:bg-red-500/30 font-bold px-4 rounded-xl transition-colors"
+                  >
+                    Remover
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
+              <div className="flex justify-between text-sm text-white/80">
+                <span>Subtotal</span>
+                <span>{formatPrice(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-sm text-white/80">
+                <span>Taxa de Entrega</span>
+                <span>{orderType === "delivery" ? formatPrice(deliveryFee) : "Gratis"}</span>
+              </div>
+              {discountApplied && (
+                <div className="flex justify-between text-sm text-green-400 font-bold">
+                  <span>Desconto (50%)</span>
+                  <span>-{formatPrice(discountAmount)}</span>
+                </div>
+              )}
+              <div className="h-[1px] w-full bg-white/10 my-2" />
+              <div className="flex justify-between text-lg font-bold">
+                <span>Total</span>
+                <span className="text-[#ff9d00]">{formatPrice(totalPrice)}</span>
               </div>
             </div>
           </div>
