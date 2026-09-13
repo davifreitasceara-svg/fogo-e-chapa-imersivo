@@ -238,6 +238,20 @@ function Index() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [slideDirection, setSlideDirection] = useState(1); // 1 = right, -1 = left
 
+  const footerRef = useRef<HTMLElement>(null);
+  const [footerHeight, setFooterHeight] = useState(0);
+
+  useEffect(() => {
+    if (!footerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setFooterHeight(entry.contentRect.height);
+      }
+    });
+    observer.observe(footerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const nextHero = () => {
     setSlideDirection(1);
     setHeroIndex((prev) => (prev + 1) % carouselSlides.length);
@@ -345,7 +359,8 @@ function Index() {
   }
 
   return (
-    <div className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
+    <>
+    <div className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`} style={{ marginBottom: footerHeight }}>
       <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
           <motion.div 
@@ -1192,8 +1207,9 @@ function Index() {
         </section>
         </div>
       </main>
+    </div>
 
-      <footer id="contato" className="pt-20 bg-background transition-colors duration-700 relative overflow-hidden text-white" style={{ backgroundColor: currentTheme.bgVeryDark }}>
+      <footer ref={footerRef} id="contato" className="fixed bottom-0 left-0 w-full pt-20 transition-colors duration-700 overflow-hidden text-white z-[-1]" style={{ backgroundColor: currentTheme.bgVeryDark }}>
         <div className="mx-auto max-w-7xl px-5 lg:px-8 relative z-10 flex flex-col gap-12">
           {/* Top Bar */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-10 border-b border-white/10">
@@ -1290,7 +1306,7 @@ function Index() {
       <AnimatePresence>
         {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} activeOrderType={activeOrderType} activeDriver={activeDriver} activeRoute={activeRoute} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
 
