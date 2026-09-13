@@ -345,7 +345,7 @@ function Index() {
   }
 
   return (
-    <div className={`min-h-screen overflow-x-hidden transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
+    <div className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}>
       <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
           <motion.div 
