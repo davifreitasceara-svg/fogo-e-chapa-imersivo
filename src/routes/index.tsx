@@ -361,7 +361,7 @@ function Index() {
   return (
     <>
     <div className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`} style={{ marginBottom: footerHeight }}>
-      <header className="absolute inset-x-0 top-0 z-40 bg-transparent">
+      <header className="fixed inset-x-0 top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10 transition-colors duration-700">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
           <motion.div 
             className="flex items-center gap-2"
