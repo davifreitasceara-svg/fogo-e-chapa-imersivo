@@ -569,6 +569,7 @@ function Index() {
            </div>
         </section>
 
+        <div className="relative z-10">
         {/* Torn paper edge divider */}
         <div className="relative -mt-1 z-10">
           <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[60px] sm:h-[90px] md:h-[120px] transition-colors duration-700" style={{ fill: currentTheme.bgDark }}>
@@ -1189,6 +1190,7 @@ function Index() {
             </div>
           </div>
         </section>
+        </div>
       </main>
 
       <footer id="contato" className="pt-20 bg-background transition-colors duration-700 relative overflow-hidden text-white" style={{ backgroundColor: currentTheme.bgVeryDark }}>
