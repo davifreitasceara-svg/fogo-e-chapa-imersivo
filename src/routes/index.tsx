@@ -2,7 +2,7 @@ import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
+import { 
   ArrowDown,
   Check,
   ChevronLeft,
@@ -27,7 +27,7 @@ import {
   TrendingUp,
   Bike,
   Navigation
-} from "lucide-react";
+, ChefHat } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -1670,72 +1670,91 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
         {activeOrderType !== "pickup" && <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />}
         
         {activeOrderType === "pickup" && (
-           <div className="text-center z-10 px-4 flex flex-col items-center w-full max-w-lg mx-auto mt-20">
-              <div className="relative group animate-in fade-in zoom-in duration-1000 w-full">
-                {/* Outer Glow */}
-                <div className="absolute -inset-2 bg-gradient-to-tr from-[#ff9d00] via-[#ffaa22] to-[#ff5500] rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-60 transition duration-1000 animate-pulse"></div>
-                
-                {/* Main Card */}
-                <div className="relative bg-black/50 backdrop-blur-2xl border border-white/20 px-8 py-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center transform transition-all hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(255,157,0,0.3)] duration-700">
-                  {/* Subtle top reflection */}
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-                  
-                  {/* Pickup Code */}
-                  <h1 className="text-7xl md:text-8xl font-black font-display uppercase tracking-tighter drop-shadow-2xl mb-2" style={{ color: currentTheme.secondary, textShadow: `0 0 50px ${currentTheme.secondary}80` }}>
-                    #{pickupCode}
-                  </h1>
-                  
-                  {/* Label */}
-                  <div className="flex items-center gap-4 mt-2">
-                    <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-white/30 rounded-full"></div>
-                    <p className="text-sm md:text-base font-bold uppercase tracking-[0.5em] text-white/90">Código de Retirada</p>
-                    <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-white/30 rounded-full"></div>
-                  </div>
-                  
-                  {/* Burger Animation Container */}
-                  <div className="mt-14 flex items-center justify-center relative w-full h-32">
-                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#ff9d00]/10 rounded-full blur-xl"></div>
-                     <div className="w-32 h-32 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center relative group-hover:scale-105 transition-transform duration-700 shadow-[inset_0_0_20px_rgba(255,255,255,0.05),_0_0_30px_rgba(255,157,0,0.2)]">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10 rounded-full"></div>
-                        
-                        {/* Hamburger Build Animation */}
-                        {/* Note: overflow-hidden is REMOVED from the circle so the pieces can drop from above! */}
-                        <div className="relative z-10 flex flex-col items-center justify-center -space-y-[2px] scale-125 pt-2">
-                          {/* Top Bun */}
-                          <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0], scale: [0.9, 0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.15, 0.25, 0.85, 0.95, 1], ease: "backOut" }} className="relative w-14 h-6 rounded-t-full bg-gradient-to-b from-[#F59E0B] to-[#D97706] shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-50 overflow-hidden border border-[#B45309]/50">
-                            {/* Sesame Seeds */}
-                            <div className="absolute top-1.5 left-3 w-1 h-1.5 bg-white/80 rounded-full rotate-45"></div>
-                            <div className="absolute top-2.5 left-6 w-1 h-1.5 bg-white/80 rounded-full -rotate-12"></div>
-                            <div className="absolute top-1.5 right-4 w-1 h-1.5 bg-white/80 rounded-full rotate-12"></div>
-                            <div className="absolute top-3 right-8 w-1 h-1.5 bg-white/80 rounded-full rotate-45"></div>
-                            <div className="absolute top-3 left-9 w-1 h-1 bg-white/80 rounded-full rotate-45"></div>
-                          </motion.div>
-                          
-                          {/* Tomato */}
-                          <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.12, 0.22, 0.85, 0.95, 1], ease: "backOut" }} className="w-14 h-2 rounded-full bg-gradient-to-b from-red-500 to-red-700 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-40 border border-red-800" />
-                          
-                          {/* Lettuce */}
-                          <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.09, 0.19, 0.85, 0.95, 1], ease: "backOut" }} className="relative w-16 h-2 rounded-full bg-gradient-to-b from-green-400 to-green-600 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-30 flex justify-between px-1">
-                             <div className="w-2 h-2 bg-green-500 rounded-full -mt-0.5"></div>
-                             <div className="w-2 h-2 bg-green-400 rounded-full -mt-0.5"></div>
-                             <div className="w-2 h-2 bg-green-600 rounded-full -mt-0.5"></div>
-                          </motion.div>
-                          
-                          {/* Cheese */}
-                          <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.06, 0.16, 0.85, 0.95, 1], ease: "backOut" }} className="w-15 h-1.5 bg-gradient-to-b from-yellow-300 to-yellow-500 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-20 -rotate-2" style={{ width: '58px' }} />
-                          
-                          {/* Patty */}
-                          <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.03, 0.13, 0.85, 0.95, 1], ease: "backOut" }} className="w-15 h-3.5 rounded-lg bg-gradient-to-b from-[#5C3A21] to-[#3a2211] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.5),_0_2px_4px_rgba(0,0,0,0.3)] z-10 border border-[#2d190b]" style={{ width: '60px' }} />
-                          
-                          {/* Bottom Bun */}
-                          <motion.div animate={{ y: [-80, 0, 0, 80, 80], opacity: [0, 1, 1, 0, 0], scale: [0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.1, 0.85, 0.95, 1], ease: "backOut" }} className="w-14 h-4 rounded-b-xl bg-gradient-to-t from-[#D97706] to-[#F59E0B] shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-0 border border-[#B45309]/50" />
-                        </div>
-                     </div>
-                  </div>
+             <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800 via-gray-950 to-black overflow-hidden flex flex-col items-center justify-center pt-10">
+                {/* Floating Particles Background */}
+                <div className="absolute inset-0 opacity-20">
+                   {[...Array(12)].map((_, i) => (
+                      <div key={i} className="absolute rounded-full bg-white animate-pulse" 
+                           style={{ 
+                              width: Math.random() * 6 + 2 + 'px', 
+                              height: Math.random() * 6 + 2 + 'px',
+                              top: Math.random() * 100 + '%',
+                              left: Math.random() * 100 + '%',
+                              animationDuration: (Math.random() * 3 + 2) + 's',
+                              animationDelay: (Math.random() * 2) + 's'
+                           }}></div>
+                   ))}
                 </div>
-              </div>
-           </div>
-        )}
+
+                <div className="relative z-10 px-4 flex flex-col items-center w-full max-w-lg mx-auto">
+                   <div className="relative group animate-in fade-in zoom-in duration-1000 w-full">
+                     {/* Outer Glow */}
+                     <div className="absolute -inset-4 bg-gradient-to-tr from-[#ff9d00] via-[#ffaa22] to-[#ff5500] rounded-[3rem] blur-3xl opacity-30 group-hover:opacity-50 transition duration-1000 animate-pulse"></div>
+                     
+                     {/* Main Card */}
+                     <div className="relative bg-black/40 backdrop-blur-3xl border border-white/20 px-8 py-16 rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.5)] flex flex-col items-center transform transition-all duration-700">
+                       {/* Subtle top reflection */}
+                       <div className="absolute top-0 inset-x-8 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+                       
+                       {/* Pickup Code with glowing text */}
+                       <h1 className="text-8xl md:text-9xl font-black font-display uppercase tracking-tighter mb-4" 
+                           style={{ 
+                              color: currentTheme.secondary, 
+                              textShadow: `0 0 40px ${currentTheme.secondary}aa, 0 0 100px ${currentTheme.secondary}66` 
+                           }}>
+                         #{pickupCode}
+                       </h1>
+                       
+                       {/* Label */}
+                       <div className="flex items-center gap-6 mt-2 mb-8">
+                         <div className="h-[2px] w-16 bg-gradient-to-r from-transparent to-white/40 rounded-full"></div>
+                         <p className="text-sm md:text-lg font-bold uppercase tracking-[0.4em] text-white/90">Código de Retirada</p>
+                         <div className="h-[2px] w-16 bg-gradient-to-l from-transparent to-white/40 rounded-full"></div>
+                       </div>
+                       
+                       {/* Burger Animation Container */}
+                       <div className="mt-8 flex items-center justify-center relative w-full h-40">
+                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#ff9d00]/10 rounded-full blur-2xl"></div>
+                          <div className="w-40 h-40 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center relative group-hover:scale-105 transition-transform duration-700 shadow-[inset_0_0_30px_rgba(255,255,255,0.05),_0_0_40px_rgba(255,157,0,0.15)]">
+                             <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10 rounded-full"></div>
+                             
+                             {/* Hamburger Build Animation */}
+                             <div className="relative z-10 flex flex-col items-center justify-center -space-y-[2px] scale-150 pt-2">
+                               {/* Top Bun */}
+                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0], scale: [0.9, 0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.15, 0.25, 0.85, 0.95, 1], ease: "backOut" }} className="relative w-14 h-6 rounded-t-full bg-gradient-to-b from-[#F59E0B] to-[#D97706] shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-50 overflow-hidden border border-[#B45309]/50">
+                                 <div className="absolute top-1.5 left-3 w-1 h-1.5 bg-white/80 rounded-full rotate-45"></div>
+                                 <div className="absolute top-2.5 left-6 w-1 h-1.5 bg-white/80 rounded-full -rotate-12"></div>
+                                 <div className="absolute top-1.5 right-4 w-1 h-1.5 bg-white/80 rounded-full rotate-12"></div>
+                                 <div className="absolute top-3 right-8 w-1 h-1.5 bg-white/80 rounded-full rotate-45"></div>
+                                 <div className="absolute top-3 left-9 w-1 h-1 bg-white/80 rounded-full rotate-45"></div>
+                               </motion.div>
+                               
+                               {/* Tomato */}
+                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.12, 0.22, 0.85, 0.95, 1], ease: "backOut" }} className="w-14 h-2 rounded-full bg-gradient-to-b from-red-500 to-red-700 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-40 border border-red-800" />
+                               
+                               {/* Lettuce */}
+                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.09, 0.19, 0.85, 0.95, 1], ease: "backOut" }} className="relative w-16 h-2 rounded-full bg-gradient-to-b from-green-400 to-green-600 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-30 flex justify-between px-1">
+                                  <div className="w-2 h-2 bg-green-500 rounded-full -mt-0.5"></div>
+                                  <div className="w-2 h-2 bg-green-400 rounded-full -mt-0.5"></div>
+                                  <div className="w-2 h-2 bg-green-600 rounded-full -mt-0.5"></div>
+                               </motion.div>
+                               
+                               {/* Cheese */}
+                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.06, 0.16, 0.85, 0.95, 1], ease: "backOut" }} className="w-15 h-1.5 bg-gradient-to-b from-yellow-300 to-yellow-500 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-20 -rotate-2" style={{ width: '58px' }} />
+                               
+                               {/* Patty */}
+                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.03, 0.13, 0.85, 0.95, 1], ease: "backOut" }} className="w-15 h-3.5 rounded-lg bg-gradient-to-b from-[#5C3A21] to-[#3a2211] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.5),_0_2px_4px_rgba(0,0,0,0.3)] z-10 border border-[#2d190b]" style={{ width: '60px' }} />
+                               
+                               {/* Bottom Bun */}
+                               <motion.div animate={{ y: [-80, 0, 0, 80, 80], opacity: [0, 1, 1, 0, 0], scale: [0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.1, 0.85, 0.95, 1], ease: "backOut" }} className="w-14 h-4 rounded-b-xl bg-gradient-to-t from-[#D97706] to-[#F59E0B] shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-0 border border-[#B45309]/50" />
+                             </div>
+                          </div>
+                       </div>
+                     </div>
+                   </div>
+                </div>
+             </div>
+          )}
         
         {/* Close Button */}
         <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white shadow-md text-black hover:bg-gray-100 rounded-full z-[9999]">
@@ -1818,21 +1837,43 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                </div>
             ) : activeOrderType === "pickup" ? (
                <div className="text-center pb-4">
-                  <h2 className="text-3xl font-black font-display uppercase tracking-tight text-gray-900 mb-2">
+                  <h2 className="text-4xl font-black font-display uppercase tracking-tight mb-3 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900">
                     {stage === "picking_up" ? "Preparando seu pedido..." : stage === "delivering" ? "Quase pronto!" : "Pronto para retirar!"}
                   </h2>
-                  <p className="text-base font-medium opacity-70 text-gray-600">
+                  <p className="text-lg font-medium opacity-70 text-gray-600">
                     {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
                   </p>
                   
                   {/* Progress Bar */}
-                  <div className="mt-8 flex justify-between items-center relative">
-                     <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -z-10 -translate-y-1/2 rounded-full"></div>
-                     <div className="absolute top-1/2 left-0 h-1 bg-primary -z-10 -translate-y-1/2 rounded-full transition-all duration-1000" style={{ width: stage === "picking_up" ? "0%" : stage === "delivering" ? "50%" : "100%", backgroundColor: currentTheme.secondary }}></div>
+                  <div className="mt-12 mb-4 px-4 flex justify-between items-center relative">
+                     {/* Background line */}
+                     <div className="absolute top-1/2 left-4 right-4 h-2 bg-gray-100 -z-10 -translate-y-1/2 rounded-full"></div>
                      
-                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: currentTheme.secondary }}>1</div>
-                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>2</div>
-                     <div className={`size-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300 ${stage === "delivered" ? "scale-110" : "bg-gray-300"}`} style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>3</div>
+                     {/* Animated fill line */}
+                     <div className="absolute top-1/2 left-4 h-2 -z-10 -translate-y-1/2 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(0,0,0,0.2)]" 
+                          style={{ 
+                            width: stage === "picking_up" ? "0%" : stage === "delivering" ? "calc(50% - 16px)" : "calc(100% - 32px)", 
+                            backgroundColor: currentTheme.secondary 
+                          }}>
+                     </div>
+                     
+                     {/* Step 1 */}
+                     <div className={`size-14 rounded-full flex items-center justify-center text-white transition-all duration-500 shadow-xl ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-200 text-gray-400 shadow-none"}`} 
+                          style={{ backgroundColor: currentTheme.secondary }}>
+                        <ChefHat className="size-6" />
+                     </div>
+                     
+                     {/* Step 2 */}
+                     <div className={`size-14 rounded-full flex items-center justify-center text-white transition-all duration-500 shadow-xl ${stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-100 text-gray-400 shadow-none border-2 border-white"}`} 
+                          style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>
+                        <ShoppingBag className="size-6" />
+                     </div>
+                     
+                     {/* Step 3 */}
+                     <div className={`size-14 rounded-full flex items-center justify-center text-white transition-all duration-500 shadow-xl ${stage === "delivered" ? "scale-110" : "bg-gray-100 text-gray-400 shadow-none border-2 border-white"}`} 
+                          style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>
+                        <Check className="size-6" />
+                     </div>
                   </div>
 
                   {stage === "delivered" && (
