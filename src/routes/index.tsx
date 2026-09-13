@@ -1715,7 +1715,9 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                        {/* Burger Animation Container */}
                        <div className="mt-8 flex items-center justify-center relative w-full h-40">
                           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#ff9d00]/10 rounded-full blur-2xl"></div>
-                          <div className="w-40 h-40 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center relative group-hover:scale-105 transition-transform duration-700 shadow-[inset_0_0_30px_rgba(255,255,255,0.05),_0_0_40px_rgba(255,157,0,0.15)]">
+                          <div className="w-40 h-32 flex items-center justify-center relative group-hover:scale-105 transition-transform duration-700">
+                             {/* Pedestal Glow instead of a dark circle */}
+                             <div className="absolute bottom-0 w-32 h-8 bg-[#ff9d00]/30 rounded-[100%] blur-xl"></div>
                              <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/10 rounded-full"></div>
                              
                              {/* Hamburger Build Animation */}
@@ -1877,61 +1879,19 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                   </div>
 
                   {stage === "delivered" && (
-                    <Button 
-                       className="w-full mt-8 text-lg font-bold h-14 rounded-xl text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-                       style={{ backgroundColor: currentTheme.secondary }}
-                       onClick={() => setRatingState("food")}
-                    >
-                      Pedido Recebido
-                    </Button>
-                  )}
-               </div>
-            ) : (
-               <>
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h2 className="text-2xl font-black font-display uppercase tracking-tight text-gray-900">
-                        {stage === "delivered" ? "Pedido Entregue!" : stage === "picking_up" ? "Indo para a loja" : "A caminho do destino"}
-                      </h2>
-                      <p className="text-sm font-medium opacity-70 text-gray-600 mt-1">
-                        {stage === "delivered" ? "Aproveite seu lanche quente e suculento!" : stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
-                      </p>
+                    <div className="mt-8 animate-in slide-in-from-bottom-4 fade-in duration-500">
+                      <Button 
+                         className="w-full text-xl font-black font-display uppercase tracking-wider h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(34,197,94,0.4)] transition-all hover:scale-[1.02] active:scale-95 overflow-hidden relative group"
+                         style={{ backgroundColor: currentTheme.secondary }}
+                         onClick={() => setRatingState("driver")}
+                      >
+                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                        <span className="relative flex items-center justify-center gap-3">
+                          <Check className="size-6 animate-pulse" />
+                          Receber Pedido
+                        </span>
+                      </Button>
                     </div>
-                    {stage !== "delivered" && (
-                      <div className="text-right">
-                         <div className="text-4xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
-                           {stage === "picking_up" ? "3 min" : "18:45"}
-                         </div>
-                         <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 text-gray-500">
-                           {stage === "picking_up" ? "Distância" : "Chegada"}
-                         </p>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="bg-gray-50 rounded-2xl p-4 sm:p-5 flex items-center gap-4 border border-gray-100 shadow-sm">
-                     <div className="size-14 sm:size-16 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 border-2" style={{ borderColor: currentTheme.secondary }}>
-                        <img src={MOCK_DRIVERS[activeDriver].avatar} alt="Entregador" className="w-full h-full object-cover" />
-                     </div>
-                     <div className="flex-1">
-                        <h4 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">{MOCK_DRIVERS[activeDriver].name}</h4>
-                        <p className="text-xs sm:text-sm opacity-70 text-gray-600 flex items-center gap-1.5 mt-0.5">
-                           <Bike className="size-3 sm:size-4" /> {MOCK_DRIVERS[activeDriver].vehicle} • {MOCK_DRIVERS[activeDriver].plate}
-                        </p>
-                     </div>
-                     <div className="flex gap-2">
-                        <Button size="icon" className="rounded-full bg-gray-200 hover:bg-gray-300 text-gray-900 shrink-0 shadow-sm"><Mail className="size-5" /></Button>
-                     </div>
-                  </div>
-
-                  {stage === "delivered" && (
-                    <Button 
-                       className="w-full mt-6 text-lg font-bold h-14 rounded-xl text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-                       style={{ backgroundColor: currentTheme.secondary }}
-                       onClick={() => setRatingState("driver")}
-                    >
-                      Pedido Recebido
-                    </Button>
                   )}
                </>
             )}
