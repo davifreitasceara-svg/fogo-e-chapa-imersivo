@@ -5,52 +5,40 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const appetizers = [
   {
     id: 101,
-    title1: 'BATATA',
-    title2: 'FRITA',
-    name: 'Batatas Fritas',
-    desc: 'Crocante por fora, macia por dentro. Nossa batata rústica clássica, temperada com páprica e sal grosso.',
+    title1: 'TIRAS',
+    title2: 'DO TRIPA',
+    name: 'Tiras do Tripa (Convencional)',
+    desc: 'Crocante por fora, macia por dentro. Nossa batata convencional, temperada com nosso segredo especial.',
     price: 'R$ 24,90',
-    tags: ['Crocante', 'Vegetariano'],
+    tags: ['Crocante', 'Clássica'],
     image: '/fries_appetizer_transparente.png',
     bgColor: '#ECA02A', // Vibrant Mustard Yellow
     textColor: '#ffffff',
   },
   {
     id: 102,
-    title1: 'ASINHA',
-    title2: 'DE FRANGO',
-    name: 'Coxas de Frango',
-    desc: 'Asinhas empanadas super crocantes, marinadas no buttermilk com nosso dry rub especial da casa.',
+    title1: 'TRINCHEIRA',
+    title2: 'DO DAVI',
+    name: 'Trincheira do Davi',
+    desc: 'Nossa clássica porção de batata frita com uma explosão de cheddar derretido.',
     price: 'R$ 32,90',
-    tags: ['Apimentado', 'Mais Pedido'],
-    image: '/frango_transparente.png',
+    tags: ['Cheddar', 'Explosão de Sabor'],
+    image: '/fries_appetizer_transparente.png',
     bgColor: '#C6311E', // Deep Fiery Red
     textColor: '#ffffff',
   },
   {
     id: 103,
-    title1: 'ANÉIS',
-    title2: 'DE CEBOLA',
-    name: 'Onion Rings',
-    desc: 'Anéis de cebola gigantes empanados em massa de cerveja preta. Acompanha molho barbecue artesanal.',
+    title1: 'BATATAS',
+    title2: 'REAIS',
+    name: 'Batatas Reais',
+    desc: 'A realeza das batatas. Porção generosa e premium perfeita para compartilhar.',
     price: 'R$ 28,90',
-    tags: ['Crocante', 'Feito na Hora'],
-    image: '/onion_rings_appetizer_transparente.png',
+    tags: ['Premium', 'Feito na Hora'],
+    image: '/fries_appetizer_transparente.png',
     bgColor: '#C86218', // Warm Golden Orange
     textColor: '#ffffff',
-  },
-  {
-    id: 104,
-    title1: 'PALITOS',
-    title2: 'DE QUEIJO',
-    name: 'Queijo Crocante',
-    desc: 'Sticks de mozzarella derretendo por dentro, empanados e fritos. Servidos com geleia de pimenta.',
-    price: 'R$ 34,90',
-    tags: ['Derretido', 'Agridoce'],
-    image: '/cheese_sticks_appetizer_transparente.png',
-    bgColor: '#D75B29', // Rich Cheddar Orange
-    textColor: '#ffffff',
-  },
+  }
 ];
 
 
