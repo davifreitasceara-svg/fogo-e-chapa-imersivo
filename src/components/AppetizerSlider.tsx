@@ -71,7 +71,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
   const currentApp = appetizers[currentIndex]!;
 
   return (
-    <section className="relative w-full h-[700px] sm:h-[850px] overflow-hidden">
+    <section className="relative w-full min-h-[900px] sm:min-h-[1000px] overflow-hidden flex items-center">
       {/* Base Animated Background Color */}
       <motion.div 
         className="absolute inset-0 z-0"
@@ -134,9 +134,9 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
         </div>
       </div>
 
-      <div className="relative z-20 w-full max-w-[1400px] mx-auto h-full flex flex-col md:flex-row items-center pt-10 sm:pt-20">
+      <div className="relative z-20 w-full max-w-[1400px] mx-auto min-h-full flex flex-col md:flex-row items-center pt-24 sm:pt-32 pb-40 sm:pb-64">
         
-        <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center h-full z-30 mt-10 md:mt-0">
+        <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center min-h-full z-30 mt-10 md:mt-0">
           <motion.div
             key={currentApp.title1}
             initial={{ opacity: 0, x: -30 }}
