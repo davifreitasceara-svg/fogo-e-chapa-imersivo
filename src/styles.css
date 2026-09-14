@@ -205,3 +205,6 @@
 @keyframes hero-breathe { from { transform: scale(1.01); } to { transform: scale(1.055); } }
 @media (max-width: 767px) { .bg-hero-overlay { background: linear-gradient(0deg, oklch(0.07 0.01 45 / 98%) 2%, oklch(0.08 0.01 45 / 78%) 50%, oklch(0.08 0.01 45 / 18%) 90%); } .hero-image { object-position: 58% center; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+. o u t l i n e - t e x t - s u b t l e  
+   - w e b k i t - t e x t - s t r o k e :   1 p x   r g b a ( 2 5 5 ,   2 5 5 ,   2 5 5 ,   0 . 1 ) ;   c o l o r :   t r a n s p a r e n t   ! i m p o r t a n t ;    
+ .outline-text-subtle { -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1); color: transparent !important; }

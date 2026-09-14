@@ -126,11 +126,7 @@ const products: Product[] = [
   { id: 334, name: "COLD BREW", description: "COLD BREW", price: 2.0, image: burgerClassico, category: "burger" },
 ];
 
-const sparks = Array.from({ length: 18 }, (_, index) => ({
-  left: `${8 + ((index * 47) % 86)}%`,
-  delay: `${(index % 7) * 0.42}s`,
-  duration: `${3.4 + (index % 5) * 0.48}s`,
-}));
+const sparks: any[] = []; // Removed for cleaner aesthetic
 
 function Brand({ color }: { color?: string }) {
   return (
@@ -194,45 +190,30 @@ function Index() {
       titleLine1: "CHAPA",
       titleLine2: "CLÁSSICO",
       image: heroBurger,
-      bgClass: "bg-[#00A144]",
-      titleColor: "text-[#006B2D]",
-      buttonBg: "bg-[#006B2D]",
-      buttonText: "text-[#006B2D]",
-      badges: [
-        { text: "Juicy", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Smash", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
-      ]
+      bgClass: "bg-black",
+      titleColor: "text-white/5 outline-text-subtle",
+      buttonBg: "bg-[#C89552] text-black",
+      buttonText: "text-white hover:text-black",
     },
     {
       id: "brasa",
       titleLine1: "BRASA",
       titleLine2: "BACON",
       image: heroBurger,
-      bgClass: "bg-[#4B168C]",
-      titleColor: "text-[#2B005F]",
-      buttonBg: "bg-[#2B005F]",
-      buttonText: "text-[#2B005F]",
-      badges: [
-        { text: "Bacon", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Cheddar", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "180g", style: "top-[50%] left-[23%] rotate-6" },
-      ]
+      bgClass: "bg-black",
+      titleColor: "text-white/5 outline-text-subtle",
+      buttonBg: "bg-[#C89552] text-black",
+      buttonText: "text-white hover:text-black",
     },
     {
       id: "inferno",
       titleLine1: "INFERNO",
       titleLine2: "PICANTE",
       image: heroBurger,
-      bgClass: "bg-[#C41E00]",
-      titleColor: "text-[#7A1200]",
-      buttonBg: "bg-[#7A1200]",
-      buttonText: "text-[#7A1200]",
-      badges: [
-        { text: "Picante", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Jalapeño", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "180g", style: "top-[50%] left-[23%] rotate-6" },
-      ]
+      bgClass: "bg-black",
+      titleColor: "text-white/5 outline-text-subtle",
+      buttonBg: "bg-[#C89552] text-black",
+      buttonText: "text-white hover:text-black",
     }
   ];
 
@@ -266,48 +247,16 @@ function Index() {
 
   // Dynamic theme based on the currently selected burger
   const currentTheme = useMemo(() => {
-    switch (heroIndex) {
-      case 0: // CHAPA CLÁSSICO - Green
-        return {
-          bgLight: "#F0FAF4", // very light green
-          bgDark: "#0B1F13",
-          bgVeryDark: "#040B07",
-          primary: "#006B2D",
-          secondary: "#00A144",
-          secondaryAlpha: "rgba(0, 161, 68, 0.15)",
-          textDark: "#05140B",
-        };
-      case 1: // BRASA BACON - Purple
-        return {
-          bgLight: "#F5F0FA", // very light purple
-          bgDark: "#150824",
-          bgVeryDark: "#0B0414",
-          primary: "#2B005F",
-          secondary: "#4B168C",
-          secondaryAlpha: "rgba(75, 22, 140, 0.15)",
-          textDark: "#10031F",
-        };
-      case 2: // INFERNO PICANTE - Red
-        return {
-          bgLight: "#FAF0F0", // very light red
-          bgDark: "#260602",
-          bgVeryDark: "#120301",
-          primary: "#7A1200",
-          secondary: "#C41E00",
-          secondaryAlpha: "rgba(196, 30, 0, 0.15)",
-          textDark: "#1F0400",
-        };
-      default:
-        return {
-          bgLight: "#F0FAF4",
-          bgDark: "#0B1F13",
-          bgVeryDark: "#040B07",
-          primary: "#006B2D",
-          secondary: "#00A144",
-          secondaryAlpha: "rgba(0, 161, 68, 0.15)",
-          textDark: "#05140B",
-        };
-    }
+    // Premium dark theme for all slides
+    return {
+      bgLight: "#111111", 
+      bgDark: "#000000",
+      bgVeryDark: "#000000",
+      primary: "#C89552", // Gold / burnt orange accent
+      secondary: "#A8763E",
+      secondaryAlpha: "rgba(200, 149, 82, 0.1)",
+      textDark: "#FFFFFF",
+    };
   }, [heroIndex]);
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
@@ -509,78 +458,46 @@ function Index() {
                     src={currentSlide.image} 
                     alt={currentSlide.titleLine1 + " " + currentSlide.titleLine2} 
                     initial={{ 
-                      x: slideDirection * 600, 
+                      x: slideDirection * 300, 
                       opacity: 0, 
-                      rotateY: slideDirection * 40,
-                      rotateZ: slideDirection * 10,
-                      scale: 0.4,
-                      filter: "blur(12px)",
+                      scale: 0.8,
+                      filter: "blur(8px)",
                     }}
                     animate={{ 
                       x: 0, 
                       opacity: 1, 
-                      rotateY: 0,
-                      rotateZ: 0,
                       scale: 1,
                       filter: "blur(0px)",
-                      y: [0, -8, 0],
                     }}
                     exit={{ 
-                      x: slideDirection * -600, 
+                      x: slideDirection * -300, 
                       opacity: 0, 
-                      rotateY: slideDirection * -40,
-                      rotateZ: slideDirection * -10,
-                      scale: 0.4,
-                      filter: "blur(12px)",
+                      scale: 0.8,
+                      filter: "blur(8px)",
                     }}
                     transition={{ 
                       type: "spring", 
-                      stiffness: 70, 
-                      damping: 12,
-                      mass: 0.5,
-                      filter: { duration: 0.25 },
-                      y: {
-                        duration: 3,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        ease: "easeInOut",
-                        delay: 0.8,
-                      },
+                      stiffness: 80, 
+                      damping: 15,
+                      mass: 1,
                     }}
-                    className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15 saturate-150' : ''}`}
+                    className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? 'scale-x-[-1]' : ''}`}
                   />
                 </AnimatePresence>
              </div>
-
-             {/* Floating Badges */}
-             {currentSlide.badges.map((badge, idx) => (
-                <motion.div 
-                  key={currentSlide.id + idx}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.3 + (idx * 0.1), type: "spring" }}
-                  className={`hidden sm:block absolute ${badge.style} bg-white border-2 px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg transition-colors duration-700 border-current ${currentSlide.buttonText}`}
-                >
-                  {badge.text}
-                </motion.div>
-             ))}
-
-             <div className="hidden sm:block absolute top-[60%] right-[32%] text-4xl z-30 drop-shadow-lg">✨</div>
              
              {/* Carousel arrows */}
              <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
-                <Button onClick={prevHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronLeft className="size-8" /></Button>
+                <Button onClick={prevHero} size="icon" variant="outline" className="bg-transparent text-white hover:bg-white/10 hover:text-white rounded-full size-12 border border-white/20 transition-all"><ChevronLeft className="size-6" /></Button>
              </div>
              <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
-                <Button onClick={nextHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronRight className="size-8" /></Button>
+                <Button onClick={nextHero} size="icon" variant="outline" className="bg-transparent text-white hover:bg-white/10 hover:text-white rounded-full size-12 border border-white/20 transition-all"><ChevronRight className="size-6" /></Button>
              </div>
-
-
 
              {/* Action Buttons */}
              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
-                <Button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
+                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full font-bold px-8 py-6 text-sm tracking-widest uppercase transition-all duration-700 ease-in-out hover:scale-105 shadow-xl ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
+                <Button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-transparent font-bold px-8 py-6 text-sm tracking-widest uppercase border border-white/20 transition-colors duration-700 ease-in-out hover:bg-white/5 ${currentSlide.buttonText}`}>Onde Estamos</Button>
              </div>
            </div>
         </section>
@@ -1739,27 +1656,12 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
       className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
       {activeOrderType === "pickup" ? (
-         <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0B0D14] overflow-hidden px-4">
+         <div className="relative w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden px-4">
            {/* Immersive Background */}
-           <div className="absolute inset-0 bg-[#0B0D14]"></div>
-           <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+           <div className="absolute inset-0 bg-black"></div>
            
-           {/* Dynamic Glowing Orbs */}
-           <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.15] animate-pulse pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
-           <div className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.15] pointer-events-none" style={{ backgroundColor: currentTheme.secondary, animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></div>
-           
-           {/* Giant Background Text */}
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full overflow-hidden flex justify-center items-center pointer-events-none select-none opacity-[0.02] mix-blend-overlay">
-             <span className="text-[20vw] font-black font-display whitespace-nowrap tracking-tighter">FOGO & CHAPA</span>
-           </div>
-
-           {/* Floating Icons */}
-           <div className="absolute top-[15%] right-[10%] opacity-[0.02] rotate-12 pointer-events-none">
-             <ChefHat className="w-64 h-64 text-white" />
-           </div>
-           <div className="absolute bottom-[15%] left-[10%] opacity-[0.02] -rotate-12 pointer-events-none">
-             <ShoppingBag className="w-80 h-80 text-white" />
-           </div>
+           {/* Subtle radial glow */}
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] opacity-[0.05] pointer-events-none" style={{ backgroundColor: currentTheme.primary }}></div>
            
            <div className="relative z-10 w-full max-w-md flex flex-col items-center gap-10">
              
@@ -1821,39 +1723,28 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
 
                   {/* Ticket Card */}
                   <motion.div 
-                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                     initial={{ opacity: 0, scale: 0.98, y: 10 }}
                      animate={{ opacity: 1, scale: 1, y: 0 }}
                      transition={{ type: "spring", damping: 30, stiffness: 300 }}
                      className="w-full relative group"
                    >
-                     {/* Outer Ticket Glow */}
-                     <div className="absolute -inset-1 rounded-[2.5rem] blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-500" style={{ backgroundImage: `linear-gradient(to bottom, ${currentTheme.secondary}40, transparent)` }}></div>
                      
-                     <div className="relative bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-3xl border border-white/20 px-6 py-10 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center overflow-hidden">
+                     <div className="relative bg-[#111] border border-white/10 px-6 py-10 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
                        
                        {/* Subtle Ticket Texture */}
-                       <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png')] mix-blend-overlay pointer-events-none"></div>
+                       <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png')] mix-blend-overlay pointer-events-none"></div>
 
-                       {/* Top Gradient Overlay */}
-                       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-
-                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-[#0B0D14] border-r border-white/20 shadow-[inset_-3px_0_10px_rgba(0,0,0,0.8)] -translate-y-1/2 z-10"></div>
-                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-[#0B0D14] border-l border-white/20 shadow-[inset_3px_0_10px_rgba(0,0,0,0.8)] -translate-y-1/2 z-10"></div>
+                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/10 -translate-y-1/2 z-10"></div>
+                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/10 -translate-y-1/2 z-10"></div>
                        
-                       <div className="absolute top-1/2 left-8 right-8 border-t-[2px] border-dashed border-white/20 -translate-y-1/2 z-0"></div>
+                       <div className="absolute top-1/2 left-8 right-8 border-t border-dashed border-white/20 -translate-y-1/2 z-0"></div>
 
                        {/* Top Half: Code */}
                        <div className="flex flex-col items-center justify-center pb-12 h-36 w-full relative z-10">
-                         <div className="bg-white/10 px-4 py-1.5 rounded-full mb-4 border border-white/10 backdrop-blur-md shadow-inner">
-                           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/80">Código de Retirada</p>
+                         <div className="mb-4">
+                           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Código de Retirada</p>
                          </div>
-                         <h1 className="text-7xl sm:text-8xl font-black tracking-tighter" style={{ 
-                           color: "transparent", 
-                           backgroundImage: `linear-gradient(to bottom right, #fff, ${currentTheme.secondary})`,
-                           WebkitBackgroundClip: "text",
-                           backgroundClip: "text",
-                           filter: `drop-shadow(0 0 20px ${currentTheme.secondary}66)` 
-                         }}>
+                         <h1 className="text-6xl sm:text-7xl font-black tracking-tighter text-white">
                            #{pickupCode}
                          </h1>
                        </div>
@@ -1861,23 +1752,20 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                        {/* Bottom Half: Status Animation */}
                        <div className="flex flex-col items-center justify-center pt-12 h-36 w-full relative z-10">
                          <div className="relative flex items-center justify-center">
-                           <div className="absolute w-28 h-28 rounded-full animate-ping opacity-20" style={{ backgroundColor: currentTheme.secondary }}></div>
-                           <div className="absolute w-20 h-20 rounded-full animate-pulse opacity-40 blur-md" style={{ backgroundColor: currentTheme.secondary }}></div>
-                           
-                           <div className="w-20 h-20 rounded-full bg-white/10 border-2 border-white/30 backdrop-blur-xl flex items-center justify-center relative z-20 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                           <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative z-20">
                              {stage === "picking_up" ? (
-                                <ChefHat className="size-10 text-white animate-pulse drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                                <ChefHat className="size-8 text-white/80" />
                              ) : stage === "delivering" ? (
-                                <ShoppingBag className="size-10 text-white animate-bounce drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                                <ShoppingBag className="size-8 text-white/80" />
                              ) : (
-                                <Check className="size-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                                <Check className="size-8 text-white/80" />
                              )}
                            </div>
                          </div>
                        </div>
                        
                        {/* Barcode Mock at the very bottom */}
-                       <div className="absolute bottom-4 opacity-20 w-48 h-8 flex justify-between items-end gap-1 px-4 blur-[0.5px]">
+                       <div className="absolute bottom-6 opacity-10 w-48 h-6 flex justify-between items-end gap-1 px-4">
                          {[...Array(20)].map((_, i) => (
                             <div key={i} className="bg-white rounded-sm" style={{ width: `${Math.random() * 4 + 1}px`, height: `${Math.random() * 100}%` }}></div>
                          ))}
