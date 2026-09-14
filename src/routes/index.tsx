@@ -1306,12 +1306,12 @@ function Index() {
 
           <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
             {/* Badge */}
-            <div className="bg-[#f4dfd4] text-[#c4522d] font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm">
+            <div className="font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm transition-colors duration-700" style={{ backgroundColor: currentTheme.secondaryAlpha, color: currentTheme.secondary }}>
               NOVIDADE • ABERTO AGORA <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
             </div>
 
             {/* Title */}
-            <h2 className="font-display font-black text-[#c4522d] text-[12vw] md:text-[6rem] lg:text-[8rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm">
+            <h2 className="font-display font-black text-[12vw] md:text-[6rem] lg:text-[8rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm transition-colors duration-700" style={{ color: currentTheme.secondary }}>
               HAMBÚRGUER PERFEITO,<br/>SEMPRE.
             </h2>
 
