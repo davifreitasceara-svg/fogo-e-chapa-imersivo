@@ -1419,14 +1419,36 @@ function Index() {
           </div>
         </div>
 
-        {/* Giant Cutoff Text Bottom Edge */}
-        <div className="w-full relative h-[30vw] min-h-[160px] max-h-[400px] mt-10 overflow-hidden select-none pointer-events-none flex justify-center items-end opacity-95 transition-colors duration-700">
-           <div className="font-display font-black uppercase text-[24vw] leading-[0.75] tracking-tighter whitespace-nowrap translate-y-[20%] flex items-center" style={{ color: 'white' }}>
-             FOGO
-             <span className="inline-flex items-center justify-center rounded-full text-white bg-secondary aspect-square w-[20vw] mx-[1vw] leading-none pb-[1vw] shadow-2xl" style={{ backgroundColor: currentTheme.secondary }}>
-               &
+        {/* Giant Text Bottom Edge */}
+        <div className="w-full relative mt-20 pb-12 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center opacity-95 transition-colors duration-700">
+           
+           <div className="font-display font-black uppercase text-[13vw] leading-[0.8] tracking-tighter flex items-center justify-center w-full gap-2 sm:gap-6 drop-shadow-2xl">
+             
+             {/* FOGO with Outline Style */}
+             <span className="text-transparent transition-colors duration-700" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.9)' }}>
+               FOGO
              </span>
-             CHAPA
+
+             {/* The Ampersand with Theme Color */}
+             <motion.span 
+               initial={{ rotate: -5, scale: 0.95 }}
+               animate={{ rotate: 5, scale: 1.05 }}
+               transition={{ repeat: Infinity, repeatType: "reverse", duration: 2, ease: "easeInOut" }}
+               className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[14vw] sm:w-[12vw] max-w-[150px] shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-1 sm:mx-2 pb-[1vw]" 
+               style={{ backgroundColor: currentTheme.secondary }}
+             >
+               &
+             </motion.span>
+
+             {/* CHAPA filled */}
+             <span className="text-white transition-colors duration-700 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+               CHAPA
+             </span>
+             
+           </div>
+
+           <div className="mt-8 text-white/40 text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase">
+             A verdadeira experiência do fogo
            </div>
         </div>
       </footer>
