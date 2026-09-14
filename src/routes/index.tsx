@@ -1307,29 +1307,29 @@ function Index() {
           <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
             {/* Badge */}
             <div className="bg-[#f4dfd4] text-[#c4522d] font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm">
-              BRISTOL • NOW OPEN <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
+              NOVIDADE • ABERTO AGORA <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
             </div>
 
             {/* Title */}
-            <h2 className="font-display font-black text-[#c4522d] text-[15vw] md:text-[8rem] lg:text-[10rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm">
-              PERFECT PATTY,<br/>EVERY TIME.
+            <h2 className="font-display font-black text-[#c4522d] text-[12vw] md:text-[6rem] lg:text-[8rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm">
+              HAMBÚRGUER PERFEITO,<br/>SEMPRE.
             </h2>
 
             {/* Subtitle */}
             <p className="font-bold text-[#222222] text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-snug">
-              We keep it simple. Good food with honest ingredients.<br/>Everything else is just noise.
+              Nós mantemos a simplicidade. Comida de verdade com ingredientes honestos.<br/>Todo o resto é apenas ruído.
             </p>
 
             {/* Buttons */}
             <div className="flex flex-col items-center gap-5">
-              <Button className="bg-[#222222] hover:bg-black text-white font-black uppercase tracking-widest rounded-xl px-12 py-7 text-sm md:text-base shadow-xl transition-transform hover:scale-105 active:scale-95">
-                ORDER NOW
+              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full text-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1 ${currentTheme.buttonBg}`}>
+                FAZER PEDIDO
               </Button>
-              <Button className="bg-[#c4522d] hover:bg-[#a34425] text-white font-black uppercase tracking-widest rounded-xl px-12 py-7 text-sm md:text-base shadow-xl transition-transform hover:scale-105 active:scale-95 border-b-4 border-[#933d21]">
-                EXPLORE THE MENU
+              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1 ${currentTheme.buttonText}`}>
+                VER CARDÁPIO
               </Button>
               <div className="text-[#d0d0d0] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 mt-6">
-                <ArrowDown className="w-4 h-4" /> PSST... THIS WAY <ArrowDown className="w-4 h-4" />
+                <ArrowDown className="w-4 h-4" /> PSIU... POR AQUI <ArrowDown className="w-4 h-4" />
               </div>
             </div>
           </div>
