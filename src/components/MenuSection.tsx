@@ -52,30 +52,23 @@ const burgers: Item[] = [
 
 const drinks: Item[] = [
   {
-    name: "IPA da Casa",
-    description: "Cerveja artesanal IPA, amargor cítrico que corta a gordura.",
-    price: "R$ 22",
+    name: "Seca-nunca",
+    description: "Para matar a sede de vez! Muito gelo e refrescância.",
+    price: "R$ 12",
     image: drink1,
-    tag: "Artesanal",
   },
   {
-    name: "Cola Gelada",
-    description: "Refrigerante em garrafa de vidro, servido com gelo e limão.",
-    price: "R$ 10",
-    image: drink2,
-  },
-  {
-    name: "Old Fashioned Defumado",
-    description: "Bourbon, bitter e fumaça de carvalho na taça.",
-    price: "R$ 34",
+    name: "Gole de Martins",
+    description: "Um gole que você nunca esquece. Drink autoral e extremamente refrescante.",
+    price: "R$ 14",
     image: drink3,
     tag: "Drink autoral",
   },
   {
-    name: "Limonada da Brasa",
-    description: "Limão siciliano queimado, hortelã e xarope de gengibre.",
-    price: "R$ 14",
-    image: drink4,
+    name: "Sprite",
+    description: "Refrigerante de limão bem gelado.",
+    price: "R$ 8",
+    image: drink2,
   },
 ];
 
