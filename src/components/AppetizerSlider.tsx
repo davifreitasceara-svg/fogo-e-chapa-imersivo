@@ -144,42 +144,49 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex flex-col mb-10"
           >
-            <div className="font-display font-black text-2xl sm:text-3xl tracking-widest text-white/90 uppercase mb-2 drop-shadow-md">Entradas</div>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6 w-fit shadow-xl">
+               <span className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_white]"></span>
+               <span className="font-display font-bold text-xs tracking-[0.2em] text-white uppercase">Menu de Entradas</span>
+            </div>
             
-            <div className="flex flex-col">
+            <div className="flex flex-col relative z-10">
                <span 
-                 className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-transparent"
-                 style={{ WebkitTextStroke: "3px white" }}
+                 className="font-display text-7xl sm:text-[120px] leading-[0.8] font-black tracking-tighter text-transparent italic"
+                 style={{ WebkitTextStroke: "2px rgba(255,255,255,0.9)" }}
                >
                  {currentApp.title1}
                </span>
-               <span className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-white drop-shadow-xl mt-2">
+               <span className="font-display text-7xl sm:text-[120px] leading-[0.8] font-black tracking-tighter text-white drop-shadow-2xl italic mt-1">
                  {currentApp.title2}
                </span>
             </div>
 
-            <div className="mt-8 max-w-sm">
-               <div className="flex flex-wrap gap-2 mb-5">
+            <div className="mt-8 max-w-sm relative z-10">
+               <div className="flex flex-wrap gap-2 mb-6">
                  {currentApp.tags.map(tag => (
-                    <span key={tag} className="px-3 py-1 rounded-full border border-white/40 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-sm bg-white/10 shadow-sm">{tag}</span>
+                    <span key={tag} className="px-4 py-1.5 rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest backdrop-blur-md bg-black/20 shadow-lg flex items-center justify-center">
+                      {tag}
+                    </span>
                  ))}
                </div>
                
-               <p className="text-white/95 text-sm sm:text-base font-medium leading-relaxed mb-6 drop-shadow-md">
+               <p className="text-white text-sm sm:text-base font-medium leading-relaxed mb-8 drop-shadow-md opacity-90 border-l-2 border-white/30 pl-4">
                  {currentApp.desc}
                </p>
                
-               <div className="text-white font-display font-black text-3xl sm:text-4xl drop-shadow-lg mb-8">
-                 {currentApp.price}
+               <div className="mb-8">
+                 <div className="inline-block bg-white text-black px-6 py-2 rounded-2xl font-display font-black text-3xl sm:text-4xl shadow-2xl transform -rotate-2 border-b-4 border-black/20">
+                   {currentApp.price}
+                 </div>
                </div>
                
                <div className="flex gap-4">
                   <button 
                     onClick={() => onAddToCart && onAddToCart(currentApp.id)}
-                    className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-all hover:-translate-y-1 shadow-2xl flex items-center gap-3 border border-transparent hover:border-amber-500/30"
+                    className="group bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-white hover:text-black transition-all hover:-translate-y-1 shadow-2xl flex items-center gap-3 border border-transparent"
                   >
-                    <ShoppingBag className="size-4" />
-                    PEDIR AGORA
+                    <ShoppingBag className="size-4 group-hover:scale-110 transition-transform" />
+                    <span className="tracking-wide">PEDIR AGORA</span>
                   </button>
                </div>
             </div>
@@ -202,6 +209,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             let scale = 1;
             let zIndex = 20;
             let rotate = 0;
+            let blur = 0;
 
             if (offset === 0) {
               x = 0;
@@ -209,24 +217,28 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
               scale = 1.35;
               zIndex = 30;
               rotate = 0;
+              blur = 0;
             } else if (offset === 1) {
               x = 160;
               y = -60;
               scale = 0.8;
               zIndex = 20;
               rotate = 10;
+              blur = 4;
             } else if (offset === 2) {
               x = 300;
               y = -120;
               scale = 0.6;
               zIndex = 10;
               rotate = 20;
+              blur = 8;
             } else if (offset === -1) {
               x = -160;
               y = 70;
               scale = 0.8;
               zIndex = 15;
               rotate = -15;
+              blur = 6;
             }
 
             // Adjust for mobile screens safely using the useIsMobile hook
@@ -234,6 +246,8 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
               x = x * 0.5; 
               y = y * 0.5;
             }
+
+            const isActive = offset === 0;
 
             return (
               <motion.div
@@ -246,14 +260,12 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                   scale,
                   rotate,
                   zIndex,
-                  opacity: offset === 2 ? 0.2 : (offset === -1 ? 0 : 1) // Fades out strongly on the left
+                  filter: `blur(${blur}px)`,
+                  opacity: offset === 2 ? 0.3 : (offset === -1 ? 0 : 1) // Fades out strongly on the left
                 }}
                 transition={{
-                  type: "spring",
-                  stiffness: 70,
-                  damping: 10,
-                  mass: 0.9,
-                  velocity: 2 // Gives an initial push to feel more dynamic
+                  duration: 0.8,
+                  ease: [0.32, 0.72, 0, 1] // Custom snappy spring-like easing
                 }}
                 onClick={() => {
                   if (offset === 1) slideLeft();
@@ -261,6 +273,9 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                 }}
                 style={{ width: "360px" }}
               >
+                {isActive && (
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/20 rounded-full blur-[60px] -z-10" />
+                )}
                 <motion.div
                   className="w-full h-full"
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
