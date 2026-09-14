@@ -169,14 +169,14 @@ function Index() {
       id: "classico",
       titleLine1: "X",
       titleLine2: "BURGUER",
-      image: heroBurger,
+      image: burgerClassico,
       bgClass: "bg-[#00A144]",
       titleColor: "text-[#006B2D]",
       buttonBg: "bg-[#006B2D]",
       buttonText: "text-[#006B2D]",
       badges: [
-        { text: "Juicy", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Smash", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "Clássico", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
         { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
       ]
     },
@@ -184,30 +184,30 @@ function Index() {
       id: "brasa",
       titleLine1: "DAVI VS",
       titleLine2: "GOLIAS",
-      image: heroBurger,
+      image: burgerBrasa,
       bgClass: "bg-[#4B168C]",
       titleColor: "text-[#2B005F]",
       buttonBg: "bg-[#2B005F]",
       buttonText: "text-[#2B005F]",
       badges: [
-        { text: "Bacon", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Cheddar", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "180g", style: "top-[50%] left-[23%] rotate-6" },
+        { text: "Desafio", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Gigante", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "300g", style: "top-[50%] left-[23%] rotate-6" },
       ]
     },
     {
       id: "inferno",
       titleLine1: "TRIPLEX",
       titleLine2: "BURGUER",
-      image: heroBurger,
+      image: burgerInferno,
       bgClass: "bg-[#C41E00]",
       titleColor: "text-[#7A1200]",
       buttonBg: "bg-[#7A1200]",
       buttonText: "text-[#7A1200]",
       badges: [
-        { text: "Picante", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Jalapeño", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "180g", style: "top-[50%] left-[23%] rotate-6" },
+        { text: "Triplo", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Muito Queijo", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "450g", style: "top-[50%] left-[23%] rotate-6" },
       ]
     }
   ];
