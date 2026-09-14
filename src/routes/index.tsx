@@ -1339,6 +1339,22 @@ function Index() {
     </div>
 
       <footer ref={footerRef} id="contato" className="fixed bottom-0 left-0 w-full pt-20 transition-colors duration-700 overflow-hidden text-white z-[-1]" style={{ backgroundColor: currentTheme.bgVeryDark }}>
+        
+        {/* Full Footer Video Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="w-full h-full object-cover object-bottom opacity-40 mix-blend-screen"
+          >
+            <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+          </video>
+          {/* Gradient to darken the top so the form and links are readable */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent"></div>
+        </div>
+
         <div className="mx-auto max-w-7xl px-5 lg:px-8 relative z-10 flex flex-col gap-12">
           {/* Top Bar */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-10 border-b border-white/10">
@@ -1358,18 +1374,18 @@ function Index() {
 
           {/* Main Grid Layout */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-12">
-            <div className="space-y-4 font-bold text-sm uppercase">
+            <div className="space-y-4 font-bold text-sm uppercase relative z-10">
               <a href="#cardapio" className="block hover:text-white/70 transition-colors">MENU</a>
               <a href="#promocoes" className="block hover:text-white/70 transition-colors">PROMOÇÕES</a>
               <a href="#avaliacoes" className="block hover:text-white/70 transition-colors">AVALIAÇÕES</a>
               <a href="#contato" className="block hover:text-white/70 transition-colors">ONDE ESTAMOS</a>
             </div>
-            <div className="space-y-4 font-bold text-sm uppercase">
+            <div className="space-y-4 font-bold text-sm uppercase relative z-10">
               <a href="#" className="block hover:text-white/70 transition-colors">POLÍTICA DE PRIVACIDADE</a>
               <a href="#" className="block hover:text-white/70 transition-colors">TERMOS DE SERVIÇO</a>
               <a href="#" className="block hover:text-white/70 transition-colors">POLÍTICA DE REEMBOLSO</a>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 relative z-10">
               <a href="#" className="flex items-center gap-3 group">
                 <div className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105" style={{ backgroundColor: currentTheme.secondary }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 11.454c-.015-3.084 2.52-4.557 2.634-4.627-1.436-2.102-3.659-2.387-4.453-2.417-1.895-.19-3.704 1.115-4.664 1.115-.961 0-2.454-1.09-4.004-1.061-2.02.028-3.882 1.173-4.919 3.003-2.096 3.651-.537 9.07 1.503 12.032 1.002 1.455 2.179 3.086 3.754 3.031 1.498-.057 2.062-.962 3.865-.962 1.787 0 2.308.962 3.865.932 1.614-.029 2.63-1.47 3.616-2.918 1.144-1.671 1.614-3.29 1.642-3.376-.037-.014-3.153-1.214-3.138-4.32z"/><path d="M10.985 5.566c.82-.99 1.373-2.368 1.222-3.74-.112.005-.23.012-.34.012-1.353 0-2.825-.85-3.67-1.859-.757-.9-1.391-2.327-1.21-3.67 1.464.113 2.802.99 3.658 1.956.76.85 1.326 2.197 1.19 3.51-.1.006-.21.006-.31.006-1.39.006-2.784-.81-3.64-1.78z"/></svg>
@@ -1384,11 +1400,11 @@ function Index() {
               </a>
             </div>
             
-            <div className="col-span-2 lg:col-span-1 h-48 lg:h-56 rounded-xl overflow-hidden order-first md:order-none relative bg-white/5 shadow-inner">
-               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3657.197368023192!2d-46.689364!3d-23.559385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce57a6020c6a51%3A0xc3928ebaf298e8!2sVila%20Madalena%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1714522804561!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="opacity-90 hover:opacity-100 transition-opacity"></iframe>
+            <div className="col-span-2 lg:col-span-1 h-48 lg:h-56 rounded-xl overflow-hidden order-first md:order-none relative bg-white/5 shadow-inner z-10">
+               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3657.197368023192!2d-46.689364!3d-23.559385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce57a6020c6a51%3A0xc3928ebaf298e8!2sVila%20Madalena%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1714522804561!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="opacity-90 hover:opacity-100 transition-opacity relative z-10"></iframe>
             </div>
 
-            <div className="col-span-2 lg:col-span-1 space-y-6 flex flex-col justify-start">
+            <div className="col-span-2 lg:col-span-1 space-y-6 flex flex-col justify-start relative z-10">
               <div className="flex gap-3">
                 <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><MapPin className="size-5" /></div>
                 <div className="text-sm font-bold">Rua das Brasas, 217<br/><span className="text-xs font-normal opacity-70">São Paulo, SP 05414, Brasil</span></div>
@@ -1401,36 +1417,26 @@ function Index() {
           </div>
 
           {/* Bottom Grid Layout for Newsletter and Socials */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 mt-4 items-end">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 mt-4 items-end relative z-10">
             <div className="lg:col-span-3">
-              <h3 className="font-display font-black text-xl mb-4 uppercase tracking-wide" style={{ color: currentTheme.secondary }}>NUNCA PERCA UMA PROMOÇÃO</h3>
-              <form className="flex max-w-sm h-12" onSubmit={(e) => { e.preventDefault(); }}>
-                <input type="email" placeholder="nome@email.com" className="flex-1 bg-transparent border border-white/30 rounded-l-md px-4 text-sm focus:outline-none focus:border-white transition-colors" />
+              <h3 className="font-display font-black text-xl mb-4 uppercase tracking-wide drop-shadow-md" style={{ color: currentTheme.secondary }}>NUNCA PERCA UMA PROMOÇÃO</h3>
+              <form className="flex max-w-sm h-12 shadow-xl" onSubmit={(e) => { e.preventDefault(); }}>
+                <input type="email" placeholder="nome@email.com" className="flex-1 bg-black/50 backdrop-blur-sm border border-white/30 rounded-l-md px-4 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-white/50" />
                 <Button type="submit" className="font-bold hover:brightness-110 transition-all text-white rounded-l-none h-full px-6" style={{ backgroundColor: currentTheme.secondary }}>ASSINAR</Button>
               </form>
-              <p className="text-xs mt-3 opacity-70 leading-relaxed">Receba combos exclusivos direto no seu e-mail.<br/>Sem spam, prometemos.</p>
+              <p className="text-xs mt-3 opacity-70 leading-relaxed font-medium">Receba combos exclusivos direto no seu e-mail.<br/>Sem spam, prometemos.</p>
             </div>
             
             <div className="lg:col-span-2 flex justify-start lg:justify-end items-center gap-3">
               <span className="text-sm font-bold mr-2">Siga-nos:</span>
-              <a href="#" className="size-10 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}><Instagram className="size-5" /></a>
-              <a href="#" className="size-10 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform" style={{ backgroundColor: currentTheme.secondary }}>T</a>
+              <a href="#" className="size-10 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg" style={{ backgroundColor: currentTheme.secondary }}><Instagram className="size-5" /></a>
+              <a href="#" className="size-10 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform shadow-lg" style={{ backgroundColor: currentTheme.secondary }}>T</a>
             </div>
           </div>
         </div>
 
         {/* Giant Text Bottom Edge */}
-        <div className="w-full relative mt-32 md:mt-48 pb-16 pt-32 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center transition-colors duration-700">
-           
-           <video 
-             autoPlay 
-             loop 
-             muted 
-             playsInline 
-             className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent,black_30%,black)]"
-           >
-             <source src="/quero_mais_chamas.mp4" type="video/mp4" />
-           </video>
+        <div className="w-full relative mt-32 md:mt-48 pb-16 pt-16 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center transition-colors duration-700">
 
            <div className="relative z-10 font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
              
