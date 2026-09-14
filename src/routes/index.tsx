@@ -187,6 +187,7 @@ function Index() {
   const [addedId, setAddedId] = useState<number | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [activeComboIndex, setActiveComboIndex] = useState(0);
 
   const carouselSlides = [
     {
@@ -790,94 +791,137 @@ function Index() {
                   <p className="mt-3 text-lg font-medium opacity-70 text-white/80">As combinações definitivas para matar qualquer fome.</p>
                 </div>
                 
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                <div className="relative max-w-4xl mx-auto">
                   
-                  {/* Combo 1 */}
-                  <motion.div 
-                    variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 90 } } }}
-                    className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-black opacity-90"></div>
-                    {/* Glow effect */}
-                    <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl group-hover:bg-amber-500/30 transition-colors duration-500"></div>
-                    <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl group-hover:bg-orange-600/20 transition-colors duration-500"></div>
+                  {/* Slider Controls */}
+                  <div className="absolute top-1/2 -translate-y-1/2 -left-4 sm:-left-12 z-20">
+                    <button 
+                      onClick={() => setActiveComboIndex(prev => prev === 0 ? 1 : 0)}
+                      className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
+                    >
+                      <ChevronLeft className="size-6" />
+                    </button>
+                  </div>
+                  <div className="absolute top-1/2 -translate-y-1/2 -right-4 sm:-right-12 z-20">
+                    <button 
+                      onClick={() => setActiveComboIndex(prev => prev === 0 ? 1 : 0)}
+                      className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
+                    >
+                      <ChevronRight className="size-6" />
+                    </button>
+                  </div>
 
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                      {/* Text Content */}
-                      <div className="flex-1 text-white flex flex-col justify-center h-full">
-                        <div>
-                          <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">MAIS VENDIDO • ECONOMIZE R$ 8</span>
-                          <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO BRASA</h4>
-                          <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">O suculento Brasa Bacon acompanhado da refrescante Coca-Cola bem gelada. A combinação definitiva.</p>
-                        </div>
-                        
-                        <div className="flex items-center gap-4 mt-auto">
-                          <span className="text-3xl font-black font-display text-amber-500">R$ 49,90</span>
-                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(2)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                            Adicionar
-                          </motion.button>
-                        </div>
-                      </div>
+                  <div className="overflow-hidden relative">
+                    <AnimatePresence mode="wait">
+                      {activeComboIndex === 0 && (
+                        <motion.div 
+                          key="combo-0"
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -50 }}
+                          transition={{ type: 'spring', damping: 20, stiffness: 90 }}
+                          className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-black opacity-90"></div>
+                          {/* Glow effect */}
+                          <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl group-hover:bg-amber-500/30 transition-colors duration-500"></div>
+                          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl group-hover:bg-orange-600/20 transition-colors duration-500"></div>
 
-                      {/* 3D Images */}
-                      <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                        <motion.img 
-                          src={cocaCola} 
-                          alt="Coca Cola" 
-                          className="absolute right-[15%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                        />
-                        <motion.img 
-                          src={burgerBrasa} 
-                          alt="Burger Brasa" 
-                          className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1a1a1a] shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
+                          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                            {/* Text Content */}
+                            <div className="flex-1 text-white flex flex-col justify-center h-full">
+                              <div>
+                                <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">MAIS VENDIDO • ECONOMIZE R$ 8</span>
+                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO BRASA</h4>
+                                <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">O suculento Brasa Bacon acompanhado da refrescante Coca-Cola bem gelada. A combinação definitiva.</p>
+                              </div>
+                              
+                              <div className="flex items-center gap-4 mt-auto">
+                                <span className="text-3xl font-black font-display text-amber-500">R$ 49,90</span>
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(2)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                                  Adicionar
+                                </motion.button>
+                              </div>
+                            </div>
 
-                  {/* Combo 2 */}
-                  <motion.div 
-                    variants={{ hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { type: 'spring', damping: 20, stiffness: 90 } } }}
-                    className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#2D0A0A] to-black opacity-90"></div>
-                    {/* Glow effect */}
-                    <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-3xl group-hover:bg-red-600/30 transition-colors duration-500"></div>
-                    <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
+                            {/* 3D Images */}
+                            <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
+                              <motion.img 
+                                src={cocaCola} 
+                                alt="Coca Cola" 
+                                className="absolute right-[15%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
+                              />
+                              <motion.img 
+                                src={burgerBrasa} 
+                                alt="Burger Brasa" 
+                                className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1a1a1a] shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
 
-                    <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                      {/* Text Content */}
-                      <div className="flex-1 text-white flex flex-col justify-center h-full">
-                        <div>
-                          <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">OUSADO • ECONOMIZE R$ 12</span>
-                          <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO INFERNO</h4>
-                          <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Para os fortes: Inferno Picante com Cerveja Pilsen trincando para apagar o fogo. Você aguenta?</p>
-                        </div>
-                        
-                        <div className="flex items-center gap-4 mt-auto">
-                          <span className="text-3xl font-black font-display text-red-500">R$ 51,90</span>
-                          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(3)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
-                            Adicionar
-                          </motion.button>
-                        </div>
-                      </div>
+                      {activeComboIndex === 1 && (
+                        <motion.div 
+                          key="combo-1"
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -50 }}
+                          transition={{ type: 'spring', damping: 20, stiffness: 90 }}
+                          className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#2D0A0A] to-black opacity-90"></div>
+                          {/* Glow effect */}
+                          <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-3xl group-hover:bg-red-600/30 transition-colors duration-500"></div>
+                          <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
 
-                      {/* 3D Images */}
-                      <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                        <motion.img 
-                          src={beer} 
-                          alt="Cerveja" 
-                          className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                        />
-                        <motion.img 
-                          src={burgerInferno} 
-                          alt="Burger Inferno" 
-                          className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#2D0A0A] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
+                          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                            {/* Text Content */}
+                            <div className="flex-1 text-white flex flex-col justify-center h-full">
+                              <div>
+                                <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">OUSADO • ECONOMIZE R$ 12</span>
+                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO INFERNO</h4>
+                                <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Para os fortes: Inferno Picante com Cerveja Pilsen trincando para apagar o fogo. Você aguenta?</p>
+                              </div>
+                              
+                              <div className="flex items-center gap-4 mt-auto">
+                                <span className="text-3xl font-black font-display text-red-500">R$ 51,90</span>
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(3)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                                  Adicionar
+                                </motion.button>
+                              </div>
+                            </div>
 
+                            {/* 3D Images */}
+                            <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
+                              <motion.img 
+                                src={beer} 
+                                alt="Cerveja" 
+                                className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
+                              />
+                              <motion.img 
+                                src={burgerInferno} 
+                                alt="Burger Inferno" 
+                                className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#2D0A0A] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  
+                  {/* Indicators */}
+                  <div className="flex justify-center gap-2 mt-6">
+                    <button 
+                      onClick={() => setActiveComboIndex(0)}
+                      className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 0 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
+                    />
+                    <button 
+                      onClick={() => setActiveComboIndex(1)}
+                      className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 1 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
+                    />
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
