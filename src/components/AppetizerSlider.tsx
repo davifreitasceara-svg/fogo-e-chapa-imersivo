@@ -72,28 +72,55 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
 
   return (
     <section className="relative w-full h-[700px] sm:h-[850px] overflow-hidden">
-      {/* Animated Background Color */}
+      {/* Base Animated Background Color */}
       <motion.div 
         className="absolute inset-0 z-0"
         animate={{ backgroundColor: currentTheme?.secondary || currentApp.bgColor }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
       />
 
+      {/* Animated Light Blobs for Depth */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.4, 0.2],
+            x: [0, 80, 0],
+            y: [0, -50, 0]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[10%] right-[10%] w-[500px] h-[500px] bg-white/20 rounded-full blur-[120px]"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.3, 1],
+            opacity: [0.1, 0.3, 0.1],
+            x: [0, -60, 0],
+            y: [0, 60, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute bottom-[10%] left-[10%] w-[600px] h-[600px] bg-black/30 rounded-full blur-[120px]"
+        />
+      </div>
+
+      {/* Premium Dotted Grid Pattern */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:24px_24px] opacity-70"></div>
+
       {/* Giant Watermark Text Background */}
-      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none opacity-[0.04] will-change-transform">
+      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none opacity-[0.05] will-change-transform">
         <motion.div
           key={currentApp.title1}
           initial={{ opacity: 0, scale: 0.9, y: 50 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="font-display font-black text-white text-[35vw] leading-none whitespace-nowrap tracking-tighter"
+          className="font-display font-black text-white text-[32vw] leading-none whitespace-nowrap tracking-tighter"
         >
           {currentApp.title1}
         </motion.div>
       </div>
 
-      {/* Radial Gradient Vignette Overlay for Depth - Optimized without mix-blend */}
-      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.6)_150%)]"></div>
+      {/* Radial Gradient Vignette Overlay for Focus */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_10%,rgba(0,0,0,0.5)_130%)]"></div>
 
       {/* Top Navbar */}
       <div className="absolute top-8 w-full px-8 sm:px-16 flex justify-end items-center z-50 max-w-[1400px] left-1/2 -translate-x-1/2">
