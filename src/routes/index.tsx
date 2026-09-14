@@ -1141,7 +1141,7 @@ function Index() {
                 style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COLA<br/>TRADICIONAL</h3>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SECA-<br/>NUNCA</h3>
                   <button onClick={() => addToCart(201)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
@@ -1164,7 +1164,7 @@ function Index() {
                 style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SUCO DE<br/>LARANJA</h3>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GOLE DE<br/>MARTINS</h3>
                   <button onClick={() => addToCart(202)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
@@ -1187,7 +1187,7 @@ function Index() {
                 style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>LIMONADA<br/>SUÍÇA</h3>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SPRITE<br/>GELADA</h3>
                   <button onClick={() => addToCart(203)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
