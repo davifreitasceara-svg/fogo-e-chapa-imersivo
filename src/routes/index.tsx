@@ -1738,104 +1738,16 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
       className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
-      <div className={`relative flex-1 overflow-hidden ${activeOrderType === "pickup" ? "bg-background flex flex-col items-center justify-center" : ""}`}>
-        {/* Real Leaflet Map Container */}
-        {activeOrderType !== "pickup" && <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />}
-        
-        {activeOrderType === "pickup" && (
-             <div className="absolute inset-0 z-0 bg-[#0B0D14] overflow-hidden flex flex-col items-center justify-center">
-                {/* Subtle Grid / Noise Background */}
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
-                
-                {/* Core ambient glow based on theme */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
-
-                <div className="relative z-10 px-6 w-full max-w-sm mx-auto flex flex-col items-center pt-4 sm:pt-10">
-                   {/* Ticket Style Card */}
-                   <motion.div 
-                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                     transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                     className="w-full relative group"
-                   >
-                     {/* Outer Ticket Glow */}
-                     <div className="absolute -inset-1 bg-gradient-to-b from-white/10 to-transparent rounded-3xl blur-md opacity-50"></div>
-                     
-                     <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 px-6 py-10 sm:px-8 sm:py-12 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
-                       
-                       {/* Subtle Ticket Cutouts */}
-                       <div className="absolute -left-4 top-1/2 w-8 h-8 rounded-full bg-[#0B0D14] border-r border-white/10 shadow-[inset_-2px_0_4px_rgba(255,255,255,0.05)] -translate-y-1/2"></div>
-                       <div className="absolute -right-4 top-1/2 w-8 h-8 rounded-full bg-[#0B0D14] border-l border-white/10 shadow-[inset_2px_0_4px_rgba(255,255,255,0.05)] -translate-y-1/2"></div>
-                       
-                       {/* Perforated Line */}
-                       <div className="absolute top-1/2 left-6 right-6 border-t-[2px] border-dashed border-white/10 -translate-y-1/2"></div>
-
-                       {/* Top Half: Code */}
-                       <div className="flex flex-col items-center justify-center pb-10 h-28 sm:h-32">
-                         <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 mb-3">Código de Retirada</p>
-                         <h1 className="text-5xl sm:text-6xl font-black tracking-tighter" style={{ color: currentTheme.secondary, textShadow: `0 0 30px ${currentTheme.secondary}88` }}>
-                           #{pickupCode}
-                         </h1>
-                       </div>
-
-                       {/* Bottom Half: Status Animation */}
-                       <div className="flex flex-col items-center justify-center pt-10 h-28 sm:h-32 w-full">
-                         {/* Elegant animated icon */}
-                         <div className="relative flex items-center justify-center">
-                           <div className="absolute w-20 h-20 rounded-full animate-ping opacity-20" style={{ backgroundColor: currentTheme.secondary }}></div>
-                           <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center relative z-10 shadow-lg">
-                             {stage === "picking_up" ? (
-                                <ChefHat className="size-8 text-white/90 animate-pulse" />
-                             ) : stage === "delivering" ? (
-                                <ShoppingBag className="size-8 text-white/90 animate-bounce" />
-                             ) : (
-                                <Check className="size-8 text-white/90" />
-                             )}
-                           </div>
-                         </div>
-                       </div>
-
-                     </div>
-                   </motion.div>
-                </div>
-             </div>
-          )}
-      </div>
-
-      {/* Status Card (Bottom sheet style) - PREMIUM DARK MODE */}
-      <div className="bg-gray-950 border-t border-gray-800 p-6 sm:p-8 rounded-t-[2.5rem] -mt-6 relative z-30 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-         {/* Subtle top light effect */}
-         <div className="absolute top-0 inset-x-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-         
-         <div className="max-w-2xl mx-auto relative z-10">
-            <div className="w-12 h-1.5 bg-gray-800 rounded-full mx-auto mb-8" />
-            
-            {ratingState !== null ? (
-               <div className="pb-4">
-                  {ratingState === "driver" && (
-                    <div className="text-center animate-in fade-in slide-in-from-bottom-4">
-                      <h3 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-2">Avalie a Entrega</h3>
-                      <p className="text-base font-medium opacity-70 text-gray-400 mb-8">Como foi o atendimento do entregador {MOCK_DRIVERS[activeDriver].name}?</p>
-                      
-                      <div className="flex justify-center gap-4 mb-10">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button key={star} onClick={() => setDriverRating(star)} className="focus:outline-none transition-transform hover:scale-125 hover:rotate-6">
-                            <Star className={`size-14 ${driverRating >= star ? 'fill-[#ff9d00] text-[#ff9d00] drop-shadow-[0_0_15px_rgba(255,157,0,0.5)]' : 'text-gray-700'}`} />
-                          </button>
-                        ))}
-                      </div>
-                      
-                      <Button 
-                        disabled={driverRating === 0}
-                        className="w-full text-xl font-black font-display uppercase tracking-wider h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(255,157,0,0.3)] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
-                        style={{ backgroundColor: currentTheme.secondary }}
-                        onClick={() => setRatingState("food")}
-                      >
-                        Continuar
-                      </Button>
-                    </div>
-                  )}
-
+      {activeOrderType === "pickup" ? (
+         <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0B0D14] overflow-hidden px-4">
+           {/* Immersive Background */}
+           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] opacity-20 pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
+           
+           <div className="relative z-10 w-full max-w-md flex flex-col items-center gap-10">
+             
+             {ratingState !== null ? (
+                <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-8 rounded-3xl shadow-2xl w-full">
                   {ratingState === "food" && (
                     <div className="text-center animate-in fade-in slide-in-from-right-4">
                       <h3 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-2">Avalie o Sabor</h3>
@@ -1877,23 +1789,67 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                       </Button>
                     </div>
                   )}
-               </div>
-            ) : activeOrderType === "pickup" ? (
-               <div className="text-center pb-6">
-                  <h2 className="text-3xl font-black tracking-tight mb-2 text-white/95">
-                    {stage === "picking_up" ? "Preparando pedido" : stage === "delivering" ? "Quase pronto!" : "Pronto p/ retirar!"}
-                  </h2>
-                  <p className="text-sm font-medium text-white/50 mb-10">
-                    {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
-                  </p>
-                  
-                  {/* Premium Clean Progress Stepper */}
-                  <div className="relative flex items-center justify-between max-w-sm mx-auto px-2">
-                     {/* Base track */}
-                     <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
+                </div>
+             ) : (
+                <>
+                  {/* Status Text */}
+                  <div className="text-center animate-in fade-in slide-in-from-top-4 duration-700">
+                    <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white/95 mb-2">
+                      {stage === "picking_up" ? "Preparando pedido" : stage === "delivering" ? "Quase pronto!" : "Pronto p/ retirar!"}
+                    </h2>
+                    <p className="text-sm sm:text-base font-medium text-white/60">
+                      {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
+                    </p>
+                  </div>
+
+                  {/* Ticket Card */}
+                  <motion.div 
+                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                     className="w-full relative group"
+                   >
+                     {/* Outer Ticket Glow */}
+                     <div className="absolute -inset-1 bg-gradient-to-b from-white/10 to-transparent rounded-3xl blur-md opacity-50"></div>
                      
-                     {/* Active track */}
-                     <div className="absolute left-6 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out" 
+                     <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 px-6 py-10 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
+                       
+                       <div className="absolute -left-4 top-1/2 w-8 h-8 rounded-full bg-[#0B0D14] border-r border-white/10 shadow-[inset_-2px_0_4px_rgba(255,255,255,0.05)] -translate-y-1/2"></div>
+                       <div className="absolute -right-4 top-1/2 w-8 h-8 rounded-full bg-[#0B0D14] border-l border-white/10 shadow-[inset_2px_0_4px_rgba(255,255,255,0.05)] -translate-y-1/2"></div>
+                       
+                       <div className="absolute top-1/2 left-6 right-6 border-t-[2px] border-dashed border-white/10 -translate-y-1/2"></div>
+
+                       {/* Top Half: Code */}
+                       <div className="flex flex-col items-center justify-center pb-10 h-32 w-full">
+                         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 mb-3">Código de Retirada</p>
+                         <h1 className="text-6xl sm:text-7xl font-black tracking-tighter" style={{ color: currentTheme.secondary, textShadow: `0 0 30px ${currentTheme.secondary}88` }}>
+                           #{pickupCode}
+                         </h1>
+                       </div>
+
+                       {/* Bottom Half: Status Animation */}
+                       <div className="flex flex-col items-center justify-center pt-10 h-32 w-full">
+                         <div className="relative flex items-center justify-center">
+                           <div className="absolute w-20 h-20 rounded-full animate-ping opacity-20" style={{ backgroundColor: currentTheme.secondary }}></div>
+                           <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center relative z-10 shadow-lg">
+                             {stage === "picking_up" ? (
+                                <ChefHat className="size-8 text-white/90 animate-pulse" />
+                             ) : stage === "delivering" ? (
+                                <ShoppingBag className="size-8 text-white/90 animate-bounce" />
+                             ) : (
+                                <Check className="size-8 text-white/90" />
+                             )}
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                  </motion.div>
+
+                  {/* Stepper */}
+                  <div className="relative flex items-center justify-between w-full px-4 mt-4">
+                     <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
+                     
+                     <div className="absolute left-8 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out" 
                           style={{ 
                             width: stage === "picking_up" ? "0%" : stage === "delivering" ? "calc(50% - 24px)" : "calc(100% - 48px)", 
                             backgroundColor: currentTheme.secondary,
@@ -1901,7 +1857,6 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                           }}>
                      </div>
                      
-                     {/* Step 1 */}
                      <div className="relative z-10 flex flex-col items-center gap-3">
                        <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
                           <ChefHat className="size-4" />
@@ -1909,7 +1864,6 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                        <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Cozinha</span>
                      </div>
                      
-                     {/* Step 2 */}
                      <div className="relative z-10 flex flex-col items-center gap-3">
                        <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
                           <ShoppingBag className="size-4" />
@@ -1917,7 +1871,6 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                        <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Embalando</span>
                      </div>
                      
-                     {/* Step 3 */}
                      <div className="relative z-10 flex flex-col items-center gap-3">
                        <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
                           <Check className="size-4" />
@@ -1926,8 +1879,9 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                      </div>
                   </div>
 
+                  {/* Complete Button */}
                   {stage === "delivered" && (
-                    <div className="mt-14 animate-in slide-in-from-bottom-4 fade-in duration-500 max-w-sm mx-auto">
+                    <div className="w-full mt-10 animate-in slide-in-from-bottom-4 fade-in duration-500">
                       <Button 
                          className="w-full text-sm font-bold uppercase tracking-widest h-14 rounded-xl text-white shadow-xl transition-all hover:scale-[1.02] active:scale-95 overflow-hidden relative group"
                          style={{ backgroundColor: currentTheme.secondary }}
@@ -1941,69 +1895,156 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                       </Button>
                     </div>
                   )}
-               </div>
-            ) : (
-               <div className="pb-2">
-                  <div className="flex items-center justify-between mb-8">
-                    <div>
-                      <h2 className="text-3xl font-black font-display uppercase tracking-tight text-white drop-shadow-md">
-                        {stage === "delivered" ? "Pedido Entregue!" : stage === "picking_up" ? "Indo para a loja" : "A caminho!"}
-                      </h2>
-                      <p className="text-sm font-medium text-gray-400 mt-1.5">
-                        {stage === "delivered" ? "Aproveite seu lanche quente e suculento!" : stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
-                      </p>
-                    </div>
-                    {stage !== "delivered" && (
-                      <div className="text-right bg-gray-900 px-4 py-2 rounded-2xl border border-gray-800 shadow-inner">
-                         <div className="text-3xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
-                           {stage === "picking_up" ? "3 min" : "18:45"}
-                         </div>
-                         <p className="text-[10px] font-bold uppercase tracking-widest opacity-70 text-gray-500 mt-0.5">
-                           {stage === "picking_up" ? "Distância" : "Chegada"}
-                         </p>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="bg-gray-900 rounded-3xl p-5 flex items-center gap-5 border border-gray-800 shadow-xl relative overflow-hidden group">
-                     {/* Driver Card subtle glow */}
-                     <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-colors duration-700"></div>
-                     
-                     <div className="size-16 rounded-full bg-gray-800 overflow-hidden flex-shrink-0 border-2 relative z-10" style={{ borderColor: currentTheme.secondary }}>
-                        <img src={MOCK_DRIVERS[activeDriver].avatar} alt="Entregador" className="w-full h-full object-cover" />
-                     </div>
-                     <div className="flex-1 relative z-10">
-                        <h4 className="text-lg font-bold text-white tracking-tight">{MOCK_DRIVERS[activeDriver].name}</h4>
-                        <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-1">
-                           <Bike className="size-4" /> {MOCK_DRIVERS[activeDriver].vehicle} • {MOCK_DRIVERS[activeDriver].plate}
-                        </p>
-                     </div>
-                     <div className="flex gap-2 relative z-10">
-                        <Button size="icon" className="size-12 rounded-full bg-gray-800 hover:bg-gray-700 text-white shrink-0 shadow-lg transition-transform hover:scale-110 active:scale-95 border border-gray-700">
-                          <Mail className="size-5" />
-                        </Button>
-                     </div>
-                  </div>
-
-                  {stage === "delivered" && (
-                    <div className="mt-10 animate-in slide-in-from-bottom-4 fade-in duration-500">
-                      <Button 
-                         className="w-full text-xl font-black font-display uppercase tracking-widest h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(34,197,94,0.4)] transition-all hover:scale-[1.02] active:scale-95 overflow-hidden relative group"
-                         style={{ backgroundColor: currentTheme.secondary }}
-                         onClick={() => setRatingState("driver")}
-                      >
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-                        <span className="relative flex items-center justify-center gap-3">
-                          <Check className="size-6 animate-pulse" />
-                          Receber Pedido
-                        </span>
-                      </Button>
-                    </div>
-                  )}
-               </div>
-            )}
+                </>
+             )}
+           </div>
          </div>
-      </div>
+      ) : (
+         <>
+           <div className="relative flex-1 overflow-hidden">
+             <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
+           </div>
+           
+           {/* Status Card (Bottom sheet style) - PREMIUM DARK MODE */}
+           <div className="bg-gray-950 border-t border-gray-800 p-6 sm:p-8 rounded-t-[2.5rem] -mt-6 relative z-30 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
+              <div className="absolute top-0 inset-x-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              
+              <div className="max-w-2xl mx-auto relative z-10">
+                 <div className="w-12 h-1.5 bg-gray-800 rounded-full mx-auto mb-8" />
+                 
+                 {ratingState !== null ? (
+                    <div className="pb-4">
+                       {ratingState === "driver" && (
+                         <div className="text-center animate-in fade-in slide-in-from-bottom-4">
+                           <h3 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-2">Avalie a Entrega</h3>
+                           <p className="text-base font-medium opacity-70 text-gray-400 mb-8">Como foi o atendimento do entregador {MOCK_DRIVERS[activeDriver].name}?</p>
+                           
+                           <div className="flex justify-center gap-4 mb-10">
+                             {[1, 2, 3, 4, 5].map((star) => (
+                               <button key={star} onClick={() => setDriverRating(star)} className="focus:outline-none transition-transform hover:scale-125 hover:rotate-6">
+                                 <Star className={`size-14 ${driverRating >= star ? 'fill-[#ff9d00] text-[#ff9d00] drop-shadow-[0_0_15px_rgba(255,157,0,0.5)]' : 'text-gray-700'}`} />
+                               </button>
+                             ))}
+                           </div>
+                           
+                           <Button 
+                             disabled={driverRating === 0}
+                             className="w-full text-xl font-black font-display uppercase tracking-wider h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(255,157,0,0.3)] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                             style={{ backgroundColor: currentTheme.secondary }}
+                             onClick={() => setRatingState("food")}
+                           >
+                             Continuar
+                           </Button>
+                         </div>
+                       )}
+
+                       {ratingState === "food" && (
+                         <div className="text-center animate-in fade-in slide-in-from-right-4">
+                           <h3 className="text-3xl font-black font-display uppercase tracking-tight text-white mb-2">Avalie o Sabor</h3>
+                           <p className="text-base font-medium opacity-70 text-gray-400 mb-8">Como estava o seu pedido da Fogo & Chapa?</p>
+                           
+                           <div className="flex justify-center gap-4 mb-10">
+                             {[1, 2, 3, 4, 5].map((star) => (
+                               <button key={star} onClick={() => setFoodRating(star)} className="focus:outline-none transition-transform hover:scale-125 hover:rotate-6">
+                                 <Star className={`size-14 ${foodRating >= star ? 'fill-[#ff9d00] text-[#ff9d00] drop-shadow-[0_0_15px_rgba(255,157,0,0.5)]' : 'text-gray-700'}`} />
+                               </button>
+                             ))}
+                           </div>
+                           
+                           <Button 
+                             disabled={foodRating === 0}
+                             className="w-full text-xl font-black font-display uppercase tracking-wider h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(255,157,0,0.3)] transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                             style={{ backgroundColor: currentTheme.secondary }}
+                             onClick={() => setRatingState("done")}
+                           >
+                             Enviar Avaliação
+                           </Button>
+                         </div>
+                       )}
+
+                       {ratingState === "done" && (
+                         <div className="text-center animate-in zoom-in duration-500">
+                           <div className="size-24 bg-green-900/40 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[inset_0_0_20px_rgba(34,197,94,0.2)]">
+                             <Check className="size-12 text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
+                           </div>
+                           <h3 className="text-4xl font-black font-display uppercase tracking-tight text-white mb-3">Muito Obrigado!</h3>
+                           <p className="text-lg font-medium opacity-70 text-gray-400 mb-10 max-w-[280px] mx-auto">
+                             Sua opinião é o nosso ingrediente secreto para melhorar sempre.
+                           </p>
+                           <Button 
+                             className="w-full text-xl font-bold h-16 rounded-2xl bg-gray-800 text-white hover:bg-gray-700 hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
+                             onClick={onClose}
+                           >
+                             Concluir e Fechar
+                           </Button>
+                         </div>
+                       )}
+                    </div>
+                 ) : (
+                    <div className="pb-2">
+                       <div className="flex items-center justify-between mb-8">
+                         <div>
+                           <h2 className="text-3xl font-black font-display uppercase tracking-tight text-white drop-shadow-md">
+                             {stage === "delivered" ? "Pedido Entregue!" : stage === "picking_up" ? "Indo para a loja" : "A caminho!"}
+                           </h2>
+                           <p className="text-sm font-medium text-gray-400 mt-1.5">
+                             {stage === "delivered" ? "Aproveite seu lanche quente e suculento!" : stage === "picking_up" ? "O entregador está a caminho da Fogo & Chapa" : "Previsão de entrega: 15-20 min"}
+                           </p>
+                         </div>
+                         {stage !== "delivered" && (
+                           <div className="text-right bg-gray-900 px-4 py-2 rounded-2xl border border-gray-800 shadow-inner">
+                              <div className="text-3xl font-black font-display tracking-tighter" style={{ color: currentTheme.secondary }}>
+                                {stage === "picking_up" ? "3 min" : "18:45"}
+                              </div>
+                              <p className="text-[10px] font-bold uppercase tracking-widest opacity-70 text-gray-500 mt-0.5">
+                                {stage === "picking_up" ? "Distância" : "Chegada"}
+                              </p>
+                           </div>
+                         )}
+                       </div>
+                       
+                       <div className="bg-gray-900 rounded-3xl p-5 flex items-center gap-5 border border-gray-800 shadow-xl relative overflow-hidden group">
+                          {/* Driver Card subtle glow */}
+                          <div className="absolute -right-20 -top-20 w-40 h-40 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-colors duration-700"></div>
+                          
+                          <div className="size-16 rounded-full bg-gray-800 overflow-hidden flex-shrink-0 border-2 relative z-10" style={{ borderColor: currentTheme.secondary }}>
+                             <img src={MOCK_DRIVERS[activeDriver].avatar} alt="Entregador" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex-1 relative z-10">
+                             <h4 className="text-lg font-bold text-white tracking-tight">{MOCK_DRIVERS[activeDriver].name}</h4>
+                             <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-1">
+                                <Bike className="size-4" /> {MOCK_DRIVERS[activeDriver].vehicle} • {MOCK_DRIVERS[activeDriver].plate}
+                             </p>
+                          </div>
+                          <div className="flex gap-2 relative z-10">
+                             <Button size="icon" className="size-12 rounded-full bg-gray-800 hover:bg-gray-700 text-white shrink-0 shadow-lg transition-transform hover:scale-110 active:scale-95 border border-gray-700">
+                               <Mail className="size-5" />
+                             </Button>
+                          </div>
+                       </div>
+
+                       {stage === "delivered" && (
+                         <div className="mt-10 animate-in slide-in-from-bottom-4 fade-in duration-500">
+                           <Button 
+                              className="w-full text-xl font-black font-display uppercase tracking-widest h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(34,197,94,0.4)] transition-all hover:scale-[1.02] active:scale-95 overflow-hidden relative group"
+                              style={{ backgroundColor: currentTheme.secondary }}
+                              onClick={() => setRatingState("driver")}
+                           >
+                             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                             <span className="relative flex items-center justify-center gap-3">
+                               <Check className="size-6 animate-pulse" />
+                               Receber Pedido
+                             </span>
+                           </Button>
+                         </div>
+                       )}
+                    </div>
+                 )}
+              </div>
+           </div>
+         </>
+      )}
+      
       {/* Close Button - Moved to root level of modal to prevent click blocking */}
       <Button onClick={onClose} size="icon" variant="ghost" className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.5)] text-white rounded-full z-[99999] border border-white/20 transition-all hover:scale-110 active:scale-95">
         <X className="size-6 drop-shadow-md" />
