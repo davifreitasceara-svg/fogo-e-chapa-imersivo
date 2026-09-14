@@ -1420,9 +1420,19 @@ function Index() {
         </div>
 
         {/* Giant Text Bottom Edge */}
-        <div className="w-full relative mt-32 md:mt-48 pb-16 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center opacity-95 transition-colors duration-700">
+        <div className="w-full relative mt-32 md:mt-48 pb-16 pt-32 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center transition-colors duration-700">
            
-           <div className="font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
+           <video 
+             autoPlay 
+             loop 
+             muted 
+             playsInline 
+             className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen"
+           >
+             <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+           </video>
+
+           <div className="relative z-10 font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
              
              {/* FOGO with Outline Style */}
              <span className="text-transparent transition-colors duration-700" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.9)' }}>
@@ -1447,7 +1457,7 @@ function Index() {
              
            </div>
 
-           <div className="mt-12 text-white/40 text-[10px] sm:text-sm font-bold tracking-[0.5em] uppercase">
+           <div className="relative z-10 mt-12 text-white/50 text-[10px] sm:text-sm font-bold tracking-[0.5em] uppercase">
              A verdadeira experiência do fogo
            </div>
         </div>
