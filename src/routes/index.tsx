@@ -72,58 +72,33 @@ export const Route = createFileRoute("/")({
 type Product = { id: number; name: string; description: string; price: number; image: string; badge?: string; category: "burger" | "drink" };
 
 const products: Product[] = [
-  // Burgers
-  { id: 1, name: "Chapa Clássico", description: "Blend 160g, cheddar inglês, picles agridoce e molho da casa no brioche tostado.", price: 34.9, image: burgerClassico, badge: "Mais pedido", category: "burger" },
-  { id: 2, name: "Brasa Bacon", description: "Blend 180g, queijo meia cura, bacon crocante, cebola caramelizada e barbecue de rapadura.", price: 42.9, image: burgerBrasa, badge: "Assinatura", category: "burger" },
-  { id: 3, name: "Inferno", description: "Blend 180g, cheddar, jalapeño, cebola crispy e molho vermelho picante da casa.", price: 39.9, image: burgerInferno, badge: "Picante", category: "burger" },
+  { id: 1, name: "X Burguer", description: "Clássico.", price: 25.0, image: burgerClassico, category: "burger" },
+  { id: 2, name: "Mac Sesi Feliz", description: "O sabor da alegria.", price: 28.0, image: burgerClassico, category: "burger" },
+  { id: 3, name: "Tripa Jr", description: "Para fomes menores.", price: 18.0, image: burgerClassico, category: "burger" },
+  { id: 4, name: "Mini Burguer", description: "Pequeno e saboroso.", price: 16.0, image: burgerClassico, category: "burger" },
+  { id: 5, name: "Davi vs Golias", description: "Um desafio de sabor.", price: 45.0, image: burgerClassico, badge: "Exagerado", category: "burger" },
+  { id: 6, name: "Triplex", description: "Três vezes mais sabor.", price: 42.0, image: burgerClassico, badge: "Exagerado", category: "burger" },
+  
   // Appetizers
-  { id: 101, name: "Batatas Fritas", description: "Batatas fritas crocantes com tempero especial.", price: 19.9, image: "/fries_appetizer.jpg", category: "burger" },
-  { id: 102, name: "Coxas de Frango", description: "Asinhas e coxas de frango fritas e temperadas.", price: 29.9, image: burgerClassico, category: "burger" }, // using a placeholder if we don't have the exact image
-  { id: 103, name: "Onion Rings", description: "Anéis de cebola empanados e fritos.", price: 24.9, image: burgerBrasa, category: "burger" }, // placeholder
-  { id: 104, name: "Queijo Crocante", description: "Palitos de queijo crocantes por fora e derretidos por dentro.", price: 26.9, image: burgerInferno, category: "burger" }, // placeholder
+  { id: 101, name: "Tiras do Tripa", description: "Batata convencional.", price: 15.0, image: burgerClassico, category: "burger" },
+  { id: 102, name: "Trincheira do Davi", description: "Batata com explosão de cheddar.", price: 22.0, image: burgerClassico, category: "burger" },
+  { id: 103, name: "Batatas Reais", description: "Porção majestosa.", price: 25.0, image: burgerClassico, category: "burger" },
+  
+  // Sauces
+  { id: 201, name: "Azeite de Oliveira", description: "Fio de ouro.", price: 4.0, image: burgerClassico, category: "burger" },
+  { id: 202, name: "Maionese Temperada", description: "Especial da casa.", price: 5.0, image: burgerClassico, category: "burger" },
+  { id: 203, name: "Ketchup", description: "Clássico.", price: 3.0, image: burgerClassico, category: "burger" },
+  { id: 204, name: "Porções Separadas", description: "Cheddar, barbecue e maionese de alho.", price: 8.0, image: burgerClassico, category: "burger" },
+  
   // Drinks
-  { id: 201, name: "Cola Tradicional", description: "Refrigerante de cola tradicional.", price: 8.9, image: cocaCola, category: "drink" },
-  { id: 202, name: "Suco de Laranja", description: "Suco natural de laranja espremida na hora.", price: 10.9, image: orangeJuice, category: "drink" },
-  { id: 203, name: "Limonada Suíça", description: "Limonada refrescante.", price: 12.9, image: lemonade, category: "drink" },
-  { id: 204, name: "Cerveja Pilsen", description: "Cerveja clara e refrescante.", price: 14.9, image: beer, category: "drink" },
-  { id: 205, name: "Chá Gelado", description: "Chá mate gelado com limão.", price: 9.9, image: icedTea, category: "drink" },
-  { id: 206, name: "Guaraná Natural", description: "Refrigerante de guaraná tradicional.", price: 8.9, image: guarana, category: "drink" },
-
-  // Text Menu Items
-  { id: 301, name: "PEPPERONI", description: "PEPPERONI", price: 12.0, image: burgerClassico, category: "burger" },
-  { id: 302, name: "MARGHERITA", description: "MARGHERITA", price: 11.75, image: burgerClassico, category: "burger" },
-  { id: 303, name: "FRANGO BBQ", description: "FRANGO BBQ", price: 14.25, image: burgerClassico, category: "burger" },
-  { id: 304, name: "QUATRO QUEIJOS", description: "QUATRO QUEIJOS", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 305, name: "SALAME PICANTE", description: "SALAME PICANTE", price: 15.5, image: burgerClassico, category: "burger" },
-  { id: 306, name: "COGUMELO TRUFADO", description: "COGUMELO TRUFADO", price: 16.0, image: burgerClassico, category: "burger" },
-  { id: 307, name: "VEGETARIANA", description: "VEGETARIANA", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 308, name: "CLÁSSICO", description: "CLÁSSICO", price: 10.5, image: burgerClassico, category: "burger" },
-  { id: 309, name: "DUPLO QUEIJO", description: "DUPLO QUEIJO", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 310, name: "SMASH", description: "SMASH", price: 13.75, image: burgerClassico, category: "burger" },
-  { id: 311, name: "BACON BBQ", description: "BACON BBQ", price: 14.0, image: burgerClassico, category: "burger" },
-  { id: 312, name: "FRANGO CROCANTE", description: "FRANGO CROCANTE", price: 12.0, image: burgerClassico, category: "burger" },
-  { id: 313, name: "CLÁSSICO", description: "CLÁSSICO", price: 7.25, image: burgerClassico, category: "burger" },
-  { id: 314, name: "CHILI COM QUEIJO", description: "CHILI COM QUEIJO", price: 8.25, image: burgerClassico, category: "burger" },
-  { id: 315, name: "BACON E QUEIJO", description: "BACON E QUEIJO", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 316, name: "FRANGO", description: "FRANGO", price: 8.5, image: burgerClassico, category: "burger" },
-  { id: 317, name: "CAESAR", description: "CAESAR", price: 11.25, image: burgerClassico, category: "burger" },
-  { id: 318, name: "CROCANTE APIMENTADO", description: "CROCANTE APIMENTADO", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 319, name: "FRANGO COM ALHO", description: "FRANGO COM ALHO", price: 12.5, image: burgerClassico, category: "burger" },
-  { id: 320, name: "BUFFALO", description: "BUFFALO", price: 12.0, image: burgerClassico, category: "burger" },
-  { id: 321, name: "BBQ", description: "BBQ", price: 11.0, image: burgerClassico, category: "burger" },
-  { id: 322, name: "MEL GLAÇADO", description: "MEL GLAÇADO", price: 14.5, image: burgerClassico, category: "burger" },
-  { id: 323, name: "MEL APIMENTADO", description: "MEL APIMENTADO", price: 14.0, image: burgerClassico, category: "burger" },
-  { id: 324, name: "LEMON PEPPER", description: "LEMON PEPPER", price: 13.0, image: burgerClassico, category: "burger" },
-  { id: 325, name: "CEBOLA", description: "CEBOLA", price: 4.25, image: burgerClassico, category: "burger" },
-  { id: 326, name: "JALAPEÑO", description: "JALAPEÑO", price: 9.0, image: burgerClassico, category: "burger" },
-  { id: 327, name: "CROCANTE", description: "CROCANTE", price: 7.75, image: burgerClassico, category: "burger" },
-  { id: 328, name: "COCA-COLA", description: "COCA-COLA", price: 2.25, image: burgerClassico, category: "burger" },
-  { id: 329, name: "LIMONADA", description: "LIMONADA", price: 3.0, image: burgerClassico, category: "burger" },
-  { id: 330, name: "CHÁ GELADO", description: "CHÁ GELADO", price: 3.75, image: burgerClassico, category: "burger" },
-  { id: 331, name: "REFRIGERANTE DE LARANJA", description: "REFRIGERANTE DE LARANJA", price: 2.0, image: burgerClassico, category: "burger" },
-  { id: 332, name: "MILKSHAKE", description: "MILKSHAKE", price: 5.5, image: burgerClassico, category: "burger" },
-  { id: 333, name: "MOJITO", description: "MOJITO", price: 4.0, image: burgerClassico, category: "burger" },
-  { id: 334, name: "COLD BREW", description: "COLD BREW", price: 2.0, image: burgerClassico, category: "burger" },
+  { id: 301, name: "Seca-nunca", description: "Mata a sede.", price: 12.0, image: cocaCola, category: "drink" },
+  { id: 302, name: "Gole de Martins", description: "Refrescante.", price: 14.0, image: lemonade, category: "drink" },
+  { id: 303, name: "Sprite", description: "Limão.", price: 8.0, image: lemonade, category: "drink" },
+  
+  // Combos
+  { id: 401, name: "Tripa em Triplo", description: "Tiras do tripa, tripa jr, seca-nunca.", price: 35.0, image: burgerClassico, badge: "Especial", category: "burger" },
+  { id: 402, name: "Aristofome", description: "Davi vs Golias, seca-nunca, tiras do tripa.", price: 60.0, image: burgerClassico, badge: "Especial", category: "burger" },
+  { id: 403, name: "Fome dos Reis", description: "Batatas reais, triplex burguer, gole de Martins.", price: 70.0, image: burgerClassico, badge: "Premium", category: "burger" }
 ];
 
 const sparks = Array.from({ length: 18 }, (_, index) => ({
@@ -650,22 +625,21 @@ function Index() {
                         </motion.div>
                       ))}
                     </div>
-                  </motion.div>
-
-                  {/* Category: BURGERS */}
+                     {/* Category: BURGERS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
                     <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">HAMBÚRGUERES</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "CLÁSSICO", price: "10,50" },
-                        { name: "DUPLO QUEIJO", price: "13,00" },
-                        { name: "SMASH", price: "13,75" },
-                        { name: "BACON BBQ", price: "14,00" },
-                        { name: "FRANGO CROCANTE", price: "12,00", spicy: true }
+                        { name: "X Burguer", price: "25,00" },
+                        { name: "Mac Sesi Feliz", price: "28,00" },
+                        { name: "Tripa Jr", price: "18,00" },
+                        { name: "Mini Burguer", price: "16,00" },
+                        { name: "Davi vs Golias", price: "45,00", badge: "Exagerado" },
+                        { name: "Triplex", price: "42,00", badge: "Exagerado" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
+                          {item.badge && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-amber-500/20 text-amber-500 rounded-full">{item.badge}</span>}
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
                           <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
@@ -673,37 +647,17 @@ function Index() {
                     </div>
                   </motion.div>
 
-                  {/* Category: HOT DOGS */}
+                  {/* Category: BATATAS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">CACHORRO-QUENTE</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BATATAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "CLÁSSICO", price: "7,25" },
-                        { name: "CHILI COM QUEIJO", price: "8,25" },
-                        { name: "BACON E QUEIJO", price: "11,00" }
+                        { name: "Tiras do Tripa", price: "15,00" },
+                        { name: "Trincheira do Davi", price: "22,00" },
+                        { name: "Batatas Reais", price: "25,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Category: WRAPS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">WRAPS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "FRANGO", price: "8,50" },
-                        { name: "CAESAR", price: "11,25" },
-                        { name: "CROCANTE APIMENTADO", price: "11,00", spicy: true },
-                        { name: "FRANGO COM ALHO", price: "12,50" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
                           <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
@@ -717,20 +671,18 @@ function Index() {
                 {/* RIGHT COLUMN */}
                 <div className="flex flex-col gap-12">
                   
-                  {/* Category: WINGS */}
+                  {/* Category: MOLHOS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">ASINHAS</h4>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">MOLHOS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "BUFFALO", price: "12,00", spicy: true },
-                        { name: "BBQ", price: "11,00" },
-                        { name: "MEL GLAÇADO", price: "14,50" },
-                        { name: "MEL APIMENTADO", price: "14,00", spicy: true },
-                        { name: "LEMON PEPPER", price: "13,00" }
+                        { name: "Azeite de Oliveira", price: "4,00" },
+                        { name: "Maionese Temperada", price: "5,00" },
+                        { name: "Ketchup", price: "3,00" },
+                        { name: "Porções Separadas", price: "8,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
                           <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
@@ -738,38 +690,14 @@ function Index() {
                     </div>
                   </motion.div>
 
-                  {/* Category: RINGS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">ANÉIS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "CEBOLA", price: "4,25" },
-                        { name: "JALAPEÑO", price: "9,00", spicy: true },
-                        { name: "CROCANTE", price: "7,75" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-
-                  {/* Category: DRINKS */}
+                  {/* Category: BEBIDAS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
                     <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BEBIDAS</h4>
                     <div className="flex flex-col gap-5">
                       {[
-                        { name: "COCA-COLA", price: "2,25" },
-                        { name: "LIMONADA", price: "3,00" },
-                        { name: "CHÁ GELADO", price: "3,75" },
-                        { name: "REFRIGERANTE DE LARANJA", price: "2,00" },
-                        { name: "MILKSHAKE", price: "5,50" },
-                        { name: "MOJITO", price: "4,00" },
-                        { name: "COLD BREW", price: "2,00" }
+                        { name: "Seca-nunca", price: "12,00" },
+                        { name: "Gole de Martins", price: "14,00" },
+                        { name: "Sprite", price: "8,00" }
                       ].map(item => (
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
@@ -831,14 +759,14 @@ function Index() {
                             {/* Text Content */}
                             <div className="flex-1 text-white flex flex-col justify-center h-full">
                               <div>
-                                <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">MAIS VENDIDO • ECONOMIZE R$ 8</span>
-                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO BRASA</h4>
-                                <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">O suculento Brasa Bacon acompanhado da refrescante Coca-Cola bem gelada. A combinação definitiva.</p>
+                                <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">TRIPLO SABOR</span>
+                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">TRIPA EM TRIPLO</h4>
+                                <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">Acompanha tiras do tripa, tripa jr e seca-nunca.</p>
                               </div>
                               
                               <div className="flex items-center gap-4 mt-auto">
-                                <span className="text-3xl font-black font-display text-amber-500">R$ 49,90</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(2)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                                <span className="text-3xl font-black font-display text-amber-500">R$ 35,00</span>
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(401)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
                                   Adicionar
                                 </motion.button>
                               </div>
@@ -879,14 +807,14 @@ function Index() {
                             {/* Text Content */}
                             <div className="flex-1 text-white flex flex-col justify-center h-full">
                               <div>
-                                <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">OUSADO • ECONOMIZE R$ 12</span>
-                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">COMBO INFERNO</h4>
-                                <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Para os fortes: Inferno Picante com Cerveja Pilsen trincando para apagar o fogo. Você aguenta?</p>
+                                <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">TAMANHO FAMÍLIA</span>
+                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">ARISTOFOME</h4>
+                                <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?</p>
                               </div>
                               
                               <div className="flex items-center gap-4 mt-auto">
-                                <span className="text-3xl font-black font-display text-red-500">R$ 51,90</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(3)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                                <span className="text-3xl font-black font-display text-red-500">R$ 60,00</span>
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(402)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
                                   Adicionar
                                 </motion.button>
                               </div>
@@ -908,6 +836,54 @@ function Index() {
                           </div>
                         </motion.div>
                       )}
+
+                      {activeComboIndex === 2 && (
+                        <motion.div 
+                          key="combo-2"
+                          initial={{ opacity: 0, x: 50 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -50 }}
+                          transition={{ type: 'spring', damping: 20, stiffness: 90 }}
+                          className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#1A0A2D] to-black opacity-90"></div>
+                          {/* Glow effect */}
+                          <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl group-hover:bg-purple-600/30 transition-colors duration-500"></div>
+                          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-fuchsia-500/10 rounded-full blur-3xl group-hover:bg-fuchsia-500/20 transition-colors duration-500"></div>
+
+                          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                            {/* Text Content */}
+                            <div className="flex-1 text-white flex flex-col justify-center h-full">
+                              <div>
+                                <span className="inline-block px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-xs font-bold tracking-wider mb-4 border border-purple-500/20">PREMIUM</span>
+                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">FOME DOS REIS</h4>
+                                <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Batatas reais, triplex burguer e gole de Martins. Uma refeição majestosa.</p>
+                              </div>
+                              
+                              <div className="flex items-center gap-4 mt-auto">
+                                <span className="text-3xl font-black font-display text-purple-400">R$ 70,00</span>
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(403)} className="bg-purple-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-purple-500 transition-colors shadow-[0_0_20px_rgba(147,51,234,0.4)]">
+                                  Adicionar
+                                </motion.button>
+                              </div>
+                            </div>
+
+                            {/* 3D Images */}
+                            <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
+                              <motion.img 
+                                src={lemonade} 
+                                alt="Gole de Martins" 
+                                className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
+                              />
+                              <motion.img 
+                                src={burgerClassico} 
+                                alt="Triplex" 
+                                className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1A0A2D] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
                     </AnimatePresence>
                   </div>
                   
@@ -920,6 +896,10 @@ function Index() {
                     <button 
                       onClick={() => setActiveComboIndex(1)}
                       className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 1 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
+                    />
+                    <button 
+                      onClick={() => setActiveComboIndex(2)}
+                      className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 2 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
                     />
                   </div>
                 </div>
