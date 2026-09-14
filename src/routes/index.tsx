@@ -1373,7 +1373,7 @@ function Index() {
           </div>
 
           {/* Main Grid Layout */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             <div className="space-y-3 font-bold text-sm uppercase relative z-10">
               <a href="#cardapio" className="block hover:text-white/70 transition-colors">MENU</a>
               <a href="#promocoes" className="block hover:text-white/70 transition-colors">PROMOÇÕES</a>
@@ -1399,12 +1399,8 @@ function Index() {
                 <div className="text-xs">Baixar no<br/><span className="font-bold text-sm">Google Play</span></div>
               </a>
             </div>
-            
-            <div className="col-span-2 lg:col-span-1 h-32 lg:h-40 rounded-xl overflow-hidden order-first md:order-none relative bg-white/5 shadow-inner z-10">
-               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3657.197368023192!2d-46.689364!3d-23.559385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce57a6020c6a51%3A0xc3928ebaf298e8!2sVila%20Madalena%2C%20S%C3%A3o%20Paulo%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1714522804561!5m2!1spt-BR!2sbr" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="opacity-90 hover:opacity-100 transition-opacity relative z-10"></iframe>
-            </div>
 
-            <div className="col-span-2 lg:col-span-1 space-y-4 flex flex-col justify-start relative z-10">
+            <div className="space-y-4 flex flex-col justify-start relative z-10">
               <div className="flex gap-3">
                 <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><MapPin className="size-5" /></div>
                 <div className="text-sm font-bold">Rua das Brasas, 217<br/><span className="text-xs font-normal opacity-70">São Paulo, SP 05414, Brasil</span></div>
