@@ -71,7 +71,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
   const currentApp = appetizers[currentIndex]!;
 
   return (
-    <section className="relative w-full min-h-[750px] sm:min-h-[800px] max-h-[900px] overflow-hidden flex items-center">
+    <section className="relative w-full min-h-[650px] sm:min-h-[700px] max-h-[850px] overflow-hidden flex items-center">
       {/* Base Animated Background Color */}
       <motion.div 
         className="absolute inset-0 z-0"
@@ -89,7 +89,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             y: [0, -50, 0]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] right-[10%] w-[500px] h-[500px] bg-white/20 rounded-full blur-[120px]"
+          className="absolute top-[10%] right-[10%] w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] bg-white/20 rounded-full blur-[100px] sm:blur-[120px]"
         />
         <motion.div 
           animate={{ 
@@ -99,7 +99,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             y: [0, 60, 0]
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[10%] left-[10%] w-[600px] h-[600px] bg-black/30 rounded-full blur-[120px]"
+          className="absolute bottom-[10%] left-[10%] w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] bg-black/30 rounded-full blur-[100px] sm:blur-[120px]"
         />
       </div>
 
@@ -134,7 +134,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
         </div>
       </div>
 
-      <div className="relative z-20 w-full max-w-[1400px] mx-auto min-h-full flex flex-col md:flex-row items-center pt-20 sm:pt-24 pb-32 sm:pb-48">
+      <div className="relative z-20 w-full max-w-[1400px] mx-auto min-h-full flex flex-col md:flex-row items-center pt-16 sm:pt-20 pb-28 sm:pb-36">
         
         <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center min-h-full z-30 mt-6 md:mt-0">
           <motion.div
