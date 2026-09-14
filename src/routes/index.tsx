@@ -1427,7 +1427,7 @@ function Index() {
              loop 
              muted 
              playsInline 
-             className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen"
+             className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent,black_30%,black)]"
            >
              <source src="/quero_mais_chamas.mp4" type="video/mp4" />
            </video>
