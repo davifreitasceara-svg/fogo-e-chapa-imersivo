@@ -1289,6 +1289,57 @@ function Index() {
           </div>
         </section>
         </div>
+
+        {/* New Section Based on the Print */}
+        <section className="relative w-full overflow-hidden bg-[#FCFBF9] py-32 flex flex-col items-center justify-center text-center z-10" style={{ minHeight: '80vh' }}>
+          {/* Floating Burgers */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {/* Top Left */}
+            <img src={heroBurger} alt="" className="absolute top-[15%] left-[5%] md:left-[10%] w-32 md:w-48 -rotate-12 drop-shadow-2xl" />
+            {/* Mid Left (Blurred) */}
+            <img src={heroBurger} alt="" className="absolute top-[45%] -left-[10%] md:-left-[5%] w-48 md:w-72 rotate-12 blur-md drop-shadow-2xl opacity-95" />
+            {/* Bottom Left */}
+            <img src={heroBurger} alt="" className="absolute bottom-[5%] md:bottom-[10%] left-[5%] md:left-[15%] w-40 md:w-64 -rotate-6 blur-[2px] drop-shadow-2xl" />
+            
+            {/* Top Right */}
+            <img src={heroBurger} alt="" className="absolute top-[20%] right-[5%] md:right-[15%] w-24 md:w-32 rotate-12 drop-shadow-2xl" />
+            {/* Mid Right (Blurred) */}
+            <img src={heroBurger} alt="" className="absolute top-[40%] right-[0%] md:right-[5%] w-36 md:w-56 -rotate-12 blur-md drop-shadow-2xl opacity-95" />
+            {/* Bottom Right */}
+            <img src={heroBurger} alt="" className="absolute bottom-[10%] md:bottom-[15%] right-[5%] md:right-[10%] w-48 md:w-80 rotate-6 drop-shadow-2xl" />
+          </div>
+
+          <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
+            {/* Badge */}
+            <div className="bg-[#f4dfd4] text-[#c4522d] font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm">
+              BRISTOL • NOW OPEN <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
+            </div>
+
+            {/* Title */}
+            <h2 className="font-display font-black text-[#c4522d] text-[15vw] md:text-[8rem] lg:text-[10rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm">
+              PERFECT PATTY,<br/>EVERY TIME.
+            </h2>
+
+            {/* Subtitle */}
+            <p className="font-bold text-[#222222] text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-snug">
+              We keep it simple. Good food with honest ingredients.<br/>Everything else is just noise.
+            </p>
+
+            {/* Buttons */}
+            <div className="flex flex-col items-center gap-5">
+              <Button className="bg-[#222222] hover:bg-black text-white font-black uppercase tracking-widest rounded-xl px-12 py-7 text-sm md:text-base shadow-xl transition-transform hover:scale-105 active:scale-95">
+                ORDER NOW
+              </Button>
+              <Button className="bg-[#c4522d] hover:bg-[#a34425] text-white font-black uppercase tracking-widest rounded-xl px-12 py-7 text-sm md:text-base shadow-xl transition-transform hover:scale-105 active:scale-95 border-b-4 border-[#933d21]">
+                EXPLORE THE MENU
+              </Button>
+              <div className="text-[#d0d0d0] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 mt-6">
+                <ArrowDown className="w-4 h-4" /> PSST... THIS WAY <ArrowDown className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        </section>
+
       </main>
     </div>
 
