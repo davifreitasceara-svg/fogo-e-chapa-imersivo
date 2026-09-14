@@ -40,9 +40,9 @@ import {
 import { Embers } from "@/components/Embers";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
 import heroBurger from "@/assets/hero-burger.png";
-import burgerClassico from "@/assets/burger-classico.jpg";
-import burgerBrasa from "@/assets/burger-brasa.jpg";
-import burgerInferno from "@/assets/burger-inferno.jpg";
+import burgerClassico from "@/assets/burger-classico.png";
+import burgerBrasa from "@/assets/burger-brasa.png";
+import burgerInferno from "@/assets/burger-inferno.png";
 import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
