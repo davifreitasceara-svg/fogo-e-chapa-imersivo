@@ -80,7 +80,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
       />
 
       {/* Giant Watermark Text Background */}
-      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none opacity-[0.04]">
+      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none opacity-[0.04] will-change-transform">
         <motion.div
           key={currentApp.title1}
           initial={{ opacity: 0, scale: 0.9, y: 50 }}
@@ -92,11 +92,8 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
         </motion.div>
       </div>
 
-      {/* Radial Gradient Vignette Overlay for Depth */}
+      {/* Radial Gradient Vignette Overlay for Depth - Optimized without mix-blend */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.6)_150%)]"></div>
-      
-      {/* Subtle Noise Texture */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.15] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
 
       {/* Top Navbar */}
       <div className="absolute top-8 w-full px-8 sm:px-16 flex justify-end items-center z-50 max-w-[1400px] left-1/2 -translate-x-1/2">
