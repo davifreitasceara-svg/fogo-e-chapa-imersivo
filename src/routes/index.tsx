@@ -1743,90 +1743,60 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
         {activeOrderType !== "pickup" && <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />}
         
         {activeOrderType === "pickup" && (
-             <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800 via-gray-950 to-black overflow-hidden flex flex-col items-center justify-center pt-10">
-                {/* Floating Particles Background */}
-                <div className="absolute inset-0 opacity-20">
-                   {[...Array(12)].map((_, i) => (
-                      <div key={i} className="absolute rounded-full bg-white animate-pulse" 
-                           style={{ 
-                              width: Math.random() * 6 + 2 + 'px', 
-                              height: Math.random() * 6 + 2 + 'px',
-                              top: Math.random() * 100 + '%',
-                              left: Math.random() * 100 + '%',
-                              animationDuration: (Math.random() * 3 + 2) + 's',
-                              animationDelay: (Math.random() * 2) + 's'
-                           }}></div>
-                   ))}
-                </div>
+             <div className="absolute inset-0 z-0 bg-[#0B0D14] overflow-hidden flex flex-col items-center justify-center">
+                {/* Subtle Grid / Noise Background */}
+                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+                
+                {/* Core ambient glow based on theme */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
 
-                <div className="relative z-10 px-4 flex flex-col items-center w-full max-w-lg mx-auto">
-                   <div className="relative group animate-in fade-in zoom-in duration-1000 w-full">
-                     {/* Outer Glow */}
-                     <div className="absolute -inset-4 bg-gradient-to-tr from-[#ff9d00] via-[#ffaa22] to-[#ff5500] rounded-[3rem] blur-3xl opacity-30 group-hover:opacity-50 transition duration-1000 animate-pulse"></div>
+                <div className="relative z-10 px-6 w-full max-w-sm mx-auto flex flex-col items-center pt-4 sm:pt-10">
+                   {/* Ticket Style Card */}
+                   <motion.div 
+                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                     className="w-full relative group"
+                   >
+                     {/* Outer Ticket Glow */}
+                     <div className="absolute -inset-1 bg-gradient-to-b from-white/10 to-transparent rounded-3xl blur-md opacity-50"></div>
                      
-                     {/* Main Card */}
-                     <div className="relative bg-black/40 backdrop-blur-3xl border border-white/20 px-8 py-16 rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.5)] flex flex-col items-center transform transition-all duration-700">
-                       {/* Subtle top reflection */}
-                       <div className="absolute top-0 inset-x-8 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
+                     <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 px-6 py-10 sm:px-8 sm:py-12 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
                        
-                       {/* Pickup Code with glowing text */}
-                       <h1 className="text-8xl md:text-9xl font-black font-display uppercase tracking-tighter mb-4" 
-                           style={{ 
-                              color: currentTheme.secondary, 
-                              textShadow: `0 0 40px ${currentTheme.secondary}aa, 0 0 100px ${currentTheme.secondary}66` 
-                           }}>
-                         #{pickupCode}
-                       </h1>
+                       {/* Subtle Ticket Cutouts */}
+                       <div className="absolute -left-4 top-1/2 w-8 h-8 rounded-full bg-[#0B0D14] border-r border-white/10 shadow-[inset_-2px_0_4px_rgba(255,255,255,0.05)] -translate-y-1/2"></div>
+                       <div className="absolute -right-4 top-1/2 w-8 h-8 rounded-full bg-[#0B0D14] border-l border-white/10 shadow-[inset_2px_0_4px_rgba(255,255,255,0.05)] -translate-y-1/2"></div>
                        
-                       {/* Label */}
-                       <div className="flex items-center gap-6 mt-2 mb-8">
-                         <div className="h-[2px] w-16 bg-gradient-to-r from-transparent to-white/40 rounded-full"></div>
-                         <p className="text-sm md:text-lg font-bold uppercase tracking-[0.4em] text-white/90">Código de Retirada</p>
-                         <div className="h-[2px] w-16 bg-gradient-to-l from-transparent to-white/40 rounded-full"></div>
+                       {/* Perforated Line */}
+                       <div className="absolute top-1/2 left-6 right-6 border-t-[2px] border-dashed border-white/10 -translate-y-1/2"></div>
+
+                       {/* Top Half: Code */}
+                       <div className="flex flex-col items-center justify-center pb-10 h-28 sm:h-32">
+                         <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.3em] text-white/50 mb-3">Código de Retirada</p>
+                         <h1 className="text-5xl sm:text-6xl font-black tracking-tighter" style={{ color: currentTheme.secondary, textShadow: `0 0 30px ${currentTheme.secondary}88` }}>
+                           #{pickupCode}
+                         </h1>
                        </div>
-                       
-                       {/* Burger Animation Container */}
-                       <div className="mt-8 flex items-center justify-center relative w-full h-40">
-                          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#ff9d00]/10 rounded-full blur-2xl"></div>
-                          <div className="w-40 h-32 flex items-center justify-center relative group-hover:scale-105 transition-transform duration-700">
-                             {/* Pedestal Glow instead of a dark circle */}
-                             <div className="absolute bottom-0 w-32 h-8 bg-[#ff9d00]/30 rounded-[100%] blur-xl"></div>
-                             
-                             
-                             {/* Hamburger Build Animation */}
-                             <div className="relative z-10 flex flex-col items-center justify-center -space-y-[2px] scale-150 pt-2">
-                               {/* Top Bun */}
-                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0], scale: [0.9, 0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.15, 0.25, 0.85, 0.95, 1], ease: "backOut" }} className="relative w-14 h-6 rounded-t-full bg-gradient-to-b from-[#F59E0B] to-[#D97706] shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-50 overflow-hidden border border-[#B45309]/50">
-                                 <div className="absolute top-1.5 left-3 w-1 h-1.5 bg-white/80 rounded-full rotate-45"></div>
-                                 <div className="absolute top-2.5 left-6 w-1 h-1.5 bg-white/80 rounded-full -rotate-12"></div>
-                                 <div className="absolute top-1.5 right-4 w-1 h-1.5 bg-white/80 rounded-full rotate-12"></div>
-                                 <div className="absolute top-3 right-8 w-1 h-1.5 bg-white/80 rounded-full rotate-45"></div>
-                                 <div className="absolute top-3 left-9 w-1 h-1 bg-white/80 rounded-full rotate-45"></div>
-                               </motion.div>
-                               
-                               {/* Tomato */}
-                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.12, 0.22, 0.85, 0.95, 1], ease: "backOut" }} className="w-14 h-2 rounded-full bg-gradient-to-b from-red-500 to-red-700 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-40 border border-red-800" />
-                               
-                               {/* Lettuce */}
-                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.09, 0.19, 0.85, 0.95, 1], ease: "backOut" }} className="relative w-16 h-2 rounded-full bg-gradient-to-b from-green-400 to-green-600 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-30 flex justify-between px-1">
-                                  <div className="w-2 h-2 bg-green-500 rounded-full -mt-0.5"></div>
-                                  <div className="w-2 h-2 bg-green-400 rounded-full -mt-0.5"></div>
-                                  <div className="w-2 h-2 bg-green-600 rounded-full -mt-0.5"></div>
-                               </motion.div>
-                               
-                               {/* Cheese */}
-                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.06, 0.16, 0.85, 0.95, 1], ease: "backOut" }} className="w-15 h-1.5 bg-gradient-to-b from-yellow-300 to-yellow-500 shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-20 -rotate-2" style={{ width: '58px' }} />
-                               
-                               {/* Patty */}
-                               <motion.div animate={{ y: [-80, -80, 0, 0, 80, 80], opacity: [0, 0, 1, 1, 0, 0] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.03, 0.13, 0.85, 0.95, 1], ease: "backOut" }} className="w-15 h-3.5 rounded-lg bg-gradient-to-b from-[#5C3A21] to-[#3a2211] shadow-[inset_0_-2px_4px_rgba(0,0,0,0.5),_0_2px_4px_rgba(0,0,0,0.3)] z-10 border border-[#2d190b]" style={{ width: '60px' }} />
-                               
-                               {/* Bottom Bun */}
-                               <motion.div animate={{ y: [-80, 0, 0, 80, 80], opacity: [0, 1, 1, 0, 0], scale: [0.9, 1, 1, 0.9, 0.9] }} transition={{ duration: 6, repeat: Infinity, times: [0, 0.1, 0.85, 0.95, 1], ease: "backOut" }} className="w-14 h-4 rounded-b-xl bg-gradient-to-t from-[#D97706] to-[#F59E0B] shadow-[0_2px_4px_rgba(0,0,0,0.3)] z-0 border border-[#B45309]/50" />
-                             </div>
-                          </div>
+
+                       {/* Bottom Half: Status Animation */}
+                       <div className="flex flex-col items-center justify-center pt-10 h-28 sm:h-32 w-full">
+                         {/* Elegant animated icon */}
+                         <div className="relative flex items-center justify-center">
+                           <div className="absolute w-20 h-20 rounded-full animate-ping opacity-20" style={{ backgroundColor: currentTheme.secondary }}></div>
+                           <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center relative z-10 shadow-lg">
+                             {stage === "picking_up" ? (
+                                <ChefHat className="size-8 text-white/90 animate-pulse" />
+                             ) : stage === "delivering" ? (
+                                <ShoppingBag className="size-8 text-white/90 animate-bounce" />
+                             ) : (
+                                <Check className="size-8 text-white/90" />
+                             )}
+                           </div>
+                         </div>
                        </div>
+
                      </div>
-                   </div>
+                   </motion.div>
                 </div>
              </div>
           )}
@@ -1909,51 +1879,64 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                   )}
                </div>
             ) : activeOrderType === "pickup" ? (
-               <div className="text-center pb-2">
-                  <h2 className="text-4xl font-black font-display uppercase tracking-tight mb-3 text-white drop-shadow-md">
+               <div className="text-center pb-6">
+                  <h2 className="text-3xl font-black tracking-tight mb-2 text-white/95">
                     {stage === "picking_up" ? "Preparando pedido" : stage === "delivering" ? "Quase pronto!" : "Pronto p/ retirar!"}
                   </h2>
-                  <p className="text-lg font-medium text-gray-400">
+                  <p className="text-sm font-medium text-white/50 mb-10">
                     {stage === "picking_up" ? "Estamos preparando tudo com muito capricho." : stage === "delivering" ? "Falta pouco para você saborear." : "Seu pedido está aguardando no balcão."}
                   </p>
                   
-                  {/* Progress Bar */}
-                  <div className="mt-12 mb-6 px-4 flex justify-between items-center relative">
-                     <div className="absolute top-1/2 left-4 right-4 h-2 bg-gray-800 -z-10 -translate-y-1/2 rounded-full"></div>
-                     <div className="absolute top-1/2 left-4 h-2 -z-10 -translate-y-1/2 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(255,157,0,0.5)]" 
+                  {/* Premium Clean Progress Stepper */}
+                  <div className="relative flex items-center justify-between max-w-sm mx-auto px-2">
+                     {/* Base track */}
+                     <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
+                     
+                     {/* Active track */}
+                     <div className="absolute left-6 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out" 
                           style={{ 
-                            width: stage === "picking_up" ? "0%" : stage === "delivering" ? "calc(50% - 16px)" : "calc(100% - 32px)", 
-                            backgroundColor: currentTheme.secondary 
+                            width: stage === "picking_up" ? "0%" : stage === "delivering" ? "calc(50% - 24px)" : "calc(100% - 48px)", 
+                            backgroundColor: currentTheme.secondary,
+                            boxShadow: `0 0 10px ${currentTheme.secondary}`
                           }}>
                      </div>
                      
-                     <div className={`size-14 rounded-full flex items-center justify-center text-white transition-all duration-500 shadow-2xl ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "scale-110" : "bg-gray-800 text-gray-600 shadow-none"}`} 
-                          style={{ backgroundColor: currentTheme.secondary }}>
-                        <ChefHat className="size-6" />
+                     {/* Step 1 */}
+                     <div className="relative z-10 flex flex-col items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
+                          <ChefHat className="size-4" />
+                       </div>
+                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Cozinha</span>
                      </div>
                      
-                     <div className={`size-14 rounded-full flex items-center justify-center text-white transition-all duration-500 shadow-2xl ${stage === "delivering" || stage === "delivered" ? "scale-110 border border-white/20" : "bg-gray-800 text-gray-600 shadow-none"}`} 
-                          style={{ backgroundColor: stage === "delivering" || stage === "delivered" ? currentTheme.secondary : undefined }}>
-                        <ShoppingBag className="size-6" />
+                     {/* Step 2 */}
+                     <div className="relative z-10 flex flex-col items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
+                          <ShoppingBag className="size-4" />
+                       </div>
+                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Embalando</span>
                      </div>
                      
-                     <div className={`size-14 rounded-full flex items-center justify-center text-white transition-all duration-500 shadow-2xl ${stage === "delivered" ? "scale-110 border border-white/20" : "bg-gray-800 text-gray-600 shadow-none"}`} 
-                          style={{ backgroundColor: stage === "delivered" ? currentTheme.secondary : undefined }}>
-                        <Check className="size-6" />
+                     {/* Step 3 */}
+                     <div className="relative z-10 flex flex-col items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
+                          <Check className="size-4" />
+                       </div>
+                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Pronto</span>
                      </div>
                   </div>
 
                   {stage === "delivered" && (
-                    <div className="mt-10 animate-in slide-in-from-bottom-4 fade-in duration-500">
+                    <div className="mt-14 animate-in slide-in-from-bottom-4 fade-in duration-500 max-w-sm mx-auto">
                       <Button 
-                         className="w-full text-xl font-black font-display uppercase tracking-widest h-16 rounded-2xl text-white shadow-[0_10px_30px_rgba(34,197,94,0.4)] transition-all hover:scale-[1.02] active:scale-95 overflow-hidden relative group"
+                         className="w-full text-sm font-bold uppercase tracking-widest h-14 rounded-xl text-white shadow-xl transition-all hover:scale-[1.02] active:scale-95 overflow-hidden relative group"
                          style={{ backgroundColor: currentTheme.secondary }}
                          onClick={() => setRatingState("food")}
                       >
                         <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-                        <span className="relative flex items-center justify-center gap-3">
-                          <Check className="size-6 animate-pulse" />
-                          Receber Pedido
+                        <span className="relative flex items-center justify-center gap-2">
+                          <Check className="size-5" />
+                          Retirei o Pedido
                         </span>
                       </Button>
                     </div>
