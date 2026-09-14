@@ -1741,8 +1741,25 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
       {activeOrderType === "pickup" ? (
          <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0B0D14] overflow-hidden px-4">
            {/* Immersive Background */}
-           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] opacity-20 pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
+           <div className="absolute inset-0 bg-[#0B0D14]"></div>
+           <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+           
+           {/* Dynamic Glowing Orbs */}
+           <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.15] animate-pulse pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
+           <div className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.15] pointer-events-none" style={{ backgroundColor: currentTheme.secondary, animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></div>
+           
+           {/* Giant Background Text */}
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full overflow-hidden flex justify-center items-center pointer-events-none select-none opacity-[0.02] mix-blend-overlay">
+             <span className="text-[20vw] font-black font-display whitespace-nowrap tracking-tighter">FOGO & CHAPA</span>
+           </div>
+
+           {/* Floating Icons */}
+           <div className="absolute top-[15%] right-[10%] opacity-[0.02] rotate-12 pointer-events-none">
+             <ChefHat className="w-64 h-64 text-white" />
+           </div>
+           <div className="absolute bottom-[15%] left-[10%] opacity-[0.02] -rotate-12 pointer-events-none">
+             <ShoppingBag className="w-80 h-80 text-white" />
+           </div>
            
            <div className="relative z-10 w-full max-w-md flex flex-col items-center gap-10">
              
