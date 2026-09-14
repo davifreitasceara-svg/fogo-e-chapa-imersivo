@@ -8,6 +8,9 @@ const appetizers = [
     title1: 'BATATA',
     title2: 'FRITA',
     name: 'Batatas Fritas',
+    desc: 'Crocante por fora, macia por dentro. Nossa batata rústica clássica, temperada com páprica e sal grosso.',
+    price: 'R$ 24,90',
+    tags: ['Crocante', 'Vegetariano'],
     image: '/fries_appetizer_transparente.png',
     bgColor: '#ECA02A', // Vibrant Mustard Yellow
     textColor: '#ffffff',
@@ -17,6 +20,9 @@ const appetizers = [
     title1: 'ASINHA',
     title2: 'DE FRANGO',
     name: 'Coxas de Frango',
+    desc: 'Asinhas empanadas super crocantes, marinadas no buttermilk com nosso dry rub especial da casa.',
+    price: 'R$ 32,90',
+    tags: ['Apimentado', 'Mais Pedido'],
     image: '/frango_transparente.png',
     bgColor: '#C6311E', // Deep Fiery Red
     textColor: '#ffffff',
@@ -26,6 +32,9 @@ const appetizers = [
     title1: 'ANÉIS',
     title2: 'DE CEBOLA',
     name: 'Onion Rings',
+    desc: 'Anéis de cebola gigantes empanados em massa de cerveja preta. Acompanha molho barbecue artesanal.',
+    price: 'R$ 28,90',
+    tags: ['Crocante', 'Feito na Hora'],
     image: '/onion_rings_appetizer_transparente.png',
     bgColor: '#C86218', // Warm Golden Orange
     textColor: '#ffffff',
@@ -35,6 +44,9 @@ const appetizers = [
     title1: 'PALITOS',
     title2: 'DE QUEIJO',
     name: 'Queijo Crocante',
+    desc: 'Sticks de mozzarella derretendo por dentro, empanados e fritos. Servidos com geleia de pimenta.',
+    price: 'R$ 34,90',
+    tags: ['Derretido', 'Agridoce'],
     image: '/cheese_sticks_appetizer_transparente.png',
     bgColor: '#D75B29', // Rich Cheddar Orange
     textColor: '#ffffff',
@@ -90,25 +102,45 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             className="flex flex-col mb-10"
           >
             <div className="font-display font-black text-2xl sm:text-3xl tracking-widest text-white/90 uppercase mb-2 drop-shadow-md">Entradas</div>
-            <span 
-              className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-transparent"
-              style={{ WebkitTextStroke: "3px white" }}
-            >
-              {currentApp.title1}
-            </span>
-            <span className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-white drop-shadow-xl mt-2">
-              {currentApp.title2}
-            </span>
+            
+            <div className="flex flex-col">
+               <span 
+                 className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-transparent"
+                 style={{ WebkitTextStroke: "3px white" }}
+               >
+                 {currentApp.title1}
+               </span>
+               <span className="font-display text-7xl sm:text-[110px] leading-[0.85] font-black tracking-tighter text-white drop-shadow-xl mt-2">
+                 {currentApp.title2}
+               </span>
+            </div>
+
+            <div className="mt-8 max-w-sm">
+               <div className="flex flex-wrap gap-2 mb-5">
+                 {currentApp.tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 rounded-full border border-white/40 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-sm bg-white/10 shadow-sm">{tag}</span>
+                 ))}
+               </div>
+               
+               <p className="text-white/95 text-sm sm:text-base font-medium leading-relaxed mb-6 drop-shadow-md">
+                 {currentApp.desc}
+               </p>
+               
+               <div className="text-white font-display font-black text-3xl sm:text-4xl drop-shadow-lg mb-8">
+                 {currentApp.price}
+               </div>
+               
+               <div className="flex gap-4">
+                  <button 
+                    onClick={() => onAddToCart && onAddToCart(currentApp.id)}
+                    className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-all hover:-translate-y-1 shadow-2xl flex items-center gap-3 border border-transparent hover:border-amber-500/30"
+                  >
+                    <ShoppingBag className="size-4" />
+                    PEDIR AGORA
+                  </button>
+               </div>
+            </div>
           </motion.div>
-          
-          <div className="flex flex-col gap-8">
-            <button 
-              onClick={() => onAddToCart && onAddToCart(currentApp.id)}
-              className="bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-black transition-colors shadow-xl"
-            >
-              PEDIR AGORA
-            </button>
-          </div>
         </div>
 
         <div className="w-full md:w-7/12 relative h-[400px] sm:h-[600px] flex items-center justify-center perspective-[1200px]">
