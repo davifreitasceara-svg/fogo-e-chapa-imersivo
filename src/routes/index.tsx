@@ -1420,9 +1420,9 @@ function Index() {
         </div>
 
         {/* Giant Text Bottom Edge */}
-        <div className="w-full relative mt-20 pb-12 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center opacity-95 transition-colors duration-700">
+        <div className="w-full relative mt-32 md:mt-48 pb-16 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center opacity-95 transition-colors duration-700">
            
-           <div className="font-display font-black uppercase text-[13vw] leading-[0.8] tracking-tighter flex items-center justify-center w-full gap-2 sm:gap-6 drop-shadow-2xl">
+           <div className="font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
              
              {/* FOGO with Outline Style */}
              <span className="text-transparent transition-colors duration-700" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.9)' }}>
@@ -1434,20 +1434,20 @@ function Index() {
                initial={{ rotate: -5, scale: 0.95 }}
                animate={{ rotate: 5, scale: 1.05 }}
                transition={{ repeat: Infinity, repeatType: "reverse", duration: 2, ease: "easeInOut" }}
-               className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[14vw] sm:w-[12vw] max-w-[150px] shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-1 sm:mx-2 pb-[1vw]" 
+               className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[16vw] sm:w-[15vw] max-w-[180px] shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-2 pb-[1.5vw]" 
                style={{ backgroundColor: currentTheme.secondary }}
              >
                &
              </motion.span>
 
              {/* CHAPA filled */}
-             <span className="text-white transition-colors duration-700 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+             <span className="text-white transition-colors duration-700 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
                CHAPA
              </span>
              
            </div>
 
-           <div className="mt-8 text-white/40 text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase">
+           <div className="mt-12 text-white/40 text-[10px] sm:text-sm font-bold tracking-[0.5em] uppercase">
              A verdadeira experiência do fogo
            </div>
         </div>
