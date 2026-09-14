@@ -167,8 +167,8 @@ function Index() {
   const carouselSlides = [
     {
       id: "classico",
-      titleLine1: "CHAPA",
-      titleLine2: "CLÁSSICO",
+      titleLine1: "X",
+      titleLine2: "BURGUER",
       image: heroBurger,
       bgClass: "bg-[#00A144]",
       titleColor: "text-[#006B2D]",
@@ -182,8 +182,8 @@ function Index() {
     },
     {
       id: "brasa",
-      titleLine1: "BRASA",
-      titleLine2: "BACON",
+      titleLine1: "DAVI VS",
+      titleLine2: "GOLIAS",
       image: heroBurger,
       bgClass: "bg-[#4B168C]",
       titleColor: "text-[#2B005F]",
@@ -197,8 +197,8 @@ function Index() {
     },
     {
       id: "inferno",
-      titleLine1: "INFERNO",
-      titleLine2: "PICANTE",
+      titleLine1: "TRIPLEX",
+      titleLine2: "BURGUER",
       image: heroBurger,
       bgClass: "bg-[#C41E00]",
       titleColor: "text-[#7A1200]",
