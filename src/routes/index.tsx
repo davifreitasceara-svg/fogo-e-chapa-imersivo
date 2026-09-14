@@ -1739,27 +1739,12 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
       className="fixed inset-0 z-[100] flex flex-col bg-[#e5e7eb]" 
     >
       {activeOrderType === "pickup" ? (
-         <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0B0D14] overflow-hidden px-4">
+         <div className="relative w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden px-4">
            {/* Immersive Background */}
-           <div className="absolute inset-0 bg-[#0B0D14]"></div>
-           <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+           <div className="absolute inset-0 bg-black"></div>
            
-           {/* Dynamic Glowing Orbs */}
-           <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.15] animate-pulse pointer-events-none" style={{ backgroundColor: currentTheme.secondary }}></div>
-           <div className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.15] pointer-events-none" style={{ backgroundColor: currentTheme.secondary, animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></div>
-           
-           {/* Giant Background Text */}
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full overflow-hidden flex justify-center items-center pointer-events-none select-none opacity-[0.02] mix-blend-overlay">
-             <span className="text-[20vw] font-black font-display whitespace-nowrap tracking-tighter">FOGO & CHAPA</span>
-           </div>
-
-           {/* Floating Icons */}
-           <div className="absolute top-[15%] right-[10%] opacity-[0.02] rotate-12 pointer-events-none">
-             <ChefHat className="w-64 h-64 text-white" />
-           </div>
-           <div className="absolute bottom-[15%] left-[10%] opacity-[0.02] -rotate-12 pointer-events-none">
-             <ShoppingBag className="w-80 h-80 text-white" />
-           </div>
+           {/* Subtle radial glow */}
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-[150px] opacity-[0.05] pointer-events-none" style={{ backgroundColor: currentTheme.primary }}></div>
            
            <div className="relative z-10 w-full max-w-md flex flex-col items-center gap-10">
              
@@ -1821,39 +1806,28 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
 
                   {/* Ticket Card */}
                   <motion.div 
-                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                     initial={{ opacity: 0, scale: 0.98, y: 10 }}
                      animate={{ opacity: 1, scale: 1, y: 0 }}
                      transition={{ type: "spring", damping: 30, stiffness: 300 }}
                      className="w-full relative group"
                    >
-                     {/* Outer Ticket Glow */}
-                     <div className="absolute -inset-1 rounded-[2.5rem] blur-xl opacity-40 group-hover:opacity-70 transition-opacity duration-500" style={{ backgroundImage: `linear-gradient(to bottom, ${currentTheme.secondary}40, transparent)` }}></div>
                      
-                     <div className="relative bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-3xl border border-white/20 px-6 py-10 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center overflow-hidden">
+                     <div className="relative bg-[#111] border border-white/10 px-6 py-10 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
                        
                        {/* Subtle Ticket Texture */}
-                       <div className="absolute inset-0 opacity-[0.05] bg-[url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png')] mix-blend-overlay pointer-events-none"></div>
+                       <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png')] mix-blend-overlay pointer-events-none"></div>
 
-                       {/* Top Gradient Overlay */}
-                       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-
-                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-[#0B0D14] border-r border-white/20 shadow-[inset_-3px_0_10px_rgba(0,0,0,0.8)] -translate-y-1/2 z-10"></div>
-                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-[#0B0D14] border-l border-white/20 shadow-[inset_3px_0_10px_rgba(0,0,0,0.8)] -translate-y-1/2 z-10"></div>
+                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/10 -translate-y-1/2 z-10"></div>
+                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/10 -translate-y-1/2 z-10"></div>
                        
-                       <div className="absolute top-1/2 left-8 right-8 border-t-[2px] border-dashed border-white/20 -translate-y-1/2 z-0"></div>
+                       <div className="absolute top-1/2 left-8 right-8 border-t border-dashed border-white/20 -translate-y-1/2 z-0"></div>
 
                        {/* Top Half: Code */}
                        <div className="flex flex-col items-center justify-center pb-12 h-36 w-full relative z-10">
-                         <div className="bg-white/10 px-4 py-1.5 rounded-full mb-4 border border-white/10 backdrop-blur-md shadow-inner">
-                           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/80">Código de Retirada</p>
+                         <div className="mb-4">
+                           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Código de Retirada</p>
                          </div>
-                         <h1 className="text-7xl sm:text-8xl font-black tracking-tighter" style={{ 
-                           color: "transparent", 
-                           backgroundImage: `linear-gradient(to bottom right, #fff, ${currentTheme.secondary})`,
-                           WebkitBackgroundClip: "text",
-                           backgroundClip: "text",
-                           filter: `drop-shadow(0 0 20px ${currentTheme.secondary}66)` 
-                         }}>
+                         <h1 className="text-6xl sm:text-7xl font-black tracking-tighter text-white">
                            #{pickupCode}
                          </h1>
                        </div>
@@ -1861,23 +1835,20 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                        {/* Bottom Half: Status Animation */}
                        <div className="flex flex-col items-center justify-center pt-12 h-36 w-full relative z-10">
                          <div className="relative flex items-center justify-center">
-                           <div className="absolute w-28 h-28 rounded-full animate-ping opacity-20" style={{ backgroundColor: currentTheme.secondary }}></div>
-                           <div className="absolute w-20 h-20 rounded-full animate-pulse opacity-40 blur-md" style={{ backgroundColor: currentTheme.secondary }}></div>
-                           
-                           <div className="w-20 h-20 rounded-full bg-white/10 border-2 border-white/30 backdrop-blur-xl flex items-center justify-center relative z-20 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                           <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative z-20">
                              {stage === "picking_up" ? (
-                                <ChefHat className="size-10 text-white animate-pulse drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                                <ChefHat className="size-8 text-white/80" />
                              ) : stage === "delivering" ? (
-                                <ShoppingBag className="size-10 text-white animate-bounce drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                                <ShoppingBag className="size-8 text-white/80" />
                              ) : (
-                                <Check className="size-10 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                                <Check className="size-8 text-white/80" />
                              )}
                            </div>
                          </div>
                        </div>
                        
                        {/* Barcode Mock at the very bottom */}
-                       <div className="absolute bottom-4 opacity-20 w-48 h-8 flex justify-between items-end gap-1 px-4 blur-[0.5px]">
+                       <div className="absolute bottom-6 opacity-10 w-48 h-6 flex justify-between items-end gap-1 px-4">
                          {[...Array(20)].map((_, i) => (
                             <div key={i} className="bg-white rounded-sm" style={{ width: `${Math.random() * 4 + 1}px`, height: `${Math.random() * 100}%` }}></div>
                          ))}
