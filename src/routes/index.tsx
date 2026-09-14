@@ -1146,8 +1146,8 @@ function Index() {
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
-                    src={cocaCola} 
-                    alt="Cola Tradicional" 
+                    src={guarana} 
+                    alt="Seca-nunca" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
                     style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
