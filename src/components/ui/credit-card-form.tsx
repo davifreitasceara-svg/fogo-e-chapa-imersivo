@@ -117,7 +117,7 @@ export const CreditCardForm = ({
           <section className="card__front" style={{ ["--ring1" as any]: ring1, ["--ring2" as any]: ring2 }}>
             <div className="card__header">
               <svg viewBox="0 0 48 48" width="40" height="40">
-                <path fill="#ff9d00" d="M45,35c0,2.209-1.791,4-4,4H7c-2.209,0-4-1.791-4-4V13c0-2.209,1.791-4,4-4h34c2.209,0,4,1.791,4,4V35z"/>
+                <path fill="#444" d="M45,35c0,2.209-1.791,4-4,4H7c-2.209,0-4-1.791-4-4V13c0-2.209,1.791-4,4-4h34c2.209,0,4,1.791,4,4V35z"/>
                 <path fill="#fff" d="M41 10H7c-1.654 0-3 1.346-3 3v22c0 1.654 1.346 3 3 3h34c1.654 0 3-1.346 3-3V13c0-1.654-1.346-3-3-3zm1 25c0 .551-.449 1-1 1H7c-.551 0-1-.449-1-1V13c0-.551.449-1 1-1h34c.551 0 1 .449 1 1v22z"/>
                 <path fill="#fff" d="M11 28H19V30H11zM23 28H31V30H23z"/>
               </svg>

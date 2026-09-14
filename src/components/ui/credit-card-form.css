@@ -79,8 +79,8 @@
   height: 185px;
   border-radius: 20px;
   padding: 16px 20px 20px;
-  background: linear-gradient(135deg, #2a2a2a, #111);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
   color: #fff;
   overflow: hidden;
   margin: 0 auto;
@@ -88,7 +88,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .card__back {
@@ -100,28 +100,28 @@
 .card__back::before {
   content: "";
   position: absolute;
-  border: 16px solid var(--ring1, #ff9d00);
+  border: 16px solid rgba(255, 255, 255, 0.05);
   border-radius: 100%;
   left: -17%;
   top: -45px;
   height: 300px;
   width: 300px;
   filter: blur(15px);
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .card__front::after,
 .card__back::after {
   content: "";
   position: absolute;
-  border: 16px solid var(--ring2, #ff5500);
+  border: 16px solid rgba(255, 255, 255, 0.02);
   border-radius: 100%;
   width: 300px;
   top: 55%;
   left: -100px;
   height: 300px;
   filter: blur(15px);
-  opacity: 0.3;
+  opacity: 1;
 }
 
 .card__hide_line {
