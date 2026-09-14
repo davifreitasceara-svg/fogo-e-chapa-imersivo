@@ -11,7 +11,7 @@ const appetizers = [
     desc: 'Crocante por fora, macia por dentro. Nossa batata convencional, temperada com nosso segredo especial.',
     price: 'R$ 24,90',
     tags: ['Crocante', 'Clássica'],
-    image: '/fries_appetizer_transparente.png',
+    image: '/fries_conv.png',
     bgColor: '#ECA02A', // Vibrant Mustard Yellow
     textColor: '#ffffff',
   },
@@ -23,7 +23,7 @@ const appetizers = [
     desc: 'Nossa clássica porção de batata frita com uma explosão de cheddar derretido.',
     price: 'R$ 32,90',
     tags: ['Cheddar', 'Explosão de Sabor'],
-    image: '/fries_appetizer_transparente.png',
+    image: '/fries_cheddar.png',
     bgColor: '#C6311E', // Deep Fiery Red
     textColor: '#ffffff',
   },
@@ -35,7 +35,7 @@ const appetizers = [
     desc: 'A realeza das batatas. Porção generosa e premium perfeita para compartilhar.',
     price: 'R$ 28,90',
     tags: ['Premium', 'Feito na Hora'],
-    image: '/fries_appetizer_transparente.png',
+    image: '/fries_royal.png',
     bgColor: '#C86218', // Warm Golden Orange
     textColor: '#ffffff',
   }
