@@ -625,7 +625,9 @@ function Index() {
                         </motion.div>
                       ))}
                     </div>
-                     {/* Category: BURGERS */}
+                  </motion.div>
+
+                  {/* Category: BURGERS */}
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
                     <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">HAMBÚRGUERES</h4>
                     <div className="flex flex-col gap-5">
@@ -724,7 +726,7 @@ function Index() {
                   {/* Slider Controls */}
                   <div className="absolute top-1/2 -translate-y-1/2 -left-4 sm:-left-12 z-20">
                     <button 
-                      onClick={() => setActiveComboIndex(prev => prev === 0 ? 1 : 0)}
+                      onClick={() => setActiveComboIndex(prev => prev === 0 ? 2 : prev - 1)}
                       className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
                     >
                       <ChevronLeft className="size-6" />
@@ -732,7 +734,7 @@ function Index() {
                   </div>
                   <div className="absolute top-1/2 -translate-y-1/2 -right-4 sm:-right-12 z-20">
                     <button 
-                      onClick={() => setActiveComboIndex(prev => prev === 0 ? 1 : 0)}
+                      onClick={() => setActiveComboIndex(prev => prev === 2 ? 0 : prev + 1)}
                       className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
                     >
                       <ChevronRight className="size-6" />
