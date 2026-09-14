@@ -1253,41 +1253,6 @@ function Index() {
         </section>
 
 
-        <section id="sobre" className="border-y border-white/10 py-24 sm:py-32 relative overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
-          
-          {/* Premium Glowing Background Effects */}
-          <div className="absolute top-0 left-1/4 w-[30rem] h-[30rem] rounded-full blur-[120px] opacity-30 pointer-events-none mix-blend-screen transition-colors duration-700 animate-pulse" style={{ backgroundColor: currentTheme.secondary }}></div>
-          <div className="absolute -bottom-32 right-1/4 w-[25rem] h-[25rem] rounded-full blur-[100px] opacity-20 pointer-events-none mix-blend-screen transition-colors duration-700 animate-pulse" style={{ backgroundColor: currentTheme.secondary, animationDelay: '2s' }}></div>
-          <div className="absolute inset-0 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, transparent 30%, ${currentTheme.bgDark} 100%)` }}></div>
-          
-          <div className="mx-auto grid max-w-7xl gap-16 px-5 lg:grid-cols-2 lg:items-center lg:px-8 relative z-10">
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }} 
-              whileInView={{ opacity: 1, x: 0 }} 
-              viewport={{ once: true }} 
-              transition={{ duration: 0.6 }}
-            >
-              <p className="eyebrow transition-colors duration-700" style={{ color: currentTheme.secondary }}>Manifesto da chapa</p>
-              <h2 className="section-title">O sabor começa<br /><span className="transition-colors duration-700" style={{ color: currentTheme.secondary }}>no fogo</span></h2>
-            </motion.div>
-            <div className="grid gap-7 sm:grid-cols-2">
-              {[{n:"01", title:"Blend autoral", text:"Cortes selecionados, moídos todos os dias e moldados à mão."}, {n:"02", title:"Calor de verdade", text:"Chapa de ferro em alta temperatura para a crosta perfeita."}, {n:"03", title:"Origem local", text:"Pães, hortaliças e queijos de pequenos produtores parceiros."}, {n:"04", title:"Sem atalhos", text:"Molhos, picles e acompanhamentos feitos dentro de casa."}].map((item, i) => (
-                <motion.div 
-                  key={item.n} 
-                  className="border-t border-white/10 pt-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.15 }}
-                >
-                  <span className="font-mono text-xs transition-colors duration-700" style={{ color: currentTheme.secondary }}>{item.n}</span>
-                  <h3 className="mt-3 font-display text-xl font-bold uppercase">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.text}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
         </div>
 
         {/* New Section Based on the Print */}
@@ -1295,18 +1260,48 @@ function Index() {
           {/* Floating Burgers */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {/* Top Left */}
-            <img src={heroBurger} alt="" className="absolute top-[15%] left-[5%] md:left-[10%] w-32 md:w-48 -rotate-12 drop-shadow-2xl" />
+            <motion.img 
+              initial={{ opacity: 0, x: -100, y: -50, rotate: -30, scale: 0.8 }}
+              whileInView={{ opacity: 1, x: 0, y: 0, rotate: -12, scale: 1 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+              src={heroBurger} alt="" className="absolute top-[15%] left-[5%] md:left-[10%] w-32 md:w-48 drop-shadow-2xl" />
             {/* Mid Left (Blurred) */}
-            <img src={heroBurger} alt="" className="absolute top-[45%] -left-[10%] md:-left-[5%] w-48 md:w-72 rotate-12 blur-md drop-shadow-2xl opacity-95" />
+            <motion.img 
+              initial={{ opacity: 0, x: -150, rotate: -10 }}
+              whileInView={{ opacity: 0.95, x: 0, rotate: 12 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1.2, delay: 0.1, type: "spring", bounce: 0.3 }}
+              src={heroBurger} alt="" className="absolute top-[45%] -left-[10%] md:-left-[5%] w-48 md:w-72 blur-md drop-shadow-2xl" />
             {/* Bottom Left */}
-            <img src={heroBurger} alt="" className="absolute bottom-[5%] md:bottom-[10%] left-[5%] md:left-[15%] w-40 md:w-64 -rotate-6 blur-[2px] drop-shadow-2xl" />
+            <motion.img 
+              initial={{ opacity: 0, x: -100, y: 50, rotate: -20, scale: 0.8 }}
+              whileInView={{ opacity: 1, x: 0, y: 0, rotate: -6, scale: 1 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1.1, delay: 0.2, type: "spring", bounce: 0.4 }}
+              src={heroBurger} alt="" className="absolute bottom-[5%] md:bottom-[10%] left-[5%] md:left-[15%] w-40 md:w-64 blur-[2px] drop-shadow-2xl" />
             
             {/* Top Right */}
-            <img src={heroBurger} alt="" className="absolute top-[20%] right-[5%] md:right-[15%] w-24 md:w-32 rotate-12 drop-shadow-2xl" />
+            <motion.img 
+              initial={{ opacity: 0, x: 100, y: -50, rotate: 30, scale: 0.8 }}
+              whileInView={{ opacity: 1, x: 0, y: 0, rotate: 12, scale: 1 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1, delay: 0.1, type: "spring", bounce: 0.4 }}
+              src={heroBurger} alt="" className="absolute top-[20%] right-[5%] md:right-[15%] w-24 md:w-32 drop-shadow-2xl" />
             {/* Mid Right (Blurred) */}
-            <img src={heroBurger} alt="" className="absolute top-[40%] right-[0%] md:right-[5%] w-36 md:w-56 -rotate-12 blur-md drop-shadow-2xl opacity-95" />
+            <motion.img 
+              initial={{ opacity: 0, x: 150, rotate: 10 }}
+              whileInView={{ opacity: 0.95, x: 0, rotate: -12 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1.2, delay: 0.15, type: "spring", bounce: 0.3 }}
+              src={heroBurger} alt="" className="absolute top-[40%] right-[0%] md:right-[5%] w-36 md:w-56 blur-md drop-shadow-2xl" />
             {/* Bottom Right */}
-            <img src={heroBurger} alt="" className="absolute bottom-[10%] md:bottom-[15%] right-[5%] md:right-[10%] w-48 md:w-80 rotate-6 drop-shadow-2xl" />
+            <motion.img 
+              initial={{ opacity: 0, x: 100, y: 50, rotate: -10, scale: 0.8 }}
+              whileInView={{ opacity: 1, x: 0, y: 0, rotate: 6, scale: 1 }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{ duration: 1.1, delay: 0.25, type: "spring", bounce: 0.4 }}
+              src={heroBurger} alt="" className="absolute bottom-[10%] md:bottom-[15%] right-[5%] md:right-[10%] w-48 md:w-80 drop-shadow-2xl" />
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
