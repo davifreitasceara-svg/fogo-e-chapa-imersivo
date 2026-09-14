@@ -1141,13 +1141,13 @@ function Index() {
                 style={{ borderColor: currentTheme.secondaryAlpha }}
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SECA-<br/>NUNCA</h3>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COCA<br/>COLA</h3>
                   <button onClick={() => addToCart(201)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
-                    src={guarana} 
-                    alt="Seca-nunca" 
+                    src={cocaCola} 
+                    alt="Coca Cola" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
                     style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
@@ -1255,13 +1255,13 @@ function Index() {
                 className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16 transition-colors duration-700"
               >
                 <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GUARANÁ<br/>NATURAL</h3>
+                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SECA-<br/>NUNCA</h3>
                   <button onClick={() => addToCart(206)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
                     src={guarana} 
-                    alt="Guaraná Natural" 
+                    alt="Seca-nunca" 
                     className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
                     style={{ filter: "contrast(1.15) brightness(1.08)" }}
                   />
