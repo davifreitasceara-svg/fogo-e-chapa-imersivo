@@ -1322,10 +1322,10 @@ function Index() {
 
             {/* Buttons */}
             <div className="flex flex-col items-center gap-5">
-              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full text-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1 ${currentTheme.buttonBg}`}>
+              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1" style={{ backgroundColor: currentTheme.secondary }}>
                 FAZER PEDIDO
               </Button>
-              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1 ${currentTheme.buttonText}`}>
+              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full bg-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1" style={{ color: currentTheme.secondary }}>
                 VER CARDÁPIO
               </Button>
               <div className="text-[#d0d0d0] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 mt-6">
