@@ -1838,46 +1838,61 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                      className="w-full relative group"
                    >
                      
-                     <div className="relative bg-[#111] border border-white/10 px-6 py-10 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
+                     {/* Ambient glow behind card */}
+                     <div className="absolute -inset-3 bg-gradient-to-b from-white/[0.03] via-transparent to-white/[0.02] rounded-[2rem] blur-xl pointer-events-none"></div>
+                     
+                     <div className="relative bg-gradient-to-b from-[#141414] to-[#0d0d0d] border border-white/[0.08] px-6 py-10 rounded-3xl shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] flex flex-col items-center overflow-hidden">
                        
-                       {/* Subtle Ticket Texture */}
-                       <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png')] mix-blend-overlay pointer-events-none"></div>
-
-                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/10 -translate-y-1/2 z-10"></div>
-                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/10 -translate-y-1/2 z-10"></div>
+                       {/* Animated gradient border sweep */}
+                       <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+                         <div className="absolute inset-[-1px] rounded-3xl" style={{ background: "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.08), transparent, transparent)", animation: "borderSpin 6s linear infinite" }}></div>
+                       </div>
+                       <div className="absolute inset-[1px] bg-gradient-to-b from-[#141414] to-[#0d0d0d] rounded-[calc(1.5rem-1px)] pointer-events-none"></div>
                        
-                       <div className="absolute top-1/2 left-8 right-8 border-t border-dashed border-white/20 -translate-y-1/2 z-0"></div>
-
+                       {/* Top shimmer line */}
+                       <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                       
+                       {/* Ticket cutouts */}
+                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/[0.06] -translate-y-1/2 z-10"></div>
+                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/[0.06] -translate-y-1/2 z-10"></div>
+                       
+                       {/* Dashed separator */}
+                       <div className="absolute top-1/2 left-10 right-10 border-t border-dashed border-white/[0.08] -translate-y-1/2 z-0"></div>
+                       
                        {/* Top Half: Code */}
-                       <div className="flex flex-col items-center justify-center pb-12 h-36 w-full relative z-10">
-                         <div className="mb-4">
-                           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Código de Retirada</p>
+                       <div className="flex flex-col items-center justify-center pb-14 h-40 w-full relative z-10">
+                         <div className="mb-5 flex items-center gap-3">
+                           <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/30"></div>
+                           <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/40">Código de Retirada</p>
+                           <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-white/30"></div>
                          </div>
-                         <h1 className="text-6xl sm:text-7xl font-black tracking-tighter text-white" style={{ animation: "pulseGlow 3s ease-in-out infinite" }}>
+                         <h1 className="text-7xl sm:text-8xl font-black tracking-tighter text-white" style={{ textShadow: "0 0 40px rgba(255,255,255,0.08)", animation: "pulseGlow 3s ease-in-out infinite" }}>
                            #{pickupCode}
                          </h1>
                        </div>
-
+                       
                        {/* Bottom Half: Status Animation */}
-                       <div className="flex flex-col items-center justify-center pt-12 h-36 w-full relative z-10">
+                       <div className="flex flex-col items-center justify-center pt-14 h-40 w-full relative z-10 gap-4">
                          <div className="relative flex items-center justify-center">
-                           <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative z-20" style={{ animation: "iconPulse 2.5s ease-in-out infinite" }}>
+                           {/* Pulsing ring */}
+                           <div className="absolute w-20 h-20 rounded-full border border-white/[0.06]" style={{ animation: "iconPulse 2.5s ease-in-out infinite" }}></div>
+                           <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center relative z-20 backdrop-blur-sm">
                              {stage === "picking_up" ? (
-                                <ChefHat className="size-8 text-white/80" />
+                                <ChefHat className="size-7 text-white/70" />
                              ) : stage === "delivering" ? (
-                                <ShoppingBag className="size-8 text-white/80" />
+                                <ShoppingBag className="size-7 text-white/70" />
                              ) : (
-                                <Check className="size-8 text-white/80" />
+                                <Check className="size-7 text-white/70" />
                              )}
                            </div>
                          </div>
-                       </div>
-
-                       {/* Barcode Mock at the very bottom */}
-                       <div className="absolute bottom-6 opacity-10 w-48 h-6 flex justify-between items-end gap-1 px-4">
-                         {[...Array(20)].map((_, i) => (
-                            <div key={i} className="bg-white rounded-sm" style={{ width: `${Math.random() * 4 + 1}px`, height: `${Math.random() * 100}%` }}></div>
-                         ))}
+                         
+                         {/* Loading dots */}
+                         <div className="flex items-center gap-1.5">
+                           {[0, 1, 2].map((dot) => (
+                             <div key={dot} className="w-1.5 h-1.5 rounded-full bg-white/20" style={{ animation: "dotPulse 1.4s ease-in-out infinite", animationDelay: `${dot * 0.2}s` }}></div>
+                           ))}
+                         </div>
                        </div>
                      </div>
                   </motion.div>
