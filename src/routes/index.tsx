@@ -1838,7 +1838,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                      className="w-full relative group"
                    >
                      
-                     <div className="relative bg-[#111] border border-white/10 px-6 py-10 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden">
+                     <div className="relative bg-[#111] border border-white/10 px-6 py-10 rounded-3xl shadow-2xl flex flex-col items-center overflow-hidden" style={{ animation: "floatCard 6s ease-in-out infinite" }}>
                        
                        {/* Subtle Ticket Texture */}
                        <div className="absolute inset-0 opacity-[0.02] bg-[url('https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png')] mix-blend-overlay pointer-events-none"></div>
@@ -1853,7 +1853,7 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                          <div className="mb-4">
                            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/50">Código de Retirada</p>
                          </div>
-                         <h1 className="text-6xl sm:text-7xl font-black tracking-tighter text-white">
+                         <h1 className="text-6xl sm:text-7xl font-black tracking-tighter" style={{ background: "linear-gradient(90deg, #fff, #555, #fff)", backgroundSize: "200% auto", color: "transparent", WebkitBackgroundClip: "text", backgroundClip: "text", animation: "shimmerText 3s linear infinite" }}>
                            #{pickupCode}
                          </h1>
                        </div>
@@ -1861,6 +1861,9 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                        {/* Bottom Half: Status Animation */}
                        <div className="flex flex-col items-center justify-center pt-12 h-36 w-full relative z-10">
                          <div className="relative flex items-center justify-center">
+                           {/* Ripple rings */}
+                           <div className="absolute w-16 h-16 rounded-full border border-white/30 z-10" style={{ animation: "ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite" }}></div>
+                           <div className="absolute w-16 h-16 rounded-full border border-white/30 z-10" style={{ animation: "ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite", animationDelay: "-1s" }}></div>
                            <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center relative z-20">
                              {stage === "picking_up" ? (
                                 <ChefHat className="size-8 text-white/80" />
@@ -1873,6 +1876,13 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                          </div>
                        </div>
                        
+                       {/* Equalizer bars */}
+                       <div className="flex items-end gap-[3px] h-4 mt-4 relative z-10">
+                         {[30,60,80,40,100,50,70,30,60,40,80,50,20].map((h, i) => (
+                           <div key={i} className="w-[2px] rounded-sm" style={{ height: h + "%", backgroundColor: i === 4 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.2)", animation: "equalize 1s infinite alternate ease-in-out", animationDelay: [0.1,0.3,0.5,0.2,0.6,0.4,0.1,0.5,0.2,0.7,0.3,0.5,0.1][i] + "s" }}></div>
+                         ))}
+                       </div>
+
                        {/* Barcode Mock at the very bottom */}
                        <div className="absolute bottom-6 opacity-10 w-48 h-6 flex justify-between items-end gap-1 px-4">
                          {[...Array(20)].map((_, i) => (
