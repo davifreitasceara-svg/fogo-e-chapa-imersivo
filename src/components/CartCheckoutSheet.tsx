@@ -15,7 +15,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [complement, setComplement] = useState("");
   const [detailsError, setDetailsError] = useState("");
   const [couponCode, setCouponCode] = useState("");
-  const [discountApplied, setDiscountApplied] = useState(false);
+  const [appliedDiscount, setAppliedDiscount] = useState<{ type: "fixed" | "percentage" | "free_shipping", value: number, label: string, code: string } | null>(null);
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
     if (products.some((p: any) => p.id === parseInt(id))) return sum + (count as number);
@@ -28,8 +28,22 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   }, 0);
 
   const deliveryFee = orderType === "delivery" ? 8 : 0;
-  const discountAmount = discountApplied ? deliveryFee : 0;
-  const totalPrice = subtotal - discountAmount + deliveryFee;
+  
+  let discountAmount = 0;
+  if (appliedDiscount) {
+    if (appliedDiscount.type === "free_shipping") {
+      discountAmount = deliveryFee;
+    } else if (appliedDiscount.type === "percentage") {
+      discountAmount = subtotal * appliedDiscount.value;
+    } else if (appliedDiscount.type === "fixed") {
+      discountAmount = appliedDiscount.value;
+    }
+  }
+  
+  // Ensure the discount does not exceed the subtotal + delivery fee
+  discountAmount = Math.min(discountAmount, subtotal + deliveryFee);
+
+  const totalPrice = Math.max(0, subtotal - discountAmount + deliveryFee);
 
   const formatPrice = (price: number) => {
     return price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -68,6 +82,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
     setStep("cart");
     setPaymentMethod(null);
     setOrderType(null);
+    setAppliedDiscount(null);
   };
 
   const handleBack = () => {
@@ -82,6 +97,12 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
     } else if (step === "type") {
       setStep("cart");
     }
+  };
+
+  const COUPONS: Record<string, { type: "fixed" | "percentage" | "free_shipping", value: number, label: string }> = {
+    "DVSCODES": { type: "free_shipping", value: 0, label: "Frete Grátis" },
+    "FOGO10": { type: "percentage", value: 0.1, label: "10% OFF" },
+    "CHAPA20": { type: "fixed", value: 20, label: "R$ 20 OFF" },
   };
 
   return (
@@ -229,16 +250,17 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 <input 
                   value={couponCode} 
                   onChange={e => setCouponCode(e.target.value.toUpperCase())} 
-                  disabled={discountApplied}
+                  disabled={!!appliedDiscount}
                   type="text" 
                   className="flex-1 bg-black/40 border-2 border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:border-white/40 focus:bg-black/60 focus:outline-none transition-all duration-300 placeholder:text-white/30 uppercase" 
                   placeholder="DIGITE O CUPOM" 
                 />
-                {!discountApplied ? (
+                {!appliedDiscount ? (
                   <button 
                     onClick={() => {
-                      if (couponCode.toUpperCase() === "DVSCODES") {
-                        setDiscountApplied(true);
+                      const code = couponCode.toUpperCase();
+                      if (COUPONS[code]) {
+                        setAppliedDiscount({ ...COUPONS[code], code });
                       } else {
                         alert("Cupom invalido");
                       }
@@ -250,7 +272,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 ) : (
                   <button 
                     onClick={() => {
-                      setDiscountApplied(false);
+                      setAppliedDiscount(null);
                       setCouponCode("");
                     }}
                     className="bg-red-500/20 text-red-400 hover:bg-red-500/30 font-bold px-4 rounded-xl transition-colors"
@@ -270,9 +292,9 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 <span>Taxa de Entrega</span>
                 <span>{orderType === "delivery" ? formatPrice(deliveryFee) : "Gratis"}</span>
               </div>
-              {discountApplied && (
+              {appliedDiscount && (
                 <div className="flex justify-between text-sm text-green-400 font-bold">
-                  <span>Desconto (Frete Gratis)</span>
+                  <span>Desconto ({appliedDiscount.label})</span>
                   <span>-{formatPrice(discountAmount)}</span>
                 </div>
               )}
