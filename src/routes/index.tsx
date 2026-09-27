@@ -541,7 +541,7 @@ function Index() {
                 </motion.div>
              ))}
 
-             <div className="hidden sm:block absolute top-[60%] right-[32%] text-4xl z-30 drop-shadow-lg">✨</div>
+
              
              {/* Carousel arrows */}
              <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
