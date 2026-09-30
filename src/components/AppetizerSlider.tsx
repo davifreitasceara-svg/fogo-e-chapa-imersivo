@@ -67,29 +67,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
         transition={{ duration: 0.8, ease: "easeInOut" }}
       />
 
-      {/* Animated Light Blobs for Depth */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.4, 0.2],
-            x: [0, 80, 0],
-            y: [0, -50, 0]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[10%] right-[10%] w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] bg-white/20 rounded-full blur-[100px] sm:blur-[120px]"
-        />
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.3, 1],
-            opacity: [0.1, 0.3, 0.1],
-            x: [0, -60, 0],
-            y: [0, 60, 0]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[10%] left-[10%] w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] bg-black/30 rounded-full blur-[100px] sm:blur-[120px]"
-        />
-      </div>
+      {/* Animated Light Blobs removed for performance */}
 
       {/* Premium Dotted Grid Pattern */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:24px_24px] opacity-70"></div>
@@ -197,36 +175,30 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             let scale = 1;
             let zIndex = 20;
             let rotate = 0;
-            let blur = 0;
-
             if (offset === 0) {
               x = 0;
               y = 0;
               scale = 1.35;
               zIndex = 30;
               rotate = 0;
-              blur = 0;
             } else if (offset === 1) {
               x = 160;
               y = -60;
               scale = 0.8;
               zIndex = 20;
               rotate = 10;
-              blur = 4;
             } else if (offset === 2) {
               x = 300;
               y = -120;
               scale = 0.6;
               zIndex = 10;
               rotate = 20;
-              blur = 8;
             } else if (offset === -1) {
               x = -160;
               y = 70;
               scale = 0.8;
               zIndex = 15;
               rotate = -15;
-              blur = 6;
             }
 
             // Adjust for mobile screens safely using the useIsMobile hook
@@ -240,7 +212,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             return (
               <motion.div
                 key={app.id}
-                className="absolute top-1/2 left-1/2 cursor-pointer"
+                className="absolute top-1/2 left-1/2 cursor-pointer will-change-transform"
                 initial={false}
                 animate={{
                   x: `calc(-50% + ${x}px)`,
@@ -248,7 +220,6 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                   scale,
                   rotate,
                   zIndex,
-                  filter: `blur(${blur}px)`,
                   opacity: offset === 2 ? 0.3 : (offset === -1 ? 0 : 1) // Fades out strongly on the left
                 }}
                 transition={{
@@ -272,7 +243,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                   <img 
                     src={app.image} 
                     alt={app.name} 
-                    className="w-full object-contain drop-shadow-2xl mix-blend-multiply" 
+                    className="w-full object-contain drop-shadow-md" 
                   />
                 </motion.div>
               </motion.div>

@@ -38,6 +38,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Embers } from "@/components/Embers";
+import { Bubbles } from "@/components/Bubbles";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
@@ -423,6 +424,20 @@ function Index() {
 
       <main className="relative">
         <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
+           {/* Background Video */}
+           <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+             <div className="absolute inset-0 bg-black/60 z-10 transition-opacity duration-700"></div>
+             <video 
+               autoPlay 
+               loop 
+               muted 
+               playsInline 
+               className="w-full h-full object-cover opacity-80"
+             >
+               <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+             </video>
+           </div>
+           
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
              {/* Animated Title - Each burger name, line by line */}
@@ -693,20 +708,23 @@ function Index() {
                   </motion.div>
 
                   {/* Category: BEBIDAS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BEBIDAS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "Seca-nunca", price: "12,00" },
-                        { name: "Gole de Martins", price: "14,00" },
-                        { name: "Sprite", price: "8,00" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }} className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg">
+                    <Bubbles count={20} />
+                    <div className="relative z-10">
+                      <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white flex items-center gap-2">BEBIDAS <span className="text-xl">🫧</span></h4>
+                      <div className="flex flex-col gap-5">
+                        {[
+                          { name: "Seca-nunca", price: "12,00" },
+                          { name: "Gole de Martins", price: "14,00" },
+                          { name: "Sprite", price: "8,00" }
+                        ].map(item => (
+                          <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
+                            <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors">{item.name}</span>
+                            <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                            <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
                   </motion.div>
 
@@ -954,7 +972,7 @@ function Index() {
               style={{ transformStyle: "preserve-3d" }}
             >
               <div 
-                className="absolute w-full h-full animate-spin-gallery cursor-grab active:cursor-grabbing"
+                className="absolute w-full h-full animate-spin-gallery cursor-grab active:cursor-grabbing will-change-transform"
                 style={{ transformStyle: "preserve-3d" }}
               >
                 {[
@@ -975,7 +993,7 @@ function Index() {
                   return (
                     <div 
                       key={idx} 
-                      className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-transform duration-500 hover:border-amber-500/30"
+                      className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-lg transition-transform duration-500 hover:border-amber-500/30"
                       style={{ 
                         transform: `rotateY(${angle}deg) translateZ(-550px)`,
                         backfaceVisibility: "hidden"
@@ -995,6 +1013,21 @@ function Index() {
         {/* Drinks Section */}
         <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20">
           
+          {/* Background Video */}
+          <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className="w-full h-full object-cover opacity-20"
+            >
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-soda-pouring-into-a-glass-with-ice-5324-large.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <Bubbles count={40} color={currentTheme.secondary} />
+
           <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
             
             {/* Left Content - Title and Text */}

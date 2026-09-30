@@ -1,4 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "name": "fogo-e-chapa",
   "framework": "tanstack-start"
 }
