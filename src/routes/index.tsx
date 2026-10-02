@@ -477,6 +477,19 @@ function Index() {
 
       <main className="relative">
         <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
+           {/* Hero Video Background */}
+           <div className="absolute inset-0 z-0 pointer-events-none">
+             <video 
+               autoPlay 
+               loop 
+               muted 
+               playsInline 
+               className="w-full h-full object-cover opacity-50 mix-blend-screen"
+             >
+               <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+             </video>
+             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
+           </div>
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
              {/* Animated Title - Each burger name, line by line */}
