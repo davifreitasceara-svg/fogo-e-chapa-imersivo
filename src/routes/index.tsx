@@ -434,7 +434,35 @@ function Index() {
               <SheetTrigger asChild>
                 <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative rounded-full text-white hover:bg-white/20 transition-colors">
                   <ShoppingBag className="size-5" />
-                  {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
+                  
+                  <AnimatePresence mode="popLayout">
+                    {cartCount > 0 && (
+                      <motion.span 
+                        key={cartCount}
+                        initial={{ scale: 0.5, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                        className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm z-10"
+                      >
+                        {cartCount}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence mode="popLayout">
+                    {addedId && (
+                      <motion.div
+                        key={`pop-${cartCount}`}
+                        initial={{ opacity: 1, y: 0, scale: 0.5 }}
+                        animate={{ opacity: 0, y: -45, scale: 1.5 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-primary font-black drop-shadow-md text-xl z-50"
+                      >
+                        +1
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </Button>
               </SheetTrigger>
               <CartCheckoutSheet cart={cart} products={products} updateQuantity={updateQuantity} handleCheckout={handleCheckout} currentTheme={currentTheme} />
