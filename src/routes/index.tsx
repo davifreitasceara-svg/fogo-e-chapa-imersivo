@@ -439,10 +439,10 @@ function Index() {
                     {cartCount > 0 && (
                       <motion.span 
                         key={cartCount}
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
+                        initial={{ scale: 2.5, opacity: 0, rotate: -15 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
                         exit={{ scale: 0.5, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm z-10"
                       >
                         {cartCount}
@@ -454,10 +454,10 @@ function Index() {
                     {addedId && (
                       <motion.div
                         key={`pop-${cartCount}`}
-                        initial={{ opacity: 1, y: 0, scale: 0.5 }}
-                        animate={{ opacity: 0, y: -45, scale: 1.5 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-primary font-black drop-shadow-md text-xl z-50"
+                        initial={{ opacity: 1, y: 10, scale: 0.5, rotate: 0 }}
+                        animate={{ opacity: [1, 1, 0], y: [-10, -50, -80], scale: [0.8, 2.2, 2.5], rotate: [0, 10, -10] }}
+                        transition={{ duration: 1.2, ease: "easeOut", times: [0, 0.6, 1] }}
+                        className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-amber-400 font-black drop-shadow-[0_0_12px_rgba(251,191,36,0.9)] text-3xl z-[9999]"
                       >
                         +1
                       </motion.div>
