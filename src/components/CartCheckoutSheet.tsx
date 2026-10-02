@@ -264,11 +264,11 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
-              <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">Observa��es (opcional)</h3>
+              <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">{"Observa\u00e7\u00f5es (opcional)"}</h3>
               <textarea 
                 value={observations}
                 onChange={e => setObservations(e.target.value)}
-                placeholder="Ex: Tirar cebola, hamb�rguer bem passado, sem picles..."
+                placeholder={"Ex: Tirar cebola, hamb\u00farguer bem passado, sem picles..."}
                 className="w-full bg-black/40 border-2 border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:border-white/40 focus:bg-black/60 focus:outline-none transition-all duration-300 placeholder:text-white/30 min-h-[80px] resize-none"
               />
             </div>
