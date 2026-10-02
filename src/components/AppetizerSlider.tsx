@@ -42,7 +42,7 @@ const appetizers = [
 ];
 
 
-export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (id: number) => void, currentTheme?: any }) {
+export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (id: number, event?: React.MouseEvent) => void, currentTheme?: any }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isMobile = useIsMobile();
 
@@ -170,7 +170,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                
                <div className="flex gap-4">
                   <button 
-                    onClick={() => onAddToCart && onAddToCart(currentApp.id)}
+                    onClick={(e) => onAddToCart && onAddToCart(currentApp.id, e)}
                     className="group bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-white hover:text-black transition-all hover:-translate-y-1 shadow-2xl flex items-center gap-3 border border-transparent"
                   >
                     <ShoppingBag className="size-4 group-hover:scale-110 transition-transform" />

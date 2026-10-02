@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Trash2, Plus, Minus, ArrowLeft, Store, Truck, CreditCard, Banknote, QrCode, CheckCircle2 } from "lucide-react";
@@ -134,7 +135,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                       
                       <div className="flex items-center gap-4 mt-3 bg-black/40 w-fit rounded-full px-1 py-1 border border-white/10">
                         <button onClick={() => updateQuantity(product.id, -1)} className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all p-1.5"><Minus className="w-3.5 h-3.5" /></button>
-                        <span className="text-sm font-bold w-4 text-center text-white">{quantity as number}</span>
+                        <div className="w-5 text-center overflow-hidden flex items-center justify-center"><AnimatePresence mode="popLayout" initial={false}><motion.span key={quantity as number} initial={{ y: 8, opacity: 0, scale: 0.7 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: -8, opacity: 0, scale: 0.7 }} transition={{ type: "spring", stiffness: 500, damping: 25 }} className="text-sm font-black text-white inline-block">{quantity as number}</motion.span></AnimatePresence></div>
                         <button onClick={() => updateQuantity(product.id, 1)} className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all p-1.5"><Plus className="w-3.5 h-3.5" /></button>
                       </div>
                     </div>
