@@ -478,17 +478,17 @@ function Index() {
       <main className="relative">
         <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
            {/* Hero Video Background */}
-           <div className="absolute inset-0 z-0 pointer-events-none bg-[#0a0a0a]">
+           <div className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
              <video 
                autoPlay 
                loop 
                muted 
                playsInline 
-               className="w-full h-full object-cover opacity-60"
+               className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
              >
                <source src="/quero_mais_chamas.mp4" type="video/mp4" />
              </video>
-             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90"></div>
+             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
            </div>
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
