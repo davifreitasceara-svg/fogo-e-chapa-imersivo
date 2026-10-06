@@ -1,13 +1,45 @@
 import { useScroll, useMotionValueEvent, motion, useTransform } from "framer-motion";
 import { useRef, useEffect, useState, useCallback } from "react";
 
-const FRAME_COUNT = 240;
-
-function getFrameSrc(index: number) {
-  return `/video1_frames/frame_${index.toString().padStart(4, "0")}.jpg`;
+export interface ExplodingBurgerProps {
+  frameCount?: number;
+  framePrefix?: string;
+  frameOffset?: number;
+  bgClass?: string;
+  canvasClass?: string;
+  burgerName1?: string;
+  burgerName2?: string;
+  ingredient1?: string;
+  ingredientDesc1?: string;
+  ingredient2?: string;
+  ingredientDesc2?: string;
+  ingredient3?: string;
+  ingredientDesc3?: string;
+  ingredient4?: string;
+  ingredientDesc4?: string;
 }
 
-export function ExplodingBurger() {
+export function ExplodingBurger({
+  frameCount = 240,
+  framePrefix = "/video1_frames/frame_",
+  frameOffset = 0,
+  bgClass = "bg-white",
+  canvasClass = "",
+  burgerName1 = "Triplex",
+  burgerName2 = "Burger",
+  ingredient1 = "Pão Brioche",
+  ingredientDesc1 = "Selado na manteiga para não desmanchar. Macio e dourado perfeito.",
+  ingredient2 = "Queijo Cheddar",
+  ingredientDesc2 = "Derretido no ponto exato, abraçando a carne suculenta.",
+  ingredient3 = "Blend Fogo & Chapa",
+  ingredientDesc3 = "Três carnes de 180g de pura suculência, feitas na brasa ardente.",
+  ingredient4 = "Salada Fresca",
+  ingredientDesc4 = "Alface crocante e tomate fresquinho cortado todos os dias."
+}: ExplodingBurgerProps) {
+  function getFrameSrc(index: number) {
+    return `${framePrefix}${(index + frameOffset).toString().padStart(4, "0")}.jpg`;
+  }
+
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
@@ -53,7 +85,7 @@ export function ExplodingBurger() {
     let loadedCount = 0;
     const images: HTMLImageElement[] = [];
 
-    for (let i = 0; i < FRAME_COUNT; i++) {
+    for (let i = 0; i < frameCount; i++) {
       const img = new Image();
       img.src = getFrameSrc(i);
       img.onload = () => {
@@ -61,14 +93,14 @@ export function ExplodingBurger() {
         if (i === 0) {
           drawFrame(img);
         }
-        if (loadedCount === FRAME_COUNT) {
+        if (loadedCount === frameCount) {
           setLoaded(true);
         }
       };
       images.push(img);
     }
     imagesRef.current = images;
-  }, [drawFrame]);
+  }, [drawFrame, frameCount, framePrefix, frameOffset]);
 
   // Redraw on resize
   useEffect(() => {
@@ -85,8 +117,8 @@ export function ExplodingBurger() {
     if (imagesRef.current.length === 0) return;
 
     const frameIndex = Math.min(
-      FRAME_COUNT - 1,
-      Math.floor(latest * FRAME_COUNT)
+      frameCount - 1,
+      Math.floor(latest * frameCount)
     );
     currentFrameRef.current = frameIndex;
     const img = imagesRef.current[frameIndex];
@@ -99,12 +131,12 @@ export function ExplodingBurger() {
     <div
       ref={containerRef}
       id="gallery"
-      className="relative w-full h-[600vh]"
+      className={`relative w-full h-[600vh] ${bgClass}`}
     >
-      <section className="sticky top-0 h-screen w-full overflow-hidden bg-white">
+      <section className={`sticky top-0 h-screen w-full overflow-hidden ${bgClass}`}>
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full"
+          className={`absolute inset-0 w-full h-full ${canvasClass}`}
         />
         {!loaded && (
           <div className="absolute inset-0 flex items-center justify-center z-30">
@@ -146,9 +178,9 @@ export function ExplodingBurger() {
           }}
         >
           <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">01</span>
-          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Pão Brioche</h3>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">{ingredient1}</h3>
           <div className="w-16 h-1.5 bg-orange-500 my-3 rounded-full"></div>
-          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Selado na manteiga para não desmanchar. Macio e dourado perfeito.</p>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">{ingredientDesc1}</p>
         </motion.div>
 
         <motion.div
@@ -159,9 +191,9 @@ export function ExplodingBurger() {
           }}
         >
           <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">02</span>
-          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Queijo Cheddar</h3>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">{ingredient2}</h3>
           <div className="w-16 h-1.5 bg-orange-500 my-3 ml-auto rounded-full"></div>
-          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Derretido no ponto exato, abraçando a carne suculenta.</p>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">{ingredientDesc2}</p>
         </motion.div>
 
         <motion.div
@@ -172,9 +204,9 @@ export function ExplodingBurger() {
           }}
         >
           <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">03</span>
-          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Blend Fogo &amp; Chapa</h3>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">{ingredient3}</h3>
           <div className="w-16 h-1.5 bg-orange-500 my-3 rounded-full"></div>
-          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Três carnes de 180g de pura suculência, feitas na brasa ardente.</p>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">{ingredientDesc3}</p>
         </motion.div>
         
         <motion.div
@@ -185,18 +217,18 @@ export function ExplodingBurger() {
           }}
         >
           <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">04</span>
-          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Salada Fresca</h3>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">{ingredient4}</h3>
           <div className="w-16 h-1.5 bg-orange-500 my-3 ml-auto rounded-full"></div>
-          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Alface crocante e tomate fresquinho cortado todos os dias.</p>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">{ingredientDesc4}</p>
         </motion.div>
 
-        {/* Triplex Burger label — bottom, doesn't cover the burger */}
+        {/* Burger label — bottom, doesn't cover the burger */}
         <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 text-center z-20 pointer-events-none">
           <p className="text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase text-gray-400 mb-1">
             Conheça o
           </p>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-gray-900">
-            Triplex <span className="text-orange-500">Burger</span>
+            {burgerName1} <span className="text-orange-500">{burgerName2}</span>
           </h2>
         </div>
       </section>

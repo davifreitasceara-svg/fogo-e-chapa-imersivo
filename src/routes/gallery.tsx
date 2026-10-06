@@ -27,6 +27,30 @@ function GalleryRoute() {
         <div className="bg-white">
           <ExplodingBurger />
         </div>
+      ) : burger === 'classico' ? (
+        <div className="bg-white">
+          <ExplodingBurger 
+            frameCount={300} 
+            framePrefix="/xburguer_frames/frame_" 
+            frameOffset={1}
+            bgClass="bg-white"
+            canvasClass="mix-blend-multiply brightness-[1.04] contrast-[1.02]"
+            burgerName1="X"
+            burgerName2="Burguer"
+          />
+        </div>
+      ) : burger === 'brasa' ? (
+        <div className="bg-white">
+          <ExplodingBurger 
+            frameCount={300} 
+            framePrefix="/davi_vs_golias_frames/frame_" 
+            frameOffset={1}
+            bgClass="bg-white"
+            canvasClass="mix-blend-multiply brightness-[1.04] contrast-[1.02]"
+            burgerName1="Davi"
+            burgerName2="vs Golias"
+          />
+        </div>
       ) : (
         <div className="flex h-screen w-full items-center justify-center">
           <h1 className="text-2xl md:text-5xl font-black text-white/50 uppercase tracking-[0.2em] text-center px-4">

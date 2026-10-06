@@ -365,7 +365,7 @@ function Index() {
              ].map((link) => (
                <motion.a 
                  key={link.href}
-                 href={link.href} 
+                 href={link.href === "/gallery" ? `/gallery?burger=${currentSlide.id}` : link.href} 
                  onClick={(e) => {
                    if (link.label === "Delivery" && activeOrderTime) {
                      e.preventDefault();
