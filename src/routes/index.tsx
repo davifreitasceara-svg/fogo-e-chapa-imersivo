@@ -1762,9 +1762,110 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
                   <div className="bg-gray-100 p-3 rounded-full shrink-0">
                     <MapPin className="size-6 text-black" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Destino</p>
-                    <p className="text-sm font-semibold text-gray-900 truncate">{mockRoute.address}</p>
+<div className="flex-1 min-w-0">
+  <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Destino</p>
+  <p className="text-sm font-semibold text-gray-900 truncate">{mockRoute.address}</p>
+</div>
+
+                  {/* Ticket Card */}
+                  <motion.div 
+                     initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                     className="w-full relative group"
+                   >
+                     
+                     {/* Ambient glow behind card */}
+                     <div className="absolute -inset-3 bg-gradient-to-b from-white/[0.03] via-transparent to-white/[0.02] rounded-[2rem] blur-xl pointer-events-none"></div>
+                     
+                     <div className="relative bg-gradient-to-b from-[#141414] to-[#0d0d0d] border border-white/[0.08] px-6 py-10 rounded-3xl shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] flex flex-col items-center overflow-hidden">
+                       
+                       {/* Animated gradient border sweep */}
+                       <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+                         <div className="absolute inset-[-1px] rounded-3xl" style={{ background: "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.08), transparent, transparent)", animation: "borderSpin 6s linear infinite" }}></div>
+                       </div>
+                       <div className="absolute inset-[1px] bg-gradient-to-b from-[#141414] to-[#0d0d0d] rounded-[calc(1.5rem-1px)] pointer-events-none"></div>
+                       
+                       {/* Top shimmer line */}
+                       <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                       
+                       {/* Ticket cutouts */}
+                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/[0.06] -translate-y-1/2 z-10"></div>
+                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/[0.06] -translate-y-1/2 z-10"></div>
+                       
+                       {/* Dashed separator */}
+                       <div className="absolute top-1/2 left-10 right-10 border-t border-dashed border-white/[0.08] -translate-y-1/2 z-0"></div>
+                       
+                       {/* Top Half: Code */}
+                       <div className="flex flex-col items-center justify-center pb-14 h-40 w-full relative z-10">
+                         <div className="mb-5 flex items-center gap-3">
+                           <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/30"></div>
+                           <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/40">Código de Retirada</p>
+                           <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-white/30"></div>
+                         </div>
+                         <h1 className="text-7xl sm:text-8xl font-black tracking-tighter text-white" style={{ textShadow: "0 0 40px rgba(255,255,255,0.08)", animation: "pulseGlow 3s ease-in-out infinite" }}>
+                           #{pickupCode}
+                         </h1>
+                       </div>
+                       
+                       {/* Bottom Half: Status Animation */}
+                       <div className="flex flex-col items-center justify-center pt-14 h-40 w-full relative z-10 gap-4">
+                         <div className="relative flex items-center justify-center">
+                           {/* Pulsing ring */}
+                           <div className="absolute w-20 h-20 rounded-full border border-white/[0.06]" style={{ animation: "iconPulse 2.5s ease-in-out infinite" }}></div>
+                           <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center relative z-20 backdrop-blur-sm">
+                             {stage === "picking_up" ? (
+                                <ChefHat className="size-7 text-white/70" />
+                             ) : stage === "delivering" ? (
+                                <ShoppingBag className="size-7 text-white/70" />
+                             ) : (
+                                <Check className="size-7 text-white/70" />
+                             )}
+                           </div>
+                         </div>
+                         
+                         {/* Loading dots */}
+                         <div className="flex items-center gap-1.5">
+                           {[0, 1, 2].map((dot) => (
+                             <div key={dot} className="w-1.5 h-1.5 rounded-full bg-white/20" style={{ animation: "dotPulse 1.4s ease-in-out infinite", animationDelay: `${dot * 0.2}s` }}></div>
+                           ))}
+                         </div>
+                       </div>
+                     </div>
+                  </motion.div>
+
+                  {/* Stepper */}
+                  <div className="relative flex items-center justify-between w-full px-4 mt-4">
+                     <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
+                     
+                     <div className="absolute left-8 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out" 
+                          style={{ 
+                            width: stage === "picking_up" ? "0%" : stage === "delivering" ? "calc(50% - 24px)" : "calc(100% - 48px)", 
+                            backgroundColor: currentTheme.secondary,
+                            boxShadow: `0 0 10px ${currentTheme.secondary}`
+                          }}>
+                     </div>
+                     
+                     <div className="relative z-10 flex flex-col items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
+                          <ChefHat className="size-4" />
+                       </div>
+                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Cozinha</span>
+                     </div>
+                     
+                     <div className="relative z-10 flex flex-col items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
+                          <ShoppingBag className="size-4" />
+                       </div>
+                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Embalando</span>
+                     </div>
+                     
+                     <div className="relative z-10 flex flex-col items-center gap-3">
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
+                          <Check className="size-4" />
+                       </div>
+                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Pronto</span>
+                     </div>
                   </div>
                </div>
             </motion.div>
