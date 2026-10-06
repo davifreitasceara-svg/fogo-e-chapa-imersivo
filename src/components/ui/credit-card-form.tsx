@@ -96,7 +96,7 @@ export const CreditCardForm = ({
     for (let i = 0; i < 16; i++) {
       let content = "#";
       if (i < displayDigits.length) {
-        const d = displayDigits[i];
+        const d = displayDigits[i] || "";
         const shouldMask = maskMiddle && i >= 4 && i <= 11;
         content = shouldMask ? "*" : d;
       }
@@ -116,12 +116,21 @@ export const CreditCardForm = ({
         <section id="card" className={`card-container ${flip ? "flip" : ""}`}>
           <section className="card__front" style={{ ["--ring1" as any]: ring1, ["--ring2" as any]: ring2 }}>
             <div className="card__header">
-              <svg viewBox="0 0 48 48" width="40" height="40">
-                <path fill="#444" d="M45,35c0,2.209-1.791,4-4,4H7c-2.209,0-4-1.791-4-4V13c0-2.209,1.791-4,4-4h34c2.209,0,4,1.791,4,4V35z"/>
-                <path fill="#fff" d="M41 10H7c-1.654 0-3 1.346-3 3v22c0 1.654 1.346 3 3 3h34c1.654 0 3-1.346 3-3V13c0-1.654-1.346-3-3-3zm1 25c0 .551-.449 1-1 1H7c-.551 0-1-.449-1-1V13c0-.551.449-1 1-1h34c.551 0 1 .449 1 1v22z"/>
-                <path fill="#fff" d="M11 28H19V30H11zM23 28H31V30H23z"/>
+              <svg viewBox="0 0 60 40" width="45" height="32" className="opacity-90 drop-shadow-md">
+                <rect x="0" y="0" width="60" height="40" rx="6" fill="url(#gold-grad)" />
+                <path d="M 0 12 L 20 12 M 0 28 L 20 28 M 40 12 L 60 12 M 40 28 L 60 28 M 20 0 V 40 M 40 0 V 40" stroke="#b8860b" strokeWidth="2" fill="none" opacity="0.6"/>
+                <rect x="20" y="10" width="20" height="20" rx="4" stroke="#b8860b" strokeWidth="2" fill="none" opacity="0.8"/>
+                <defs>
+                  <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#e6c27a" />
+                    <stop offset="50%" stopColor="#d4af37" />
+                    <stop offset="100%" stopColor="#aa7c11" />
+                  </linearGradient>
+                </defs>
               </svg>
-              <div>FOGO E CHAPA</div>
+              <div className="font-black italic tracking-widest text-lg text-white/90 drop-shadow-md">
+                FOGO <span className="text-[#ff9d00]">&</span> CHAPA
+              </div>
             </div>
 
             <div id="card_number" className="card__number" aria-label="Card number">
@@ -135,16 +144,24 @@ export const CreditCardForm = ({
               ))}
             </div>
 
-            <div className="card__footer">
-              <div className="card__holder">
-                <div className="card__section__title">Titular do Cartao</div>
-                <div id="card_holder" className="font-bold tracking-wider">{holder || "NOME NO CARTAO"}</div>
+            <div className="card__footer flex items-end justify-between gap-2">
+              <div className="card__holder flex-1 min-w-0 pr-2">
+                <div className="card__section__title">Titular do Cartão</div>
+                <div id="card_holder" className="font-bold tracking-wider text-[15px] drop-shadow-sm truncate">{holder || "NOME NO CARTÃO"}</div>
               </div>
-              <div className="card__expires text-right">
-                <div className="card__section__title">Validade</div>
-                <div className="font-bold tracking-wider">
-                  <span id="card_expires_month">{month || "MM"}</span>/
-                  <span id="card_expires_year">{year ? year.slice(-2) : "AA"}</span>
+              <div className="flex items-center gap-4 shrink-0">
+                <div className="card__expires text-right">
+                  <div className="card__section__title">Validade</div>
+                  <div className="font-bold tracking-wider text-[15px] drop-shadow-sm">
+                    <span id="card_expires_month">{month || "MM"}</span>/
+                    <span id="card_expires_year">{year ? year.slice(-2) : "AA"}</span>
+                  </div>
+                </div>
+                
+                {/* Fake Mastercard Logo */}
+                <div className="flex pointer-events-none drop-shadow-lg mr-2">
+                  <div className="size-8 rounded-full bg-red-500/80 mix-blend-screen translate-x-3 relative z-10"></div>
+                  <div className="size-8 rounded-full bg-yellow-500/80 mix-blend-screen relative z-20"></div>
                 </div>
               </div>
             </div>

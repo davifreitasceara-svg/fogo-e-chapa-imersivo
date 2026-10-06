@@ -1,147 +1,205 @@
-import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useScroll, useMotionValueEvent, motion, useTransform } from "framer-motion";
+import { useRef, useEffect, useState, useCallback } from "react";
 
-const FRAME_COUNT = 364;
+const FRAME_COUNT = 240;
+
+function getFrameSrc(index: number) {
+  return `/video1_frames/frame_${index.toString().padStart(4, "0")}.jpg`;
+}
 
 export function ExplodingBurger() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const currentFrameRef = useRef(0);
+  const [loaded, setLoaded] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Pre-load all frames
+  // Draw an image on the canvas with "cover" behavior
+  const drawFrame = useCallback((img: HTMLImageElement) => {
+    const canvas = canvasRef.current;
+    if (!canvas || !img.complete) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Match canvas pixel size to its CSS size
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    // "object-contain" math: scale image to fit fully without cropping
+    const cw = rect.width;
+    const ch = rect.height;
+    const iw = img.naturalWidth;
+    const ih = img.naturalHeight;
+    const scale = Math.min(cw / iw, ch / ih);
+    const sw = iw * scale;
+    const sh = ih * scale;
+    const sx = (cw - sw) / 2;
+    const sy = (ch - sh) / 2;
+
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, sx, sy, sw, sh);
+  }, []);
+
+  // Pre-load all frames on mount
   useEffect(() => {
     let loadedCount = 0;
     const images: HTMLImageElement[] = [];
 
     for (let i = 0; i < FRAME_COUNT; i++) {
       const img = new Image();
-      const frameNum = i.toString().padStart(4, "0");
-      img.src = `/burger_frames/frame_${frameNum}.jpg`;
-
+      img.src = getFrameSrc(i);
       img.onload = () => {
         loadedCount++;
-        
-        // Setup canvas size based on the first loaded frame
-        if (loadedCount === 1 && canvasRef.current) {
-          canvasRef.current.width = img.width;
-          canvasRef.current.height = img.height;
-          
-          // Draw first frame
-          const ctx = canvasRef.current.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-          }
+        if (i === 0) {
+          drawFrame(img);
         }
-
         if (loadedCount === FRAME_COUNT) {
-          imagesRef.current = images;
-          setImagesLoaded(true);
+          setLoaded(true);
         }
       };
-      
       images.push(img);
     }
-  }, []);
+    imagesRef.current = images;
+  }, [drawFrame]);
 
-  // Update canvas when scrolling
+  // Redraw on resize
   useEffect(() => {
-    if (!imagesLoaded || !canvasRef.current) return;
+    const handleResize = () => {
+      const img = imagesRef.current[currentFrameRef.current];
+      if (img?.complete) drawFrame(img);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [drawFrame]);
 
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
+  // Scrub the canvas on scroll
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    if (imagesRef.current.length === 0) return;
 
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
-      // Calculate which frame to show based on scroll progress
-      const frameIndex = Math.min(
-        FRAME_COUNT - 1,
-        Math.floor(latest * FRAME_COUNT)
-      );
-
-      const img = imagesRef.current[frameIndex];
-      if (img && img.complete) {
-        ctx.clearRect(0, 0, canvasRef.current!.width, canvasRef.current!.height);
-        ctx.drawImage(img, 0, 0, canvasRef.current!.width, canvasRef.current!.height);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [scrollYProgress, imagesLoaded]);
-
-  // Fade out title at 10% scroll, fade in label between 30% and 60%
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-  const labelOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
+    const frameIndex = Math.min(
+      FRAME_COUNT - 1,
+      Math.floor(latest * FRAME_COUNT)
+    );
+    currentFrameRef.current = frameIndex;
+    const img = imagesRef.current[frameIndex];
+    if (img?.complete) {
+      drawFrame(img);
+    }
+  });
 
   return (
-    <section
+    <div
       ref={containerRef}
       id="gallery"
-      className="relative bg-[#FAFAFA]"
-      style={{ height: "1000vh" }}
+      className="relative w-full h-[600vh]"
     >
-      <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
-        
-        {/* Title overlay - Empurrado mais para cima para não cobrir o hambúrguer */}
-        <motion.div
-          style={{ opacity: titleOpacity }}
-          className="absolute top-4 sm:top-8 left-0 right-0 text-center z-20 pointer-events-none"
-        >
-          <p className="text-xs sm:text-sm font-bold tracking-[0.3em] uppercase text-orange-500 mb-1 sm:mb-2">
-            A Experiência Fogo &amp; Chapa
-          </p>
-          <h2 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.95] tracking-tighter text-gray-900 drop-shadow-sm">
-            Triplex
-            <br />
-            <span className="text-orange-500">Burguer</span>
-          </h2>
-          <p className="mt-2 text-gray-500 font-medium uppercase tracking-widest text-xs sm:text-sm">
-            A anatomia de um gigante
-          </p>
-        </motion.div>
-
-        {/* Video Frames Scrubbing via Canvas */}
-        <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <canvas
-            ref={canvasRef}
-            className="w-full h-full object-contain max-w-5xl mx-auto"
-            style={{ mixBlendMode: 'multiply' }}
-          />
-          {!imagesLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#FAFAFA] z-50">
-              <div className="text-orange-500 font-bold animate-pulse">Montando o Triplex...</div>
-            </div>
-          )}
-        </div>
-
-        {/* Bottom label - Empurrado para o extremo inferior da tela */}
-        <motion.div
-          style={{ opacity: labelOpacity }}
-          className="absolute bottom-4 sm:bottom-8 left-0 right-0 text-center z-20 pointer-events-none"
-        >
-          <div className="bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl inline-block shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100">
-            <h3 className="text-lg sm:text-xl text-gray-900 font-black uppercase tracking-tight mb-1">
-              Triplex Burguer
-            </h3>
-            <p className="text-sm sm:text-base text-gray-600 font-medium max-w-sm mx-auto leading-snug">
-              Três carnes suculentas na brasa, queijo derretido e pão tostado. Preparo absurdo.
-            </p>
-            <div className="mt-4 flex justify-center gap-3">
-              <a
-                href="#menu"
-                className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm uppercase tracking-wider px-8 py-3 rounded-full transition-all hover:scale-105 shadow-lg shadow-orange-500/30 pointer-events-auto"
-              >
-                Pedir Agora
-              </a>
+      <section className="sticky top-0 h-screen w-full overflow-hidden bg-white">
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full"
+        />
+        {!loaded && (
+          <div className="absolute inset-0 flex items-center justify-center z-30">
+            <div className="text-gray-800/60 text-sm font-mono animate-pulse">
+              Carregando...
             </div>
           </div>
+        )}
+        
+        {/* Fixed stylistic typography (background/edges) */}
+        <div className="absolute top-8 left-8 z-20 pointer-events-none hidden lg:block">
+          <p className="text-[10px] font-bold tracking-[0.5em] text-gray-300 rotate-90 origin-top-left translate-x-4 mt-8">
+            100% ARTESANAL
+          </p>
+        </div>
+        
+        <div className="absolute bottom-8 right-8 z-20 pointer-events-none hidden lg:block">
+          <p className="text-[10px] font-bold tracking-[0.5em] text-gray-300 -rotate-90 origin-bottom-right -translate-x-4 mb-8">
+            PREMIUM QUALITY
+          </p>
+        </div>
+
+        <div className="absolute top-10 right-10 z-20 pointer-events-none hidden md:block">
+          <div className="w-16 h-[1px] bg-gray-200"></div>
+          <div className="w-[1px] h-16 bg-gray-200 absolute top-0 right-0"></div>
+        </div>
+
+        <div className="absolute bottom-10 left-10 z-20 pointer-events-none hidden md:block">
+          <div className="w-16 h-[1px] bg-gray-200 absolute bottom-0 left-0"></div>
+          <div className="w-[1px] h-16 bg-gray-200 absolute bottom-0 left-0"></div>
+        </div>
+
+        {/* Fun floating texts based on scroll */}
+        <motion.div
+          className="absolute left-[5%] md:left-[10%] top-1/4 max-w-[280px] text-left z-20 pointer-events-none hidden md:block"
+          style={{ 
+            opacity: useTransform(scrollYProgress, [0.1, 0.2, 0.3], [0, 1, 0]),
+            x: useTransform(scrollYProgress, [0.1, 0.2, 0.3], [-50, 0, -50])
+          }}
+        >
+          <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">01</span>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Pão Brioche</h3>
+          <div className="w-16 h-1.5 bg-orange-500 my-3 rounded-full"></div>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Selado na manteiga para não desmanchar. Macio e dourado perfeito.</p>
         </motion.div>
 
-      </div>
-    </section>
+        <motion.div
+          className="absolute right-[5%] md:right-[10%] top-1/3 max-w-[280px] text-right z-20 pointer-events-none hidden md:block"
+          style={{ 
+            opacity: useTransform(scrollYProgress, [0.35, 0.45, 0.55], [0, 1, 0]),
+            x: useTransform(scrollYProgress, [0.35, 0.45, 0.55], [50, 0, 50])
+          }}
+        >
+          <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">02</span>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Queijo Cheddar</h3>
+          <div className="w-16 h-1.5 bg-orange-500 my-3 ml-auto rounded-full"></div>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Derretido no ponto exato, abraçando a carne suculenta.</p>
+        </motion.div>
+
+        <motion.div
+          className="absolute left-[5%] md:left-[10%] top-1/2 max-w-[280px] text-left z-20 pointer-events-none hidden md:block"
+          style={{ 
+            opacity: useTransform(scrollYProgress, [0.6, 0.7, 0.8], [0, 1, 0]),
+            x: useTransform(scrollYProgress, [0.6, 0.7, 0.8], [-50, 0, -50])
+          }}
+        >
+          <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">03</span>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Blend Fogo &amp; Chapa</h3>
+          <div className="w-16 h-1.5 bg-orange-500 my-3 rounded-full"></div>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Três carnes de 180g de pura suculência, feitas na brasa ardente.</p>
+        </motion.div>
+        
+        <motion.div
+          className="absolute right-[5%] md:right-[10%] top-2/3 max-w-[280px] text-right z-20 pointer-events-none hidden md:block"
+          style={{ 
+            opacity: useTransform(scrollYProgress, [0.75, 0.85, 0.95], [0, 1, 0]),
+            x: useTransform(scrollYProgress, [0.75, 0.85, 0.95], [50, 0, 50])
+          }}
+        >
+          <span className="text-7xl font-black text-gray-200 block mb-[-10px] opacity-50">04</span>
+          <h3 className="text-3xl font-black text-orange-500 uppercase tracking-tighter drop-shadow-sm">Salada Fresca</h3>
+          <div className="w-16 h-1.5 bg-orange-500 my-3 ml-auto rounded-full"></div>
+          <p className="text-gray-800 text-base font-bold leading-snug drop-shadow-sm">Alface crocante e tomate fresquinho cortado todos os dias.</p>
+        </motion.div>
+
+        {/* Triplex Burger label — bottom, doesn't cover the burger */}
+        <div className="absolute bottom-6 sm:bottom-10 left-0 right-0 text-center z-20 pointer-events-none">
+          <p className="text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase text-gray-400 mb-1">
+            Conheça o
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-gray-900">
+            Triplex <span className="text-orange-500">Burger</span>
+          </h2>
+        </div>
+      </section>
+    </div>
   );
 }

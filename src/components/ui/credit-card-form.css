@@ -79,8 +79,11 @@
   height: 185px;
   border-radius: 20px;
   padding: 16px 20px 20px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(115deg, #2a2a2a 0%, #151515 50%, #050505 100%);
+  box-shadow: 
+    0 15px 35px -15px rgba(0, 0, 0, 0.8),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.5);
   color: #fff;
   overflow: hidden;
   margin: 0 auto;
@@ -88,7 +91,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .card__back {
@@ -100,14 +103,12 @@
 .card__back::before {
   content: "";
   position: absolute;
-  border: 16px solid rgba(255, 255, 255, 0.05);
-  border-radius: 100%;
-  left: -17%;
-  top: -45px;
-  height: 300px;
-  width: 300px;
-  filter: blur(15px);
-  opacity: 1;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%);
+  left: -20%;
+  top: -20%;
+  height: 150%;
+  width: 150%;
+  pointer-events: none;
 }
 
 .card__front::after,
@@ -172,7 +173,7 @@
 }
 
 .card__number {
-  font-size: 17px;
+  font-size: 20px;
   margin-bottom: 20px;
   position: relative;
   z-index: 1;
@@ -180,6 +181,7 @@
   height: 26px;
   overflow: hidden;
   color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 
 .card__number .slot {
@@ -224,10 +226,10 @@
   white-space: nowrap;
 }
 .card__section__title {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
-  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 4px;
 }
 
