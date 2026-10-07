@@ -17,6 +17,7 @@ export interface ExplodingBurgerProps {
   ingredientDesc3?: string;
   ingredient4?: string;
   ingredientDesc4?: string;
+  titleColorClass?: string;
 }
 
 export function ExplodingBurger({
@@ -34,7 +35,8 @@ export function ExplodingBurger({
   ingredient3 = "Blend Fogo & Chapa",
   ingredientDesc3 = "Três carnes de 180g de pura suculência, feitas na brasa ardente.",
   ingredient4 = "Salada Fresca",
-  ingredientDesc4 = "Alface crocante e tomate fresquinho cortado todos os dias."
+  ingredientDesc4 = "Alface crocante e tomate fresquinho cortado todos os dias.",
+  titleColorClass = "text-gray-900"
 }: ExplodingBurgerProps) {
   function getFrameSrc(index: number) {
     return `${framePrefix}${(index + frameOffset).toString().padStart(4, "0")}.jpg`;
@@ -227,8 +229,8 @@ export function ExplodingBurger({
           <p className="text-[10px] sm:text-xs font-bold tracking-[0.4em] uppercase text-gray-400 mb-1">
             Conheça o
           </p>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-gray-900">
-            {burgerName1} <span className="text-orange-500">{burgerName2}</span>
+          <h2 className={`font-display text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight ${titleColorClass}`}>
+            {burgerName1} {burgerName2 && <span>{burgerName2}</span>}
           </h2>
         </div>
       </section>

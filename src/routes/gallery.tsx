@@ -25,7 +25,7 @@ function GalleryRoute() {
       </div>
       {burger === 'inferno' ? (
         <div className="bg-white">
-          <ExplodingBurger />
+          <ExplodingBurger titleColorClass="text-[#7A1200]" />
         </div>
       ) : burger === 'classico' ? (
         <div className="bg-white">
@@ -37,6 +37,7 @@ function GalleryRoute() {
             canvasClass="mix-blend-multiply brightness-[1.04] contrast-[1.02]"
             burgerName1="X"
             burgerName2="Burguer"
+            titleColorClass="text-[#006B2D]"
           />
         </div>
       ) : burger === 'brasa' ? (
@@ -49,6 +50,7 @@ function GalleryRoute() {
             canvasClass="mix-blend-multiply brightness-[1.04] contrast-[1.02]"
             burgerName1="Davi"
             burgerName2="vs Golias"
+            titleColorClass="text-[#2B005F]"
           />
         </div>
       ) : (
