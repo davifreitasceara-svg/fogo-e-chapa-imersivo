@@ -385,13 +385,12 @@ function Index() {
              {[
                { href: "#about", label: "About" },
                { href: "#menu", label: "Menu" },
-               { href: "/gallery", label: "Gallery" },
                { href: "#delivery", label: "Delivery" },
                { href: "#drinks", label: "Drinks" },
              ].map((link) => (
                <motion.a 
                  key={link.href}
-                 href={link.href === "/gallery" ? `/gallery?burger=${currentSlide.id}` : link.href} 
+                 href={link.href} 
                  onClick={(e) => {
                    if (link.label === "Delivery" && activeOrderTime) {
                      e.preventDefault();
@@ -1070,18 +1069,7 @@ function Index() {
         {/* Drinks Section */}
         <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20">
           
-          {/* Background Video */}
-          <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-            <video 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="w-full h-full object-cover opacity-20"
-            >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-soda-pouring-into-a-glass-with-ice-5324-large.mp4" type="video/mp4" />
-            </video>
-          </div>
+          {/* Background Video Removed */}
 
           <Bubbles count={40} color={currentTheme.secondary} />
 
