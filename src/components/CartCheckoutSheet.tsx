@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Trash2, Plus, Minus, ArrowLeft, Store, Truck, CreditCard, Banknote, QrCode, CheckCircle2 } from "lucide-react";
+import { Trash2, Plus, Minus, ArrowLeft, ArrowRight, Store, Truck, CreditCard, Banknote, QrCode, CheckCircle2 } from "lucide-react";
 import { CreditCardForm } from "./ui/credit-card-form";
 import { PixPayment } from "./ui/pix-payment";
+
+const STEP_ORDER = ["cart", "type", "details", "review", "payment", "credit_card", "pix"] as const;
+const STEP_PROGRESS: Record<string, number> = { cart: 0.14, type: 0.28, details: 0.42, review: 0.58, payment: 0.76, credit_card: 1, pix: 1 };
+
+const stepVariants = {
+  enter: (dir: number) => ({ x: dir * 48, opacity: 0, filter: "blur(6px)" }),
+  center: { x: 0, opacity: 1, filter: "blur(0px)" },
+  exit: (dir: number) => ({ x: dir * -48, opacity: 0, filter: "blur(6px)" }),
+};
 
 export function CartCheckoutSheet({ cart, products, updateQuantity, handleCheckout, currentTheme }: any) {
   const [step, setStep] = useState<"cart" | "type" | "details" | "review" | "payment" | "credit_card" | "pix">("cart");
@@ -15,7 +25,21 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [complement, setComplement] = useState("");
   const [detailsError, setDetailsError] = useState("");
   const [couponCode, setCouponCode] = useState("");
+<<<<<<< HEAD
   const [appliedDiscount, setAppliedDiscount] = useState<{ type: "fixed" | "percentage" | "free_shipping", value: number, label: string, code: string } | null>(null);
+=======
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const [observations, setObservations] = useState("");
+  const [pulseKey, setPulseKey] = useState(0);
+
+  // Direção da animação: avança para a direita, volta para a esquerda
+  const stepIndex = STEP_ORDER.indexOf(step);
+  const prevStepIndex = useRef(stepIndex);
+  const direction = stepIndex >= prevStepIndex.current ? 1 : -1;
+  useEffect(() => {
+    prevStepIndex.current = stepIndex;
+  }, [stepIndex]);
+>>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
     if (products.some((p: any) => p.id === parseInt(id))) return sum + (count as number);
@@ -50,6 +74,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   };
 
   const handleNext = () => {
+    setPulseKey((k) => k + 1);
     if (step === "cart") setStep("type");
     else if (step === "type") {
       if (orderType === "delivery") setStep("details");
@@ -123,7 +148,27 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
         </div>
       </SheetHeader>
 
-      <div className="flex-1 overflow-y-auto px-8 pb-8 font-sans">
+      {/* Barra de progresso animada */}
+      <div className="mx-8 mb-4 h-1 rounded-full bg-white/10 overflow-hidden">
+        <motion.div
+          className="h-full rounded-full bg-[#ff9d00] shadow-[0_0_12px_rgba(255,157,0,0.7)]"
+          initial={false}
+          animate={{ width: `${(STEP_PROGRESS[step] ?? 0) * 100}%` }}
+          transition={{ type: "spring", stiffness: 120, damping: 20 }}
+        />
+      </div>
+
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8 font-sans">
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
+        <motion.div
+          key={step}
+          custom={direction}
+          variants={stepVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        >
         {step === "cart" && (
           <div className="space-y-4">
             {cartCount === 0 ? (
@@ -155,7 +200,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                       
                       <div className="flex items-center gap-4 mt-3 bg-black/40 w-fit rounded-full px-1 py-1 border border-white/10">
                         <button onClick={() => updateQuantity(product.id, -1)} className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all p-1.5"><Minus className="w-3.5 h-3.5" /></button>
-                        <span className="text-sm font-bold w-4 text-center text-white">{quantity as number}</span>
+                        <div className="w-5 text-center overflow-hidden flex items-center justify-center"><AnimatePresence mode="popLayout" initial={false}><motion.span key={quantity as number} initial={{ y: 8, opacity: 0, scale: 0.7 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: -8, opacity: 0, scale: 0.7 }} transition={{ type: "spring", stiffness: 500, damping: 25 }} className="text-sm font-black text-white inline-block">{quantity as number}</motion.span></AnimatePresence></div>
                         <button onClick={() => updateQuantity(product.id, 1)} className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all p-1.5"><Plus className="w-3.5 h-3.5" /></button>
                       </div>
                     </div>
@@ -281,6 +326,16 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                   </button>
                 )}
               </div>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
+              <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">{"Observa\u00e7\u00f5es (opcional)"}</h3>
+              <textarea 
+                value={observations}
+                onChange={e => setObservations(e.target.value)}
+                placeholder={"Ex: Tirar cebola, hamb\u00farguer bem passado, sem picles..."}
+                className="w-full bg-black/40 border-2 border-white/10 rounded-xl px-4 py-3 text-sm font-medium focus:border-white/40 focus:bg-black/60 focus:outline-none transition-all duration-300 placeholder:text-white/30 min-h-[80px] resize-none"
+              />
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-2">
@@ -430,6 +485,8 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             <PixPayment totalPrice={totalPrice} onFinish={finishOrder} />
           </div>
         )}
+        </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="p-8 pt-6 border-t border-white/10 bg-black/20 backdrop-blur-md">
@@ -461,13 +518,31 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             {paymentMethod === "credit_card" ? "Preencher Cartao" : paymentMethod === "pix" ? "Pagar com Pix" : "Finalizar Pedido"}
           </button>
         ) : (
-          <button 
+          <motion.button 
             onClick={handleNext} 
             disabled={cartCount === 0 || (step === "type" && !orderType)}
-            className="w-full py-5 rounded-2xl text-lg font-bold bg-white text-black hover:bg-white/90 hover:scale-[1.02] transition-all duration-300 ease-out disabled:opacity-40 disabled:hover:scale-100 disabled:cursor-not-allowed"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="group relative w-full overflow-hidden py-5 rounded-2xl text-lg font-bold bg-white text-black hover:bg-white/90 transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Continuar
-          </button>
+            {/* Brilho contínuo ao passar o mouse */}
+            <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-[#ff9d00]/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out" />
+            {/* Pulso ao clicar */}
+            {pulseKey > 0 && (
+              <motion.span
+                key={pulseKey}
+                className="pointer-events-none absolute inset-0 bg-[#ff9d00]"
+                initial={{ x: "-100%", opacity: 0.85 }}
+                animate={{ x: "100%", opacity: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              />
+            )}
+            <span className="relative flex items-center justify-center gap-2">
+              Continuar
+              <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+            </span>
+          </motion.button>
         )}
       </div>
     </SheetContent>

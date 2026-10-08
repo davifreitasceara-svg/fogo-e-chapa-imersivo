@@ -70,6 +70,26 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+interface FlyingParticle {
+  id: string;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  image?: string;
+  name?: string;
+}
+
+interface FloatingBadge {
+  id: string;
+  text: string;
+}
+
+interface CartToast {
+  id: string;
+  name: string;
+}
+
 type Product = { id: number; name: string; description: string; price: number; image: string; badge?: string; category: "burger" | "drink" };
 
 const products: Product[] = [
@@ -77,8 +97,8 @@ const products: Product[] = [
   { id: 2, name: "Mac Sesi Feliz", description: "O sabor da alegria.", price: 28.0, image: burgerClassico, category: "burger" },
   { id: 3, name: "Tripa Jr", description: "Para fomes menores.", price: 18.0, image: burgerClassico, category: "burger" },
   { id: 4, name: "Mini Burguer", description: "Pequeno e saboroso.", price: 16.0, image: burgerClassico, category: "burger" },
-  { id: 5, name: "Davi vs Golias", description: "Um desafio de sabor.", price: 45.0, image: burgerClassico, badge: "Exagerado", category: "burger" },
-  { id: 6, name: "Triplex", description: "Três vezes mais sabor.", price: 42.0, image: burgerClassico, badge: "Exagerado", category: "burger" },
+  { id: 5, name: "Davi vs Golias", description: "Um desafio de sabor.", price: 45.0, image: burgerBrasa, badge: "Exagerado", category: "burger" },
+  { id: 6, name: "Triplex", description: "Três vezes mais sabor.", price: 42.0, image: burgerInferno, badge: "Exagerado", category: "burger" },
   
   // Appetizers
   { id: 101, name: "Tiras do Tripa", description: "Batata convencional.", price: 15.0, image: burgerClassico, category: "burger" },
@@ -86,20 +106,26 @@ const products: Product[] = [
   { id: 103, name: "Batatas Reais", description: "Porção majestosa.", price: 25.0, image: burgerClassico, category: "burger" },
   
   // Sauces
-  { id: 201, name: "Azeite de Oliveira", description: "Fio de ouro.", price: 4.0, image: burgerClassico, category: "burger" },
-  { id: 202, name: "Maionese Temperada", description: "Especial da casa.", price: 5.0, image: burgerClassico, category: "burger" },
-  { id: 203, name: "Ketchup", description: "Clássico.", price: 3.0, image: burgerClassico, category: "burger" },
-  { id: 204, name: "Porções Separadas", description: "Cheddar, barbecue e maionese de alho.", price: 8.0, image: burgerClassico, category: "burger" },
+  { id: 501, name: "Azeite de Oliveira", description: "Fio de ouro.", price: 4.0, image: burgerClassico, category: "burger" },
+  { id: 502, name: "Maionese Temperada", description: "Especial da casa.", price: 5.0, image: burgerClassico, category: "burger" },
+  { id: 503, name: "Ketchup", description: "Clássico.", price: 3.0, image: burgerClassico, category: "burger" },
+  { id: 504, name: "Porções Separadas", description: "Cheddar, barbecue e maionese de alho.", price: 8.0, image: burgerClassico, category: "burger" },
   
   // Drinks
-  { id: 301, name: "Seca-nunca", description: "Mata a sede.", price: 12.0, image: cocaCola, category: "drink" },
+  { id: 201, name: "Coca Cola", description: "Clássica e gelada.", price: 9.0, image: cocaCola, category: "drink" },
+  { id: 202, name: "Gole de Martins", description: "Refrescante limão artesanal.", price: 14.0, image: lemonade, category: "drink" },
+  { id: 203, name: "Sprite Gelada", description: "Limão refrescante.", price: 8.0, image: sodaSplash, category: "drink" },
+  { id: 204, name: "Chopp Gelado", description: "Gelado com colarinho.", price: 12.0, image: beer, category: "drink" },
+  { id: 205, name: "Chá Gelado", description: "Refrescante de pêssego.", price: 10.0, image: icedTea, category: "drink" },
+  { id: 206, name: "Seca-nunca", description: "Mata a sede.", price: 12.0, image: guarana, category: "drink" },
+  { id: 301, name: "Seca-nunca", description: "Mata a sede.", price: 12.0, image: guarana, category: "drink" },
   { id: 302, name: "Gole de Martins", description: "Refrescante.", price: 14.0, image: lemonade, category: "drink" },
-  { id: 303, name: "Sprite", description: "Limão.", price: 8.0, image: lemonade, category: "drink" },
+  { id: 303, name: "Sprite", description: "Limão.", price: 8.0, image: sodaSplash, category: "drink" },
   
   // Combos
   { id: 401, name: "Tripa em Triplo", description: "Tiras do tripa, tripa jr, seca-nunca.", price: 35.0, image: burgerClassico, badge: "Especial", category: "burger" },
-  { id: 402, name: "Aristofome", description: "Davi vs Golias, seca-nunca, tiras do tripa.", price: 60.0, image: burgerClassico, badge: "Especial", category: "burger" },
-  { id: 403, name: "Fome dos Reis", description: "Batatas reais, triplex burguer, gole de Martins.", price: 70.0, image: burgerClassico, badge: "Premium", category: "burger" }
+  { id: 402, name: "Aristofome", description: "Davi vs Golias, seca-nunca, tiras do tripa.", price: 60.0, image: burgerBrasa, badge: "Especial", category: "burger" },
+  { id: 403, name: "Fome dos Reis", description: "Batatas reais, triplex burguer, gole de Martins.", price: 70.0, image: burgerInferno, badge: "Premium", category: "burger" }
 ];
 
 const sparks = Array.from({ length: 18 }, (_, index) => ({
@@ -405,7 +431,35 @@ function Index() {
               <SheetTrigger asChild>
                 <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative rounded-full text-white hover:bg-white/20 transition-colors">
                   <ShoppingBag className="size-5" />
-                  {cartCount > 0 && <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">{cartCount}</span>}
+                  
+                  <AnimatePresence mode="popLayout">
+                    {cartCount > 0 && (
+                      <motion.span 
+                        key={cartCount}
+                        initial={{ scale: 2.5, opacity: 0, rotate: -15 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                        className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm z-10"
+                      >
+                        {cartCount}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence mode="popLayout">
+                    {addedId && (
+                      <motion.div
+                        key={`pop-${cartCount}`}
+                        initial={{ opacity: 1, y: 10, scale: 0.5, rotate: 0 }}
+                        animate={{ opacity: [1, 1, 0], y: [-10, -50, -80], scale: [0.8, 2.2, 2.5], rotate: [0, 10, -10] }}
+                        transition={{ duration: 1.2, ease: "easeOut", times: [0, 0.6, 1] }}
+                        className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-amber-400 font-black drop-shadow-[0_0_12px_rgba(251,191,36,0.9)] text-3xl z-[9999]"
+                      >
+                        +1
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </Button>
               </SheetTrigger>
               <CartCheckoutSheet cart={cart} products={products} updateQuantity={updateQuantity} handleCheckout={handleCheckout} currentTheme={currentTheme} />
@@ -420,20 +474,34 @@ function Index() {
 
       <main className="relative">
         <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
+<<<<<<< HEAD
            {/* Background Video */}
            <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
              <div className="absolute inset-0 bg-black/60 z-10 transition-opacity duration-700"></div>
+=======
+           {/* Hero Video Background */}
+           <div className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
+>>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
              <video 
                autoPlay 
                loop 
                muted 
                playsInline 
+<<<<<<< HEAD
                className="w-full h-full object-cover opacity-80"
              >
                <source src="/quero_mais_chamas.mp4" type="video/mp4" />
              </video>
            </div>
            
+=======
+               className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
+             >
+               <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+             </video>
+             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
+           </div>
+>>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
              {/* Animated Title - Each burger name, line by line */}
@@ -489,7 +557,15 @@ function Index() {
              </div>
              
              {/* Center Image - perfectly centered on title */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] sm:w-[42vw] max-w-[520px] pointer-events-none z-20" style={{ perspective: "1200px" }}>
+             <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] sm:w-[42vw] max-w-[520px] pointer-events-auto cursor-pointer z-20 group" 
+                style={{ perspective: "1200px" }}
+                title="Clique para adicionar este hambúrguer à sacola!"
+                onClick={(e) => {
+                  const heroProdId = heroIndex === 0 ? 1 : heroIndex === 1 ? 5 : 6;
+                  addToCart(heroProdId, e);
+                }}
+             >
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.img 
                     key={currentSlide.id}
@@ -632,7 +708,7 @@ function Index() {
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -654,7 +730,7 @@ function Index() {
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           {item.badge && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-amber-500/20 text-amber-500 rounded-full">{item.badge}</span>}
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -672,7 +748,7 @@ function Index() {
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
@@ -697,13 +773,14 @@ function Index() {
                         <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                           <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
                           <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                         </motion.div>
                       ))}
                     </div>
                   </motion.div>
 
                   {/* Category: BEBIDAS */}
+<<<<<<< HEAD
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }} className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg">
                     <Bubbles count={20} />
                     <div className="relative z-10">
@@ -721,6 +798,22 @@ function Index() {
                           </motion.div>
                         ))}
                       </div>
+=======
+                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
+                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BEBIDAS</h4>
+                    <div className="flex flex-col gap-5">
+                      {[
+                        { name: "Seca-nunca", price: "12,00" },
+                        { name: "Gole de Martins", price: "14,00" },
+                        { name: "Sprite", price: "8,00" }
+                      ].map(item => (
+                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
+                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
+                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                        </motion.div>
+                      ))}
+>>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
                     </div>
                   </motion.div>
 
@@ -782,7 +875,7 @@ function Index() {
                               
                               <div className="flex items-center gap-4 mt-auto">
                                 <span className="text-3xl font-black font-display text-amber-500">R$ 35,00</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(401)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={(e) => addToCart(401, e)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
                                   Adicionar
                                 </motion.button>
                               </div>
@@ -830,7 +923,7 @@ function Index() {
                               
                               <div className="flex items-center gap-4 mt-auto">
                                 <span className="text-3xl font-black font-display text-red-500">R$ 60,00</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(402)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={(e) => addToCart(402, e)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
                                   Adicionar
                                 </motion.button>
                               </div>
@@ -878,7 +971,7 @@ function Index() {
                               
                               <div className="flex items-center gap-4 mt-auto">
                                 <span className="text-3xl font-black font-display text-purple-400">R$ 70,00</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => addToCart(403)} className="bg-purple-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-purple-500 transition-colors shadow-[0_0_20px_rgba(147,51,234,0.4)]">
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={(e) => addToCart(403, e)} className="bg-purple-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-purple-500 transition-colors shadow-[0_0_20px_rgba(147,51,234,0.4)]">
                                   Adicionar
                                 </motion.button>
                               </div>
@@ -925,7 +1018,7 @@ function Index() {
         </section>
 
         {/* Appetizer Slider Section */}
-        <AppetizerSlider onAddToCart={addToCart} currentTheme={currentTheme} />
+        <AppetizerSlider onAddToCart={(id, e) => addToCart(id, e)} currentTheme={currentTheme} />
 
         {/* Galeria Section (3D Cylinder - Exact Match) */}
         <section id="gallery" className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
@@ -1171,7 +1264,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COCA<br/>COLA</h3>
-                  <button onClick={() => addToCart(201)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={(e) => addToCart(201, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1194,7 +1287,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GOLE DE<br/>MARTINS</h3>
-                  <button onClick={() => addToCart(202)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={(e) => addToCart(202, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1217,7 +1310,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SPRITE<br/>GELADA</h3>
-                  <button onClick={() => addToCart(203)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={(e) => addToCart(203, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1240,7 +1333,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHOPP<br/>GELADO</h3>
-                  <button onClick={() => addToCart(204)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={(e) => addToCart(204, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1263,7 +1356,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHÁ<br/>GELADO</h3>
-                  <button onClick={() => addToCart(205)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={(e) => addToCart(205, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
@@ -1285,7 +1378,7 @@ function Index() {
               >
                 <div className="flex items-baseline justify-between mb-8">
                   <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SECA-<br/>NUNCA</h3>
-                  <button onClick={() => addToCart(206)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                  <button onClick={(e) => addToCart(206, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
                 </div>
                 <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
                   <img 
