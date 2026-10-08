@@ -25,9 +25,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [complement, setComplement] = useState("");
   const [detailsError, setDetailsError] = useState("");
   const [couponCode, setCouponCode] = useState("");
-<<<<<<< HEAD
   const [appliedDiscount, setAppliedDiscount] = useState<{ type: "fixed" | "percentage" | "free_shipping", value: number, label: string, code: string } | null>(null);
-=======
   const [discountApplied, setDiscountApplied] = useState(false);
   const [observations, setObservations] = useState("");
   const [pulseKey, setPulseKey] = useState(0);
@@ -39,7 +37,6 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   useEffect(() => {
     prevStepIndex.current = stepIndex;
   }, [stepIndex]);
->>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
     if (products.some((p: any) => p.id === parseInt(id))) return sum + (count as number);

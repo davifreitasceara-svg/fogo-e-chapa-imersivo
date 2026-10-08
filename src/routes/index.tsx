@@ -474,34 +474,19 @@ function Index() {
 
       <main className="relative">
         <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
-<<<<<<< HEAD
-           {/* Background Video */}
-           <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-             <div className="absolute inset-0 bg-black/60 z-10 transition-opacity duration-700"></div>
-=======
            {/* Hero Video Background */}
            <div className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
->>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
              <video 
                autoPlay 
                loop 
                muted 
                playsInline 
-<<<<<<< HEAD
-               className="w-full h-full object-cover opacity-80"
-             >
-               <source src="/quero_mais_chamas.mp4" type="video/mp4" />
-             </video>
-           </div>
-           
-=======
                className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
              >
                <source src="/quero_mais_chamas.mp4" type="video/mp4" />
              </video>
              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
            </div>
->>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
            {/* Center Text */}
            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
              {/* Animated Title - Each burger name, line by line */}
@@ -780,7 +765,6 @@ function Index() {
                   </motion.div>
 
                   {/* Category: BEBIDAS */}
-<<<<<<< HEAD
                   <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }} className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg">
                     <Bubbles count={20} />
                     <div className="relative z-10">
@@ -794,26 +778,10 @@ function Index() {
                           <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
                             <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors">{item.name}</span>
                             <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                            <button onClick={() => addToCart((item as any).id || products.find(p => p.name === item.name)?.id)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
+                            <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
                           </motion.div>
                         ))}
                       </div>
-=======
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BEBIDAS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "Seca-nunca", price: "12,00" },
-                        { name: "Gole de Martins", price: "14,00" },
-                        { name: "Sprite", price: "8,00" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
->>>>>>> 8e280ffb361bba3b73e7e903e82978f740700e12
                     </div>
                   </motion.div>
 
