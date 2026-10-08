@@ -24,39 +24,21 @@ function GalleryRoute() {
         </Link>
       </div>
       {burger === 'inferno' ? (
-        <div className="bg-white">
-          <ExplodingBurger titleColorClass="text-[#7A1200]" />
+        <div className="flex h-screen w-full items-center justify-center bg-white">
+          <img src="/burger_three.jpg" alt="Inferno Burger" className="max-h-[80vh] object-contain drop-shadow-2xl" />
         </div>
       ) : burger === 'classico' ? (
-        <div className="bg-white">
-          <ExplodingBurger 
-            frameCount={300} 
-            framePrefix="/xburguer_frames/frame_" 
-            frameOffset={1}
-            bgClass="bg-white"
-            canvasClass="mix-blend-multiply brightness-[1.04] contrast-[1.02]"
-            burgerName1="X"
-            burgerName2="Burguer"
-            titleColorClass="text-[#006B2D]"
-          />
+        <div className="flex h-screen w-full items-center justify-center bg-white">
+          <img src="/burger_one.jpg" alt="X-Burguer" className="max-h-[80vh] object-contain drop-shadow-2xl" />
         </div>
       ) : burger === 'brasa' ? (
-        <div className="bg-white">
-          <ExplodingBurger 
-            frameCount={300} 
-            framePrefix="/davi_vs_golias_frames/frame_" 
-            frameOffset={1}
-            bgClass="bg-white"
-            canvasClass="mix-blend-multiply brightness-[1.04] contrast-[1.02]"
-            burgerName1="Davi"
-            burgerName2="vs Golias"
-            titleColorClass="text-[#2B005F]"
-          />
+        <div className="flex h-screen w-full items-center justify-center bg-white">
+          <img src="/burger_two.jpg" alt="Davi vs Golias" className="max-h-[80vh] object-contain drop-shadow-2xl" />
         </div>
       ) : (
         <div className="flex h-screen w-full items-center justify-center">
           <h1 className="text-2xl md:text-5xl font-black text-white/50 uppercase tracking-[0.2em] text-center px-4">
-            Vídeo a caminho...
+            Em breve...
           </h1>
         </div>
       )}
