@@ -388,6 +388,7 @@ function Index() {
                { href: "/gallery", label: "Gallery" },
                { href: "#delivery", label: "Delivery" },
                { href: "#drinks", label: "Drinks" },
+               { href: "/login", label: "Login" },
              ].map((link) => (
                <motion.a 
                  key={link.href}
