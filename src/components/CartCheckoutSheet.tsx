@@ -32,6 +32,11 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [isLoading, setIsLoading] = useState(false);
   const loadingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Estados para o cursor customizado de espátula
+  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isMouseIn, setIsMouseIn] = useState(false);
+
   // Limpa o timeout do loading se o componente desmontar
   useEffect(() => () => {
     if (loadingTimeout.current) clearTimeout(loadingTimeout.current);
@@ -157,9 +162,120 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   return (
     <SheetContent 
       style={{ backgroundColor: currentTheme.bgDark, color: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }} 
-      className={`flex w-full flex-col sm:max-w-md border-l-[1px] p-0 font-sans shadow-2xl transition-all duration-500 ease-in-out`}
+      className={`flex w-full flex-col sm:max-w-md border-l-[1px] p-0 font-sans shadow-2xl transition-all duration-500 ease-in-out [&_*]:cursor-none cursor-none overflow-hidden`}
     >
-      <SheetHeader className="px-8 pt-10 pb-4 text-left flex flex-row items-center justify-between">
+      <div 
+        className="flex flex-col w-full h-full relative"
+        onMouseMove={(e) => {
+          setMousePos({ x: e.clientX, y: e.clientY });
+          if (!isMouseIn) setIsMouseIn(true);
+        }}
+        onMouseLeave={() => setIsMouseIn(false)}
+        onMouseDown={() => setIsMouseDown(true)}
+        onMouseUp={() => setIsMouseDown(false)}
+      >
+      {/* Cursor Espátula Customizado */}
+      <AnimatePresence>
+        {isMouseIn && (
+          <motion.div
+            className="fixed top-0 left-0 pointer-events-none z-[99999]"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ 
+              x: mousePos.x - 20, 
+              y: mousePos.y - 20, 
+              opacity: 1, 
+              scale: isMouseDown ? 0.8 : 1,
+              rotate: isMouseDown ? 15 : 45
+            }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: "spring", stiffness: 800, damping: 25, mass: 0.5 }}
+          >
+            <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: "drop-shadow(3px 12px 10px rgba(0,0,0,0.5))" }}>
+              <defs>
+                <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#f8f9fa"/>
+                  <stop offset="25%" stopColor="#ced4da"/>
+                  <stop offset="50%" stopColor="#e9ecef"/>
+                  <stop offset="75%" stopColor="#adb5bd"/>
+                  <stop offset="100%" stopColor="#6c757d"/>
+                </linearGradient>
+                <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#1a1a1a"/>
+                  <stop offset="50%" stopColor="#4d4d4d"/>
+                  <stop offset="100%" stopColor="#0a0a0a"/>
+                </linearGradient>
+                <linearGradient id="rivetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ffffff"/>
+                  <stop offset="100%" stopColor="#888888"/>
+                </linearGradient>
+                
+                <mask id="hyper-holes">
+                  <rect width="100" height="100" fill="white"/>
+                  <rect x="32" y="10" width="6" height="28" rx="3" fill="black"/>
+                  <rect x="47" y="10" width="6" height="28" rx="3" fill="black"/>
+                  <rect x="62" y="10" width="6" height="28" rx="3" fill="black"/>
+                </mask>
+                
+                {/* Geometria perfeita e contínua da espátula inteira */}
+                <path id="spatula-shape" d="
+                  M 45 70 
+                  L 45 48 
+                  C 35 48 26 42 24 35 
+                  L 20 10 
+                  C 18 5 22 2 28 2 
+                  L 72 2 
+                  C 78 2 82 5 80 10 
+                  L 76 35 
+                  C 74 42 65 48 55 48 
+                  L 55 70 
+                  Z" 
+                />
+              </defs>
+
+              {/* Corpo de Metal com Buracos */}
+              <use href="#spatula-shape" fill="url(#metalGrad)" mask="url(#hyper-holes)" />
+              
+              {/* Borda Externa de Metal */}
+              <use href="#spatula-shape" fill="none" stroke="#495057" strokeWidth="2" strokeLinejoin="round" />
+
+              {/* Reflexo de luz na borda esquerda */}
+              <path d="M 45 70 L 45 48 C 35 48 26 42 24 35 L 20 10 C 18 5 22 2 28 2 L 72 2" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.9" />
+
+              {/* Furos da Espátula (Borda interna escura e anel de luz 3D) */}
+              <g opacity="0.8">
+                <rect x="32" y="10" width="6" height="28" rx="3" fill="none" stroke="#343a40" strokeWidth="2"/>
+                <rect x="31" y="9" width="8" height="30" rx="4" fill="none" stroke="#ffffff" strokeWidth="1"/>
+                
+                <rect x="47" y="10" width="6" height="28" rx="3" fill="none" stroke="#343a40" strokeWidth="2"/>
+                <rect x="46" y="9" width="8" height="30" rx="4" fill="none" stroke="#ffffff" strokeWidth="1"/>
+                
+                <rect x="62" y="10" width="6" height="28" rx="3" fill="none" stroke="#343a40" strokeWidth="2"/>
+                <rect x="61" y="9" width="8" height="30" rx="4" fill="none" stroke="#ffffff" strokeWidth="1"/>
+              </g>
+
+              {/* Cabo Preto */}
+              <rect x="39" y="65" width="22" height="33" rx="6" fill="url(#handleGrad)" stroke="#111" strokeWidth="2"/>
+              <rect x="41" y="67" width="2" height="29" rx="1" fill="#ffffff" opacity="0.2" /> {/* Luz do cabo */}
+
+              {/* Rebites / Parafusos do cabo */}
+              <circle cx="50" cy="72" r="2.5" fill="url(#rivetGrad)" stroke="#111" strokeWidth="0.5"/>
+              <circle cx="50" cy="81" r="2.5" fill="url(#rivetGrad)" stroke="#111" strokeWidth="0.5"/>
+              <circle cx="50" cy="90" r="2.5" fill="url(#rivetGrad)" stroke="#111" strokeWidth="0.5"/>
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fundo Detalhado (Textura de Grelha + Gradiente) */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.04]"
+           style={{
+             backgroundImage: `repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 1px, transparent 12px), repeating-linear-gradient(-45deg, #fff 0, #fff 1px, transparent 1px, transparent 12px)`,
+             backgroundSize: '24px 24px'
+           }}
+      />
+      <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-transparent via-black/30 to-black/90" />
+      
+      <SheetHeader className="relative z-10 px-8 pt-10 pb-4 text-left flex flex-row items-center justify-between">
         <div className="flex items-center gap-4">
           {step !== "cart" && (
             <button onClick={handleBack} className="p-2 -ml-2 bg-white/5 hover:bg-white/10 rounded-full transition-all duration-300 opacity-80 hover:opacity-100 flex items-center justify-center">
@@ -615,6 +731,7 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
             </AnimatePresence>
           </motion.button>
         )}
+      </div>
       </div>
     </SheetContent>
   );
