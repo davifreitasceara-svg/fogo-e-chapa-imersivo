@@ -29,6 +29,13 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   const [discountApplied, setDiscountApplied] = useState(false);
   const [observations, setObservations] = useState("");
   const [pulseKey, setPulseKey] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const loadingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Limpa o timeout do loading se o componente desmontar
+  useEffect(() => () => {
+    if (loadingTimeout.current) clearTimeout(loadingTimeout.current);
+  }, []);
 
   // Direção da animação: avança para a direita, volta para a esquerda
   const stepIndex = STEP_ORDER.indexOf(step);
@@ -71,7 +78,6 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
   };
 
   const handleNext = () => {
-    setPulseKey((k) => k + 1);
     if (step === "cart") setStep("type");
     else if (step === "type") {
       if (orderType === "delivery") setStep("details");
@@ -97,6 +103,27 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
         finishOrder();
       }
     }
+  };
+
+  const isContinueDisabled = cartCount === 0 || (step === "type" && !orderType);
+
+  // Botão "Continuar": mostra o loading e bloqueia cliques repetidos
+  const handleContinue = () => {
+    if (isLoading || isContinueDisabled) return;
+
+    // Se o formulário de entrega estiver incompleto, mostra o erro na hora (sem loading)
+    if (step === "details" && (!name.trim() || !address.trim() || !number.trim())) {
+      handleNext();
+      return;
+    }
+
+    setPulseKey((k) => k + 1);
+    setIsLoading(true);
+    loadingTimeout.current = setTimeout(() => {
+      handleNext();
+      setIsLoading(false);
+      loadingTimeout.current = null;
+    }, 1200);
   };
 
   const finishOrder = () => {
@@ -516,15 +543,23 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
           </button>
         ) : (
           <motion.button 
-            onClick={handleNext} 
-            disabled={cartCount === 0 || (step === "type" && !orderType)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.96 }}
+            onClick={handleContinue} 
+            disabled={isContinueDisabled || isLoading}
+            aria-busy={isLoading}
+            {...(isLoading ? { "aria-label": "Carregando..." } : {})}
+            whileHover={{ scale: isLoading || isContinueDisabled ? 1 : 1.02 }}
+            whileTap={{ scale: isLoading || isContinueDisabled ? 1 : 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="group relative w-full overflow-hidden py-5 rounded-2xl text-lg font-bold bg-white text-black hover:bg-white/90 transition-colors duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
+            className={`group relative w-full overflow-hidden py-5 rounded-2xl text-lg font-bold bg-white text-black transition-[background-color,opacity,box-shadow] duration-300 ease-in-out ${
+              isLoading
+                ? "cursor-not-allowed bg-white/90"
+                : "hover:bg-white/90 disabled:opacity-40 disabled:cursor-not-allowed"
+            }`}
           >
             {/* Brilho contínuo ao passar o mouse */}
-            <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-[#ff9d00]/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out" />
+            {!isLoading && (
+              <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-[#ff9d00]/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out" />
+            )}
             {/* Pulso ao clicar */}
             {pulseKey > 0 && (
               <motion.span
@@ -535,10 +570,49 @@ export function CartCheckoutSheet({ cart, products, updateQuantity, handleChecko
                 transition={{ duration: 0.6, ease: "easeOut" }}
               />
             )}
-            <span className="relative flex items-center justify-center gap-2">
+            {/* Texto: continua no layout (só fica invisível) para o botão não mudar de tamanho */}
+            <motion.span
+              className="relative flex items-center justify-center gap-2"
+              animate={{ opacity: isLoading ? 0 : 1, y: isLoading ? -6 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
               Continuar
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1.5" />
-            </span>
+            </motion.span>
+            {/* Animação do Hambúrguer Sendo Montado */}
+            <AnimatePresence>
+              {isLoading && (
+                <motion.div
+                  key="burger-loading"
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-[1px]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <motion.div 
+                    initial={{ y: -15, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.25, delay: 0.45, type: "spring", stiffness: 300 }}
+                    className="w-6 h-2.5 bg-[#e29337] rounded-t-full z-40 shadow-[0_1px_2px_rgba(0,0,0,0.2)]" 
+                  />
+                  <motion.div 
+                    initial={{ y: -15, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.25, delay: 0.35, type: "spring", stiffness: 300 }}
+                    className="w-[1.6rem] h-1 bg-[#6ebe43] rounded-full z-30" 
+                  />
+                  <motion.div 
+                    initial={{ y: -15, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.25, delay: 0.25, type: "spring", stiffness: 300 }}
+                    className="w-6 h-1 bg-[#fdbd10] z-20" 
+                  />
+                  <motion.div 
+                    initial={{ y: -15, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.25, delay: 0.15, type: "spring", stiffness: 300 }}
+                    className="w-[1.65rem] h-1.5 bg-[#5e3023] rounded-full z-10" 
+                  />
+                  <motion.div 
+                    initial={{ y: 0, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.2, delay: 0 }}
+                    className="w-6 h-2 bg-[#e29337] rounded-b-full z-0 shadow-[0_-1px_1px_rgba(0,0,0,0.1)]" 
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.button>
         )}
       </div>
