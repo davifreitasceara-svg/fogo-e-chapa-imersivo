@@ -3230,7 +3230,115 @@ const MOCK_ROUTES: any[] = [
 ]
 ;
 
+function DrinkModal({
+  drinkName,
+  onClose,
+  products
+}: {
+  drinkName: string;
+  onClose: () => void;
+  products: Product[];
+}) {
+  const drink = products.find((p) => p.name === drinkName);
+  
+  if (!drink) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-hidden"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="relative max-w-2xl w-full flex flex-col items-center justify-center h-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 md:top-10 right-4 md:right-10 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md"
+        >
+          <X className="size-6" />
+        </button>
+        
+        {/* Efeito de Líquido no Fundo */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 360],
+              borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%"]
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            className="w-72 h-72 md:w-96 md:h-96 bg-cyan-400/40 blur-3xl rounded-full absolute mix-blend-screen"
+          />
+          <motion.div
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              rotate: [360, 180, 0],
+              borderRadius: ["60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%"]
+            }}
+            transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
+            className="w-64 h-64 md:w-80 md:h-80 bg-blue-500/40 blur-2xl rounded-full absolute mix-blend-screen"
+          />
+        </div>
+
+        {/* Bebida Girando e Flutuando */}
+        <motion.div
+          initial={{ y: -300, rotate: -720, scale: 0.5, opacity: 0 }}
+          animate={{ y: 0, rotate: 0, scale: 1, opacity: 1 }}
+          transition={{ type: "spring", damping: 15, stiffness: 60, duration: 1.5 }}
+          className="relative z-10 flex flex-col items-center"
+        >
+          <motion.img
+            animate={{ y: [0, -20, 0], rotate: [0, 5, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+            src={drink.image}
+            alt={drink.name}
+            className="w-full max-w-[280px] md:max-w-md h-auto object-contain drop-shadow-2xl mix-blend-normal"
+            style={{ filter: "contrast(1.15) brightness(1.08) drop-shadow(0px 20px 30px rgba(0,0,0,0.5))" }}
+          />
+        </motion.div>
+        
+        {/* Observações / Detalhes */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8, type: "spring" }}
+          className="text-center mt-10 z-10 relative"
+        >
+          <h2 className="text-5xl md:text-7xl font-display font-black uppercase text-white tracking-tight mb-4 drop-shadow-xl">
+            {drink.name}
+          </h2>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="text-cyan-100 text-xl md:text-2xl font-medium mb-8 max-w-lg mx-auto drop-shadow-md bg-black/20 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+          >
+            {drink.description}
+          </motion.p>
+          
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 1.2, type: "spring", bounce: 0.5 }}
+            className="flex items-center justify-center"
+          >
+            <span className="text-4xl md:text-5xl font-black text-white drop-shadow-2xl bg-cyan-600/30 px-10 py-4 rounded-full border border-cyan-400/50 backdrop-blur-md shadow-[0_0_30px_rgba(34,211,238,0.3)]">
+              R$ {drink.price.toFixed(2).replace('.', ',')}
+            </span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 function Index() {
+  const [activeDrinkName, setActiveDrinkName] = useState<string | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -3244,7 +3352,7 @@ function Index() {
   const [addedId, setAddedId] = useState<number | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [activeComboIndex, setActiveComboIndex] = useState(0);
+
 
   const carouselSlides = [
     {
@@ -3526,13 +3634,12 @@ function Index() {
               {[
                 { href: "#about", label: "About" },
                 { href: "#menu", label: "Menu" },
-                { href: "/gallery", label: "Gallery" },
                 { href: "#delivery", label: "Delivery" },
-                { href: "#drinks", label: "Drinks" },
+                { href: "/drinks", label: "Drinks" },
               ].map((link) => (
                 <motion.a
                   key={link.href}
-                  href={link.href === "/gallery" ? `/gallery?burger=${currentSlide.id}` : link.href}
+                  href={link.href}
                   onClick={(e) => {
                     if (link.label === "Delivery") {
                       e.preventDefault();
@@ -4265,228 +4372,132 @@ function Index() {
                       </p>
                     </div>
 
-                    <div className="relative max-w-4xl mx-auto">
-                      {/* Slider Controls */}
-                      <div className="absolute top-1/2 -translate-y-1/2 -left-4 sm:-left-12 z-20">
-                        <button
-                          onClick={() => setActiveComboIndex((prev) => (prev === 0 ? 2 : prev - 1))}
-                          className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
-                        >
-                          <ChevronLeft className="size-6" />
-                        </button>
-                      </div>
-                      <div className="absolute top-1/2 -translate-y-1/2 -right-4 sm:-right-12 z-20">
-                        <button
-                          onClick={() => setActiveComboIndex((prev) => (prev === 2 ? 0 : prev + 1))}
-                          className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
-                        >
-                          <ChevronRight className="size-6" />
-                        </button>
-                      </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1400px] mx-auto px-4 md:px-8">
+                      {/* Combo 1 */}
+                      <motion.div 
+                        whileHover={{ y: -15, scale: 1.02 }}
+                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-amber-500/40 flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-[80px] group-hover:bg-amber-500/30 transition-colors duration-700 pointer-events-none" />
+                        
+                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
+                          <motion.img 
+                            animate={{ y: [0, -10, 0] }} 
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                            src={burgerBrasa}
+                            alt="Burger Brasa"
+                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-amber-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
+                          <motion.img 
+                            animate={{ y: [0, 8, 0] }} 
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
+                            src={cocaCola}
+                            alt="Coca Cola"
+                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
+                          />
+                        </div>
 
-                      <div className="overflow-hidden relative">
-                        <AnimatePresence mode="wait">
-                          {activeComboIndex === 0 && (
-                            <motion.div
-                              key="combo-0"
-                              initial={{ opacity: 0, x: 50 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -50 }}
-                              transition={{ type: "spring", damping: 20, stiffness: 90 }}
-                              className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                            >
-                              <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-black opacity-90"></div>
-                              {/* Glow effect */}
-                              <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl group-hover:bg-amber-500/30 transition-colors duration-500"></div>
-                              <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl group-hover:bg-orange-600/20 transition-colors duration-500"></div>
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                          <span className="px-5 py-2 rounded-full bg-amber-500/10 text-amber-500 text-xs font-black tracking-widest border border-amber-500/20 mb-6 shadow-[0_0_15px_rgba(245,158,11,0.2)] uppercase">Triplo Sabor</span>
+                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Tripa em<br/><span className="text-amber-500">Triplo</span></h4>
+                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Acompanha tiras do tripa, tripa jr e seca-nunca.</p>
+                          
+                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
+                            <div className="flex flex-col">
+                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
+                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">35<span className="text-2xl text-amber-500 font-bold">,00</span></span>
+                            </div>
+                            <button onClick={(e) => addToCart(401, e)} className="h-16 px-8 rounded-full bg-amber-500 text-black font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+                              Comprar <Plus className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
 
-                              <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                                {/* Text Content */}
-                                <div className="flex-1 text-white flex flex-col justify-center h-full">
-                                  <div>
-                                    <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">
-                                      TRIPLO SABOR
-                                    </span>
-                                    <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">
-                                      TRIPA EM TRIPLO
-                                    </h4>
-                                    <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">
-                                      Acompanha tiras do tripa, tripa jr e seca-nunca.
-                                    </p>
-                                  </div>
+                      {/* Combo 2 */}
+                      <motion.div 
+                        whileHover={{ y: -15, scale: 1.02 }}
+                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-red-500/40 flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-[80px] group-hover:bg-red-600/30 transition-colors duration-700 pointer-events-none" />
+                        
+                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
+                          <motion.img 
+                            animate={{ y: [0, -10, 0] }} 
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 0.5 }}
+                            src={burgerInferno}
+                            alt="Burger Inferno"
+                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-red-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
+                          <motion.img 
+                            animate={{ y: [0, 8, 0] }} 
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1.5 }}
+                            src={beer}
+                            alt="Cerveja"
+                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
+                          />
+                        </div>
 
-                                  <div className="flex items-center gap-4 mt-auto">
-                                    <span className="text-3xl font-black font-display text-amber-500">
-                                      R$ 35,00
-                                    </span>
-                                    <motion.button
-                                      whileHover={{ scale: 1.05 }}
-                                      whileTap={{ scale: 0.95 }}
-                                      onClick={(e) => addToCart(401, e)}
-                                      className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]"
-                                    >
-                                      Adicionar
-                                    </motion.button>
-                                  </div>
-                                </div>
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                          <span className="px-5 py-2 rounded-full bg-red-500/10 text-red-500 text-xs font-black tracking-widest border border-red-500/20 mb-6 shadow-[0_0_15px_rgba(239,68,68,0.2)] uppercase">Tamanho Família</span>
+                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Aristo<span className="text-red-500">fome</span></h4>
+                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?</p>
+                          
+                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
+                            <div className="flex flex-col">
+                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
+                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">60<span className="text-2xl text-red-500 font-bold">,00</span></span>
+                            </div>
+                            <button onClick={(e) => addToCart(402, e)} className="h-16 px-8 rounded-full bg-red-600 text-white font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-red-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(220,38,38,0.4)]">
+                              Comprar <Plus className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
 
-                                {/* 3D Images */}
-                                <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                                  <motion.img
-                                    src={cocaCola}
-                                    alt="Coca Cola"
-                                    className="absolute right-[15%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                                  />
-                                  <motion.img
-                                    src={burgerBrasa}
-                                    alt="Burger Brasa"
-                                    className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1a1a1a] shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                                  />
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
+                      {/* Combo 3 */}
+                      <motion.div 
+                        whileHover={{ y: -15, scale: 1.02 }}
+                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-purple-500/40 flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-[80px] group-hover:bg-purple-600/30 transition-colors duration-700 pointer-events-none" />
+                        
+                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
+                          <motion.img 
+                            animate={{ y: [0, -10, 0] }} 
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }}
+                            src={burgerClassico}
+                            alt="Burger Clássico"
+                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-purple-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
+                          <motion.img 
+                            animate={{ y: [0, 8, 0] }} 
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.5 }}
+                            src={lemonade}
+                            alt="Limonada"
+                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
+                          />
+                        </div>
 
-                          {activeComboIndex === 1 && (
-                            <motion.div
-                              key="combo-1"
-                              initial={{ opacity: 0, x: 50 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -50 }}
-                              transition={{ type: "spring", damping: 20, stiffness: 90 }}
-                              className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                            >
-                              <div className="absolute inset-0 bg-gradient-to-br from-[#2D0A0A] to-black opacity-90"></div>
-                              {/* Glow effect */}
-                              <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-3xl group-hover:bg-red-600/30 transition-colors duration-500"></div>
-                              <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
-
-                              <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                                {/* Text Content */}
-                                <div className="flex-1 text-white flex flex-col justify-center h-full">
-                                  <div>
-                                    <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">
-                                      TAMANHO FAMÍLIA
-                                    </span>
-                                    <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">
-                                      ARISTOFOME
-                                    </h4>
-                                    <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">
-                                      Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?
-                                    </p>
-                                  </div>
-
-                                  <div className="flex items-center gap-4 mt-auto">
-                                    <span className="text-3xl font-black font-display text-red-500">
-                                      R$ 60,00
-                                    </span>
-                                    <motion.button
-                                      whileHover={{ scale: 1.05 }}
-                                      whileTap={{ scale: 0.95 }}
-                                      onClick={(e) => addToCart(402, e)}
-                                      className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]"
-                                    >
-                                      Adicionar
-                                    </motion.button>
-                                  </div>
-                                </div>
-
-                                {/* 3D Images */}
-                                <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                                  <motion.img
-                                    src={beer}
-                                    alt="Cerveja"
-                                    className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                                  />
-                                  <motion.img
-                                    src={burgerInferno}
-                                    alt="Burger Inferno"
-                                    className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#2D0A0A] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                                  />
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-
-                          {activeComboIndex === 2 && (
-                            <motion.div
-                              key="combo-2"
-                              initial={{ opacity: 0, x: 50 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -50 }}
-                              transition={{ type: "spring", damping: 20, stiffness: 90 }}
-                              className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                            >
-                              <div className="absolute inset-0 bg-gradient-to-br from-[#1A0A2D] to-black opacity-90"></div>
-                              {/* Glow effect */}
-                              <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl group-hover:bg-purple-600/30 transition-colors duration-500"></div>
-                              <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-fuchsia-500/10 rounded-full blur-3xl group-hover:bg-fuchsia-500/20 transition-colors duration-500"></div>
-
-                              <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                                {/* Text Content */}
-                                <div className="flex-1 text-white flex flex-col justify-center h-full">
-                                  <div>
-                                    <span className="inline-block px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-xs font-bold tracking-wider mb-4 border border-purple-500/20">
-                                      PREMIUM
-                                    </span>
-                                    <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">
-                                      FOME DOS REIS
-                                    </h4>
-                                    <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">
-                                      Batatas reais, triplex burguer e gole de Martins. Uma refeição
-                                      majestosa.
-                                    </p>
-                                  </div>
-
-                                  <div className="flex items-center gap-4 mt-auto">
-                                    <span className="text-3xl font-black font-display text-purple-400">
-                                      R$ 70,00
-                                    </span>
-                                    <motion.button
-                                      whileHover={{ scale: 1.05 }}
-                                      whileTap={{ scale: 0.95 }}
-                                      onClick={(e) => addToCart(403, e)}
-                                      className="bg-purple-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-purple-500 transition-colors shadow-[0_0_20px_rgba(147,51,234,0.4)]"
-                                    >
-                                      Adicionar
-                                    </motion.button>
-                                  </div>
-                                </div>
-
-                                {/* 3D Images */}
-                                <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                                  <motion.img
-                                    src={lemonade}
-                                    alt="Gole de Martins"
-                                    className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                                  />
-                                  <motion.img
-                                    src={burgerClassico}
-                                    alt="Triplex"
-                                    className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1A0A2D] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                                  />
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-
-                      {/* Indicators */}
-                      <div className="flex justify-center gap-2 mt-6">
-                        <button
-                          onClick={() => setActiveComboIndex(0)}
-                          className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 0 ? "w-8 bg-amber-500" : "w-2 bg-white/20"}`}
-                        />
-                        <button
-                          onClick={() => setActiveComboIndex(1)}
-                          className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 1 ? "w-8 bg-amber-500" : "w-2 bg-white/20"}`}
-                        />
-                        <button
-                          onClick={() => setActiveComboIndex(2)}
-                          className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 2 ? "w-8 bg-amber-500" : "w-2 bg-white/20"}`}
-                        />
-                      </div>
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                          <span className="px-5 py-2 rounded-full bg-purple-500/10 text-purple-400 text-xs font-black tracking-widest border border-purple-500/20 mb-6 shadow-[0_0_15px_rgba(168,85,247,0.2)] uppercase">Premium</span>
+                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Fome dos<br/><span className="text-purple-400">Reis</span></h4>
+                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Batatas reais, triplex burguer e gole de Martins. Majestosa.</p>
+                          
+                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
+                            <div className="flex flex-col">
+                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
+                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">70<span className="text-2xl text-purple-400 font-bold">,00</span></span>
+                            </div>
+                            <button onClick={(e) => addToCart(403, e)} className="h-16 px-8 rounded-full bg-purple-600 text-white font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-purple-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(147,51,234,0.4)]">
+                              Comprar <Plus className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -4842,7 +4853,8 @@ function Index() {
                       <img
                         src={cocaCola}
                         alt="Coca Cola"
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply"
+                        onClick={() => setActiveDrinkName("Coca Cola")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
                         style={{ filter: "contrast(1.15) brightness(1.08)" }}
                       />
                     </div>
@@ -4878,7 +4890,8 @@ function Index() {
                       <img
                         src={orangeJuice}
                         alt="Suco de Laranja"
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply"
+                        onClick={() => setActiveDrinkName("Gole de Martins")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
                         style={{ filter: "contrast(1.15) brightness(1.08)" }}
                       />
                     </div>
@@ -4914,7 +4927,8 @@ function Index() {
                       <img
                         src={lemonade}
                         alt="Limonada Suíça"
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply"
+                        onClick={() => setActiveDrinkName("Sprite Gelada")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
                         style={{ filter: "contrast(1.15) brightness(1.08)" }}
                       />
                     </div>
@@ -4950,7 +4964,8 @@ function Index() {
                       <img
                         src={beer}
                         alt="Chopp Gelado"
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply"
+                        onClick={() => setActiveDrinkName("Chopp Gelado")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
                         style={{ filter: "contrast(1.15) brightness(1.08)" }}
                       />
                     </div>
@@ -4986,7 +5001,8 @@ function Index() {
                       <img
                         src={icedTea}
                         alt="Chá Gelado"
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply"
+                        onClick={() => setActiveDrinkName("Chá Gelado")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
                         style={{ filter: "contrast(1.15) brightness(1.08)" }}
                       />
                     </div>
@@ -5021,7 +5037,8 @@ function Index() {
                       <img
                         src={guarana}
                         alt="Seca-nunca"
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply"
+                        onClick={() => setActiveDrinkName("Seca-nunca")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
                         style={{ filter: "contrast(1.15) brightness(1.08)" }}
                       />
                     </div>
@@ -5424,6 +5441,16 @@ function Index() {
       </footer>
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
+      <AnimatePresence>
+        {activeDrinkName && (
+          <DrinkModal
+            drinkName={activeDrinkName}
+            onClose={() => setActiveDrinkName(null)}
+            products={products}
+          />
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {trackingOpen && activeOrderTime && (
           <DeliveryTrackingModal

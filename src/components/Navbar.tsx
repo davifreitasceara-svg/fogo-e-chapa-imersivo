@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Menu, X } from "lucide-react";
 
 const links = [
-  { label: "Início", href: "#inicio" },
-  { label: "Cardápio", href: "#cardapio" },
-  { label: "Sobre Nós", href: "#sobre" },
-  { label: "Contato", href: "#contato" },
+  { label: "Início", href: "/" },
+  { label: "Cardápio", href: "/#cardapio" },
+  { label: "Sobre Nós", href: "/#sobre" },
+  { label: "Contato", href: "/#contato" },
 ];
 
 export function Navbar({ onOpenLogin }: { onOpenLogin: () => void }) {
@@ -30,7 +30,7 @@ export function Navbar({ onOpenLogin }: { onOpenLogin: () => void }) {
       }`}
     >
       <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-5">
-        <a href="#inicio" className="group flex items-center gap-2.5">
+        <a href="/" className="group flex items-center gap-2.5">
           <span className="relative grid size-10 place-items-center rounded-xl bg-fire shadow-[var(--shadow-fire)]">
             <Flame className="size-5 text-primary-foreground" strokeWidth={2.5} />
           </span>
