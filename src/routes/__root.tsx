@@ -49,9 +49,10 @@ function ErrorComponent({ error, reset }: any) {
         </h1>
         <p className="mt-2 text-sm text-muted-foreground break-all text-left">
           Something went wrong on our end. You can try refreshing or head back home.
-          <br/><br/>
+          <br />
+          <br />
           <strong className="text-red-500 font-mono text-xs">{String(error)}</strong>
-          <br/>
+          <br />
           <span className="text-red-400 font-mono text-xs whitespace-pre-wrap">{error?.stack}</span>
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -97,7 +98,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Manrope:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Manrope:wght@400;500;600;700&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -120,8 +124,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-import { CartProvider } from '../context/CartContext';
-import { CartSidebar } from '../components/CartSidebar';
+import { CartProvider } from "../context/CartContext";
+import { CartSidebar } from "../components/CartSidebar";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -129,8 +133,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <CartProvider><Outlet /><CartSidebar /></CartProvider> breaks all child routes. */}
-      <CartProvider><Outlet /><CartSidebar /></CartProvider>
+      <CartProvider>
+        <Outlet />
+        <CartSidebar />
+      </CartProvider>
     </QueryClientProvider>
   );
 }
-

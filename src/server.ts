@@ -8,7 +8,7 @@ type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
 
-const handler = (((_serverEntry as any).default ?? _serverEntry) as unknown) as ServerEntry;
+const handler = ((_serverEntry as any).default ?? _serverEntry) as unknown as ServerEntry;
 
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
