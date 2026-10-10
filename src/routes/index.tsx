@@ -3248,21 +3248,6 @@ function Index() {
 
   const carouselSlides = [
     {
-      id: "classico",
-      titleLine1: "X",
-      titleLine2: "BURGUER",
-      image: burgerClassico,
-      bgClass: "bg-[#00A144]",
-      titleColor: "text-[#006B2D]",
-      buttonBg: "bg-[#006B2D]",
-      buttonText: "text-[#006B2D]",
-      badges: [
-        { text: "Clássico", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
-      ],
-    },
-    {
       id: "brasa",
       titleLine1: "DAVI VS",
       titleLine2: "GOLIAS",
@@ -3290,6 +3275,66 @@ function Index() {
         { text: "Triplo", style: "top-[25%] left-[25%] -rotate-12" },
         { text: "Muito Queijo", style: "top-[35%] left-[20%] -rotate-6" },
         { text: "450g", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "classico",
+      titleLine1: "X",
+      titleLine2: "BURGUER",
+      image: burgerClassico,
+      bgClass: "bg-[#00A144]",
+      titleColor: "text-[#006B2D]",
+      buttonBg: "bg-[#006B2D]",
+      buttonText: "text-[#006B2D]",
+      badges: [
+        { text: "Clássico", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "mac-senai-feliz",
+      titleLine1: "MAC SENAI",
+      titleLine2: "FELIZ",
+      image: burgerClassico,
+      bgClass: "bg-[#0070C0]",
+      titleColor: "text-[#004A80]",
+      buttonBg: "bg-[#004A80]",
+      buttonText: "text-[#004A80]",
+      badges: [
+        { text: "Alegria", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Especial", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "Mágico", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "tripa-jr",
+      titleLine1: "TRIPA",
+      titleLine2: "JR",
+      image: burgerClassico,
+      bgClass: "bg-[#FF8C00]",
+      titleColor: "text-[#B36200]",
+      buttonBg: "bg-[#B36200]",
+      buttonText: "text-[#B36200]",
+      badges: [
+        { text: "Fome Menor", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "No Ponto", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "mini-burguer",
+      titleLine1: "MINI",
+      titleLine2: "BURGUER",
+      image: burgerClassico,
+      bgClass: "bg-[#00BFA5]",
+      titleColor: "text-[#00806E]",
+      buttonBg: "bg-[#00806E]",
+      buttonText: "text-[#00806E]",
+      badges: [
+        { text: "Pequeno", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Perfeito", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "Para Todos", style: "top-[50%] left-[23%] rotate-6" },
       ],
     },
   ];
@@ -3325,19 +3370,9 @@ function Index() {
   // Dynamic theme based on the currently selected burger
   const currentTheme = useMemo(() => {
     switch (heroIndex) {
-      case 0: // CHAPA CLÁSSICO - Green
+      case 0: // BRASA BACON - Purple
         return {
-          bgLight: "#F0FAF4", // very light green
-          bgDark: "#0B1F13",
-          bgVeryDark: "#040B07",
-          primary: "#006B2D",
-          secondary: "#00A144",
-          secondaryAlpha: "rgba(0, 161, 68, 0.15)",
-          textDark: "#05140B",
-        };
-      case 1: // BRASA BACON - Purple
-        return {
-          bgLight: "#F5F0FA", // very light purple
+          bgLight: "#F5F0FA",
           bgDark: "#150824",
           bgVeryDark: "#0B0414",
           primary: "#2B005F",
@@ -3345,9 +3380,9 @@ function Index() {
           secondaryAlpha: "rgba(75, 22, 140, 0.15)",
           textDark: "#10031F",
         };
-      case 2: // INFERNO PICANTE - Red
+      case 1: // INFERNO PICANTE - Red
         return {
-          bgLight: "#FAF0F0", // very light red
+          bgLight: "#FAF0F0",
           bgDark: "#260602",
           bgVeryDark: "#120301",
           primary: "#7A1200",
@@ -3355,7 +3390,7 @@ function Index() {
           secondaryAlpha: "rgba(196, 30, 0, 0.15)",
           textDark: "#1F0400",
         };
-      default:
+      case 2: // CHAPA CLÁSSICO - Green
         return {
           bgLight: "#F0FAF4",
           bgDark: "#0B1F13",
@@ -3364,6 +3399,46 @@ function Index() {
           secondary: "#00A144",
           secondaryAlpha: "rgba(0, 161, 68, 0.15)",
           textDark: "#05140B",
+        };
+      case 3: // MAC SENAI FELIZ - Yellow/Blue
+        return {
+          bgLight: "#F5F8FA",
+          bgDark: "#0B1624",
+          bgVeryDark: "#050B14",
+          primary: "#004A80",
+          secondary: "#0070C0",
+          secondaryAlpha: "rgba(0, 112, 192, 0.15)",
+          textDark: "#03101F",
+        };
+      case 4: // TRIPA JR - Orange
+        return {
+          bgLight: "#FFF7F0",
+          bgDark: "#261500",
+          bgVeryDark: "#140A00",
+          primary: "#B36200",
+          secondary: "#FF8C00",
+          secondaryAlpha: "rgba(255, 140, 0, 0.15)",
+          textDark: "#261100",
+        };
+      case 5: // MINI BURGUER - Teal
+        return {
+          bgLight: "#F0FAFA",
+          bgDark: "#001F1A",
+          bgVeryDark: "#000D0B",
+          primary: "#00806E",
+          secondary: "#00BFA5",
+          secondaryAlpha: "rgba(0, 191, 165, 0.15)",
+          textDark: "#001A16",
+        };
+      default:
+        return {
+          bgLight: "#F5F0FA",
+          bgDark: "#150824",
+          bgVeryDark: "#0B0414",
+          primary: "#2B005F",
+          secondary: "#4B168C",
+          secondaryAlpha: "rgba(75, 22, 140, 0.15)",
+          textDark: "#10031F",
         };
     }
   }, [heroIndex]);
@@ -3597,6 +3672,22 @@ function Index() {
                       exit: { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
                     }}
                   >
+                    {(currentSlide.id === "brasa" || currentSlide.id === "inferno") && (
+                      <div className="overflow-hidden flex justify-center mb-1 sm:mb-2">
+                        <motion.div
+                          variants={{
+                            hidden: { y: "100%", opacity: 0 },
+                            visible: { y: "0%", opacity: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+                            exit: { y: "-100%", opacity: 0, transition: { duration: 0.3 } },
+                          }}
+                          className="inline-flex items-center justify-center gap-1.5 text-white font-bold tracking-[0.2em] uppercase text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 rounded-full backdrop-blur-md shadow-xl"
+                          style={{ backgroundColor: currentTheme.primary, border: `1px solid ${currentTheme.secondary}` }}
+                        >
+                          <Flame className="w-3.5 h-3.5" style={{ color: currentTheme.bgLight }} />
+                          Série Exagerados
+                        </motion.div>
+                      </div>
+                    )}
                     {[currentSlide.titleLine1, currentSlide.titleLine2].map((line, i) => (
                       <div key={i} className="overflow-hidden">
                         <motion.h1
@@ -3641,7 +3732,7 @@ function Index() {
                 style={{ perspective: "1200px" }}
                 title="Clique para adicionar este hambúrguer à sacola!"
                 onClick={(e) => {
-                  const heroProdId = heroIndex === 0 ? 1 : heroIndex === 1 ? 5 : 6;
+                  const heroProdId = [5, 6, 1, 2, 3, 4][heroIndex] || 5;
                   addToCart(heroProdId, e);
                 }}
               >
@@ -3689,7 +3780,7 @@ function Index() {
                         delay: 0.8,
                       },
                     }}
-                    className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? "scale-x-[-1]" : ""} ${heroIndex === 2 ? "hue-rotate-15 saturate-150" : ""}`}
+                    className={`w-full h-auto object-contain drop-shadow-2xl ${currentSlide.id === "brasa" ? "scale-x-[-1]" : ""} ${currentSlide.id === "inferno" ? "hue-rotate-15 saturate-150" : ""}`}
                   />
                 </AnimatePresence>
               </div>
@@ -4480,18 +4571,18 @@ function Index() {
                     style={{ transformStyle: "preserve-3d" }}
                   >
                     {[
-                      { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
-                      { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
-                      { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
-                      { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
-                      { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
-                      { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" },
-                      { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
-                      { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
-                      { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
-                      { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
-                      { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
-                      { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
                     ].map((item, idx) => {
                       const angle = idx * (360 / 12);
                       return (
