@@ -1,5 +1,5 @@
-const fs = require('fs');
-let code = fs.readFileSync('src/routes/index.tsx', 'utf-8');
+const fs = require("fs");
+let code = fs.readFileSync("src/routes/index.tsx", "utf-8");
 
 const modalStartRegex = /function DeliveryTrackingModal\(\{[\s\S]*$/;
 const match = code.match(modalStartRegex);
@@ -295,5 +295,5 @@ const newModal = `function DeliveryTrackingModal({ onClose, currentTheme, active
 `;
 
 const newCode = code.replace(modalStartRegex, newModal);
-fs.writeFileSync('src/routes/index.tsx', newCode);
-console.log('Replaced DeliveryTrackingModal.');
+fs.writeFileSync("src/routes/index.tsx", newCode);
+console.log("Replaced DeliveryTrackingModal.");

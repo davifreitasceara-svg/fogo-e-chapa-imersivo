@@ -2,7 +2,7 @@ import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   ArrowDown,
   Check,
   ChevronLeft,
@@ -26,17 +26,15 @@ import {
   Layers,
   TrendingUp,
   Bike,
-  Navigation
-, ChefHat, Maximize2, Minimize2 } from "lucide-react";
+  Navigation,
+  ChefHat,
+  Maximize2,
+  Minimize2,
+  Store,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Embers } from "@/components/Embers";
 import { Bubbles } from "@/components/Bubbles";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
@@ -47,22 +45,29 @@ import burgerInferno from "@/assets/burger-inferno.png";
 import bebidaCola from "@/assets/bebida-cola.jpg";
 import bebidaLimonada from "@/assets/bebida-limonada.jpg";
 import bebidaCerveja from "@/assets/bebida-cerveja.jpg";
-import sodaSplash from '../assets/soda-splash.jpg'
-import cocaCola from '../assets/coca-cola.jpg'
-import orangeJuice from '../assets/orange-juice.jpg'
-import lemonade from '../assets/lemonade.jpg'
-import beer from '../assets/beer.jpg'
-import icedTea from '../assets/iced-tea.jpg'
-import guarana from '../assets/guarana.jpg'
+import sodaSplash from "../assets/soda-splash.jpg";
+import cocaCola from "../assets/coca-cola.jpg";
+import orangeJuice from "../assets/orange-juice.jpg";
+import lemonade from "../assets/lemonade.jpg";
+import beer from "../assets/beer.jpg";
+import icedTea from "../assets/iced-tea.jpg";
+import guarana from "../assets/guarana.jpg";
 import coffeeSplash from "@/assets/coffee-splash.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Fogo e Chapa | Hamburgueria Artesanal" },
-      { name: "description", content: "Hambúrgueres artesanais feitos na brasa, ingredientes selecionados e sabor sem atalhos." },
+      {
+        name: "description",
+        content:
+          "Hambúrgueres artesanais feitos na brasa, ingredientes selecionados e sabor sem atalhos.",
+      },
       { property: "og:title", content: "Fogo e Chapa | Hamburgueria Artesanal" },
-      { property: "og:description", content: "Carne, fogo e técnica. Descubra nosso cardápio feito na brasa." },
+      {
+        property: "og:description",
+        content: "Carne, fogo e técnica. Descubra nosso cardápio feito na brasa.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -90,42 +95,230 @@ interface CartToast {
   name: string;
 }
 
-type Product = { id: number; name: string; description: string; price: number; image: string; badge?: string; category: "burger" | "drink" };
+type Product = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  badge?: string;
+  category: "burger" | "drink";
+};
 
 const products: Product[] = [
-  { id: 1, name: "X Burguer", description: "Clássico.", price: 25.0, image: burgerClassico, category: "burger" },
-  { id: 2, name: "Mac Sesi Feliz", description: "O sabor da alegria.", price: 28.0, image: burgerClassico, category: "burger" },
-  { id: 3, name: "Tripa Jr", description: "Para fomes menores.", price: 18.0, image: burgerClassico, category: "burger" },
-  { id: 4, name: "Mini Burguer", description: "Pequeno e saboroso.", price: 16.0, image: burgerClassico, category: "burger" },
-  { id: 5, name: "Davi vs Golias", description: "Um desafio de sabor.", price: 45.0, image: burgerBrasa, badge: "Exagerado", category: "burger" },
-  { id: 6, name: "Triplex", description: "Três vezes mais sabor.", price: 42.0, image: burgerInferno, badge: "Exagerado", category: "burger" },
-  
+  {
+    id: 1,
+    name: "X Burguer",
+    description: "Clássico.",
+    price: 25.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 2,
+    name: "Mac Sesi Feliz",
+    description: "O sabor da alegria.",
+    price: 28.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 3,
+    name: "Tripa Jr",
+    description: "Para fomes menores.",
+    price: 18.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 4,
+    name: "Mini Burguer",
+    description: "Pequeno e saboroso.",
+    price: 16.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 5,
+    name: "Davi vs Golias",
+    description: "Um desafio de sabor.",
+    price: 45.0,
+    image: burgerBrasa,
+    badge: "Exagerado",
+    category: "burger",
+  },
+  {
+    id: 6,
+    name: "Triplex",
+    description: "Três vezes mais sabor.",
+    price: 42.0,
+    image: burgerInferno,
+    badge: "Exagerado",
+    category: "burger",
+  },
+
   // Appetizers
-  { id: 101, name: "Tiras do Tripa", description: "Batata convencional.", price: 15.0, image: burgerClassico, category: "burger" },
-  { id: 102, name: "Trincheira do Davi", description: "Batata com explosão de cheddar.", price: 22.0, image: burgerClassico, category: "burger" },
-  { id: 103, name: "Batatas Reais", description: "Porção majestosa.", price: 25.0, image: burgerClassico, category: "burger" },
-  
+  {
+    id: 101,
+    name: "Tiras do Tripa",
+    description: "Batata convencional.",
+    price: 15.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 102,
+    name: "Trincheira do Davi",
+    description: "Batata com explosão de cheddar.",
+    price: 22.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 103,
+    name: "Batatas Reais",
+    description: "Porção majestosa.",
+    price: 25.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+
   // Sauces
-  { id: 501, name: "Azeite de Oliveira", description: "Fio de ouro.", price: 4.0, image: burgerClassico, category: "burger" },
-  { id: 502, name: "Maionese Temperada", description: "Especial da casa.", price: 5.0, image: burgerClassico, category: "burger" },
-  { id: 503, name: "Ketchup", description: "Clássico.", price: 3.0, image: burgerClassico, category: "burger" },
-  { id: 504, name: "Porções Separadas", description: "Cheddar, barbecue e maionese de alho.", price: 8.0, image: burgerClassico, category: "burger" },
-  
+  {
+    id: 501,
+    name: "Azeite de Oliveira",
+    description: "Fio de ouro.",
+    price: 4.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 502,
+    name: "Maionese Temperada",
+    description: "Especial da casa.",
+    price: 5.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 503,
+    name: "Ketchup",
+    description: "Clássico.",
+    price: 3.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+  {
+    id: 504,
+    name: "Porções Separadas",
+    description: "Cheddar, barbecue e maionese de alho.",
+    price: 8.0,
+    image: burgerClassico,
+    category: "burger",
+  },
+
   // Drinks
-  { id: 201, name: "Coca Cola", description: "Clássica e gelada.", price: 9.0, image: cocaCola, category: "drink" },
-  { id: 202, name: "Gole de Martins", description: "Refrescante limão artesanal.", price: 14.0, image: lemonade, category: "drink" },
-  { id: 203, name: "Sprite Gelada", description: "Limão refrescante.", price: 8.0, image: sodaSplash, category: "drink" },
-  { id: 204, name: "Chopp Gelado", description: "Gelado com colarinho.", price: 12.0, image: beer, category: "drink" },
-  { id: 205, name: "Chá Gelado", description: "Refrescante de pêssego.", price: 10.0, image: icedTea, category: "drink" },
-  { id: 206, name: "Seca-nunca", description: "Mata a sede.", price: 12.0, image: guarana, category: "drink" },
-  { id: 301, name: "Seca-nunca", description: "Mata a sede.", price: 12.0, image: guarana, category: "drink" },
-  { id: 302, name: "Gole de Martins", description: "Refrescante.", price: 14.0, image: lemonade, category: "drink" },
-  { id: 303, name: "Sprite", description: "Limão.", price: 8.0, image: sodaSplash, category: "drink" },
-  
+  {
+    id: 201,
+    name: "Coca Cola",
+    description: "Clássica e gelada.",
+    price: 9.0,
+    image: cocaCola,
+    category: "drink",
+  },
+  {
+    id: 202,
+    name: "Gole de Martins",
+    description: "Refrescante limão artesanal.",
+    price: 14.0,
+    image: lemonade,
+    category: "drink",
+  },
+  {
+    id: 203,
+    name: "Sprite Gelada",
+    description: "Limão refrescante.",
+    price: 8.0,
+    image: sodaSplash,
+    category: "drink",
+  },
+  {
+    id: 204,
+    name: "Chopp Gelado",
+    description: "Gelado com colarinho.",
+    price: 12.0,
+    image: beer,
+    category: "drink",
+  },
+  {
+    id: 205,
+    name: "Chá Gelado",
+    description: "Refrescante de pêssego.",
+    price: 10.0,
+    image: icedTea,
+    category: "drink",
+  },
+  {
+    id: 206,
+    name: "Seca-nunca",
+    description: "Mata a sede.",
+    price: 12.0,
+    image: guarana,
+    category: "drink",
+  },
+  {
+    id: 301,
+    name: "Seca-nunca",
+    description: "Mata a sede.",
+    price: 12.0,
+    image: guarana,
+    category: "drink",
+  },
+  {
+    id: 302,
+    name: "Gole de Martins",
+    description: "Refrescante.",
+    price: 14.0,
+    image: lemonade,
+    category: "drink",
+  },
+  {
+    id: 303,
+    name: "Sprite",
+    description: "Limão.",
+    price: 8.0,
+    image: sodaSplash,
+    category: "drink",
+  },
+
   // Combos
-  { id: 401, name: "Tripa em Triplo", description: "Tiras do tripa, tripa jr, seca-nunca.", price: 35.0, image: burgerClassico, badge: "Especial", category: "burger" },
-  { id: 402, name: "Aristofome", description: "Davi vs Golias, seca-nunca, tiras do tripa.", price: 60.0, image: burgerBrasa, badge: "Especial", category: "burger" },
-  { id: 403, name: "Fome dos Reis", description: "Batatas reais, triplex burguer, gole de Martins.", price: 70.0, image: burgerInferno, badge: "Premium", category: "burger" }
+  {
+    id: 401,
+    name: "Tripa em Triplo",
+    description: "Tiras do tripa, tripa jr, seca-nunca.",
+    price: 35.0,
+    image: burgerClassico,
+    badge: "Especial",
+    category: "burger",
+  },
+  {
+    id: 402,
+    name: "Aristofome",
+    description: "Davi vs Golias, seca-nunca, tiras do tripa.",
+    price: 60.0,
+    image: burgerBrasa,
+    badge: "Especial",
+    category: "burger",
+  },
+  {
+    id: 403,
+    name: "Fome dos Reis",
+    description: "Batatas reais, triplex burguer, gole de Martins.",
+    price: 70.0,
+    image: burgerInferno,
+    badge: "Premium",
+    category: "burger",
+  },
 ];
 
 const sparks = Array.from({ length: 18 }, (_, index) => ({
@@ -137,41 +330,3015 @@ const sparks = Array.from({ length: 18 }, (_, index) => ({
 function Brand({ color }: { color?: string }) {
   return (
     <a href="#inicio" className="group flex items-center gap-3" aria-label="Fogo e Chapa   início">
-      <span 
+      <span
         className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/5 transition-all group-hover:rotate-6 duration-700"
-        style={{ color: color || 'var(--primary)', borderColor: color ? `${color}40` : undefined, backgroundColor: color ? `${color}1A` : undefined }}
+        style={{
+          color: color || "var(--primary)",
+          borderColor: color ? `${color}40` : undefined,
+          backgroundColor: color ? `${color}1A` : undefined,
+        }}
       >
         <Flame className="size-5 fill-current" />
       </span>
-      <span className="font-display text-xl font-black uppercase leading-none text-foreground">Fogo <span className="transition-colors duration-700" style={{ color: color || 'var(--primary)' }}>&</span> Chapa</span>
+      <span className="font-display text-xl font-black uppercase leading-none text-foreground">
+        Fogo{" "}
+        <span
+          className="transition-colors duration-700"
+          style={{ color: color || "var(--primary)" }}
+        >
+          &
+        </span>{" "}
+        Chapa
+      </span>
     </a>
   );
 }
 
 const MOCK_DRIVERS = [
-  { name: "Carlos S.", vehicle: "Honda CG 160", plate: "ABC-1234", avatar: "https://i.pravatar.cc/150?u=carlos" },
-  { name: "Marcos T.", vehicle: "Yamaha YBR 125", plate: "XYZ-9876", avatar: "https://i.pravatar.cc/150?u=marcos" },
-  { name: "Rafael M.", vehicle: "Honda Biz", plate: "QWE-4567", avatar: "https://i.pravatar.cc/150?u=rafael" }
-];
-
-const MOCK_ROUTES = [
   {
-    start: [-3.7310, -38.5270],
-    customer: [-3.7350, -38.5200],
-    address: "Av. Beira Mar, 2500 - Meireles",
-    route1: [[-3.73,-38.525],[-3.730095,-38.525085],[-3.73019,-38.525169999999996],[-3.730285,-38.525255],[-3.73038,-38.52534],[-3.730475,-38.525425],[-3.73057,-38.52551],[-3.730665,-38.525594999999996],[-3.73076,-38.52568],[-3.730855,-38.525765],[-3.73095,-38.52585],[-3.731045,-38.525935],[-3.73114,-38.526019999999995],[-3.731235,-38.526105],[-3.73133,-38.52619],[-3.7314249999999998,-38.526275],[-3.73152,-38.52636],[-3.731615,-38.526444999999995],[-3.73171,-38.52653],[-3.731805,-38.526615],[-3.7319,-38.5267]],
-    route2: [[-3.7319,-38.5267],[-3.732003333333333,-38.52647666666667],[-3.7321066666666667,-38.52625333333333],[-3.73221,-38.52603],[-3.7323133333333334,-38.52580666666667],[-3.7324166666666665,-38.52558333333333],[-3.73252,-38.52536],[-3.732623333333333,-38.52513666666667],[-3.7327266666666667,-38.52491333333333],[-3.73283,-38.52469],[-3.7329333333333334,-38.52446666666667],[-3.7330366666666666,-38.52424333333333],[-3.73314,-38.52402],[-3.7332433333333332,-38.52379666666667],[-3.733346666666667,-38.52357333333333],[-3.73345,-38.52335],[-3.733553333333333,-38.52312666666667],[-3.7336566666666666,-38.52290333333333],[-3.7337599999999997,-38.52268],[-3.7338633333333333,-38.52245666666667],[-3.7339666666666664,-38.52223333333333],[-3.73407,-38.52201],[-3.734173333333333,-38.52178666666667],[-3.7342766666666667,-38.52156333333333],[-3.73438,-38.52134],[-3.7344833333333334,-38.52111666666667],[-3.7345866666666665,-38.52089333333333],[-3.73469,-38.52067],[-3.734793333333333,-38.52044666666667],[-3.7348966666666668,-38.520223333333334],[-3.735,-38.52]]
+    name: "Carlos S.",
+    vehicle: "Honda CG 160",
+    plate: "ABC-1234",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    start: [-3.7340, -38.5280],
-    customer: [-3.7400, -38.5300],
-    address: "Rua Monsenhor Tabosa, 100 - Praia de Iracema",
-    route1: [[-3.734,-38.528],[-3.733895,-38.527935],[-3.73379,-38.52787],[-3.733685,-38.527805],[-3.73358,-38.52774],[-3.733475,-38.527675],[-3.73337,-38.527609999999996],[-3.733265,-38.527544999999996],[-3.73316,-38.52748],[-3.733055,-38.527415],[-3.7329499999999998,-38.52735],[-3.732845,-38.527285],[-3.73274,-38.52722],[-3.732635,-38.527155],[-3.73253,-38.52709],[-3.732425,-38.527024999999995],[-3.73232,-38.526959999999995],[-3.732215,-38.526894999999996],[-3.73211,-38.52683],[-3.732005,-38.526765],[-3.7319,-38.5267]],
-    route2: [[-3.7319,-38.5267],[-3.73217,-38.52681],[-3.73244,-38.52692],[-3.73271,-38.527029999999996],[-3.73298,-38.527139999999996],[-3.73325,-38.527249999999995],[-3.73352,-38.52736],[-3.73379,-38.52747],[-3.73406,-38.52758],[-3.73433,-38.52769],[-3.7346,-38.5278],[-3.73487,-38.52791],[-3.73514,-38.52802],[-3.73541,-38.52813],[-3.73568,-38.52824],[-3.73595,-38.52835],[-3.7362200000000003,-38.52846],[-3.7364900000000003,-38.52857],[-3.7367600000000003,-38.52868],[-3.7370300000000003,-38.52879],[-3.7373000000000003,-38.5289],[-3.7375700000000003,-38.52901],[-3.7378400000000003,-38.52912],[-3.7381100000000003,-38.52923],[-3.7383800000000003,-38.52934],[-3.7386500000000003,-38.52945],[-3.7389200000000002,-38.529560000000004],[-3.7391900000000002,-38.52967],[-3.7394600000000002,-38.52978],[-3.73973,-38.52989],[-3.74,-38.53]]
+    name: "Marcos T.",
+    vehicle: "Yamaha YBR 125",
+    plate: "XYZ-9876",
+    avatar: "https://randomuser.me/api/portraits/men/44.jpg",
+  },
+  {
+    name: "Rafael M.",
+    vehicle: "Honda Biz",
+    plate: "QWE-4567",
+    avatar: "https://randomuser.me/api/portraits/men/67.jpg",
+  },
+  {
+    name: "João P.",
+    vehicle: "Yamaha Fazer 250",
+    plate: "JKL-1122",
+    avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+  },
+  {
+    name: "Lucas V.",
+    vehicle: "Honda Bros 160",
+    plate: "DEF-5678",
+    avatar: "https://randomuser.me/api/portraits/men/84.jpg",
   }
 ];
 
+const MOCK_ROUTES: any[] = [
+  {
+    "start": [
+      -3.73086,
+      -38.527436
+    ],
+    "customer": [
+      -3.722674,
+      -38.515213
+    ],
+    "address": "Av. Monsenhor Tabosa - Praia de Iracema",
+    "route1": [
+      [
+        -3.73086,
+        -38.527436
+      ],
+      [
+        -3.731482,
+        -38.527636
+      ],
+      [
+        -3.731541,
+        -38.527655
+      ],
+      [
+        -3.73152,
+        -38.527722
+      ],
+      [
+        -3.731304,
+        -38.528392
+      ],
+      [
+        -3.731298,
+        -38.528411
+      ],
+      [
+        -3.731295,
+        -38.52842
+      ],
+      [
+        -3.731287,
+        -38.528445
+      ],
+      [
+        -3.73121,
+        -38.528419
+      ],
+      [
+        -3.729918,
+        -38.527985
+      ],
+      [
+        -3.729875,
+        -38.527971
+      ],
+      [
+        -3.729893,
+        -38.527918
+      ],
+      [
+        -3.730107,
+        -38.527245
+      ],
+      [
+        -3.730122,
+        -38.527198
+      ],
+      [
+        -3.73014,
+        -38.527143
+      ],
+      [
+        -3.730398,
+        -38.526354
+      ],
+      [
+        -3.730414,
+        -38.526303
+      ],
+      [
+        -3.73051,
+        -38.526006
+      ],
+      [
+        -3.730662,
+        -38.525561
+      ],
+      [
+        -3.730767,
+        -38.525297
+      ],
+      [
+        -3.730806,
+        -38.525206
+      ],
+      [
+        -3.730847,
+        -38.525078
+      ],
+      [
+        -3.730862,
+        -38.525005
+      ],
+      [
+        -3.730861,
+        -38.524944
+      ],
+      [
+        -3.730847,
+        -38.524863
+      ],
+      [
+        -3.730743,
+        -38.524382
+      ],
+      [
+        -3.730641,
+        -38.523909
+      ],
+      [
+        -3.730587,
+        -38.523668
+      ],
+      [
+        -3.730533,
+        -38.523391
+      ],
+      [
+        -3.73053,
+        -38.523351
+      ],
+      [
+        -3.730535,
+        -38.523308
+      ],
+      [
+        -3.730644,
+        -38.522971
+      ],
+      [
+        -3.730658,
+        -38.522929
+      ],
+      [
+        -3.730673,
+        -38.522881
+      ],
+      [
+        -3.730942,
+        -38.522037
+      ],
+      [
+        -3.730951,
+        -38.522007
+      ],
+      [
+        -3.730957,
+        -38.521989
+      ],
+      [
+        -3.730979,
+        -38.521919
+      ],
+      [
+        -3.730951,
+        -38.52191
+      ],
+      [
+        -3.730911,
+        -38.521897
+      ],
+      [
+        -3.730046,
+        -38.521617
+      ],
+      [
+        -3.72886,
+        -38.521238
+      ]
+    ],
+    "route2": [
+      [
+        -3.72886,
+        -38.521238
+      ],
+      [
+        -3.728823,
+        -38.521226
+      ],
+      [
+        -3.728802,
+        -38.521219
+      ],
+      [
+        -3.728742,
+        -38.5212
+      ],
+      [
+        -3.727599,
+        -38.520824
+      ],
+      [
+        -3.727458,
+        -38.520779
+      ],
+      [
+        -3.727428,
+        -38.52077
+      ],
+      [
+        -3.727394,
+        -38.520759
+      ],
+      [
+        -3.727337,
+        -38.52074
+      ],
+      [
+        -3.726615,
+        -38.520501
+      ],
+      [
+        -3.72601,
+        -38.520317
+      ],
+      [
+        -3.725979,
+        -38.520307
+      ],
+      [
+        -3.72596,
+        -38.5203
+      ],
+      [
+        -3.725897,
+        -38.52028
+      ],
+      [
+        -3.724617,
+        -38.519862
+      ],
+      [
+        -3.724585,
+        -38.519869
+      ],
+      [
+        -3.724549,
+        -38.519877
+      ],
+      [
+        -3.724497,
+        -38.51986
+      ],
+      [
+        -3.724122,
+        -38.519739
+      ],
+      [
+        -3.724002,
+        -38.519699
+      ],
+      [
+        -3.723784,
+        -38.519629
+      ],
+      [
+        -3.723657,
+        -38.519588
+      ],
+      [
+        -3.723602,
+        -38.519554
+      ],
+      [
+        -3.723565,
+        -38.519532
+      ],
+      [
+        -3.723478,
+        -38.519479
+      ],
+      [
+        -3.723419,
+        -38.519442
+      ],
+      [
+        -3.723327,
+        -38.519408
+      ],
+      [
+        -3.723273,
+        -38.519387
+      ],
+      [
+        -3.7232,
+        -38.519367
+      ],
+      [
+        -3.723143,
+        -38.519356
+      ],
+      [
+        -3.722939,
+        -38.519331
+      ],
+      [
+        -3.722541,
+        -38.519298
+      ],
+      [
+        -3.722441,
+        -38.51931
+      ],
+      [
+        -3.722399,
+        -38.519314
+      ],
+      [
+        -3.722404,
+        -38.519248
+      ],
+      [
+        -3.722493,
+        -38.517981
+      ],
+      [
+        -3.722496,
+        -38.517931
+      ],
+      [
+        -3.722499,
+        -38.517897
+      ],
+      [
+        -3.722534,
+        -38.51734
+      ],
+      [
+        -3.722635,
+        -38.515745
+      ],
+      [
+        -3.722674,
+        -38.515213
+      ]
+    ]
+  },
+  {
+    "start": [
+      -3.73086,
+      -38.527436
+    ],
+    "customer": [
+      -3.735857,
+      -38.502953
+    ],
+    "address": "Av. Desembargador Moreira - Aldeota",
+    "route1": [
+      [
+        -3.73086,
+        -38.527436
+      ],
+      [
+        -3.731482,
+        -38.527636
+      ],
+      [
+        -3.731541,
+        -38.527655
+      ],
+      [
+        -3.73152,
+        -38.527722
+      ],
+      [
+        -3.731304,
+        -38.528392
+      ],
+      [
+        -3.731298,
+        -38.528411
+      ],
+      [
+        -3.731295,
+        -38.52842
+      ],
+      [
+        -3.731287,
+        -38.528445
+      ],
+      [
+        -3.73121,
+        -38.528419
+      ],
+      [
+        -3.729918,
+        -38.527985
+      ],
+      [
+        -3.729875,
+        -38.527971
+      ],
+      [
+        -3.729893,
+        -38.527918
+      ],
+      [
+        -3.730107,
+        -38.527245
+      ],
+      [
+        -3.730122,
+        -38.527198
+      ],
+      [
+        -3.73014,
+        -38.527143
+      ],
+      [
+        -3.730398,
+        -38.526354
+      ],
+      [
+        -3.730414,
+        -38.526303
+      ],
+      [
+        -3.73051,
+        -38.526006
+      ],
+      [
+        -3.730662,
+        -38.525561
+      ],
+      [
+        -3.730767,
+        -38.525297
+      ],
+      [
+        -3.730806,
+        -38.525206
+      ],
+      [
+        -3.730847,
+        -38.525078
+      ],
+      [
+        -3.730862,
+        -38.525005
+      ],
+      [
+        -3.730861,
+        -38.524944
+      ],
+      [
+        -3.730847,
+        -38.524863
+      ],
+      [
+        -3.730743,
+        -38.524382
+      ],
+      [
+        -3.730641,
+        -38.523909
+      ],
+      [
+        -3.730587,
+        -38.523668
+      ],
+      [
+        -3.730533,
+        -38.523391
+      ],
+      [
+        -3.73053,
+        -38.523351
+      ],
+      [
+        -3.730535,
+        -38.523308
+      ],
+      [
+        -3.730644,
+        -38.522971
+      ],
+      [
+        -3.730658,
+        -38.522929
+      ],
+      [
+        -3.730673,
+        -38.522881
+      ],
+      [
+        -3.730942,
+        -38.522037
+      ],
+      [
+        -3.730951,
+        -38.522007
+      ],
+      [
+        -3.730957,
+        -38.521989
+      ],
+      [
+        -3.730979,
+        -38.521919
+      ],
+      [
+        -3.730997,
+        -38.521861
+      ],
+      [
+        -3.731287,
+        -38.520914
+      ],
+      [
+        -3.731307,
+        -38.520851
+      ],
+      [
+        -3.731464,
+        -38.520309
+      ],
+      [
+        -3.731636,
+        -38.519729
+      ],
+      [
+        -3.731653,
+        -38.519672
+      ],
+      [
+        -3.73167,
+        -38.519618
+      ],
+      [
+        -3.73178,
+        -38.519254
+      ],
+      [
+        -3.731968,
+        -38.518616
+      ],
+      [
+        -3.732278,
+        -38.51762
+      ],
+      [
+        -3.732299,
+        -38.517551
+      ],
+      [
+        -3.732319,
+        -38.517485
+      ],
+      [
+        -3.73263,
+        -38.516504
+      ],
+      [
+        -3.732882,
+        -38.515684
+      ],
+      [
+        -3.732943,
+        -38.515488
+      ]
+    ],
+    "route2": [
+      [
+        -3.732943,
+        -38.515488
+      ],
+      [
+        -3.732963,
+        -38.515427
+      ],
+      [
+        -3.732985,
+        -38.515357
+      ],
+      [
+        -3.733287,
+        -38.514389
+      ],
+      [
+        -3.733428,
+        -38.51395
+      ],
+      [
+        -3.733473,
+        -38.513811
+      ],
+      [
+        -3.73361,
+        -38.513382
+      ],
+      [
+        -3.73363,
+        -38.513319
+      ],
+      [
+        -3.73365,
+        -38.513254
+      ],
+      [
+        -3.733932,
+        -38.512344
+      ],
+      [
+        -3.733944,
+        -38.512257
+      ],
+      [
+        -3.733945,
+        -38.512158
+      ],
+      [
+        -3.734236,
+        -38.511266
+      ],
+      [
+        -3.734258,
+        -38.5112
+      ],
+      [
+        -3.734279,
+        -38.511136
+      ],
+      [
+        -3.734368,
+        -38.510863
+      ],
+      [
+        -3.734443,
+        -38.510633
+      ],
+      [
+        -3.734602,
+        -38.510152
+      ],
+      [
+        -3.734774,
+        -38.509623
+      ],
+      [
+        -3.734815,
+        -38.509499
+      ],
+      [
+        -3.734907,
+        -38.509217
+      ],
+      [
+        -3.734925,
+        -38.509161
+      ],
+      [
+        -3.734949,
+        -38.509086
+      ],
+      [
+        -3.734972,
+        -38.509015
+      ],
+      [
+        -3.735166,
+        -38.508417
+      ],
+      [
+        -3.7353,
+        -38.50801
+      ],
+      [
+        -3.735476,
+        -38.50748
+      ],
+      [
+        -3.735625,
+        -38.507008
+      ],
+      [
+        -3.735641,
+        -38.506957
+      ],
+      [
+        -3.735663,
+        -38.506887
+      ],
+      [
+        -3.735608,
+        -38.506869
+      ],
+      [
+        -3.735337,
+        -38.506783
+      ],
+      [
+        -3.734718,
+        -38.506589
+      ],
+      [
+        -3.733743,
+        -38.506275
+      ],
+      [
+        -3.733666,
+        -38.506251
+      ],
+      [
+        -3.733685,
+        -38.506195
+      ],
+      [
+        -3.733994,
+        -38.505256
+      ],
+      [
+        -3.73408,
+        -38.504996
+      ],
+      [
+        -3.734093,
+        -38.504954
+      ],
+      [
+        -3.734211,
+        -38.504594
+      ],
+      [
+        -3.734218,
+        -38.504571
+      ],
+      [
+        -3.734277,
+        -38.504392
+      ],
+      [
+        -3.734323,
+        -38.504251
+      ],
+      [
+        -3.734342,
+        -38.504194
+      ],
+      [
+        -3.734365,
+        -38.504125
+      ],
+      [
+        -3.734539,
+        -38.503612
+      ],
+      [
+        -3.73461,
+        -38.503406
+      ],
+      [
+        -3.734666,
+        -38.503239
+      ],
+      [
+        -3.734743,
+        -38.503197
+      ],
+      [
+        -3.735018,
+        -38.502358
+      ],
+      [
+        -3.735,
+        -38.502274
+      ],
+      [
+        -3.735977,
+        -38.502583
+      ],
+      [
+        -3.735857,
+        -38.502953
+      ]
+    ]
+  },
+  {
+    "start": [
+      -3.73086,
+      -38.527436
+    ],
+    "customer": [
+      -3.741972,
+      -38.537977
+    ],
+    "address": "Av. da Universidade - Benfica",
+    "route1": [
+      [
+        -3.73086,
+        -38.527436
+      ],
+      [
+        -3.731482,
+        -38.527636
+      ],
+      [
+        -3.731541,
+        -38.527655
+      ],
+      [
+        -3.73159,
+        -38.527672
+      ],
+      [
+        -3.732305,
+        -38.527924
+      ],
+      [
+        -3.732344,
+        -38.527937
+      ],
+      [
+        -3.732367,
+        -38.527945
+      ],
+      [
+        -3.732447,
+        -38.527971
+      ],
+      [
+        -3.732429,
+        -38.528027
+      ],
+      [
+        -3.732218,
+        -38.528694
+      ],
+      [
+        -3.732211,
+        -38.528714
+      ],
+      [
+        -3.732202,
+        -38.528745
+      ],
+      [
+        -3.732187,
+        -38.528791
+      ],
+      [
+        -3.732065,
+        -38.529167
+      ],
+      [
+        -3.73205,
+        -38.529216
+      ],
+      [
+        -3.732037,
+        -38.529257
+      ],
+      [
+        -3.732027,
+        -38.52929
+      ],
+      [
+        -3.732008,
+        -38.52935
+      ],
+      [
+        -3.731834,
+        -38.52988
+      ],
+      [
+        -3.731823,
+        -38.529912
+      ],
+      [
+        -3.731815,
+        -38.529938
+      ],
+      [
+        -3.731808,
+        -38.529961
+      ],
+      [
+        -3.7318,
+        -38.529984
+      ],
+      [
+        -3.731785,
+        -38.53003
+      ],
+      [
+        -3.731491,
+        -38.530943
+      ],
+      [
+        -3.731483,
+        -38.530973
+      ],
+      [
+        -3.731474,
+        -38.531002
+      ],
+      [
+        -3.731452,
+        -38.531067
+      ],
+      [
+        -3.731158,
+        -38.531975
+      ],
+      [
+        -3.731146,
+        -38.532015
+      ],
+      [
+        -3.731137,
+        -38.532047
+      ],
+      [
+        -3.731116,
+        -38.532113
+      ],
+      [
+        -3.730769,
+        -38.533188
+      ],
+      [
+        -3.730759,
+        -38.533221
+      ],
+      [
+        -3.730749,
+        -38.533253
+      ],
+      [
+        -3.730732,
+        -38.533303
+      ],
+      [
+        -3.730463,
+        -38.534131
+      ],
+      [
+        -3.730449,
+        -38.534171
+      ],
+      [
+        -3.730437,
+        -38.53421
+      ],
+      [
+        -3.730416,
+        -38.534275
+      ],
+      [
+        -3.730392,
+        -38.534347
+      ],
+      [
+        -3.7301,
+        -38.535215
+      ],
+      [
+        -3.730092,
+        -38.535242
+      ],
+      [
+        -3.730083,
+        -38.535269
+      ],
+      [
+        -3.730151,
+        -38.535289
+      ],
+      [
+        -3.7305,
+        -38.535388
+      ],
+      [
+        -3.730923,
+        -38.535509
+      ],
+      [
+        -3.730956,
+        -38.535519
+      ],
+      [
+        -3.730981,
+        -38.535526
+      ],
+      [
+        -3.731034,
+        -38.535541
+      ],
+      [
+        -3.73193,
+        -38.535801
+      ],
+      [
+        -3.731961,
+        -38.535811
+      ],
+      [
+        -3.731988,
+        -38.535819
+      ],
+      [
+        -3.732046,
+        -38.535837
+      ],
+      [
+        -3.73235,
+        -38.535936
+      ],
+      [
+        -3.732994,
+        -38.536127
+      ],
+      [
+        -3.733022,
+        -38.536136
+      ],
+      [
+        -3.733056,
+        -38.536146
+      ]
+    ],
+    "route2": [
+      [
+        -3.733056,
+        -38.536146
+      ],
+      [
+        -3.733112,
+        -38.536162
+      ],
+      [
+        -3.734299,
+        -38.536515
+      ],
+      [
+        -3.734748,
+        -38.536655
+      ],
+      [
+        -3.734776,
+        -38.536678
+      ],
+      [
+        -3.734809,
+        -38.536705
+      ],
+      [
+        -3.73492,
+        -38.536738
+      ],
+      [
+        -3.734985,
+        -38.536757
+      ],
+      [
+        -3.735847,
+        -38.537004
+      ],
+      [
+        -3.736137,
+        -38.537093
+      ],
+      [
+        -3.73635,
+        -38.537158
+      ],
+      [
+        -3.736875,
+        -38.537324
+      ],
+      [
+        -3.736967,
+        -38.537363
+      ],
+      [
+        -3.737063,
+        -38.537408
+      ],
+      [
+        -3.737128,
+        -38.537433
+      ],
+      [
+        -3.737149,
+        -38.537441
+      ],
+      [
+        -3.737384,
+        -38.537571
+      ],
+      [
+        -3.73756,
+        -38.537695
+      ],
+      [
+        -3.738101,
+        -38.538226
+      ],
+      [
+        -3.738381,
+        -38.538505
+      ],
+      [
+        -3.738529,
+        -38.538667
+      ],
+      [
+        -3.738639,
+        -38.538807
+      ],
+      [
+        -3.738743,
+        -38.538956
+      ],
+      [
+        -3.7389,
+        -38.5392
+      ],
+      [
+        -3.738922,
+        -38.539234
+      ],
+      [
+        -3.738943,
+        -38.539269
+      ],
+      [
+        -3.738885,
+        -38.539333
+      ],
+      [
+        -3.738625,
+        -38.539618
+      ],
+      [
+        -3.738268,
+        -38.540036
+      ],
+      [
+        -3.738205,
+        -38.540108
+      ],
+      [
+        -3.738275,
+        -38.540127
+      ],
+      [
+        -3.738436,
+        -38.540174
+      ],
+      [
+        -3.738715,
+        -38.540437
+      ],
+      [
+        -3.738746,
+        -38.540466
+      ],
+      [
+        -3.738807,
+        -38.540523
+      ],
+      [
+        -3.738869,
+        -38.540581
+      ],
+      [
+        -3.73927,
+        -38.540958
+      ],
+      [
+        -3.73929,
+        -38.540976
+      ],
+      [
+        -3.73931,
+        -38.540993
+      ],
+      [
+        -3.739372,
+        -38.541045
+      ],
+      [
+        -3.739437,
+        -38.540968
+      ],
+      [
+        -3.739917,
+        -38.540414
+      ],
+      [
+        -3.739936,
+        -38.540392
+      ],
+      [
+        -3.739968,
+        -38.540354
+      ],
+      [
+        -3.740001,
+        -38.540315
+      ],
+      [
+        -3.740054,
+        -38.540253
+      ],
+      [
+        -3.740086,
+        -38.540217
+      ],
+      [
+        -3.740138,
+        -38.540155
+      ],
+      [
+        -3.740893,
+        -38.539253
+      ],
+      [
+        -3.740907,
+        -38.539234
+      ],
+      [
+        -3.740935,
+        -38.539203
+      ],
+      [
+        -3.740963,
+        -38.539171
+      ],
+      [
+        -3.740983,
+        -38.539144
+      ],
+      [
+        -3.741002,
+        -38.539122
+      ],
+      [
+        -3.741097,
+        -38.539013
+      ],
+      [
+        -3.741144,
+        -38.53896
+      ],
+      [
+        -3.741972,
+        -38.537977
+      ]
+    ]
+  },
+  {
+    "start": [
+      -3.73086,
+      -38.527436
+    ],
+    "customer": [
+      -3.733056,
+      -38.489829
+    ],
+    "address": "Rua Frederico Borges - Varjota",
+    "route1": [
+      [
+        -3.73086,
+        -38.527436
+      ],
+      [
+        -3.731482,
+        -38.527636
+      ],
+      [
+        -3.731541,
+        -38.527655
+      ],
+      [
+        -3.73152,
+        -38.527722
+      ],
+      [
+        -3.731304,
+        -38.528392
+      ],
+      [
+        -3.731298,
+        -38.528411
+      ],
+      [
+        -3.731295,
+        -38.52842
+      ],
+      [
+        -3.731287,
+        -38.528445
+      ],
+      [
+        -3.73121,
+        -38.528419
+      ],
+      [
+        -3.729918,
+        -38.527985
+      ],
+      [
+        -3.729875,
+        -38.527971
+      ],
+      [
+        -3.729893,
+        -38.527918
+      ],
+      [
+        -3.730107,
+        -38.527245
+      ],
+      [
+        -3.730122,
+        -38.527198
+      ],
+      [
+        -3.73014,
+        -38.527143
+      ],
+      [
+        -3.730398,
+        -38.526354
+      ],
+      [
+        -3.730414,
+        -38.526303
+      ],
+      [
+        -3.73051,
+        -38.526006
+      ],
+      [
+        -3.730662,
+        -38.525561
+      ],
+      [
+        -3.730767,
+        -38.525297
+      ],
+      [
+        -3.730806,
+        -38.525206
+      ],
+      [
+        -3.730847,
+        -38.525078
+      ],
+      [
+        -3.730862,
+        -38.525005
+      ],
+      [
+        -3.730861,
+        -38.524944
+      ],
+      [
+        -3.730847,
+        -38.524863
+      ],
+      [
+        -3.730743,
+        -38.524382
+      ],
+      [
+        -3.730641,
+        -38.523909
+      ],
+      [
+        -3.730587,
+        -38.523668
+      ],
+      [
+        -3.730533,
+        -38.523391
+      ],
+      [
+        -3.73053,
+        -38.523351
+      ],
+      [
+        -3.730535,
+        -38.523308
+      ],
+      [
+        -3.730644,
+        -38.522971
+      ],
+      [
+        -3.730658,
+        -38.522929
+      ],
+      [
+        -3.730673,
+        -38.522881
+      ],
+      [
+        -3.730942,
+        -38.522037
+      ],
+      [
+        -3.730951,
+        -38.522007
+      ],
+      [
+        -3.730957,
+        -38.521989
+      ],
+      [
+        -3.730979,
+        -38.521919
+      ],
+      [
+        -3.730997,
+        -38.521861
+      ],
+      [
+        -3.731287,
+        -38.520914
+      ],
+      [
+        -3.731307,
+        -38.520851
+      ],
+      [
+        -3.731464,
+        -38.520309
+      ],
+      [
+        -3.731636,
+        -38.519729
+      ],
+      [
+        -3.731653,
+        -38.519672
+      ],
+      [
+        -3.73167,
+        -38.519618
+      ],
+      [
+        -3.73178,
+        -38.519254
+      ],
+      [
+        -3.731968,
+        -38.518616
+      ],
+      [
+        -3.732278,
+        -38.51762
+      ],
+      [
+        -3.732299,
+        -38.517551
+      ],
+      [
+        -3.732319,
+        -38.517485
+      ],
+      [
+        -3.73263,
+        -38.516504
+      ],
+      [
+        -3.732882,
+        -38.515684
+      ],
+      [
+        -3.732943,
+        -38.515488
+      ],
+      [
+        -3.732963,
+        -38.515427
+      ],
+      [
+        -3.732985,
+        -38.515357
+      ],
+      [
+        -3.733287,
+        -38.514389
+      ],
+      [
+        -3.733428,
+        -38.51395
+      ],
+      [
+        -3.733473,
+        -38.513811
+      ],
+      [
+        -3.73361,
+        -38.513382
+      ],
+      [
+        -3.73363,
+        -38.513319
+      ],
+      [
+        -3.73365,
+        -38.513254
+      ],
+      [
+        -3.733932,
+        -38.512344
+      ],
+      [
+        -3.733944,
+        -38.512257
+      ],
+      [
+        -3.733945,
+        -38.512158
+      ],
+      [
+        -3.734236,
+        -38.511266
+      ],
+      [
+        -3.734258,
+        -38.5112
+      ],
+      [
+        -3.734279,
+        -38.511136
+      ],
+      [
+        -3.734368,
+        -38.510863
+      ],
+      [
+        -3.734443,
+        -38.510633
+      ],
+      [
+        -3.734602,
+        -38.510152
+      ],
+      [
+        -3.734774,
+        -38.509623
+      ],
+      [
+        -3.734815,
+        -38.509499
+      ],
+      [
+        -3.734907,
+        -38.509217
+      ],
+      [
+        -3.734925,
+        -38.509161
+      ],
+      [
+        -3.734949,
+        -38.509086
+      ],
+      [
+        -3.734972,
+        -38.509015
+      ]
+    ],
+    "route2": [
+      [
+        -3.734972,
+        -38.509015
+      ],
+      [
+        -3.735166,
+        -38.508417
+      ],
+      [
+        -3.7353,
+        -38.50801
+      ],
+      [
+        -3.735476,
+        -38.50748
+      ],
+      [
+        -3.735625,
+        -38.507008
+      ],
+      [
+        -3.735641,
+        -38.506957
+      ],
+      [
+        -3.735663,
+        -38.506887
+      ],
+      [
+        -3.735677,
+        -38.506843
+      ],
+      [
+        -3.73584,
+        -38.50634
+      ],
+      [
+        -3.735983,
+        -38.5059
+      ],
+      [
+        -3.736327,
+        -38.504833
+      ],
+      [
+        -3.736642,
+        -38.503859
+      ],
+      [
+        -3.73694,
+        -38.502951
+      ],
+      [
+        -3.736959,
+        -38.502895
+      ],
+      [
+        -3.736979,
+        -38.502833
+      ],
+      [
+        -3.737254,
+        -38.50199
+      ],
+      [
+        -3.737273,
+        -38.501932
+      ],
+      [
+        -3.737296,
+        -38.501861
+      ],
+      [
+        -3.737379,
+        -38.501598
+      ],
+      [
+        -3.737478,
+        -38.501294
+      ],
+      [
+        -3.737571,
+        -38.501016
+      ],
+      [
+        -3.737592,
+        -38.500953
+      ],
+      [
+        -3.737619,
+        -38.500872
+      ],
+      [
+        -3.73791,
+        -38.499991
+      ],
+      [
+        -3.738202,
+        -38.499075
+      ],
+      [
+        -3.738218,
+        -38.499025
+      ],
+      [
+        -3.738238,
+        -38.498959
+      ],
+      [
+        -3.738268,
+        -38.498861
+      ],
+      [
+        -3.738521,
+        -38.498059
+      ],
+      [
+        -3.738542,
+        -38.497995
+      ],
+      [
+        -3.738563,
+        -38.497926
+      ],
+      [
+        -3.738834,
+        -38.4971
+      ],
+      [
+        -3.738859,
+        -38.497026
+      ],
+      [
+        -3.73888,
+        -38.49696
+      ],
+      [
+        -3.739181,
+        -38.49605
+      ],
+      [
+        -3.739487,
+        -38.495081
+      ],
+      [
+        -3.739685,
+        -38.494467
+      ],
+      [
+        -3.739769,
+        -38.494202
+      ],
+      [
+        -3.739778,
+        -38.494176
+      ],
+      [
+        -3.739786,
+        -38.49415
+      ],
+      [
+        -3.739807,
+        -38.494086
+      ],
+      [
+        -3.739743,
+        -38.494065
+      ],
+      [
+        -3.739258,
+        -38.493909
+      ],
+      [
+        -3.738836,
+        -38.493773
+      ],
+      [
+        -3.738754,
+        -38.493746
+      ],
+      [
+        -3.737972,
+        -38.493489
+      ],
+      [
+        -3.737938,
+        -38.493477
+      ],
+      [
+        -3.73782,
+        -38.493438
+      ],
+      [
+        -3.737738,
+        -38.493411
+      ],
+      [
+        -3.73683,
+        -38.493121
+      ],
+      [
+        -3.735955,
+        -38.492852
+      ],
+      [
+        -3.735845,
+        -38.492818
+      ],
+      [
+        -3.735423,
+        -38.492674
+      ],
+      [
+        -3.734951,
+        -38.492523
+      ],
+      [
+        -3.734928,
+        -38.492516
+      ],
+      [
+        -3.734904,
+        -38.492509
+      ],
+      [
+        -3.734838,
+        -38.492489
+      ],
+      [
+        -3.734747,
+        -38.492462
+      ],
+      [
+        -3.734335,
+        -38.492323
+      ],
+      [
+        -3.733919,
+        -38.492186
+      ],
+      [
+        -3.733885,
+        -38.492175
+      ],
+      [
+        -3.733852,
+        -38.492164
+      ],
+      [
+        -3.73379,
+        -38.492145
+      ],
+      [
+        -3.732972,
+        -38.491882
+      ],
+      [
+        -3.73289,
+        -38.491856
+      ],
+      [
+        -3.732831,
+        -38.491837
+      ],
+      [
+        -3.731976,
+        -38.491565
+      ],
+      [
+        -3.731907,
+        -38.491541
+      ],
+      [
+        -3.731925,
+        -38.491486
+      ],
+      [
+        -3.731976,
+        -38.491331
+      ],
+      [
+        -3.732027,
+        -38.491174
+      ],
+      [
+        -3.732207,
+        -38.490624
+      ],
+      [
+        -3.732521,
+        -38.489653
+      ],
+      [
+        -3.732582,
+        -38.489673
+      ],
+      [
+        -3.733056,
+        -38.489829
+      ]
+    ]
+  },
+  {
+    "start": [
+      -3.73086,
+      -38.527436
+    ],
+    "customer": [
+      -3.754773,
+      -38.487816
+    ],
+    "address": "Av. Washington Soares - Iguatemi",
+    "route1": [
+      [
+        -3.73086,
+        -38.527436
+      ],
+      [
+        -3.731482,
+        -38.527636
+      ],
+      [
+        -3.731541,
+        -38.527655
+      ],
+      [
+        -3.73152,
+        -38.527722
+      ],
+      [
+        -3.731304,
+        -38.528392
+      ],
+      [
+        -3.731298,
+        -38.528411
+      ],
+      [
+        -3.731295,
+        -38.52842
+      ],
+      [
+        -3.731287,
+        -38.528445
+      ],
+      [
+        -3.73121,
+        -38.528419
+      ],
+      [
+        -3.729918,
+        -38.527985
+      ],
+      [
+        -3.729875,
+        -38.527971
+      ],
+      [
+        -3.729893,
+        -38.527918
+      ],
+      [
+        -3.730107,
+        -38.527245
+      ],
+      [
+        -3.730122,
+        -38.527198
+      ],
+      [
+        -3.73014,
+        -38.527143
+      ],
+      [
+        -3.730398,
+        -38.526354
+      ],
+      [
+        -3.730414,
+        -38.526303
+      ],
+      [
+        -3.73051,
+        -38.526006
+      ],
+      [
+        -3.730662,
+        -38.525561
+      ],
+      [
+        -3.730767,
+        -38.525297
+      ],
+      [
+        -3.730806,
+        -38.525206
+      ],
+      [
+        -3.730847,
+        -38.525078
+      ],
+      [
+        -3.730862,
+        -38.525005
+      ],
+      [
+        -3.730861,
+        -38.524944
+      ],
+      [
+        -3.730847,
+        -38.524863
+      ],
+      [
+        -3.730743,
+        -38.524382
+      ],
+      [
+        -3.730641,
+        -38.523909
+      ],
+      [
+        -3.730587,
+        -38.523668
+      ],
+      [
+        -3.730533,
+        -38.523391
+      ],
+      [
+        -3.73053,
+        -38.523351
+      ],
+      [
+        -3.730535,
+        -38.523308
+      ],
+      [
+        -3.730644,
+        -38.522971
+      ],
+      [
+        -3.730658,
+        -38.522929
+      ],
+      [
+        -3.730673,
+        -38.522881
+      ],
+      [
+        -3.730942,
+        -38.522037
+      ],
+      [
+        -3.730951,
+        -38.522007
+      ],
+      [
+        -3.730957,
+        -38.521989
+      ],
+      [
+        -3.730979,
+        -38.521919
+      ],
+      [
+        -3.730997,
+        -38.521861
+      ],
+      [
+        -3.731287,
+        -38.520914
+      ],
+      [
+        -3.731307,
+        -38.520851
+      ],
+      [
+        -3.731464,
+        -38.520309
+      ],
+      [
+        -3.731636,
+        -38.519729
+      ],
+      [
+        -3.731653,
+        -38.519672
+      ],
+      [
+        -3.73167,
+        -38.519618
+      ],
+      [
+        -3.73178,
+        -38.519254
+      ],
+      [
+        -3.731968,
+        -38.518616
+      ],
+      [
+        -3.732278,
+        -38.51762
+      ],
+      [
+        -3.732299,
+        -38.517551
+      ],
+      [
+        -3.732319,
+        -38.517485
+      ],
+      [
+        -3.73263,
+        -38.516504
+      ],
+      [
+        -3.732882,
+        -38.515684
+      ],
+      [
+        -3.732943,
+        -38.515488
+      ],
+      [
+        -3.732963,
+        -38.515427
+      ],
+      [
+        -3.732985,
+        -38.515357
+      ],
+      [
+        -3.733287,
+        -38.514389
+      ],
+      [
+        -3.733428,
+        -38.51395
+      ],
+      [
+        -3.733473,
+        -38.513811
+      ],
+      [
+        -3.73361,
+        -38.513382
+      ],
+      [
+        -3.73363,
+        -38.513319
+      ],
+      [
+        -3.73365,
+        -38.513254
+      ],
+      [
+        -3.733932,
+        -38.512344
+      ],
+      [
+        -3.733944,
+        -38.512257
+      ],
+      [
+        -3.733945,
+        -38.512158
+      ],
+      [
+        -3.734236,
+        -38.511266
+      ],
+      [
+        -3.734258,
+        -38.5112
+      ],
+      [
+        -3.734279,
+        -38.511136
+      ],
+      [
+        -3.734368,
+        -38.510863
+      ],
+      [
+        -3.734443,
+        -38.510633
+      ],
+      [
+        -3.734602,
+        -38.510152
+      ],
+      [
+        -3.734774,
+        -38.509623
+      ],
+      [
+        -3.734815,
+        -38.509499
+      ],
+      [
+        -3.734907,
+        -38.509217
+      ],
+      [
+        -3.734925,
+        -38.509161
+      ],
+      [
+        -3.734949,
+        -38.509086
+      ],
+      [
+        -3.734972,
+        -38.509015
+      ],
+      [
+        -3.735166,
+        -38.508417
+      ],
+      [
+        -3.7353,
+        -38.50801
+      ],
+      [
+        -3.735476,
+        -38.50748
+      ],
+      [
+        -3.735625,
+        -38.507008
+      ],
+      [
+        -3.735641,
+        -38.506957
+      ],
+      [
+        -3.735663,
+        -38.506887
+      ],
+      [
+        -3.735677,
+        -38.506843
+      ],
+      [
+        -3.73584,
+        -38.50634
+      ],
+      [
+        -3.735983,
+        -38.5059
+      ],
+      [
+        -3.736327,
+        -38.504833
+      ],
+      [
+        -3.736642,
+        -38.503859
+      ],
+      [
+        -3.73694,
+        -38.502951
+      ],
+      [
+        -3.736959,
+        -38.502895
+      ],
+      [
+        -3.736979,
+        -38.502833
+      ],
+      [
+        -3.737254,
+        -38.50199
+      ],
+      [
+        -3.737273,
+        -38.501932
+      ],
+      [
+        -3.737296,
+        -38.501861
+      ],
+      [
+        -3.737379,
+        -38.501598
+      ],
+      [
+        -3.737478,
+        -38.501294
+      ],
+      [
+        -3.737571,
+        -38.501016
+      ],
+      [
+        -3.737592,
+        -38.500953
+      ],
+      [
+        -3.737619,
+        -38.500872
+      ],
+      [
+        -3.73791,
+        -38.499991
+      ],
+      [
+        -3.738202,
+        -38.499075
+      ],
+      [
+        -3.738218,
+        -38.499025
+      ],
+      [
+        -3.738238,
+        -38.498959
+      ],
+      [
+        -3.738268,
+        -38.498861
+      ],
+      [
+        -3.738521,
+        -38.498059
+      ],
+      [
+        -3.738542,
+        -38.497995
+      ],
+      [
+        -3.738563,
+        -38.497926
+      ],
+      [
+        -3.738834,
+        -38.4971
+      ],
+      [
+        -3.738859,
+        -38.497026
+      ],
+      [
+        -3.73888,
+        -38.49696
+      ],
+      [
+        -3.739181,
+        -38.49605
+      ],
+      [
+        -3.739487,
+        -38.495081
+      ],
+      [
+        -3.739685,
+        -38.494467
+      ],
+      [
+        -3.739769,
+        -38.494202
+      ],
+      [
+        -3.739778,
+        -38.494176
+      ],
+      [
+        -3.739786,
+        -38.49415
+      ],
+      [
+        -3.739807,
+        -38.494086
+      ],
+      [
+        -3.739828,
+        -38.494022
+      ],
+      [
+        -3.740117,
+        -38.493143
+      ]
+    ],
+    "route2": [
+      [
+        -3.740117,
+        -38.493143
+      ],
+      [
+        -3.740422,
+        -38.492185
+      ],
+      [
+        -3.741381,
+        -38.492486
+      ],
+      [
+        -3.742301,
+        -38.492779
+      ],
+      [
+        -3.742364,
+        -38.492799
+      ],
+      [
+        -3.742435,
+        -38.492821
+      ],
+      [
+        -3.74246,
+        -38.492746
+      ],
+      [
+        -3.742731,
+        -38.491921
+      ],
+      [
+        -3.742744,
+        -38.491883
+      ],
+      [
+        -3.742752,
+        -38.491856
+      ],
+      [
+        -3.742773,
+        -38.491792
+      ],
+      [
+        -3.742926,
+        -38.491323
+      ],
+      [
+        -3.742934,
+        -38.491242
+      ],
+      [
+        -3.742931,
+        -38.491141
+      ],
+      [
+        -3.742935,
+        -38.491077
+      ],
+      [
+        -3.742949,
+        -38.490986
+      ],
+      [
+        -3.742966,
+        -38.490877
+      ],
+      [
+        -3.742983,
+        -38.490823
+      ],
+      [
+        -3.743036,
+        -38.490686
+      ],
+      [
+        -3.743333,
+        -38.489858
+      ],
+      [
+        -3.74351,
+        -38.489309
+      ],
+      [
+        -3.743637,
+        -38.488849
+      ],
+      [
+        -3.743712,
+        -38.488592
+      ],
+      [
+        -3.743784,
+        -38.488371
+      ],
+      [
+        -3.743825,
+        -38.488259
+      ],
+      [
+        -3.743909,
+        -38.488009
+      ],
+      [
+        -3.743945,
+        -38.487903
+      ],
+      [
+        -3.743978,
+        -38.48773
+      ],
+      [
+        -3.743977,
+        -38.48766
+      ],
+      [
+        -3.743965,
+        -38.487596
+      ],
+      [
+        -3.743862,
+        -38.487226
+      ],
+      [
+        -3.743671,
+        -38.486643
+      ],
+      [
+        -3.743661,
+        -38.486565
+      ],
+      [
+        -3.74366,
+        -38.486496
+      ],
+      [
+        -3.743691,
+        -38.486389
+      ],
+      [
+        -3.744057,
+        -38.485244
+      ],
+      [
+        -3.744069,
+        -38.485207
+      ],
+      [
+        -3.744077,
+        -38.485183
+      ],
+      [
+        -3.744108,
+        -38.485084
+      ],
+      [
+        -3.744129,
+        -38.485017
+      ],
+      [
+        -3.744341,
+        -38.48435
+      ],
+      [
+        -3.744408,
+        -38.484152
+      ],
+      [
+        -3.744456,
+        -38.484067
+      ],
+      [
+        -3.744525,
+        -38.484001
+      ],
+      [
+        -3.74457,
+        -38.483975
+      ],
+      [
+        -3.744642,
+        -38.483946
+      ],
+      [
+        -3.7448,
+        -38.483909
+      ],
+      [
+        -3.744882,
+        -38.483891
+      ],
+      [
+        -3.745277,
+        -38.483787
+      ],
+      [
+        -3.745331,
+        -38.483758
+      ],
+      [
+        -3.745365,
+        -38.483724
+      ],
+      [
+        -3.745396,
+        -38.483669
+      ],
+      [
+        -3.745416,
+        -38.483616
+      ],
+      [
+        -3.7454,
+        -38.483547
+      ],
+      [
+        -3.745615,
+        -38.482863
+      ],
+      [
+        -3.745702,
+        -38.482702
+      ],
+      [
+        -3.745911,
+        -38.482059
+      ],
+      [
+        -3.745942,
+        -38.481964
+      ],
+      [
+        -3.746178,
+        -38.481238
+      ],
+      [
+        -3.746226,
+        -38.481094
+      ],
+      [
+        -3.746262,
+        -38.48098
+      ],
+      [
+        -3.74628,
+        -38.48092
+      ],
+      [
+        -3.746408,
+        -38.480512
+      ],
+      [
+        -3.74655,
+        -38.480078
+      ],
+      [
+        -3.74656,
+        -38.480051
+      ],
+      [
+        -3.746606,
+        -38.480027
+      ],
+      [
+        -3.746655,
+        -38.480018
+      ],
+      [
+        -3.746991,
+        -38.480033
+      ],
+      [
+        -3.747087,
+        -38.480064
+      ],
+      [
+        -3.747183,
+        -38.480099
+      ],
+      [
+        -3.748207,
+        -38.480754
+      ],
+      [
+        -3.748778,
+        -38.481105
+      ],
+      [
+        -3.749225,
+        -38.481371
+      ],
+      [
+        -3.749414,
+        -38.481457
+      ],
+      [
+        -3.749705,
+        -38.481567
+      ],
+      [
+        -3.750138,
+        -38.481699
+      ],
+      [
+        -3.750611,
+        -38.48185
+      ],
+      [
+        -3.750757,
+        -38.4819
+      ],
+      [
+        -3.752086,
+        -38.482376
+      ],
+      [
+        -3.752383,
+        -38.482484
+      ],
+      [
+        -3.753365,
+        -38.482836
+      ],
+      [
+        -3.753625,
+        -38.482926
+      ],
+      [
+        -3.753998,
+        -38.483058
+      ],
+      [
+        -3.754394,
+        -38.483198
+      ],
+      [
+        -3.754487,
+        -38.48323
+      ],
+      [
+        -3.755093,
+        -38.483422
+      ],
+      [
+        -3.755281,
+        -38.483453
+      ],
+      [
+        -3.755503,
+        -38.483467
+      ],
+      [
+        -3.755709,
+        -38.483463
+      ],
+      [
+        -3.755952,
+        -38.483449
+      ],
+      [
+        -3.755989,
+        -38.483474
+      ],
+      [
+        -3.756016,
+        -38.483498
+      ],
+      [
+        -3.756039,
+        -38.483529
+      ],
+      [
+        -3.75606,
+        -38.483573
+      ],
+      [
+        -3.756075,
+        -38.483622
+      ],
+      [
+        -3.756077,
+        -38.483695
+      ],
+      [
+        -3.756066,
+        -38.483809
+      ],
+      [
+        -3.755773,
+        -38.4851
+      ],
+      [
+        -3.755768,
+        -38.485185
+      ],
+      [
+        -3.755694,
+        -38.485514
+      ],
+      [
+        -3.755647,
+        -38.485725
+      ],
+      [
+        -3.755468,
+        -38.486486
+      ],
+      [
+        -3.755435,
+        -38.486538
+      ],
+      [
+        -3.755364,
+        -38.486812
+      ],
+      [
+        -3.755334,
+        -38.486859
+      ],
+      [
+        -3.755287,
+        -38.486888
+      ],
+      [
+        -3.75516,
+        -38.486968
+      ],
+      [
+        -3.755095,
+        -38.48701
+      ],
+      [
+        -3.75503,
+        -38.487052
+      ],
+      [
+        -3.754963,
+        -38.487097
+      ],
+      [
+        -3.754906,
+        -38.487136
+      ],
+      [
+        -3.75484,
+        -38.487186
+      ],
+      [
+        -3.75479,
+        -38.487227
+      ],
+      [
+        -3.754684,
+        -38.48733
+      ],
+      [
+        -3.754584,
+        -38.487433
+      ],
+      [
+        -3.754492,
+        -38.487543
+      ],
+      [
+        -3.754795,
+        -38.487789
+      ],
+      [
+        -3.754773,
+        -38.487816
+      ]
+    ]
+  }
+]
+;
+
+function DrinkModal({
+  drinkName,
+  onClose,
+  products
+}: {
+  drinkName: string;
+  onClose: () => void;
+  products: Product[];
+}) {
+  const drink = products.find((p) => p.name === drinkName);
+  
+  if (!drink) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-hidden"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="relative max-w-2xl w-full flex flex-col items-center justify-center h-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 md:top-10 right-4 md:right-10 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md"
+        >
+          <X className="size-6" />
+        </button>
+        
+        {/* Efeito de Líquido no Fundo */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 360],
+              borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%"]
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            className="w-72 h-72 md:w-96 md:h-96 bg-cyan-400/40 blur-3xl rounded-full absolute mix-blend-screen"
+          />
+          <motion.div
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              rotate: [360, 180, 0],
+              borderRadius: ["60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%"]
+            }}
+            transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
+            className="w-64 h-64 md:w-80 md:h-80 bg-blue-500/40 blur-2xl rounded-full absolute mix-blend-screen"
+          />
+        </div>
+
+        {/* Bebida Girando e Flutuando */}
+        <motion.div
+          initial={{ y: -300, rotate: -720, scale: 0.5, opacity: 0 }}
+          animate={{ y: 0, rotate: 0, scale: 1, opacity: 1 }}
+          transition={{ type: "spring", damping: 15, stiffness: 60, duration: 1.5 }}
+          className="relative z-10 flex flex-col items-center"
+        >
+          <motion.img
+            animate={{ y: [0, -20, 0], rotate: [0, 5, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+            src={drink.image}
+            alt={drink.name}
+            className="w-full max-w-[280px] md:max-w-md h-auto object-contain drop-shadow-2xl mix-blend-normal"
+            style={{ filter: "contrast(1.15) brightness(1.08) drop-shadow(0px 20px 30px rgba(0,0,0,0.5))" }}
+          />
+        </motion.div>
+        
+        {/* Observações / Detalhes */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8, type: "spring" }}
+          className="text-center mt-10 z-10 relative"
+        >
+          <h2 className="text-5xl md:text-7xl font-display font-black uppercase text-white tracking-tight mb-4 drop-shadow-xl">
+            {drink.name}
+          </h2>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="text-cyan-100 text-xl md:text-2xl font-medium mb-8 max-w-lg mx-auto drop-shadow-md bg-black/20 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+          >
+            {drink.description}
+          </motion.p>
+          
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 1.2, type: "spring", bounce: 0.5 }}
+            className="flex items-center justify-center"
+          >
+            <span className="text-4xl md:text-5xl font-black text-white drop-shadow-2xl bg-cyan-600/30 px-10 py-4 rounded-full border border-cyan-400/50 backdrop-blur-md shadow-[0_0_30px_rgba(34,211,238,0.3)]">
+              R$ {drink.price.toFixed(2).replace('.', ',')}
+            </span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 function Index() {
+  const [activeDrinkName, setActiveDrinkName] = useState<string | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -185,24 +3352,9 @@ function Index() {
   const [addedId, setAddedId] = useState<number | null>(null);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const [activeComboIndex, setActiveComboIndex] = useState(0);
+
 
   const carouselSlides = [
-    {
-      id: "classico",
-      titleLine1: "X",
-      titleLine2: "BURGUER",
-      image: burgerClassico,
-      bgClass: "bg-[#00A144]",
-      titleColor: "text-[#006B2D]",
-      buttonBg: "bg-[#006B2D]",
-      buttonText: "text-[#006B2D]",
-      badges: [
-        { text: "Clássico", style: "top-[25%] left-[25%] -rotate-12" },
-        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
-        { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
-      ]
-    },
     {
       id: "brasa",
       titleLine1: "DAVI VS",
@@ -216,7 +3368,7 @@ function Index() {
         { text: "Desafio", style: "top-[25%] left-[25%] -rotate-12" },
         { text: "Gigante", style: "top-[35%] left-[20%] -rotate-6" },
         { text: "300g", style: "top-[50%] left-[23%] rotate-6" },
-      ]
+      ],
     },
     {
       id: "inferno",
@@ -231,8 +3383,68 @@ function Index() {
         { text: "Triplo", style: "top-[25%] left-[25%] -rotate-12" },
         { text: "Muito Queijo", style: "top-[35%] left-[20%] -rotate-6" },
         { text: "450g", style: "top-[50%] left-[23%] rotate-6" },
-      ]
-    }
+      ],
+    },
+    {
+      id: "classico",
+      titleLine1: "X",
+      titleLine2: "BURGUER",
+      image: burgerClassico,
+      bgClass: "bg-[#00A144]",
+      titleColor: "text-[#006B2D]",
+      buttonBg: "bg-[#006B2D]",
+      buttonText: "text-[#006B2D]",
+      badges: [
+        { text: "Clássico", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "160g", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "mac-senai-feliz",
+      titleLine1: "MAC SENAI",
+      titleLine2: "FELIZ",
+      image: burgerClassico,
+      bgClass: "bg-[#0070C0]",
+      titleColor: "text-[#004A80]",
+      buttonBg: "bg-[#004A80]",
+      buttonText: "text-[#004A80]",
+      badges: [
+        { text: "Alegria", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Especial", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "Mágico", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "tripa-jr",
+      titleLine1: "TRIPA",
+      titleLine2: "JR",
+      image: burgerClassico,
+      bgClass: "bg-[#FF8C00]",
+      titleColor: "text-[#B36200]",
+      buttonBg: "bg-[#B36200]",
+      buttonText: "text-[#B36200]",
+      badges: [
+        { text: "Fome Menor", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Saboroso", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "No Ponto", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
+    {
+      id: "mini-burguer",
+      titleLine1: "MINI",
+      titleLine2: "BURGUER",
+      image: burgerClassico,
+      bgClass: "bg-[#00BFA5]",
+      titleColor: "text-[#00806E]",
+      buttonBg: "bg-[#00806E]",
+      buttonText: "text-[#00806E]",
+      badges: [
+        { text: "Pequeno", style: "top-[25%] left-[25%] -rotate-12" },
+        { text: "Perfeito", style: "top-[35%] left-[20%] -rotate-6" },
+        { text: "Para Todos", style: "top-[50%] left-[23%] rotate-6" },
+      ],
+    },
   ];
 
   const [heroIndex, setHeroIndex] = useState(0);
@@ -260,25 +3472,15 @@ function Index() {
     setSlideDirection(-1);
     setHeroIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
   };
-  
+
   const currentSlide = carouselSlides[heroIndex]!;
 
   // Dynamic theme based on the currently selected burger
   const currentTheme = useMemo(() => {
     switch (heroIndex) {
-      case 0: // CHAPA CLÁSSICO - Green
+      case 0: // BRASA BACON - Purple
         return {
-          bgLight: "#F0FAF4", // very light green
-          bgDark: "#0B1F13",
-          bgVeryDark: "#040B07",
-          primary: "#006B2D",
-          secondary: "#00A144",
-          secondaryAlpha: "rgba(0, 161, 68, 0.15)",
-          textDark: "#05140B",
-        };
-      case 1: // BRASA BACON - Purple
-        return {
-          bgLight: "#F5F0FA", // very light purple
+          bgLight: "#F5F0FA",
           bgDark: "#150824",
           bgVeryDark: "#0B0414",
           primary: "#2B005F",
@@ -286,9 +3488,9 @@ function Index() {
           secondaryAlpha: "rgba(75, 22, 140, 0.15)",
           textDark: "#10031F",
         };
-      case 2: // INFERNO PICANTE - Red
+      case 1: // INFERNO PICANTE - Red
         return {
-          bgLight: "#FAF0F0", // very light red
+          bgLight: "#FAF0F0",
           bgDark: "#260602",
           bgVeryDark: "#120301",
           primary: "#7A1200",
@@ -296,7 +3498,7 @@ function Index() {
           secondaryAlpha: "rgba(196, 30, 0, 0.15)",
           textDark: "#1F0400",
         };
-      default:
+      case 2: // CHAPA CLÁSSICO - Green
         return {
           bgLight: "#F0FAF4",
           bgDark: "#0B1F13",
@@ -306,14 +3508,57 @@ function Index() {
           secondaryAlpha: "rgba(0, 161, 68, 0.15)",
           textDark: "#05140B",
         };
+      case 3: // MAC SENAI FELIZ - Yellow/Blue
+        return {
+          bgLight: "#F5F8FA",
+          bgDark: "#0B1624",
+          bgVeryDark: "#050B14",
+          primary: "#004A80",
+          secondary: "#0070C0",
+          secondaryAlpha: "rgba(0, 112, 192, 0.15)",
+          textDark: "#03101F",
+        };
+      case 4: // TRIPA JR - Orange
+        return {
+          bgLight: "#FFF7F0",
+          bgDark: "#261500",
+          bgVeryDark: "#140A00",
+          primary: "#B36200",
+          secondary: "#FF8C00",
+          secondaryAlpha: "rgba(255, 140, 0, 0.15)",
+          textDark: "#261100",
+        };
+      case 5: // MINI BURGUER - Teal
+        return {
+          bgLight: "#F0FAFA",
+          bgDark: "#001F1A",
+          bgVeryDark: "#000D0B",
+          primary: "#00806E",
+          secondary: "#00BFA5",
+          secondaryAlpha: "rgba(0, 191, 165, 0.15)",
+          textDark: "#001A16",
+        };
+      default:
+        return {
+          bgLight: "#F5F0FA",
+          bgDark: "#150824",
+          bgVeryDark: "#0B0414",
+          primary: "#2B005F",
+          secondary: "#4B168C",
+          secondaryAlpha: "rgba(75, 22, 140, 0.15)",
+          textDark: "#10031F",
+        };
     }
   }, [heroIndex]);
 
   const cartCount = Object.entries(cart).reduce((sum, [id, count]) => {
-    if (products.some(p => p.id === parseInt(id))) return sum + count;
+    if (products.some((p) => p.id === parseInt(id))) return sum + count;
     return sum;
   }, 0);
-  const visibleProducts = useMemo(() => products.filter((product) => product.category === tab), [tab]);
+  const visibleProducts = useMemo(
+    () => products.filter((product) => product.category === tab),
+    [tab],
+  );
 
   useEffect(() => {
     if (!authOpen) return;
@@ -326,10 +3571,9 @@ function Index() {
     };
   }, [authOpen]);
 
-
   const handleCheckout = (address: string, orderType?: "delivery" | "pickup" | null) => {
     if (Object.keys(cart).length === 0) return;
-    
+
     // In a real app, this would send an API request.
     // For demonstration, we just clear the cart and open the tracking modal!
     setCart({});
@@ -360,230 +3604,278 @@ function Index() {
 
   return (
     <>
-    <div className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`} style={{ marginBottom: footerHeight }}>
-      <header className="fixed inset-x-0 top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10 transition-colors duration-700">
-        <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
-          <motion.div 
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">FOGO E CHAPA</span>
-          </motion.div>
+      <div
+        className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}
+        style={{ marginBottom: footerHeight }}
+      >
+        <header className="fixed inset-x-0 top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10 transition-colors duration-700">
+          <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
+            <motion.div
+              className="flex items-center gap-2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">
+                FOGO E CHAPA
+              </span>
+            </motion.div>
 
-          <motion.nav 
-            className="hidden md:flex items-center gap-1 text-sm font-bold text-white bg-white/10 backdrop-blur-sm rounded-full px-2 py-2"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
-            }}
-            onMouseLeave={() => setHoveredNav(null)}
-          >
-             {[
-               { href: "#about", label: "About" },
-               { href: "#menu", label: "Menu" },
-               { href: "/gallery", label: "Gallery" },
-               { href: "#delivery", label: "Delivery" },
-               { href: "#drinks", label: "Drinks" },
-             ].map((link) => (
-               <motion.a 
-                 key={link.href}
-                 href={link.href === "/gallery" ? `/gallery?burger=${currentSlide.id}` : link.href} 
-                 onClick={(e) => {
-                   if (link.label === "Delivery" && activeOrderTime) {
-                     e.preventDefault();
-                     setTrackingOpen(true);
-                   }
-                 }}
-                 className="relative px-5 py-2 rounded-full z-10"
-                 variants={{
-                   hidden: { opacity: 0, y: -20, filter: "blur(6px)" },
-                   visible: { 
-                     opacity: 1, y: 0, filter: "blur(0px)", 
-                     transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } 
-                   },
-                 }}
-                 whileTap={{ scale: 0.95 }}
-                 onMouseEnter={() => setHoveredNav(link.href)}
-               >
-                 {hoveredNav === link.href && (
-                   <motion.span
-                     layoutId="navPill"
-                     className="absolute inset-0 bg-white/20 rounded-full"
-                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                   />
-                 )}
-                 <span className="relative z-10">{link.label}</span>
-               </motion.a>
-             ))}
-          </motion.nav>
+            <motion.nav
+              className="hidden md:flex items-center gap-1 text-sm font-bold text-white bg-white/10 backdrop-blur-sm rounded-full px-2 py-2"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+              }}
+              onMouseLeave={() => setHoveredNav(null)}
+            >
+              {[
+                { href: "#about", label: "About" },
+                { href: "#menu", label: "Menu" },
+                { href: "#delivery", label: "Delivery" },
+                { href: "/drinks", label: "Drinks" },
+              ].map((link) => (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    if (link.label === "Delivery") {
+                      e.preventDefault();
+                      if (activeOrderTime) {
+                        setTrackingOpen(true);
+                      } else {
+                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }
+                  }}
+                  className="relative px-5 py-2 rounded-full z-10"
+                  variants={{
+                    hidden: { opacity: 0, y: -20, filter: "blur(6px)" },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onMouseEnter={() => setHoveredNav(link.href)}
+                >
+                  {hoveredNav === link.href && (
+                    <motion.span
+                      layoutId="navPill"
+                      className="absolute inset-0 bg-white/20 rounded-full"
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{link.label}</span>
+                </motion.a>
+              ))}
+            </motion.nav>
 
-          <motion.div
-            className="flex items-center gap-4"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            <motion.div
+              className="flex items-center gap-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    aria-label={`Sacola com ${cartCount} itens`}
+                    variant="ghost"
+                    size="icon"
+                    className="relative rounded-full text-white hover:bg-white/20 transition-colors"
+                  >
+                    <ShoppingBag className="size-5" />
+
+                    <AnimatePresence mode="popLayout">
+                      {cartCount > 0 && (
+                        <motion.span
+                          key={cartCount}
+                          initial={{ scale: 2.5, opacity: 0, rotate: -15 }}
+                          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                          exit={{ scale: 0.5, opacity: 0 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                          className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm z-10"
+                        >
+                          {cartCount}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+
+                    <AnimatePresence mode="popLayout">
+                      {addedId && (
+                        <motion.div
+                          key={`pop-${cartCount}`}
+                          initial={{ opacity: 1, y: 10, scale: 0.5, rotate: 0 }}
+                          animate={{
+                            opacity: [1, 1, 0],
+                            y: [-10, -50, -80],
+                            scale: [0.8, 2.2, 2.5],
+                            rotate: [0, 10, -10],
+                          }}
+                          transition={{ duration: 1.2, ease: "easeOut", times: [0, 0.6, 1] }}
+                          className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-amber-400 font-black drop-shadow-[0_0_12px_rgba(251,191,36,0.9)] text-3xl z-[9999]"
+                        >
+                          +1
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Button>
+                </SheetTrigger>
+                <CartCheckoutSheet
+                  cart={cart}
+                  products={products}
+                  updateQuantity={updateQuantity}
+                  handleCheckout={handleCheckout}
+                  currentTheme={currentTheme}
+                />
+              </Sheet>
+
+              <Button className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
+                Contact Us
+              </Button>
+            </motion.div>
+          </div>
+        </header>
+
+        <main className="relative">
+          <section
+            id="inicio"
+            className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0"
           >
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button aria-label={`Sacola com ${cartCount} itens`} variant="ghost" size="icon" className="relative rounded-full text-white hover:bg-white/20 transition-colors">
-                  <ShoppingBag className="size-5" />
-                  
-                  <AnimatePresence mode="popLayout">
-                    {cartCount > 0 && (
-                      <motion.span 
-                        key={cartCount}
-                        initial={{ scale: 2.5, opacity: 0, rotate: -15 }}
-                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                        exit={{ scale: 0.5, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                        className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm z-10"
-                      >
-                        {cartCount}
-                      </motion.span>
+            {/* Hero Video Background */}
+            <div
+              className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700"
+              style={{ backgroundColor: currentTheme.bgDark }}
+            >
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
+              >
+                <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
+            </div>
+            {/* Center Text */}
+            <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
+              {/* Animated Title - Each burger name, line by line */}
+              <div className="relative mt-12 sm:mt-0">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentSlide.id + "-title"}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={{
+                      hidden: {},
+                      visible: { transition: { staggerChildren: 0.12 } },
+                      exit: { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
+                    }}
+                  >
+                    {(currentSlide.id === "brasa" || currentSlide.id === "inferno") && (
+                      <div className="overflow-hidden flex justify-center mb-1 sm:mb-2">
+                        <motion.div
+                          variants={{
+                            hidden: { y: "100%", opacity: 0 },
+                            visible: { y: "0%", opacity: 1, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+                            exit: { y: "-100%", opacity: 0, transition: { duration: 0.3 } },
+                          }}
+                          className="inline-flex items-center justify-center gap-1.5 text-white font-bold tracking-[0.2em] uppercase text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 rounded-full backdrop-blur-md shadow-xl"
+                          style={{ backgroundColor: currentTheme.primary, border: `1px solid ${currentTheme.secondary}` }}
+                        >
+                          <Flame className="w-3.5 h-3.5" style={{ color: currentTheme.bgLight }} />
+                          Série Exagerados
+                        </motion.div>
+                      </div>
                     )}
-                  </AnimatePresence>
+                    {[currentSlide.titleLine1, currentSlide.titleLine2].map((line, i) => (
+                      <div key={i} className="overflow-hidden">
+                        <motion.h1
+                          className={`font-display text-[20vw] sm:text-[18vw] leading-[0.85] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
+                          variants={{
+                            hidden: {
+                              y: "100%",
+                              opacity: 0,
+                              skewY: slideDirection * 6,
+                            },
+                            visible: {
+                              y: "0%",
+                              opacity: 1,
+                              skewY: 0,
+                              transition: {
+                                duration: 0.7,
+                                ease: [0.16, 1, 0.3, 1],
+                              },
+                            },
+                            exit: {
+                              y: "-100%",
+                              opacity: 0,
+                              skewY: slideDirection * -4,
+                              transition: {
+                                duration: 0.4,
+                                ease: [0.55, 0, 1, 0.45],
+                              },
+                            },
+                          }}
+                        >
+                          {line}
+                        </motion.h1>
+                      </div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
-                  <AnimatePresence mode="popLayout">
-                    {addedId && (
-                      <motion.div
-                        key={`pop-${cartCount}`}
-                        initial={{ opacity: 1, y: 10, scale: 0.5, rotate: 0 }}
-                        animate={{ opacity: [1, 1, 0], y: [-10, -50, -80], scale: [0.8, 2.2, 2.5], rotate: [0, 10, -10] }}
-                        transition={{ duration: 1.2, ease: "easeOut", times: [0, 0.6, 1] }}
-                        className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-amber-400 font-black drop-shadow-[0_0_12px_rgba(251,191,36,0.9)] text-3xl z-[9999]"
-                      >
-                        +1
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Button>
-              </SheetTrigger>
-              <CartCheckoutSheet cart={cart} products={products} updateQuantity={updateQuantity} handleCheckout={handleCheckout} currentTheme={currentTheme} />
-            </Sheet>
-
-            <Button className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
-               Contact Us
-            </Button>
-          </motion.div>
-        </div>
-      </header>
-
-      <main className="relative">
-        <section id="inicio" className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0">
-           {/* Hero Video Background */}
-           <div className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
-             <video 
-               autoPlay 
-               loop 
-               muted 
-               playsInline 
-               className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
-             >
-               <source src="/quero_mais_chamas.mp4" type="video/mp4" />
-             </video>
-             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
-           </div>
-           {/* Center Text */}
-           <div className="relative z-10 text-center w-full flex flex-col items-center justify-center h-full">
-             {/* Animated Title - Each burger name, line by line */}
-             <div className="relative mt-12 sm:mt-0">
-               <AnimatePresence mode="wait">
-                 <motion.div
-                   key={currentSlide.id + "-title"}
-                   initial="hidden"
-                   animate="visible"
-                   exit="exit"
-                   variants={{
-                     hidden: {},
-                     visible: { transition: { staggerChildren: 0.12 } },
-                     exit: { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
-                   }}
-                 >
-                   {[currentSlide.titleLine1, currentSlide.titleLine2].map((line, i) => (
-                     <div key={i} className="overflow-hidden">
-                       <motion.h1
-                         className={`font-display text-[20vw] sm:text-[18vw] leading-[0.85] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
-                         variants={{
-                           hidden: { 
-                             y: "100%",
-                             opacity: 0,
-                             skewY: slideDirection * 6,
-                           },
-                           visible: { 
-                             y: "0%",
-                             opacity: 1,
-                             skewY: 0,
-                             transition: { 
-                               duration: 0.7, 
-                               ease: [0.16, 1, 0.3, 1],
-                             } 
-                           },
-                           exit: { 
-                             y: "-100%",
-                             opacity: 0,
-                             skewY: slideDirection * -4,
-                             transition: { 
-                               duration: 0.4, 
-                               ease: [0.55, 0, 1, 0.45],
-                             } 
-                           },
-                         }}
-                       >
-                         {line}
-                       </motion.h1>
-                     </div>
-                   ))}
-                 </motion.div>
-               </AnimatePresence>
-             </div>
-             
-             {/* Center Image - perfectly centered on title */}
-             <div 
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] sm:w-[42vw] max-w-[520px] pointer-events-auto cursor-pointer z-20 group" 
+              {/* Center Image - perfectly centered on title */}
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] sm:w-[42vw] max-w-[520px] pointer-events-auto cursor-pointer z-20 group"
                 style={{ perspective: "1200px" }}
                 title="Clique para adicionar este hambúrguer à sacola!"
                 onClick={(e) => {
-                  const heroProdId = heroIndex === 0 ? 1 : heroIndex === 1 ? 5 : 6;
+                  const heroProdId = [5, 6, 1, 2, 3, 4][heroIndex] || 5;
                   addToCart(heroProdId, e);
                 }}
-             >
+              >
                 <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.img 
+                  <motion.img
                     key={currentSlide.id}
-                    src={currentSlide.image} 
-                    alt={currentSlide.titleLine1 + " " + currentSlide.titleLine2} 
-                    initial={{ 
-                      x: slideDirection * 600, 
-                      opacity: 0, 
+                    src={currentSlide.image}
+                    alt={currentSlide.titleLine1 + " " + currentSlide.titleLine2}
+                    initial={{
+                      x: slideDirection * 600,
+                      opacity: 0,
                       rotateY: slideDirection * 40,
                       rotateZ: slideDirection * 10,
                       scale: 0.4,
                       filter: "blur(12px)",
                     }}
-                    animate={{ 
-                      x: 0, 
-                      opacity: 1, 
+                    animate={{
+                      x: 0,
+                      opacity: 1,
                       rotateY: 0,
                       rotateZ: 0,
                       scale: 1,
                       filter: "blur(0px)",
                       y: [0, -8, 0],
                     }}
-                    exit={{ 
-                      x: slideDirection * -600, 
-                      opacity: 0, 
+                    exit={{
+                      x: slideDirection * -600,
+                      opacity: 0,
                       rotateY: slideDirection * -40,
                       rotateZ: slideDirection * -10,
                       scale: 0.4,
                       filter: "blur(12px)",
                     }}
-                    transition={{ 
-                      type: "spring", 
-                      stiffness: 70, 
+                    transition={{
+                      type: "spring",
+                      stiffness: 70,
                       damping: 12,
                       mass: 0.5,
                       filter: { duration: 0.25 },
@@ -595,421 +3887,675 @@ function Index() {
                         delay: 0.8,
                       },
                     }}
-                    className={`w-full h-auto object-contain drop-shadow-2xl ${heroIndex === 1 ? 'scale-x-[-1]' : ''} ${heroIndex === 2 ? 'hue-rotate-15 saturate-150' : ''}`}
+                    className={`w-full h-auto object-contain drop-shadow-2xl ${currentSlide.id === "brasa" ? "scale-x-[-1]" : ""} ${currentSlide.id === "inferno" ? "hue-rotate-15 saturate-150" : ""}`}
                   />
                 </AnimatePresence>
-             </div>
+              </div>
 
-             {/* Floating Badges */}
-             {currentSlide.badges.map((badge, idx) => (
-                <motion.div 
+              {/* Floating Badges */}
+              {currentSlide.badges.map((badge, idx) => (
+                <motion.div
                   key={currentSlide.id + idx}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.3 + (idx * 0.1), type: "spring" }}
+                  transition={{ delay: 0.3 + idx * 0.1, type: "spring" }}
                   className={`hidden sm:block absolute ${badge.style} bg-white border-2 px-4 py-1.5 rounded-full font-bold text-sm z-30 shadow-lg transition-colors duration-700 border-current ${currentSlide.buttonText}`}
                 >
                   {badge.text}
                 </motion.div>
-             ))}
+              ))}
 
-
-             
-             {/* Carousel arrows */}
-             <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
-                <Button onClick={prevHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronLeft className="size-8" /></Button>
-             </div>
-             <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
-                <Button onClick={nextHero} size="icon" variant="outline" className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"><ChevronRight className="size-8" /></Button>
-             </div>
-
-
-
-             {/* Action Buttons */}
-             <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}>Ver Cardápio</Button>
-                <Button onClick={() => document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' })} className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}>Onde Estamos</Button>
-             </div>
-           </div>
-        </section>
-
-        <div className="relative z-10">
-        {/* Torn paper edge divider */}
-        <div className="relative -mt-1 z-10">
-          <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[60px] sm:h-[90px] md:h-[120px] transition-colors duration-700" style={{ fill: currentTheme.bgDark }}>
-            <path d="M0,0 L0.0,40.0 L11.2,37.7 L22.5,33.7 L33.8,22.4 L45.0,17.2 L56.2,20.1 L67.5,16.9 L78.8,10.8 L90.0,10.0 L101.2,14.7 L112.5,17.8 L123.8,20.1 L135.0,21.3 L146.2,21.0 L157.5,22.5 L168.8,16.7 L180.0,13.8 L191.2,15.9 L202.5,18.9 L213.8,17.2 L225.0,17.8 L236.2,21.1 L247.5,18.1 L258.8,15.0 L270.0,10.0 L281.2,11.1 L292.5,11.9 L303.8,12.1 L315.0,10.0 L326.2,13.7 L337.5,17.5 L348.8,17.6 L360.0,22.4 L371.2,16.5 L382.5,17.0 L393.8,23.4 L405.0,23.4 L416.2,30.0 L427.5,31.9 L438.8,27.9 L450.0,29.4 L461.2,31.8 L472.5,32.8 L483.8,30.9 L495.0,25.1 L506.2,23.0 L517.5,15.5 L528.8,10.0 L540.0,10.0 L551.2,11.2 L562.5,17.4 L573.8,18.7 L585.0,21.4 L596.2,16.4 L607.5,10.0 L618.8,10.0 L630.0,10.0 L641.2,11.3 L652.5,10.0 L663.8,11.7 L675.0,10.0 L686.2,10.5 L697.5,11.7 L708.8,13.2 L720.0,10.0 L731.2,10.0 L742.5,10.0 L753.8,12.3 L765.0,10.0 L776.2,10.3 L787.5,12.2 L798.8,13.8 L810.0,16.7 L821.2,19.2 L832.5,23.3 L843.8,23.5 L855.0,20.8 L866.2,18.3 L877.5,10.6 L888.8,10.0 L900.0,10.0 L911.2,13.4 L922.5,15.6 L933.8,21.3 L945.0,22.5 L956.2,17.9 L967.5,10.7 L978.8,10.0 L990.0,10.0 L1001.2,10.0 L1012.5,10.0 L1023.8,12.6 L1035.0,10.0 L1046.2,10.7 L1057.5,15.2 L1068.8,15.6 L1080.0,10.0 L1091.2,10.0 L1102.5,11.5 L1113.8,10.9 L1125.0,10.0 L1136.2,12.2 L1147.5,11.6 L1158.8,20.0 L1170.0,25.9 L1181.2,28.7 L1192.5,30.2 L1203.8,29.9 L1215.0,24.7 L1226.2,23.1 L1237.5,19.5 L1248.8,17.6 L1260.0,10.0 L1271.2,13.4 L1282.5,14.8 L1293.8,17.4 L1305.0,19.0 L1316.2,19.2 L1327.5,25.5 L1338.8,34.4 L1350.0,37.8 L1361.2,34.1 L1372.5,34.1 L1383.8,33.1 L1395.0,35.8 L1406.2,31.7 L1417.5,33.6 L1428.8,37.6 L1440.0,40.0 L1440,120 L0,120 Z" />
-          </svg>
-        </div>
-
-        <section id="menu" className="relative border-white/10 py-20 sm:py-28 overflow-hidden transition-colors duration-700" style={{ backgroundColor: currentTheme.bgDark }}>
-          {/* Section Header */}
-          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
-            <h2 className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-4 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
-              Sabor que fala alto
-            </h2>
-            <p className="text-lg sm:text-xl font-medium tracking-wide opacity-80 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
-              Sabores autênticos servidos frescos todos os dias.
-            </p>
-          </div>
-
-          {/* Menu Card Container */}
-          <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              initial={{ opacity: 0, y: 100, scale: 0.97 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.05 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700 bg-[#0a0a0a] text-white border border-white/10"
-            >
-              {/* Menu Card Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-white/10 pb-6 transition-colors duration-700">
-                <h3 className="font-display text-5xl sm:text-6xl font-black tracking-tighter transition-colors duration-700 text-white">CARDÁPIO</h3>
-                <div className="flex gap-3">
-                  <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5"><span className="text-amber-500 text-sm">★</span> Avaliação 4.9</span>
-                  <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5"><span className="text-red-500 text-sm">♥</span> Favorito Local</span>
-                </div>
+              {/* Carousel arrows */}
+              <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
+                <Button
+                  onClick={prevHero}
+                  size="icon"
+                  variant="outline"
+                  className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"
+                >
+                  <ChevronLeft className="size-8" />
+                </Button>
+              </div>
+              <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
+                <Button
+                  onClick={nextHero}
+                  size="icon"
+                  variant="outline"
+                  className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"
+                >
+                  <ChevronRight className="size-8" />
+                </Button>
               </div>
 
-              {/* 2-Column Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-16">
-                
-                {/* LEFT COLUMN */}
-                <div className="flex flex-col gap-12">
-                  
-                  {/* Category: PIZZA */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">PIZZAS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "PEPPERONI", price: "12,00", spicy: true },
-                        { name: "MARGHERITA", price: "11,75" },
-                        { name: "FRANGO BBQ", price: "14,25" },
-                        { name: "QUATRO QUEIJOS", price: "13,00" },
-                        { name: "SALAME PICANTE", price: "15,50", spicy: true },
-                        { name: "COGUMELO TRUFADO", price: "16,00" },
-                        { name: "VEGETARIANA", price: "13,00" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          {item.spicy && <span className="ml-2 text-sm" title="Apimentado">🌶️</span>}
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Category: BURGERS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">HAMBÚRGUERES</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "X Burguer", price: "25,00" },
-                        { name: "Mac Sesi Feliz", price: "28,00" },
-                        { name: "Tripa Jr", price: "18,00" },
-                        { name: "Mini Burguer", price: "16,00" },
-                        { name: "Davi vs Golias", price: "45,00", badge: "Exagerado" },
-                        { name: "Triplex", price: "42,00", badge: "Exagerado" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          {item.badge && <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-amber-500/20 text-amber-500 rounded-full">{item.badge}</span>}
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Category: BATATAS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">BATATAS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "Tiras do Tripa", price: "15,00" },
-                        { name: "Trincheira do Davi", price: "22,00" },
-                        { name: "Batatas Reais", price: "25,00" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                </div>
-
-
-                {/* RIGHT COLUMN */}
-                <div className="flex flex-col gap-12">
-                  
-                  {/* Category: MOLHOS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }}>
-                    <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">MOLHOS</h4>
-                    <div className="flex flex-col gap-5">
-                      {[
-                        { name: "Azeite de Oliveira", price: "4,00" },
-                        { name: "Maionese Temperada", price: "5,00" },
-                        { name: "Ketchup", price: "3,00" },
-                        { name: "Porções Separadas", price: "8,00" }
-                      ].map(item => (
-                        <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                          <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">{item.name}</span>
-                          <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                          <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Category: BEBIDAS */}
-                  <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.12, delayChildren: 0.1 } } }} className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg">
-                    <Bubbles count={20} />
-                    <div className="relative z-10">
-                      <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white flex items-center gap-2">BEBIDAS <span className="text-xl">🫧</span></h4>
-                      <div className="flex flex-col gap-5">
-                        {[
-                          { name: "Seca-nunca", price: "12,00" },
-                          { name: "Gole de Martins", price: "14,00" },
-                          { name: "Sprite", price: "8,00" }
-                        ].map(item => (
-                          <motion.div key={item.name} variants={{ hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0, transition: { type: 'spring', damping: 22, stiffness: 120 } } }} className="flex items-center w-full group">
-                            <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors">{item.name}</span>
-                            <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                            <button onClick={(e) => addToCart((item as any).id || products.find(p => p.name === item.name)?.id, e)} className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer">R$ {item.price} <Plus className="size-3"/></button>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-
-                </div>
-
-              </div>
-
-              {/* COMBOS ESPECIAIS (Full Width Below Grid) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.15, delayChildren: 0.2 } } }} className="mt-16 pt-16 border-t border-white/10">
-                <div className="flex flex-col items-center text-center mb-10">
-                  <h4 className="font-display text-4xl sm:text-5xl font-black tracking-tight transition-colors duration-700 text-white">COMBOS ESPECIAIS</h4>
-                  <p className="mt-3 text-lg font-medium opacity-70 text-white/80">As combinações definitivas para matar qualquer fome.</p>
-                </div>
-                
-                <div className="relative max-w-4xl mx-auto">
-                  
-                  {/* Slider Controls */}
-                  <div className="absolute top-1/2 -translate-y-1/2 -left-4 sm:-left-12 z-20">
-                    <button 
-                      onClick={() => setActiveComboIndex(prev => prev === 0 ? 2 : prev - 1)}
-                      className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
-                    >
-                      <ChevronLeft className="size-6" />
-                    </button>
-                  </div>
-                  <div className="absolute top-1/2 -translate-y-1/2 -right-4 sm:-right-12 z-20">
-                    <button 
-                      onClick={() => setActiveComboIndex(prev => prev === 2 ? 0 : prev + 1)}
-                      className="p-3 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all shadow-xl border border-white/20 hover:scale-110 active:scale-95"
-                    >
-                      <ChevronRight className="size-6" />
-                    </button>
-                  </div>
-
-                  <div className="overflow-hidden relative">
-                    <AnimatePresence mode="wait">
-                      {activeComboIndex === 0 && (
-                        <motion.div 
-                          key="combo-0"
-                          initial={{ opacity: 0, x: 50 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -50 }}
-                          transition={{ type: 'spring', damping: 20, stiffness: 90 }}
-                          className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-black opacity-90"></div>
-                          {/* Glow effect */}
-                          <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl group-hover:bg-amber-500/30 transition-colors duration-500"></div>
-                          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl group-hover:bg-orange-600/20 transition-colors duration-500"></div>
-
-                          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                            {/* Text Content */}
-                            <div className="flex-1 text-white flex flex-col justify-center h-full">
-                              <div>
-                                <span className="inline-block px-3 py-1 bg-amber-500/10 text-amber-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-amber-500/20">TRIPLO SABOR</span>
-                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">TRIPA EM TRIPLO</h4>
-                                <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">Acompanha tiras do tripa, tripa jr e seca-nunca.</p>
-                              </div>
-                              
-                              <div className="flex items-center gap-4 mt-auto">
-                                <span className="text-3xl font-black font-display text-amber-500">R$ 35,00</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={(e) => addToCart(401, e)} className="bg-amber-500 text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 transition-colors shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                                  Adicionar
-                                </motion.button>
-                              </div>
-                            </div>
-
-                            {/* 3D Images */}
-                            <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                              <motion.img 
-                                src={cocaCola} 
-                                alt="Coca Cola" 
-                                className="absolute right-[15%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                              />
-                              <motion.img 
-                                src={burgerBrasa} 
-                                alt="Burger Brasa" 
-                                className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1a1a1a] shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                              />
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-
-                      {activeComboIndex === 1 && (
-                        <motion.div 
-                          key="combo-1"
-                          initial={{ opacity: 0, x: 50 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -50 }}
-                          transition={{ type: 'spring', damping: 20, stiffness: 90 }}
-                          className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#2D0A0A] to-black opacity-90"></div>
-                          {/* Glow effect */}
-                          <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-3xl group-hover:bg-red-600/30 transition-colors duration-500"></div>
-                          <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
-
-                          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                            {/* Text Content */}
-                            <div className="flex-1 text-white flex flex-col justify-center h-full">
-                              <div>
-                                <span className="inline-block px-3 py-1 bg-red-500/10 text-red-500 rounded-full text-xs font-bold tracking-wider mb-4 border border-red-500/20">TAMANHO FAMÍLIA</span>
-                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">ARISTOFOME</h4>
-                                <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?</p>
-                              </div>
-                              
-                              <div className="flex items-center gap-4 mt-auto">
-                                <span className="text-3xl font-black font-display text-red-500">R$ 60,00</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={(e) => addToCart(402, e)} className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-red-500 transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)]">
-                                  Adicionar
-                                </motion.button>
-                              </div>
-                            </div>
-
-                            {/* 3D Images */}
-                            <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                              <motion.img 
-                                src={beer} 
-                                alt="Cerveja" 
-                                className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                              />
-                              <motion.img 
-                                src={burgerInferno} 
-                                alt="Burger Inferno" 
-                                className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#2D0A0A] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                              />
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-
-                      {activeComboIndex === 2 && (
-                        <motion.div 
-                          key="combo-2"
-                          initial={{ opacity: 0, x: 50 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -50 }}
-                          transition={{ type: 'spring', damping: 20, stiffness: 90 }}
-                          className="group relative overflow-hidden rounded-[32px] p-8 shadow-2xl transition-all duration-500 hover:shadow-3xl bg-[#0a0a0a]"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-[#1A0A2D] to-black opacity-90"></div>
-                          {/* Glow effect */}
-                          <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl group-hover:bg-purple-600/30 transition-colors duration-500"></div>
-                          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-fuchsia-500/10 rounded-full blur-3xl group-hover:bg-fuchsia-500/20 transition-colors duration-500"></div>
-
-                          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                            {/* Text Content */}
-                            <div className="flex-1 text-white flex flex-col justify-center h-full">
-                              <div>
-                                <span className="inline-block px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-xs font-bold tracking-wider mb-4 border border-purple-500/20">PREMIUM</span>
-                                <h4 className="font-display text-3xl sm:text-4xl font-black leading-tight mb-3">FOME DOS REIS</h4>
-                                <p className="text-gray-300 text-sm sm:text-base mb-8 max-w-sm">Batatas reais, triplex burguer e gole de Martins. Uma refeição majestosa.</p>
-                              </div>
-                              
-                              <div className="flex items-center gap-4 mt-auto">
-                                <span className="text-3xl font-black font-display text-purple-400">R$ 70,00</span>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={(e) => addToCart(403, e)} className="bg-purple-600 text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-purple-500 transition-colors shadow-[0_0_20px_rgba(147,51,234,0.4)]">
-                                  Adicionar
-                                </motion.button>
-                              </div>
-                            </div>
-
-                            {/* 3D Images */}
-                            <div className="w-full md:w-1/2 h-56 sm:h-64 relative flex items-center justify-center">
-                              <motion.img 
-                                src={lemonade} 
-                                alt="Gole de Martins" 
-                                className="absolute right-[5%] top-[10%] w-28 sm:w-36 h-28 sm:h-36 object-cover rounded-2xl border border-white/10 shadow-2xl -rotate-6 group-hover:-rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-10"
-                              />
-                              <motion.img 
-                                src={burgerClassico} 
-                                alt="Triplex" 
-                                className="absolute left-[5%] bottom-[5%] w-40 sm:w-52 h-40 sm:h-52 object-cover rounded-2xl border-4 border-[#1A0A2D] shadow-2xl rotate-6 group-hover:rotate-12 group-hover:scale-110 transition-all duration-700 ease-out z-20"
-                              />
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  
-                  {/* Indicators */}
-                  <div className="flex justify-center gap-2 mt-6">
-                    <button 
-                      onClick={() => setActiveComboIndex(0)}
-                      className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 0 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
-                    />
-                    <button 
-                      onClick={() => setActiveComboIndex(1)}
-                      className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 1 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
-                    />
-                    <button 
-                      onClick={() => setActiveComboIndex(2)}
-                      className={`h-2 rounded-full transition-all duration-300 ${activeComboIndex === 2 ? 'w-8 bg-amber-500' : 'w-2 bg-white/20'}`}
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Appetizer Slider Section */}
-        <AppetizerSlider onAddToCart={(id, e) => addToCart(id, e)} currentTheme={currentTheme} />
-
-        {/* Galeria Section (3D Cylinder - Exact Match) */}
-        <section id="gallery" className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700" style={{ backgroundColor: currentTheme.bgVeryDark }}>
-          <div className="absolute inset-0 opacity-60 pointer-events-none transition-colors duration-700" style={{ backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 100%)` }}></div>
-          
-          <div className="relative z-10 w-full mb-8 flex justify-center text-center">
-            <div className="flex flex-col items-center max-w-3xl px-5">
-              <h2 className="font-display text-2xl sm:text-3xl font-medium mb-6 opacity-70 transition-colors duration-700" style={{ color: currentTheme.bgLight }}>
-                Criado para atrair, despertar fome e surpreender seu paladar.
-              </h2>
-              
-              <div className="flex flex-wrap justify-center gap-4">
-                <button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="flex items-center gap-2 text-white px-7 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5" style={{ backgroundColor: currentTheme.secondary }}>
-                  Fazer Pedido <ArrowUpRight className="size-4" />
-                </button>
-                <button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="flex items-center gap-2 border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm transition-all hover:bg-white/10" style={{ backgroundColor: currentTheme.bgDark }}>
+              {/* Action Buttons */}
+              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button
+                  onClick={() =>
+                    document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}
+                >
                   Ver Cardápio
-                </button>
+                </Button>
+                <Button
+                  onClick={() =>
+                    document.getElementById("sobre")?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}
+                >
+                  Onde Estamos
+                </Button>
               </div>
             </div>
-          </div>
+          </section>
 
-          <style>{`
+          <div className="relative z-10">
+            {/* Torn paper edge divider */}
+            <div className="relative -mt-1 z-10">
+              <svg
+                viewBox="0 0 1440 120"
+                preserveAspectRatio="none"
+                className="block w-full h-[60px] sm:h-[90px] md:h-[120px] transition-colors duration-700"
+                style={{ fill: currentTheme.bgDark }}
+              >
+                <path d="M0,0 L0.0,40.0 L11.2,37.7 L22.5,33.7 L33.8,22.4 L45.0,17.2 L56.2,20.1 L67.5,16.9 L78.8,10.8 L90.0,10.0 L101.2,14.7 L112.5,17.8 L123.8,20.1 L135.0,21.3 L146.2,21.0 L157.5,22.5 L168.8,16.7 L180.0,13.8 L191.2,15.9 L202.5,18.9 L213.8,17.2 L225.0,17.8 L236.2,21.1 L247.5,18.1 L258.8,15.0 L270.0,10.0 L281.2,11.1 L292.5,11.9 L303.8,12.1 L315.0,10.0 L326.2,13.7 L337.5,17.5 L348.8,17.6 L360.0,22.4 L371.2,16.5 L382.5,17.0 L393.8,23.4 L405.0,23.4 L416.2,30.0 L427.5,31.9 L438.8,27.9 L450.0,29.4 L461.2,31.8 L472.5,32.8 L483.8,30.9 L495.0,25.1 L506.2,23.0 L517.5,15.5 L528.8,10.0 L540.0,10.0 L551.2,11.2 L562.5,17.4 L573.8,18.7 L585.0,21.4 L596.2,16.4 L607.5,10.0 L618.8,10.0 L630.0,10.0 L641.2,11.3 L652.5,10.0 L663.8,11.7 L675.0,10.0 L686.2,10.5 L697.5,11.7 L708.8,13.2 L720.0,10.0 L731.2,10.0 L742.5,10.0 L753.8,12.3 L765.0,10.0 L776.2,10.3 L787.5,12.2 L798.8,13.8 L810.0,16.7 L821.2,19.2 L832.5,23.3 L843.8,23.5 L855.0,20.8 L866.2,18.3 L877.5,10.6 L888.8,10.0 L900.0,10.0 L911.2,13.4 L922.5,15.6 L933.8,21.3 L945.0,22.5 L956.2,17.9 L967.5,10.7 L978.8,10.0 L990.0,10.0 L1001.2,10.0 L1012.5,10.0 L1023.8,12.6 L1035.0,10.0 L1046.2,10.7 L1057.5,15.2 L1068.8,15.6 L1080.0,10.0 L1091.2,10.0 L1102.5,11.5 L1113.8,10.9 L1125.0,10.0 L1136.2,12.2 L1147.5,11.6 L1158.8,20.0 L1170.0,25.9 L1181.2,28.7 L1192.5,30.2 L1203.8,29.9 L1215.0,24.7 L1226.2,23.1 L1237.5,19.5 L1248.8,17.6 L1260.0,10.0 L1271.2,13.4 L1282.5,14.8 L1293.8,17.4 L1305.0,19.0 L1316.2,19.2 L1327.5,25.5 L1338.8,34.4 L1350.0,37.8 L1361.2,34.1 L1372.5,34.1 L1383.8,33.1 L1395.0,35.8 L1406.2,31.7 L1417.5,33.6 L1428.8,37.6 L1440.0,40.0 L1440,120 L0,120 Z" />
+              </svg>
+            </div>
+
+            <section
+              id="menu"
+              className="relative border-white/10 py-20 sm:py-28 overflow-hidden transition-colors duration-700"
+              style={{ backgroundColor: currentTheme.bgDark }}
+            >
+              {/* Section Header */}
+              <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8 text-center mb-16">
+                <h2
+                  className="font-display text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter uppercase mb-4 transition-colors duration-700"
+                  style={{ color: currentTheme.bgLight }}
+                >
+                  Sabor que fala alto
+                </h2>
+                <p
+                  className="text-lg sm:text-xl font-medium tracking-wide opacity-80 transition-colors duration-700"
+                  style={{ color: currentTheme.bgLight }}
+                >
+                  Sabores autênticos servidos frescos todos os dias.
+                </p>
+              </div>
+
+              {/* Menu Card Container */}
+              <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 100, scale: 0.97 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.05 }}
+                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                  className="rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700 bg-[#0a0a0a] text-white border border-white/10"
+                >
+                  {/* Menu Card Header */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-white/10 pb-6 transition-colors duration-700">
+                    <h3 className="font-display text-5xl sm:text-6xl font-black tracking-tighter transition-colors duration-700 text-white">
+                      CARDÁPIO
+                    </h3>
+                    <div className="flex gap-3">
+                      <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5">
+                        <span className="text-amber-500 text-sm">★</span> Avaliação 4.9
+                      </span>
+                      <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5">
+                        <span className="text-red-500 text-sm">♥</span> Favorito Local
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 2-Column Grid */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-16">
+                    {/* LEFT COLUMN */}
+                    <div className="flex flex-col gap-12">
+                      {/* Category: PIZZA */}
+                      <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        variants={{
+                          hidden: { opacity: 0, y: 40 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                              duration: 0.6,
+                              ease: "easeOut",
+                              staggerChildren: 0.12,
+                              delayChildren: 0.1,
+                            },
+                          },
+                        }}
+                      >
+                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                          PIZZAS
+                        </h4>
+                        <div className="flex flex-col gap-5">
+                          {[
+                            { name: "PEPPERONI", price: "12,00", spicy: true },
+                            { name: "MARGHERITA", price: "11,75" },
+                            { name: "FRANGO BBQ", price: "14,25" },
+                            { name: "QUATRO QUEIJOS", price: "13,00" },
+                            { name: "SALAME PICANTE", price: "15,50", spicy: true },
+                            { name: "COGUMELO TRUFADO", price: "16,00" },
+                            { name: "VEGETARIANA", price: "13,00" },
+                          ].map((item) => (
+                            <motion.div
+                              key={item.name}
+                              variants={{
+                                hidden: { opacity: 0, x: -30 },
+                                visible: {
+                                  opacity: 1,
+                                  x: 0,
+                                  transition: { type: "spring", damping: 22, stiffness: 120 },
+                                },
+                              }}
+                              className="flex items-center w-full group"
+                            >
+                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
+                                {item.name}
+                              </span>
+                              {item.spicy && (
+                                <span className="ml-2 text-sm" title="Apimentado">
+                                  🌶️
+                                </span>
+                              )}
+                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                              <button
+                                onClick={(e) =>
+                                  addToCart(
+                                    (item as any).id ||
+                                      products.find((p) => p.name === item.name)?.id,
+                                    e,
+                                  )
+                                }
+                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                              >
+                                R$ {item.price} <Plus className="size-3" />
+                              </button>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+
+                      {/* Category: BURGERS */}
+                      <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        variants={{
+                          hidden: { opacity: 0, y: 40 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                              duration: 0.6,
+                              ease: "easeOut",
+                              staggerChildren: 0.12,
+                              delayChildren: 0.1,
+                            },
+                          },
+                        }}
+                      >
+                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                          HAMBÚRGUERES
+                        </h4>
+                        <div className="flex flex-col gap-5">
+                          {[
+                            { name: "X Burguer", price: "25,00" },
+                            { name: "Mac Sesi Feliz", price: "28,00" },
+                            { name: "Tripa Jr", price: "18,00" },
+                            { name: "Mini Burguer", price: "16,00" },
+                            { name: "Davi vs Golias", price: "45,00", badge: "Exagerado" },
+                            { name: "Triplex", price: "42,00", badge: "Exagerado" },
+                          ].map((item) => (
+                            <motion.div
+                              key={item.name}
+                              variants={{
+                                hidden: { opacity: 0, x: -30 },
+                                visible: {
+                                  opacity: 1,
+                                  x: 0,
+                                  transition: { type: "spring", damping: 22, stiffness: 120 },
+                                },
+                              }}
+                              className="flex items-center w-full group"
+                            >
+                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
+                                {item.name}
+                              </span>
+                              {item.badge && (
+                                <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-amber-500/20 text-amber-500 rounded-full">
+                                  {item.badge}
+                                </span>
+                              )}
+                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                              <button
+                                onClick={(e) =>
+                                  addToCart(
+                                    (item as any).id ||
+                                      products.find((p) => p.name === item.name)?.id,
+                                    e,
+                                  )
+                                }
+                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                              >
+                                R$ {item.price} <Plus className="size-3" />
+                              </button>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+
+                      {/* Category: BATATAS */}
+                      <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        variants={{
+                          hidden: { opacity: 0, y: 40 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                              duration: 0.6,
+                              ease: "easeOut",
+                              staggerChildren: 0.12,
+                              delayChildren: 0.1,
+                            },
+                          },
+                        }}
+                      >
+                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                          BATATAS
+                        </h4>
+                        <div className="flex flex-col gap-5">
+                          {[
+                            { name: "Tiras do Tripa", price: "15,00" },
+                            { name: "Trincheira do Davi", price: "22,00" },
+                            { name: "Batatas Reais", price: "25,00" },
+                          ].map((item) => (
+                            <motion.div
+                              key={item.name}
+                              variants={{
+                                hidden: { opacity: 0, x: -30 },
+                                visible: {
+                                  opacity: 1,
+                                  x: 0,
+                                  transition: { type: "spring", damping: 22, stiffness: 120 },
+                                },
+                              }}
+                              className="flex items-center w-full group"
+                            >
+                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
+                                {item.name}
+                              </span>
+                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                              <button
+                                onClick={(e) =>
+                                  addToCart(
+                                    (item as any).id ||
+                                      products.find((p) => p.name === item.name)?.id,
+                                    e,
+                                  )
+                                }
+                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                              >
+                                R$ {item.price} <Plus className="size-3" />
+                              </button>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    {/* RIGHT COLUMN */}
+                    <div className="flex flex-col gap-12">
+                      {/* Category: MOLHOS */}
+                      <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        variants={{
+                          hidden: { opacity: 0, y: 40 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                              duration: 0.6,
+                              ease: "easeOut",
+                              staggerChildren: 0.12,
+                              delayChildren: 0.1,
+                            },
+                          },
+                        }}
+                      >
+                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                          MOLHOS
+                        </h4>
+                        <div className="flex flex-col gap-5">
+                          {[
+                            { name: "Azeite de Oliveira", price: "4,00" },
+                            { name: "Maionese Temperada", price: "5,00" },
+                            { name: "Ketchup", price: "3,00" },
+                            { name: "Porções Separadas", price: "8,00" },
+                          ].map((item) => (
+                            <motion.div
+                              key={item.name}
+                              variants={{
+                                hidden: { opacity: 0, x: -30 },
+                                visible: {
+                                  opacity: 1,
+                                  x: 0,
+                                  transition: { type: "spring", damping: 22, stiffness: 120 },
+                                },
+                              }}
+                              className="flex items-center w-full group"
+                            >
+                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
+                                {item.name}
+                              </span>
+                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                              <button
+                                onClick={(e) =>
+                                  addToCart(
+                                    (item as any).id ||
+                                      products.find((p) => p.name === item.name)?.id,
+                                    e,
+                                  )
+                                }
+                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                              >
+                                R$ {item.price} <Plus className="size-3" />
+                              </button>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+
+                      {/* Category: BEBIDAS */}
+                      <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        variants={{
+                          hidden: { opacity: 0, y: 40 },
+                          visible: {
+                            opacity: 1,
+                            y: 0,
+                            transition: {
+                              duration: 0.6,
+                              ease: "easeOut",
+                              staggerChildren: 0.12,
+                              delayChildren: 0.1,
+                            },
+                          },
+                        }}
+                        className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg"
+                      >
+                        <Bubbles count={20} />
+                        <div className="relative z-10">
+                          <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white flex items-center gap-2">
+                            BEBIDAS <span className="text-xl">🫧</span>
+                          </h4>
+                          <div className="flex flex-col gap-5">
+                            {[
+                              { name: "Seca-nunca", price: "12,00" },
+                              { name: "Gole de Martins", price: "14,00" },
+                              { name: "Sprite", price: "8,00" },
+                            ].map((item) => (
+                              <motion.div
+                                key={item.name}
+                                variants={{
+                                  hidden: { opacity: 0, x: -30 },
+                                  visible: {
+                                    opacity: 1,
+                                    x: 0,
+                                    transition: { type: "spring", damping: 22, stiffness: 120 },
+                                  },
+                                }}
+                                className="flex items-center w-full group"
+                              >
+                                <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors">
+                                  {item.name}
+                                </span>
+                                <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                                <button
+                                  onClick={(e) =>
+                                    addToCart(
+                                      (item as any).id ||
+                                        products.find((p) => p.name === item.name)?.id,
+                                      e,
+                                    )
+                                  }
+                                  className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                                >
+                                  R$ {item.price} <Plus className="size-3" />
+                                </button>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
+
+                  {/* COMBOS ESPECIAIS (Full Width Below Grid) */}
+                  <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-50px" }}
+                    variants={{
+                      hidden: { opacity: 0, y: 40 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          duration: 0.6,
+                          ease: "easeOut",
+                          staggerChildren: 0.15,
+                          delayChildren: 0.2,
+                        },
+                      },
+                    }}
+                    className="mt-16 pt-16 border-t border-white/10"
+                  >
+                    <div className="flex flex-col items-center text-center mb-10">
+                      <h4 className="font-display text-4xl sm:text-5xl font-black tracking-tight transition-colors duration-700 text-white">
+                        COMBOS ESPECIAIS
+                      </h4>
+                      <p className="mt-3 text-lg font-medium opacity-70 text-white/80">
+                        As combinações definitivas para matar qualquer fome.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1400px] mx-auto px-4 md:px-8">
+                      {/* Combo 1 */}
+                      <motion.div 
+                        whileHover={{ y: -15, scale: 1.02 }}
+                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-amber-500/40 flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-[80px] group-hover:bg-amber-500/30 transition-colors duration-700 pointer-events-none" />
+                        
+                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
+                          <motion.img 
+                            animate={{ y: [0, -10, 0] }} 
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                            src={burgerBrasa}
+                            alt="Burger Brasa"
+                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-amber-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
+                          <motion.img 
+                            animate={{ y: [0, 8, 0] }} 
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
+                            src={cocaCola}
+                            alt="Coca Cola"
+                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
+                          />
+                        </div>
+
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                          <span className="px-5 py-2 rounded-full bg-amber-500/10 text-amber-500 text-xs font-black tracking-widest border border-amber-500/20 mb-6 shadow-[0_0_15px_rgba(245,158,11,0.2)] uppercase">Triplo Sabor</span>
+                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Tripa em<br/><span className="text-amber-500">Triplo</span></h4>
+                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Acompanha tiras do tripa, tripa jr e seca-nunca.</p>
+                          
+                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
+                            <div className="flex flex-col">
+                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
+                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">35<span className="text-2xl text-amber-500 font-bold">,00</span></span>
+                            </div>
+                            <button onClick={(e) => addToCart(401, e)} className="h-16 px-8 rounded-full bg-amber-500 text-black font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+                              Comprar <Plus className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Combo 2 */}
+                      <motion.div 
+                        whileHover={{ y: -15, scale: 1.02 }}
+                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-red-500/40 flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-[80px] group-hover:bg-red-600/30 transition-colors duration-700 pointer-events-none" />
+                        
+                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
+                          <motion.img 
+                            animate={{ y: [0, -10, 0] }} 
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 0.5 }}
+                            src={burgerInferno}
+                            alt="Burger Inferno"
+                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-red-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
+                          <motion.img 
+                            animate={{ y: [0, 8, 0] }} 
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1.5 }}
+                            src={beer}
+                            alt="Cerveja"
+                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
+                          />
+                        </div>
+
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                          <span className="px-5 py-2 rounded-full bg-red-500/10 text-red-500 text-xs font-black tracking-widest border border-red-500/20 mb-6 shadow-[0_0_15px_rgba(239,68,68,0.2)] uppercase">Tamanho Família</span>
+                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Aristo<span className="text-red-500">fome</span></h4>
+                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?</p>
+                          
+                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
+                            <div className="flex flex-col">
+                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
+                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">60<span className="text-2xl text-red-500 font-bold">,00</span></span>
+                            </div>
+                            <button onClick={(e) => addToCart(402, e)} className="h-16 px-8 rounded-full bg-red-600 text-white font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-red-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(220,38,38,0.4)]">
+                              Comprar <Plus className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Combo 3 */}
+                      <motion.div 
+                        whileHover={{ y: -15, scale: 1.02 }}
+                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-purple-500/40 flex flex-col"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-[80px] group-hover:bg-purple-600/30 transition-colors duration-700 pointer-events-none" />
+                        
+                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
+                          <motion.img 
+                            animate={{ y: [0, -10, 0] }} 
+                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }}
+                            src={burgerClassico}
+                            alt="Burger Clássico"
+                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-purple-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
+                          <motion.img 
+                            animate={{ y: [0, 8, 0] }} 
+                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.5 }}
+                            src={lemonade}
+                            alt="Limonada"
+                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
+                          />
+                        </div>
+
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                          <span className="px-5 py-2 rounded-full bg-purple-500/10 text-purple-400 text-xs font-black tracking-widest border border-purple-500/20 mb-6 shadow-[0_0_15px_rgba(168,85,247,0.2)] uppercase">Premium</span>
+                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Fome dos<br/><span className="text-purple-400">Reis</span></h4>
+                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Batatas reais, triplex burguer e gole de Martins. Majestosa.</p>
+                          
+                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
+                            <div className="flex flex-col">
+                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
+                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">70<span className="text-2xl text-purple-400 font-bold">,00</span></span>
+                            </div>
+                            <button onClick={(e) => addToCart(403, e)} className="h-16 px-8 rounded-full bg-purple-600 text-white font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-purple-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(147,51,234,0.4)]">
+                              Comprar <Plus className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </section>
+
+            {/* Appetizer Slider Section */}
+            <AppetizerSlider
+              onAddToCart={(id, e) => addToCart(id, e)}
+              currentTheme={currentTheme}
+            />
+
+            {/* Galeria Section (3D Cylinder - Exact Match) */}
+            <section
+              id="gallery"
+              className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700"
+              style={{ backgroundColor: currentTheme.bgVeryDark }}
+            >
+              <div
+                className="absolute inset-0 opacity-60 pointer-events-none transition-colors duration-700"
+                style={{
+                  backgroundImage: `radial-gradient(ellipse at center, ${currentTheme.secondaryAlpha} 0%, transparent 100%)`,
+                }}
+              ></div>
+
+              <div className="relative z-10 w-full mb-8 flex justify-center text-center">
+                <div className="flex flex-col items-center max-w-3xl px-5">
+                  <h2
+                    className="font-display text-2xl sm:text-3xl font-medium mb-6 opacity-70 transition-colors duration-700"
+                    style={{ color: currentTheme.bgLight }}
+                  >
+                    Criado para atrair, despertar fome e surpreender seu paladar.
+                  </h2>
+
+                  <div className="flex flex-wrap justify-center gap-4">
+                    <button
+                      onClick={() =>
+                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      className="flex items-center gap-2 text-white px-7 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                      style={{ backgroundColor: currentTheme.secondary }}
+                    >
+                      Fazer Pedido <ArrowUpRight className="size-4" />
+                    </button>
+                    <button
+                      onClick={() =>
+                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      className="flex items-center gap-2 border border-white/10 text-white px-7 py-3 rounded-full font-bold text-sm transition-all hover:bg-white/10"
+                      style={{ backgroundColor: currentTheme.bgDark }}
+                    >
+                      Ver Cardápio
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <style>{`
             @keyframes spinGallery {
               0% { transform: rotateY(0deg); }
               100% { transform: rotateY(360deg); }
@@ -1022,441 +4568,628 @@ function Index() {
             }
           `}</style>
 
-          {/* 3D Scene */}
-          <div className="relative z-10 w-full flex justify-center items-center h-[350px] sm:h-[450px]" style={{ perspective: "800px" }}>
-            <div 
-              className="relative w-full h-full flex justify-center items-center scale-[0.6] sm:scale-100 mt-10" 
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <div 
-                className="absolute w-full h-full animate-spin-gallery cursor-grab active:cursor-grabbing will-change-transform"
-                style={{ transformStyle: "preserve-3d" }}
+              {/* 3D Scene */}
+              <div
+                className="relative z-10 w-full flex justify-center items-center h-[350px] sm:h-[450px]"
+                style={{ perspective: "800px" }}
               >
-                {[
-                  { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
-                  { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
-                  { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
-                  { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
-                  { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
-                  { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" },
-                  { img: "/burger_one.jpg", alt: "Fogo e Chapa Burger 1" },
-                  { img: "/pizza_hero.jpg", alt: "Fogo e Chapa Pizza" },
-                  { img: "/hotdog.jpg", alt: "Fogo e Chapa Hot Dog" },
-                  { img: "/burger_three.jpg", alt: "Fogo e Chapa Burger 3" },
-                  { img: "/wrap.jpg", alt: "Fogo e Chapa Wrap" },
-                  { img: "/burger_two.jpg", alt: "Fogo e Chapa Burger 2" }
-                ].map((item, idx) => {
-                  const angle = idx * (360 / 12);
-                  return (
-                    <div 
-                      key={idx} 
-                      className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-lg transition-transform duration-500 hover:border-amber-500/30"
-                      style={{ 
-                        transform: `rotateY(${angle}deg) translateZ(-550px)`,
-                        backfaceVisibility: "hidden"
-                      }}
-                    >
-                      <img src={item.img} alt={item.alt} className="w-full h-full object-cover" />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-
-        </section>
-
-        {/* Drinks Section */}
-        <section id="drinks" className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20">
-          
-          {/* Background Video */}
-          <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-            <video 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="w-full h-full object-cover opacity-20"
-            >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-soda-pouring-into-a-glass-with-ice-5324-large.mp4" type="video/mp4" />
-            </video>
-          </div>
-
-          <Bubbles count={40} color={currentTheme.secondary} />
-
-          <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
-            
-            {/* Left Content - Title and Text */}
-            <div className="w-full md:w-[50%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
-              
-              <div className="relative w-full max-w-2xl pl-2 md:pl-8 pt-12">
-                {/* Sticker Badge */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
-                  whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
-                  viewport={{ once: true }}
-                  transition={{ type: "spring", delay: 0.2 }}
-                  className="absolute -top-4 left-4 md:-top-2 md:left-8 bg-white border-[3px] rounded-full px-3 py-1 md:px-4 md:py-2 shadow-[2px_3px_0px_rgba(0,0,0,0.2)] z-30 flex flex-col items-center transition-colors duration-700"
-                  style={{ borderColor: currentTheme.primary }}
+                <div
+                  className="relative w-full h-full flex justify-center items-center scale-[0.6] sm:scale-100 mt-10"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  <span className="font-display font-black text-[10px] md:text-sm leading-none tracking-tighter transition-colors duration-700" style={{ color: currentTheme.primary }}>BOM</span>
-                  <span className="font-display font-black text-[10px] md:text-sm leading-none tracking-tighter transition-colors duration-700" style={{ color: currentTheme.primary }}>HUMOR</span>
-                </motion.div>
-                
-                {/* Main Tilted Title */}
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="relative z-20 flex flex-col"
-                >
-                  {/* Top Word (FRESHLY style) */}
-                  <h2 
-                    className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter ml-6 md:ml-12 transition-all duration-700" 
-                    style={{ 
-                      color: currentTheme.secondary,
-                      textShadow: `6px 6px 0px ${currentTheme.secondaryAlpha}`
-                    }}
+                  <div
+                    className="absolute w-full h-full animate-spin-gallery cursor-grab active:cursor-grabbing will-change-transform"
+                    style={{ transformStyle: "preserve-3d" }}
                   >
-                    NOSSOS
-                  </h2>
-                  
-                  {/* Bottom Word (BREWED style) - Inside a skewed brown box */}
-                  <div className="relative mt-2 md:mt-4 w-fit">
-                    {/* The skewed background box */}
-                    <div className="absolute inset-0 transform -skew-y-3 -rotate-2 scale-105 origin-left transition-colors duration-700" style={{ backgroundColor: currentTheme.secondary }} />
-                    
-                    {/* The text itself */}
-                    <h2 
-                      className="relative font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-white uppercase tracking-tighter px-4 py-2 transform -skew-y-3 -rotate-2 transition-all duration-700" 
-                      style={{ 
-                        WebkitTextStroke: `2px ${currentTheme.secondary}`
-                      }}
-                    >
-                      DRINKS
-                    </h2>
+                    {[
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
+                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
+                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                    ].map((item, idx) => {
+                      const angle = idx * (360 / 12);
+                      return (
+                        <div
+                          key={idx}
+                          className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-lg transition-transform duration-500 hover:border-amber-500/30"
+                          style={{
+                            transform: `rotateY(${angle}deg) translateZ(-550px)`,
+                            backfaceVisibility: "hidden",
+                          }}
+                        >
+                          <img
+                            src={item.img}
+                            alt={item.alt}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
-                </motion.div>
+                </div>
+              </div>
+            </section>
+
+            {/* Drinks Section */}
+            <section
+              id="drinks"
+              className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20"
+            >
+              {/* Background Video */}
+              <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover opacity-20"
+                >
+                  <source
+                    src="https://assets.mixkit.co/videos/preview/mixkit-soda-pouring-into-a-glass-with-ice-5324-large.mp4"
+                    type="video/mp4"
+                  />
+                </video>
               </div>
 
-              {/* Story Block */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
-              >
-                <h3 className="font-display font-black text-xl mb-3 tracking-tighter uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>NOSSA HISTÓRIA</h3>
-                <p className="text-sm leading-relaxed mb-8 font-medium transition-colors duration-700 opacity-80" style={{ color: currentTheme.primary }}>
-                  Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a nossa hamburgueria e aproveite uma experiência de sabor na brasa.
-                </p>
-                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
-                  style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
-                  PEDIR AGORA <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
-                </Button>
-              </motion.div>
+              <Bubbles count={40} color={currentTheme.secondary} />
 
-            </div>
+              <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
+                {/* Left Content - Title and Text */}
+                <div className="w-full md:w-[50%] flex flex-col justify-center relative z-20 mt-10 md:mt-0 order-2 md:order-1 h-full">
+                  <div className="relative w-full max-w-2xl pl-2 md:pl-8 pt-12">
+                    {/* Sticker Badge */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+                      whileInView={{ opacity: 1, scale: 1, rotate: -12 }}
+                      viewport={{ once: true }}
+                      transition={{ type: "spring", delay: 0.2 }}
+                      className="absolute -top-4 left-4 md:-top-2 md:left-8 bg-white border-[3px] rounded-full px-3 py-1 md:px-4 md:py-2 shadow-[2px_3px_0px_rgba(0,0,0,0.2)] z-30 flex flex-col items-center transition-colors duration-700"
+                      style={{ borderColor: currentTheme.primary }}
+                    >
+                      <span
+                        className="font-display font-black text-[10px] md:text-sm leading-none tracking-tighter transition-colors duration-700"
+                        style={{ color: currentTheme.primary }}
+                      >
+                        BOM
+                      </span>
+                      <span
+                        className="font-display font-black text-[10px] md:text-sm leading-none tracking-tighter transition-colors duration-700"
+                        style={{ color: currentTheme.primary }}
+                      >
+                        HUMOR
+                      </span>
+                    </motion.div>
 
-            {/* Right Content - Generated Soda Cup Image */}
-            <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-end items-center order-1 md:order-2">
-               
-               {/* Main Soda Drink Image */}
-               <motion.div
-                 initial={{ opacity: 0, x: 100 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ 
-                   type: "spring", 
-                   stiffness: 40,
-                   damping: 15,
-                   duration: 1.2
-                 }}
-                 className="relative z-20 w-full max-w-[700px] md:max-w-[900px] lg:max-w-[1000px] flex justify-end md:-mr-12 lg:-mr-32 xl:-mr-48"
-                 style={{ mixBlendMode: "multiply" }}
-               >
-                 <img 
-                   src={sodaSplash} 
-                   alt="Refrigerante Gelado" 
-                   className="w-full h-auto object-contain scale-110 md:scale-125 lg:scale-150 origin-right"
-                 />
-               </motion.div>
-               
-            </div>
-            
+                    {/* Main Tilted Title */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      className="relative z-20 flex flex-col"
+                    >
+                      {/* Top Word (FRESHLY style) */}
+                      <h2
+                        className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter ml-6 md:ml-12 transition-all duration-700"
+                        style={{
+                          color: currentTheme.secondary,
+                          textShadow: `6px 6px 0px ${currentTheme.secondaryAlpha}`,
+                        }}
+                      >
+                        NOSSOS
+                      </h2>
+
+                      {/* Bottom Word (BREWED style) - Inside a skewed brown box */}
+                      <div className="relative mt-2 md:mt-4 w-fit">
+                        {/* The skewed background box */}
+                        <div
+                          className="absolute inset-0 transform -skew-y-3 -rotate-2 scale-105 origin-left transition-colors duration-700"
+                          style={{ backgroundColor: currentTheme.secondary }}
+                        />
+
+                        {/* The text itself */}
+                        <h2
+                          className="relative font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-white uppercase tracking-tighter px-4 py-2 transform -skew-y-3 -rotate-2 transition-all duration-700"
+                          style={{
+                            WebkitTextStroke: `2px ${currentTheme.secondary}`,
+                          }}
+                        >
+                          DRINKS
+                        </h2>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  {/* Story Block */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                    className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
+                  >
+                    <h3
+                      className="font-display font-black text-xl mb-3 tracking-tighter uppercase transition-colors duration-700"
+                      style={{ color: currentTheme.secondary }}
+                    >
+                      NOSSA HISTÓRIA
+                    </h3>
+                    <p
+                      className="text-sm leading-relaxed mb-8 font-medium transition-colors duration-700 opacity-80"
+                      style={{ color: currentTheme.primary }}
+                    >
+                      Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a
+                      nossa hamburgueria e aproveite uma experiência de sabor na brasa.
+                    </p>
+                    <Button
+                      onClick={() =>
+                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
+                      style={{
+                        backgroundColor: currentTheme.secondary,
+                        borderColor: currentTheme.secondary,
+                      }}
+                    >
+                      PEDIR AGORA{" "}
+                      <ChevronRight
+                        className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      />
+                    </Button>
+                  </motion.div>
+                </div>
+
+                {/* Right Content - Generated Soda Cup Image */}
+                <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-end items-center order-1 md:order-2">
+                  {/* Main Soda Drink Image */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 40,
+                      damping: 15,
+                      duration: 1.2,
+                    }}
+                    className="relative z-20 w-full max-w-[700px] md:max-w-[900px] lg:max-w-[1000px] flex justify-end md:-mr-12 lg:-mr-32 xl:-mr-48"
+                    style={{ mixBlendMode: "multiply" }}
+                  >
+                    <img
+                      src={sodaSplash}
+                      alt="Refrigerante Gelado"
+                      className="w-full h-auto object-contain scale-110 md:scale-125 lg:scale-150 origin-right"
+                    />
+                  </motion.div>
+                </div>
+              </div>
+            </section>
+
+            {/* Drinks Grid Section */}
+            <section
+              className="w-full py-16 md:py-24 border-t transition-colors duration-700"
+              style={{
+                backgroundColor: currentTheme.bgLight,
+                borderColor: currentTheme.secondaryAlpha,
+              }}
+            >
+              <div className="mx-auto max-w-[1400px] px-5 lg:px-12">
+                {/* Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 md:gap-0">
+                  <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="font-display font-black text-5xl md:text-6xl lg:text-[5.5rem] leading-[0.85] uppercase tracking-tighter max-w-xl transition-colors duration-700"
+                    style={{ color: currentTheme.secondary }}
+                  >
+                    DRINKS FOR
+                    <br />
+                    EVERYDAY
+                  </motion.h2>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                  >
+                    <Button
+                      onClick={() =>
+                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                      }
+                      className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
+                      style={{
+                        backgroundColor: currentTheme.secondary,
+                        borderColor: currentTheme.secondary,
+                      }}
+                    >
+                      VIEW ALL MENU{" "}
+                      <ChevronRight
+                        className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      />
+                    </Button>
+                  </motion.div>
+                </div>
+
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0">
+                  {/* Item 1 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 }}
+                    className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pb-16 md:border-b transition-colors duration-700"
+                    style={{ borderColor: currentTheme.secondaryAlpha }}
+                  >
+                    <div className="flex items-baseline justify-between mb-8">
+                      <h3
+                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        COCA
+                        <br />
+                        COLA
+                      </h3>
+                      <button
+                        onClick={(e) => addToCart(201, e)}
+                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        ORDER NOW +
+                      </button>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                      <img
+                        src={cocaCola}
+                        alt="Coca Cola"
+                        onClick={() => setActiveDrinkName("Coca Cola")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Item 2 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
+                    style={{ borderColor: currentTheme.secondaryAlpha }}
+                  >
+                    <div className="flex items-baseline justify-between mb-8">
+                      <h3
+                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        GOLE DE
+                        <br />
+                        MARTINS
+                      </h3>
+                      <button
+                        onClick={(e) => addToCart(202, e)}
+                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        ORDER NOW +
+                      </button>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                      <img
+                        src={orangeJuice}
+                        alt="Suco de Laranja"
+                        onClick={() => setActiveDrinkName("Gole de Martins")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Item 3 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 }}
+                    className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
+                    style={{ borderColor: currentTheme.secondaryAlpha }}
+                  >
+                    <div className="flex items-baseline justify-between mb-8">
+                      <h3
+                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        SPRITE
+                        <br />
+                        GELADA
+                      </h3>
+                      <button
+                        onClick={(e) => addToCart(203, e)}
+                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        ORDER NOW +
+                      </button>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                      <img
+                        src={lemonade}
+                        alt="Limonada Suíça"
+                        onClick={() => setActiveDrinkName("Sprite Gelada")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Item 4 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 }}
+                    className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pt-16 transition-colors duration-700"
+                    style={{ borderColor: currentTheme.secondaryAlpha }}
+                  >
+                    <div className="flex items-baseline justify-between mb-8">
+                      <h3
+                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        CHOPP
+                        <br />
+                        GELADO
+                      </h3>
+                      <button
+                        onClick={(e) => addToCart(204, e)}
+                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        ORDER NOW +
+                      </button>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                      <img
+                        src={beer}
+                        alt="Chopp Gelado"
+                        onClick={() => setActiveDrinkName("Chopp Gelado")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Item 5 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5 }}
+                    className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 pt-16 transition-colors duration-700"
+                    style={{ borderColor: currentTheme.secondaryAlpha }}
+                  >
+                    <div className="flex items-baseline justify-between mb-8">
+                      <h3
+                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        CHÁ
+                        <br />
+                        GELADO
+                      </h3>
+                      <button
+                        onClick={(e) => addToCart(205, e)}
+                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        ORDER NOW +
+                      </button>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                      <img
+                        src={icedTea}
+                        alt="Chá Gelado"
+                        onClick={() => setActiveDrinkName("Chá Gelado")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                      />
+                    </div>
+                  </motion.div>
+
+                  {/* Item 6 */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.6 }}
+                    className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16 transition-colors duration-700"
+                  >
+                    <div className="flex items-baseline justify-between mb-8">
+                      <h3
+                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        SECA-
+                        <br />
+                        NUNCA
+                      </h3>
+                      <button
+                        onClick={(e) => addToCart(206, e)}
+                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
+                        style={{ color: currentTheme.secondary }}
+                      >
+                        ORDER NOW +
+                      </button>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
+                      <img
+                        src={guarana}
+                        alt="Seca-nunca"
+                        onClick={() => setActiveDrinkName("Seca-nunca")}
+                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
+                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
 
-        {/* Drinks Grid Section */}
-        <section className="w-full py-16 md:py-24 border-t transition-colors duration-700" style={{ backgroundColor: currentTheme.bgLight, borderColor: currentTheme.secondaryAlpha }}>
-          <div className="mx-auto max-w-[1400px] px-5 lg:px-12">
-            
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 md:gap-0">
-              <motion.h2 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="font-display font-black text-5xl md:text-6xl lg:text-[5.5rem] leading-[0.85] uppercase tracking-tighter max-w-xl transition-colors duration-700"
+          {/* New Section Based on the Print */}
+          <section
+            className="relative w-full overflow-hidden bg-[#FCFBF9] py-32 flex flex-col items-center justify-center text-center z-10"
+            style={{ minHeight: "80vh" }}
+          >
+            {/* Floating Burgers */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {/* Top Left */}
+              <motion.img
+                initial={{ opacity: 0, x: -100, y: -50, rotate: -30, scale: 0.8 }}
+                whileInView={{ opacity: 1, x: 0, y: 0, rotate: -12, scale: 1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+                src={heroBurger}
+                alt=""
+                className="absolute top-[15%] left-[5%] md:left-[10%] w-32 md:w-48 drop-shadow-2xl"
+              />
+              {/* Mid Left (Blurred) */}
+              <motion.img
+                initial={{ opacity: 0, x: -150, rotate: -10 }}
+                whileInView={{ opacity: 0.95, x: 0, rotate: 12 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1.2, delay: 0.1, type: "spring", bounce: 0.3 }}
+                src={heroBurger}
+                alt=""
+                className="absolute top-[45%] -left-[10%] md:-left-[5%] w-48 md:w-72 blur-md drop-shadow-2xl"
+              />
+              {/* Bottom Left */}
+              <motion.img
+                initial={{ opacity: 0, x: -100, y: 50, rotate: -20, scale: 0.8 }}
+                whileInView={{ opacity: 1, x: 0, y: 0, rotate: -6, scale: 1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1.1, delay: 0.2, type: "spring", bounce: 0.4 }}
+                src={heroBurger}
+                alt=""
+                className="absolute bottom-[5%] md:bottom-[10%] left-[5%] md:left-[15%] w-40 md:w-64 blur-[2px] drop-shadow-2xl"
+              />
+
+              {/* Top Right */}
+              <motion.img
+                initial={{ opacity: 0, x: 100, y: -50, rotate: 30, scale: 0.8 }}
+                whileInView={{ opacity: 1, x: 0, y: 0, rotate: 12, scale: 1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1, delay: 0.1, type: "spring", bounce: 0.4 }}
+                src={heroBurger}
+                alt=""
+                className="absolute top-[20%] right-[5%] md:right-[15%] w-24 md:w-32 drop-shadow-2xl"
+              />
+              {/* Mid Right (Blurred) */}
+              <motion.img
+                initial={{ opacity: 0, x: 150, rotate: 10 }}
+                whileInView={{ opacity: 0.95, x: 0, rotate: -12 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1.2, delay: 0.15, type: "spring", bounce: 0.3 }}
+                src={heroBurger}
+                alt=""
+                className="absolute top-[40%] right-[0%] md:right-[5%] w-36 md:w-56 blur-md drop-shadow-2xl"
+              />
+              {/* Bottom Right */}
+              <motion.img
+                initial={{ opacity: 0, x: 100, y: 50, rotate: -10, scale: 0.8 }}
+                whileInView={{ opacity: 1, x: 0, y: 0, rotate: 6, scale: 1 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 1.1, delay: 0.25, type: "spring", bounce: 0.4 }}
+                src={heroBurger}
+                alt=""
+                className="absolute bottom-[10%] md:bottom-[15%] right-[5%] md:right-[10%] w-48 md:w-80 drop-shadow-2xl"
+              />
+            </div>
+
+            <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
+              {/* Badge */}
+              <div
+                className="font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm transition-colors duration-700"
+                style={{
+                  backgroundColor: currentTheme.secondaryAlpha,
+                  color: currentTheme.secondary,
+                }}
+              >
+                NOVIDADE • ABERTO AGORA <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
+              </div>
+
+              {/* Title */}
+              <h2
+                className="font-display font-black text-[12vw] md:text-[6rem] lg:text-[8rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm transition-colors duration-700"
                 style={{ color: currentTheme.secondary }}
               >
-                DRINKS FOR<br/>EVERYDAY
-              </motion.h2>
-              
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
-                  style={{ backgroundColor: currentTheme.secondary, borderColor: currentTheme.secondary }}>
-                  VIEW ALL MENU <ChevronRight className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700" style={{ color: currentTheme.secondary }} />
+                HAMBÚRGUER PERFEITO,
+                <br />
+                SEMPRE.
+              </h2>
+
+              {/* Subtitle */}
+              <p className="font-bold text-[#222222] text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-snug">
+                Nós mantemos a simplicidade. Comida de verdade com ingredientes honestos.
+                <br />
+                Todo o resto é apenas ruído.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex flex-col items-center gap-5">
+                <Button
+                  onClick={() =>
+                    document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="rounded-full text-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1"
+                  style={{ backgroundColor: currentTheme.secondary }}
+                >
+                  FAZER PEDIDO
                 </Button>
-              </motion.div>
-            </div>
-
-            {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0">
-              
-              {/* Item 1 */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pb-16 md:border-b transition-colors duration-700"
-                style={{ borderColor: currentTheme.secondaryAlpha }}
-              >
-                <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>COCA<br/>COLA</h3>
-                  <button onClick={(e) => addToCart(201, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
+                <Button
+                  onClick={() =>
+                    document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+                  }
+                  className="rounded-full bg-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1"
+                  style={{ color: currentTheme.secondary }}
+                >
+                  VER CARDÁPIO
+                </Button>
+                <div className="text-[#d0d0d0] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 mt-6">
+                  <ArrowDown className="w-4 h-4" /> PSIU... POR AQUI{" "}
+                  <ArrowDown className="w-4 h-4" />
                 </div>
-                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                  <img 
-                    src={cocaCola} 
-                    alt="Coca Cola" 
-                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                  />
-                </div>
-              </motion.div>
-
-              {/* Item 2 */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
-                style={{ borderColor: currentTheme.secondaryAlpha }}
-              >
-                <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>GOLE DE<br/>MARTINS</h3>
-                  <button onClick={(e) => addToCart(202, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
-                </div>
-                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                  <img 
-                    src={orangeJuice} 
-                    alt="Suco de Laranja" 
-                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                  />
-                </div>
-              </motion.div>
-
-              {/* Item 3 */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
-                style={{ borderColor: currentTheme.secondaryAlpha }}
-              >
-                <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SPRITE<br/>GELADA</h3>
-                  <button onClick={(e) => addToCart(203, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
-                </div>
-                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                  <img 
-                    src={lemonade} 
-                    alt="Limonada Suíça" 
-                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                  />
-                </div>
-              </motion.div>
-
-              {/* Item 4 */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
-                className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pt-16 transition-colors duration-700"
-                style={{ borderColor: currentTheme.secondaryAlpha }}
-              >
-                <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHOPP<br/>GELADO</h3>
-                  <button onClick={(e) => addToCart(204, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
-                </div>
-                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                  <img 
-                    src={beer} 
-                    alt="Chopp Gelado" 
-                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                  />
-                </div>
-              </motion.div>
-
-              {/* Item 5 */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 pt-16 transition-colors duration-700"
-                style={{ borderColor: currentTheme.secondaryAlpha }}
-              >
-                <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>CHÁ<br/>GELADO</h3>
-                  <button onClick={(e) => addToCart(205, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
-                </div>
-                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                  <img 
-                    src={icedTea} 
-                    alt="Chá Gelado" 
-                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                  />
-                </div>
-              </motion.div>
-
-              {/* Item 6 */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16 transition-colors duration-700"
-              >
-                <div className="flex items-baseline justify-between mb-8">
-                  <h3 className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700" style={{ color: currentTheme.secondary }}>SECA-<br/>NUNCA</h3>
-                  <button onClick={(e) => addToCart(206, e)} className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700" style={{ color: currentTheme.secondary }}>ORDER NOW +</button>
-                </div>
-                <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                  <img 
-                    src={guarana} 
-                    alt="Seca-nunca" 
-                    className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply" 
-                    style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                  />
-                </div>
-              </motion.div>
-
-            </div>
-          </div>
-        </section>
-
-
-        </div>
-
-        {/* New Section Based on the Print */}
-        <section className="relative w-full overflow-hidden bg-[#FCFBF9] py-32 flex flex-col items-center justify-center text-center z-10" style={{ minHeight: '80vh' }}>
-          {/* Floating Burgers */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* Top Left */}
-            <motion.img 
-              initial={{ opacity: 0, x: -100, y: -50, rotate: -30, scale: 0.8 }}
-              whileInView={{ opacity: 1, x: 0, y: 0, rotate: -12, scale: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 1, type: "spring", bounce: 0.4 }}
-              src={heroBurger} alt="" className="absolute top-[15%] left-[5%] md:left-[10%] w-32 md:w-48 drop-shadow-2xl" />
-            {/* Mid Left (Blurred) */}
-            <motion.img 
-              initial={{ opacity: 0, x: -150, rotate: -10 }}
-              whileInView={{ opacity: 0.95, x: 0, rotate: 12 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 1.2, delay: 0.1, type: "spring", bounce: 0.3 }}
-              src={heroBurger} alt="" className="absolute top-[45%] -left-[10%] md:-left-[5%] w-48 md:w-72 blur-md drop-shadow-2xl" />
-            {/* Bottom Left */}
-            <motion.img 
-              initial={{ opacity: 0, x: -100, y: 50, rotate: -20, scale: 0.8 }}
-              whileInView={{ opacity: 1, x: 0, y: 0, rotate: -6, scale: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 1.1, delay: 0.2, type: "spring", bounce: 0.4 }}
-              src={heroBurger} alt="" className="absolute bottom-[5%] md:bottom-[10%] left-[5%] md:left-[15%] w-40 md:w-64 blur-[2px] drop-shadow-2xl" />
-            
-            {/* Top Right */}
-            <motion.img 
-              initial={{ opacity: 0, x: 100, y: -50, rotate: 30, scale: 0.8 }}
-              whileInView={{ opacity: 1, x: 0, y: 0, rotate: 12, scale: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 1, delay: 0.1, type: "spring", bounce: 0.4 }}
-              src={heroBurger} alt="" className="absolute top-[20%] right-[5%] md:right-[15%] w-24 md:w-32 drop-shadow-2xl" />
-            {/* Mid Right (Blurred) */}
-            <motion.img 
-              initial={{ opacity: 0, x: 150, rotate: 10 }}
-              whileInView={{ opacity: 0.95, x: 0, rotate: -12 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 1.2, delay: 0.15, type: "spring", bounce: 0.3 }}
-              src={heroBurger} alt="" className="absolute top-[40%] right-[0%] md:right-[5%] w-36 md:w-56 blur-md drop-shadow-2xl" />
-            {/* Bottom Right */}
-            <motion.img 
-              initial={{ opacity: 0, x: 100, y: 50, rotate: -10, scale: 0.8 }}
-              whileInView={{ opacity: 1, x: 0, y: 0, rotate: 6, scale: 1 }}
-              viewport={{ once: false, amount: 0.3 }}
-              transition={{ duration: 1.1, delay: 0.25, type: "spring", bounce: 0.4 }}
-              src={heroBurger} alt="" className="absolute bottom-[10%] md:bottom-[15%] right-[5%] md:right-[10%] w-48 md:w-80 drop-shadow-2xl" />
-          </div>
-
-          <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
-            {/* Badge */}
-            <div className="font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm transition-colors duration-700" style={{ backgroundColor: currentTheme.secondaryAlpha, color: currentTheme.secondary }}>
-              NOVIDADE • ABERTO AGORA <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
-            </div>
-
-            {/* Title */}
-            <h2 className="font-display font-black text-[12vw] md:text-[6rem] lg:text-[8rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm transition-colors duration-700" style={{ color: currentTheme.secondary }}>
-              HAMBÚRGUER PERFEITO,<br/>SEMPRE.
-            </h2>
-
-            {/* Subtitle */}
-            <p className="font-bold text-[#222222] text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-snug">
-              Nós mantemos a simplicidade. Comida de verdade com ingredientes honestos.<br/>Todo o resto é apenas ruído.
-            </p>
-
-            {/* Buttons */}
-            <div className="flex flex-col items-center gap-5">
-              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full text-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1" style={{ backgroundColor: currentTheme.secondary }}>
-                FAZER PEDIDO
-              </Button>
-              <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} className="rounded-full bg-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1" style={{ color: currentTheme.secondary }}>
-                VER CARDÁPIO
-              </Button>
-              <div className="text-[#d0d0d0] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 mt-6">
-                <ArrowDown className="w-4 h-4" /> PSIU... POR AQUI <ArrowDown className="w-4 h-4" />
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </main>
+      </div>
 
-      </main>
-    </div>
-
-      <footer ref={footerRef} id="contato" className="fixed bottom-0 left-0 w-full pt-10 sm:pt-16 transition-colors duration-700 overflow-hidden text-white z-[-1]" style={{ backgroundColor: currentTheme.bgVeryDark }}>
-        
+      <footer
+        ref={footerRef}
+        id="contato"
+        className="fixed bottom-0 left-0 w-full pt-10 sm:pt-16 transition-colors duration-700 overflow-hidden text-white z-[-1]"
+        style={{ backgroundColor: currentTheme.bgVeryDark }}
+      >
         {/* Full Footer Video Background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline 
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full h-full object-cover object-bottom opacity-40 mix-blend-screen"
           >
             <source src="/quero_mais_chamas.mp4" type="video/mp4" />
@@ -1469,15 +5202,41 @@ function Index() {
           {/* Top Bar */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-6 border-b border-white/10">
             <div className="flex gap-6 font-display font-black text-lg">
-              <a href="#cardapio" className="hover:text-white/80 transition-colors">MENU</a>
-              <a href="#promocoes" className="hover:text-white/80 transition-colors">PROMOÇÕES</a>
-              <a href="#avaliacoes" className="hover:text-white/80 transition-colors">AVALIAÇÕES</a>
-              <a href="#contato" className="hover:text-white/80 transition-colors">LOCAL</a>
+              <a href="#cardapio" className="hover:text-white/80 transition-colors">
+                MENU
+              </a>
+              <a href="#promocoes" className="hover:text-white/80 transition-colors">
+                PROMOÇÕES
+              </a>
+              <a href="#avaliacoes" className="hover:text-white/80 transition-colors">
+                AVALIAÇÕES
+              </a>
+              <a href="#contato" className="hover:text-white/80 transition-colors">
+                LOCAL
+              </a>
             </div>
             <div className="text-4xl font-black font-display tracking-tighter uppercase flex items-center gap-1">
-              FOGO<span style={{ backgroundColor: currentTheme.secondary }} className="rounded-full text-white size-8 flex items-center justify-center text-2xl -mt-1">&</span>CHAPA
+              FOGO
+              <span
+                style={{ backgroundColor: currentTheme.secondary }}
+                className="rounded-full text-white size-8 flex items-center justify-center text-2xl -mt-1"
+              >
+                &
+              </span>
+              CHAPA
             </div>
-            <Button onClick={() => document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-8" style={{ borderColor: currentTheme.secondary, color: 'white', backgroundColor: 'transparent' }}>
+            <Button
+              onClick={() =>
+                document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+              }
+              variant="outline"
+              className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-8"
+              style={{
+                borderColor: currentTheme.secondary,
+                color: "white",
+                backgroundColor: "transparent",
+              }}
+            >
               PEDIR AGORA
             </Button>
           </div>
@@ -1485,39 +5244,104 @@ function Index() {
           {/* Main Grid Layout */}
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             <div className="space-y-3 font-bold text-sm uppercase relative z-10">
-              <a href="#cardapio" className="block hover:text-white/70 transition-colors">MENU</a>
-              <a href="#promocoes" className="block hover:text-white/70 transition-colors">PROMOÇÕES</a>
-              <a href="#avaliacoes" className="block hover:text-white/70 transition-colors">AVALIAÇÕES</a>
-              <a href="#contato" className="block hover:text-white/70 transition-colors">ONDE ESTAMOS</a>
+              <a href="#cardapio" className="block hover:text-white/70 transition-colors">
+                MENU
+              </a>
+              <a href="#promocoes" className="block hover:text-white/70 transition-colors">
+                PROMOÇÕES
+              </a>
+              <a href="#avaliacoes" className="block hover:text-white/70 transition-colors">
+                AVALIAÇÕES
+              </a>
+              <a href="#contato" className="block hover:text-white/70 transition-colors">
+                ONDE ESTAMOS
+              </a>
             </div>
             <div className="space-y-3 font-bold text-sm uppercase relative z-10">
-              <a href="#" className="block hover:text-white/70 transition-colors">POLÍTICA DE PRIVACIDADE</a>
-              <a href="#" className="block hover:text-white/70 transition-colors">TERMOS DE SERVIÇO</a>
-              <a href="#" className="block hover:text-white/70 transition-colors">POLÍTICA DE REEMBOLSO</a>
+              <a href="#" className="block hover:text-white/70 transition-colors">
+                POLÍTICA DE PRIVACIDADE
+              </a>
+              <a href="#" className="block hover:text-white/70 transition-colors">
+                TERMOS DE SERVIÇO
+              </a>
+              <a href="#" className="block hover:text-white/70 transition-colors">
+                POLÍTICA DE REEMBOLSO
+              </a>
             </div>
             <div className="space-y-4 relative z-10">
               <a href="#" className="flex items-center gap-3 group">
-                <div className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105" style={{ backgroundColor: currentTheme.secondary }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 11.454c-.015-3.084 2.52-4.557 2.634-4.627-1.436-2.102-3.659-2.387-4.453-2.417-1.895-.19-3.704 1.115-4.664 1.115-.961 0-2.454-1.09-4.004-1.061-2.02.028-3.882 1.173-4.919 3.003-2.096 3.651-.537 9.07 1.503 12.032 1.002 1.455 2.179 3.086 3.754 3.031 1.498-.057 2.062-.962 3.865-.962 1.787 0 2.308.962 3.865.932 1.614-.029 2.63-1.47 3.616-2.918 1.144-1.671 1.614-3.29 1.642-3.376-.037-.014-3.153-1.214-3.138-4.32z"/><path d="M10.985 5.566c.82-.99 1.373-2.368 1.222-3.74-.112.005-.23.012-.34.012-1.353 0-2.825-.85-3.67-1.859-.757-.9-1.391-2.327-1.21-3.67 1.464.113 2.802.99 3.658 1.956.76.85 1.326 2.197 1.19 3.51-.1.006-.21.006-.31.006-1.39.006-2.784-.81-3.64-1.78z"/></svg>
+                <div
+                  className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105"
+                  style={{ backgroundColor: currentTheme.secondary }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M16.365 11.454c-.015-3.084 2.52-4.557 2.634-4.627-1.436-2.102-3.659-2.387-4.453-2.417-1.895-.19-3.704 1.115-4.664 1.115-.961 0-2.454-1.09-4.004-1.061-2.02.028-3.882 1.173-4.919 3.003-2.096 3.651-.537 9.07 1.503 12.032 1.002 1.455 2.179 3.086 3.754 3.031 1.498-.057 2.062-.962 3.865-.962 1.787 0 2.308.962 3.865.932 1.614-.029 2.63-1.47 3.616-2.918 1.144-1.671 1.614-3.29 1.642-3.376-.037-.014-3.153-1.214-3.138-4.32z" />
+                    <path d="M10.985 5.566c.82-.99 1.373-2.368 1.222-3.74-.112.005-.23.012-.34.012-1.353 0-2.825-.85-3.67-1.859-.757-.9-1.391-2.327-1.21-3.67 1.464.113 2.802.99 3.658 1.956.76.85 1.326 2.197 1.19 3.51-.1.006-.21.006-.31.006-1.39.006-2.784-.81-3.64-1.78z" />
+                  </svg>
                 </div>
-                <div className="text-xs">Baixar na<br/><span className="font-bold text-sm">App Store</span></div>
+                <div className="text-xs">
+                  Baixar na
+                  <br />
+                  <span className="font-bold text-sm">App Store</span>
+                </div>
               </a>
               <a href="#" className="flex items-center gap-3 group">
-                <div className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105" style={{ backgroundColor: currentTheme.secondary }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.685 1.298c-.4.2-.785.643-.785 1.306v18.791c0 .663.385 1.106.785 1.306.4.2.97.106 1.442-.17L21.36 12.91c.471-.277.74-.75.74-1.16 0-.41-.269-.882-.74-1.158L6.127 1.469c-.472-.277-1.042-.371-1.442-.17z"/></svg>
+                <div
+                  className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105"
+                  style={{ backgroundColor: currentTheme.secondary }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M4.685 1.298c-.4.2-.785.643-.785 1.306v18.791c0 .663.385 1.106.785 1.306.4.2.97.106 1.442-.17L21.36 12.91c.471-.277.74-.75.74-1.16 0-.41-.269-.882-.74-1.158L6.127 1.469c-.472-.277-1.042-.371-1.442-.17z" />
+                  </svg>
                 </div>
-                <div className="text-xs">Baixar no<br/><span className="font-bold text-sm">Google Play</span></div>
+                <div className="text-xs">
+                  Baixar no
+                  <br />
+                  <span className="font-bold text-sm">Google Play</span>
+                </div>
               </a>
             </div>
 
             <div className="space-y-4 flex flex-col justify-start relative z-10">
               <div className="flex gap-3">
-                <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><MapPin className="size-5" /></div>
-                <div className="text-sm font-bold">Rua das Brasas, 217<br/><span className="text-xs font-normal opacity-70">São Paulo, SP 05414, Brasil</span></div>
+                <div
+                  className="size-10 rounded-full flex items-center justify-center shrink-0 text-white"
+                  style={{ backgroundColor: currentTheme.secondary }}
+                >
+                  <MapPin className="size-5" />
+                </div>
+                <div className="text-sm font-bold">
+                  Rua das Brasas, 217
+                  <br />
+                  <span className="text-xs font-normal opacity-70">
+                    São Paulo, SP 05414, Brasil
+                  </span>
+                </div>
               </div>
               <div className="flex gap-3">
-                <div className="size-10 rounded-full flex items-center justify-center shrink-0 text-white" style={{ backgroundColor: currentTheme.secondary }}><Clock3 className="size-5" /></div>
-                <div className="text-sm font-bold">+55 11 9999-9999<br/><span className="text-xs font-normal opacity-70">Ter-Dom, 18h - 23h</span></div>
+                <div
+                  className="size-10 rounded-full flex items-center justify-center shrink-0 text-white"
+                  style={{ backgroundColor: currentTheme.secondary }}
+                >
+                  <Clock3 className="size-5" />
+                </div>
+                <div className="text-sm font-bold">
+                  +55 11 9999-9999
+                  <br />
+                  <span className="text-xs font-normal opacity-70">Ter-Dom, 18h - 23h</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1525,175 +5349,421 @@ function Index() {
           {/* Bottom Grid Layout for Newsletter and Socials */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 mt-2 items-end relative z-10">
             <div className="lg:col-span-3">
-              <h3 className="font-display font-black text-xl mb-3 uppercase tracking-wide drop-shadow-md" style={{ color: currentTheme.secondary }}>NUNCA PERCA UMA PROMOÇÃO</h3>
-              <form className="flex max-w-sm h-12 shadow-xl" onSubmit={(e) => { e.preventDefault(); }}>
-                <input type="email" placeholder="nome@email.com" className="flex-1 bg-black/50 backdrop-blur-sm border border-white/30 rounded-l-md px-4 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-white/50" />
-                <Button type="submit" className="font-bold hover:brightness-110 transition-all text-white rounded-l-none h-full px-6" style={{ backgroundColor: currentTheme.secondary }}>ASSINAR</Button>
+              <h3
+                className="font-display font-black text-xl mb-3 uppercase tracking-wide drop-shadow-md"
+                style={{ color: currentTheme.secondary }}
+              >
+                NUNCA PERCA UMA PROMOÇÃO
+              </h3>
+              <form
+                className="flex max-w-sm h-12 shadow-xl"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <input
+                  type="email"
+                  placeholder="nome@email.com"
+                  className="flex-1 bg-black/50 backdrop-blur-sm border border-white/30 rounded-l-md px-4 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-white/50"
+                />
+                <Button
+                  type="submit"
+                  className="font-bold hover:brightness-110 transition-all text-white rounded-l-none h-full px-6"
+                  style={{ backgroundColor: currentTheme.secondary }}
+                >
+                  ASSINAR
+                </Button>
               </form>
-              <p className="text-xs mt-2 opacity-70 leading-relaxed font-medium">Receba combos exclusivos direto no seu e-mail.<br/>Sem spam, prometemos.</p>
+              <p className="text-xs mt-2 opacity-70 leading-relaxed font-medium">
+                Receba combos exclusivos direto no seu e-mail.
+                <br />
+                Sem spam, prometemos.
+              </p>
             </div>
-            
+
             <div className="lg:col-span-2 flex justify-start lg:justify-end items-center gap-3">
               <span className="text-sm font-bold mr-2">Siga-nos:</span>
-              <a href="#" className="size-10 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg" style={{ backgroundColor: currentTheme.secondary }}><Instagram className="size-5" /></a>
-              <a href="#" className="size-10 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform shadow-lg" style={{ backgroundColor: currentTheme.secondary }}>T</a>
+              <a
+                href="#"
+                className="size-10 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg"
+                style={{ backgroundColor: currentTheme.secondary }}
+              >
+                <Instagram className="size-5" />
+              </a>
+              <a
+                href="#"
+                className="size-10 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform shadow-lg"
+                style={{ backgroundColor: currentTheme.secondary }}
+              >
+                T
+              </a>
             </div>
           </div>
         </div>
 
         {/* Giant Text Bottom Edge */}
         <div className="w-full relative mt-16 md:mt-24 pb-8 pt-8 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center transition-colors duration-700">
+          <div className="relative z-10 font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
+            {/* FOGO with Outline Style */}
+            <span
+              className="text-transparent transition-colors duration-700"
+              style={{ WebkitTextStroke: "2px rgba(255,255,255,0.9)" }}
+            >
+              FOGO
+            </span>
 
-           <div className="relative z-10 font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
-             
-             {/* FOGO with Outline Style */}
-             <span className="text-transparent transition-colors duration-700" style={{ WebkitTextStroke: '2px rgba(255,255,255,0.9)' }}>
-               FOGO
-             </span>
+            {/* The Ampersand with Theme Color */}
+            <motion.span
+              initial={{ rotate: -5, scale: 0.95 }}
+              animate={{ rotate: 5, scale: 1.05 }}
+              transition={{
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 2,
+                ease: "easeInOut",
+              }}
+              className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[16vw] sm:w-[15vw] max-w-[180px] shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-2 pb-[1.5vw]"
+              style={{ backgroundColor: currentTheme.secondary }}
+            >
+              &
+            </motion.span>
 
-             {/* The Ampersand with Theme Color */}
-             <motion.span 
-               initial={{ rotate: -5, scale: 0.95 }}
-               animate={{ rotate: 5, scale: 1.05 }}
-               transition={{ repeat: Infinity, repeatType: "reverse", duration: 2, ease: "easeInOut" }}
-               className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[16vw] sm:w-[15vw] max-w-[180px] shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-2 pb-[1.5vw]" 
-               style={{ backgroundColor: currentTheme.secondary }}
-             >
-               &
-             </motion.span>
+            {/* CHAPA filled */}
+            <span className="text-white transition-colors duration-700 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+              CHAPA
+            </span>
+          </div>
 
-             {/* CHAPA filled */}
-             <span className="text-white transition-colors duration-700 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
-               CHAPA
-             </span>
-             
-           </div>
-
-           <div className="relative z-10 mt-12 text-white/50 text-[10px] sm:text-sm font-bold tracking-[0.5em] uppercase">
-             A verdadeira experiência do fogo
-           </div>
+          <div className="relative z-10 mt-12 text-white/50 text-[10px] sm:text-sm font-bold tracking-[0.5em] uppercase">
+            A verdadeira experiência do fogo
+          </div>
         </div>
       </footer>
 
       {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
       <AnimatePresence>
-        {trackingOpen && activeOrderTime && <DeliveryTrackingModal activeOrderTime={activeOrderTime} activeOrderType={activeOrderType} activeDriver={activeDriver} activeRoute={activeRoute} onClose={() => setTrackingOpen(false)} currentTheme={currentTheme} />}
+        {activeDrinkName && (
+          <DrinkModal
+            drinkName={activeDrinkName}
+            onClose={() => setActiveDrinkName(null)}
+            products={products}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {trackingOpen && activeOrderTime && (
+          <DeliveryTrackingModal
+            activeOrderTime={activeOrderTime}
+            activeOrderType={activeOrderType}
+            activeDriver={activeDriver}
+            activeRoute={activeRoute}
+            onClose={() => setTrackingOpen(false)}
+            currentTheme={currentTheme}
+          />
+        )}
       </AnimatePresence>
     </>
   );
 }
 
-function AuthModal({ mode, setMode, onClose }: { mode: "login" | "signup"; setMode: (mode: "login" | "signup") => void; onClose: () => void }) {
+function AuthModal({
+  mode,
+  setMode,
+  onClose,
+}: {
+  mode: "login" | "signup";
+  setMode: (mode: "login" | "signup") => void;
+  onClose: () => void;
+}) {
   const [message, setMessage] = useState("");
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("Demonstração visual — nenhuma conta foi criada.");
   }
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-modal-backdrop p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="auth-title" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-modal-backdrop p-4 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="auth-title"
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
       <div className="glass-panel relative w-full max-w-md overflow-hidden border border-white/10 p-6 shadow-modal sm:p-8">
-        <Button size="icon" variant="ghost" className="absolute right-3 top-3" aria-label="Fechar" onClick={onClose}><X className="size-5" /></Button>
-        <div className="mb-6 flex size-12 items-center justify-center rounded-full bg-primary/15 text-primary"><Flame className="size-6 fill-current" /></div>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute right-3 top-3"
+          aria-label="Fechar"
+          onClick={onClose}
+        >
+          <X className="size-5" />
+        </Button>
+        <div className="mb-6 flex size-12 items-center justify-center rounded-full bg-primary/15 text-primary">
+          <Flame className="size-6 fill-current" />
+        </div>
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Acesso à mesa</p>
-        <h2 id="auth-title" className="mt-2 font-display text-3xl font-black uppercase">{mode === "login" ? "Bem-vindo de volta" : "Entre para a brasa"}</h2>
-        <p className="mt-2 text-sm opacity-70">{mode === "login" ? "Acesse sua conta para acompanhar seus pedidos." : "Crie seu acesso e agilize os próximos pedidos."}</p>
+        <h2 id="auth-title" className="mt-2 font-display text-3xl font-black uppercase">
+          {mode === "login" ? "Bem-vindo de volta" : "Entre para a brasa"}
+        </h2>
+        <p className="mt-2 text-sm opacity-70">
+          {mode === "login"
+            ? "Acesse sua conta para acompanhar seus pedidos."
+            : "Crie seu acesso e agilize os próximos pedidos."}
+        </p>
         <div className="mt-6 grid grid-cols-2 gap-2 rounded-sm border border-white/10 bg-background/50 p-1">
-          <Button variant={mode === "login" ? "fire" : "ghost"} size="sm" onClick={() => { setMode("login"); setMessage(""); }}>Entrar</Button>
-          <Button variant={mode === "signup" ? "fire" : "ghost"} size="sm" onClick={() => { setMode("signup"); setMessage(""); }}>Cadastrar</Button>
+          <Button
+            variant={mode === "login" ? "fire" : "ghost"}
+            size="sm"
+            onClick={() => {
+              setMode("login");
+              setMessage("");
+            }}
+          >
+            Entrar
+          </Button>
+          <Button
+            variant={mode === "signup" ? "fire" : "ghost"}
+            size="sm"
+            onClick={() => {
+              setMode("signup");
+              setMessage("");
+            }}
+          >
+            Cadastrar
+          </Button>
         </div>
         <form onSubmit={submit} className="mt-6 space-y-4">
-          {mode === "signup" && <label className="field"><span>Nome</span><div><UserRound /><input required maxLength={80} autoComplete="name" placeholder="Seu nome" /></div></label>}
-          <label className="field"><span>E-mail</span><div><Mail /><input required type="email" maxLength={255} autoComplete="email" placeholder="voce@email.com" /></div></label>
-          <label className="field"><span>Senha</span><div><LockKeyhole /><input required type="password" minLength={6} maxLength={72} autoComplete={mode === "login" ? "current-password" : "new-password"} placeholder="••••••••" /></div></label>
-          {mode === "login" && <button type="button" className="ml-auto block text-xs text-gold hover:text-primary" onClick={() => setMessage("Recuperação de senha disponível quando o acesso real for ativado.")}>Esqueci minha senha</button>}
-          <Button className="w-full" size="lg" type="submit">{mode === "login" ? "Entrar" : "Criar conta"}</Button>
+          {mode === "signup" && (
+            <label className="field">
+              <span>Nome</span>
+              <div>
+                <UserRound />
+                <input required maxLength={80} autoComplete="name" placeholder="Seu nome" />
+              </div>
+            </label>
+          )}
+          <label className="field">
+            <span>E-mail</span>
+            <div>
+              <Mail />
+              <input
+                required
+                type="email"
+                maxLength={255}
+                autoComplete="email"
+                placeholder="voce@email.com"
+              />
+            </div>
+          </label>
+          <label className="field">
+            <span>Senha</span>
+            <div>
+              <LockKeyhole />
+              <input
+                required
+                type="password"
+                minLength={6}
+                maxLength={72}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                placeholder="••••••••"
+              />
+            </div>
+          </label>
+          {mode === "login" && (
+            <button
+              type="button"
+              className="ml-auto block text-xs text-gold hover:text-primary"
+              onClick={() =>
+                setMessage("Recuperação de senha disponível quando o acesso real for ativado.")
+              }
+            >
+              Esqueci minha senha
+            </button>
+          )}
+          <Button className="w-full" size="lg" type="submit">
+            {mode === "login" ? "Entrar" : "Criar conta"}
+          </Button>
         </form>
-        {message && <p className="mt-3 rounded-sm border border-gold/30 bg-gold/10 p-3 text-xs text-gold" role="status">{message}</p>}
-        <div className="my-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground"><span className="h-px flex-1 bg-border" /> ou continue com <span className="h-px flex-1 bg-border" /></div>
-        <div className="grid grid-cols-2 gap-3"><Button variant="outline" onClick={() => setMessage("Google é apenas demonstrativo nesta versão.")}><span className="font-bold">G</span> Google</Button><Button variant="outline" onClick={() => setMessage("Apple é apenas demonstrativo nesta versão.")}>Apple</Button></div>
-        <p className="mt-5 text-center text-[11px] leading-relaxed text-muted-foreground">Demonstração visual. Nenhum dado é enviado ou armazenado.</p>
+        {message && (
+          <p
+            className="mt-3 rounded-sm border border-gold/30 bg-gold/10 p-3 text-xs text-gold"
+            role="status"
+          >
+            {message}
+          </p>
+        )}
+        <div className="my-5 flex items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+          <span className="h-px flex-1 bg-border" /> ou continue com{" "}
+          <span className="h-px flex-1 bg-border" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setMessage("Google é apenas demonstrativo nesta versão.")}
+          >
+            <span className="font-bold">G</span> Google
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setMessage("Apple é apenas demonstrativo nesta versão.")}
+          >
+            Apple
+          </Button>
+        </div>
+        <p className="mt-5 text-center text-[11px] leading-relaxed text-muted-foreground">
+          Demonstração visual. Nenhum dado é enviado ou armazenado.
+        </p>
       </div>
     </div>
   );
 }
 
-function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeOrderType, activeDriver, activeRoute }: { onClose: () => void, currentTheme: any, activeOrderTime: number, activeOrderType?: "delivery" | "pickup" | null, activeDriver: number, activeRoute: number }) {
+function DeliveryTrackingModal({
+  onClose,
+  currentTheme,
+  activeOrderTime,
+  activeOrderType,
+  activeDriver,
+  activeRoute,
+}: {
+  onClose: () => void;
+  currentTheme: any;
+  activeOrderTime: number;
+  activeOrderType?: "delivery" | "pickup" | null;
+  activeDriver: number;
+  activeRoute: number;
+}) {
   const [ratingState, setRatingState] = useState<"driver" | "food" | "done" | null>(null);
   const [driverRating, setDriverRating] = useState(0);
   const [foodRating, setFoodRating] = useState(0);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+  const [currentTime, setCurrentTime] = useState(Date.now());
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
 
-  const stage = "delivering"; // Keep hardcoded as in previous logic or use logic if existed
+  useEffect(() => {
+    const int = setInterval(() => setCurrentTime(Date.now()), 1000);
+    return () => clearInterval(int);
+  }, []);
+
+  const elapsedApp = currentTime - (activeOrderTime || currentTime);
+  const totalDuration = 180000;
+  const remainingMs = Math.max(0, totalDuration - elapsedApp);
+  const remainingMins = Math.ceil(remainingMs / 60000);
+  const progressRatio = Math.min(1, Math.max(0, elapsedApp / totalDuration));
+  const isDone = remainingMs === 0;
+  
+  let stage = "picking_up";
+  if (progressRatio > 0.1) stage = "delivering";
+  if (isDone) stage = "delivered";
+  
+  const arrivalTimeObj = new Date((activeOrderTime || Date.now()) + totalDuration);
+  const arrivalTimeStr = arrivalTimeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   const pickupCode = "B7F9";
   const mockRoute = MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0];
 
   useEffect(() => {
     if (activeOrderType === "pickup" || !mapRef.current) return;
-    
-    // Lazy load Leaflet if needed, assuming L is available globally or imported
-    // For this rewrite, we keep the map logic same as before, just UI changes
-    if (!mapInstanceRef.current && typeof window !== 'undefined' && (window as any).L) {
+
+    let cancelled = false;
+    let resizeObserver: ResizeObserver | null = null;
+    const initMap = () => {
       const L = (window as any).L;
-      
+      if (cancelled || !L || !mapRef.current || mapInstanceRef.current) return;
+
       const map = L.map(mapRef.current, {
         zoomControl: false,
         attributionControl: false,
       });
-      
+
       mapInstanceRef.current = map;
 
-      L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      L.tileLayer("https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
         maxZoom: 19,
-        className: 'map-light-theme'
       }).addTo(map);
 
-      // We'll use a style tag to filter the map tiles to look more like 99/Uber (light and clean)
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .map-light-theme {
-          filter: brightness(1.05) contrast(1.1) saturate(0.8) sepia(0.1) hue-rotate(180deg) grayscale(0.1);
+      // Re-enquadra a rota sempre que o container mudar de tamanho
+      // (o modal anima a entrada, então o tamanho inicial pode ser 0)
+      const fitRoute = () => {
+        const m = mapInstanceRef.current;
+        if (!m || !mapRef.current) return;
+        const { clientWidth, clientHeight } = mapRef.current;
+        if (clientWidth === 0 || clientHeight === 0) return;
+        m.invalidateSize();
+        const r = (MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0])!;
+        const pts = [...(r.route1 || []), ...(r.route2 || [])];
+        if (pts.length > 1) {
+          m.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
+        } else {
+          m.setView(r.start, 15);
         }
+      };
+      resizeObserver = new ResizeObserver(fitRoute);
+      resizeObserver.observe(mapRef.current as Element);
+      requestAnimationFrame(fitRoute);
+      setTimeout(fitRoute, 400);
+
+      const style = document.createElement("style");
+      style.innerHTML = `
+        .leaflet-container img { max-width: none !important; max-height: none !important; }
       `;
       document.head.appendChild(style);
 
-      const driverStart = mockRoute.start || [-3.7310, -38.5270];
-      const customer = mockRoute.customer || [-3.7350, -38.5200];
+      const driverStart = mockRoute.start || [-3.731, -38.527];
+      const customer = mockRoute.customer || [-3.735, -38.52];
       const route1 = mockRoute.route1 || [];
       const route2 = mockRoute.route2 || [];
       const fullRoute = [...route1, ...route2];
 
-      const polyline = L.polyline(fullRoute, { color: '#9CA3AF', weight: 6, opacity: 0.6, lineCap: 'round', lineJoin: 'round' }).addTo(map);
-      
-      if (fullRoute.length > 0) {
-        map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
-      } else {
-        map.setView(driverStart, 15);
-      }
-      
-      const activeLineBg = L.polyline([], { color: 'white', weight: 10, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
-      const activeLine = L.polyline([], { color: 'black', weight: 5, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map);
+      const polyline = L.polyline(fullRoute, {
+        color: "#9CA3AF",
+        weight: 6,
+        opacity: 0.6,
+        lineCap: "round",
+        lineJoin: "round",
+      }).addTo(map);
 
-      const createDot = (color: string, icon: string, size=32) => L.divIcon({
-        className: 'custom-div-icon',
-        html: `<div style="background-color: white; width: ${size}px; height: ${size}px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 2px solid ${color}; display: flex; align-items: center; justify-content: center; font-size: ${size/2}px;">${icon}</div>`,
-        iconSize: [size, size],
-        iconAnchor: [size/2, size/2]
-      });
+      // Vista inicial segura; o fitRoute enquadra a rota assim que o container tiver tamanho
+      map.setView(driverStart, 15);
+      fitRoute();
 
-      L.marker(driverStart, { icon: createDot('#ef4444', '🍔', 24) }).addTo(map); // Restaurant
-      L.marker(customer, { icon: createDot('black', '📍', 36) }).addTo(map);
+      const activeLineBg = L.polyline([], {
+        color: "white",
+        weight: 10,
+        opacity: 1,
+        lineCap: "round",
+        lineJoin: "round",
+      }).addTo(map);
+      const activeLine = L.polyline([], {
+        color: "black",
+        weight: 5,
+        opacity: 1,
+        lineCap: "round",
+        lineJoin: "round",
+      }).addTo(map);
+
+      const createDot = (color: string, icon: string, size = 32) =>
+        L.divIcon({
+          className: "custom-div-icon",
+          html: `<div style="background-color: white; width: ${size}px; height: ${size}px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 2px solid ${color}; display: flex; align-items: center; justify-content: center; font-size: ${size / 2}px;">${icon}</div>`,
+          iconSize: [size, size],
+          iconAnchor: [size / 2, size / 2],
+        });
+
+      L.marker(driverStart, { icon: createDot("#ef4444", "🍔", 24) }).addTo(map); // Restaurant
+      L.marker(customer, { icon: createDot("black", "📍", 36) }).addTo(map);
 
       const driverIcon = L.divIcon({
-        className: 'custom-div-icon',
+        className: "custom-div-icon",
         html: `<div style="width: 44px; height: 44px; background-color: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 10;">
                  <div id="driver-icon-rotation" style="width: 32px; height: 32px; background-color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s linear;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><path d="M12 2L22 20L12 16L2 20L12 2Z"/></svg>
                  </div>
                </div>`,
         iconSize: [44, 44],
-        iconAnchor: [22, 22]
+        iconAnchor: [22, 22],
       });
 
       const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
@@ -1702,80 +5772,117 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
         const dists = [0];
         let total = 0;
         for (let i = 0; i < path.length - 1; i++) {
-          const dx = path[i+1][1] - path[i][1];
-          const dy = path[i+1][0] - path[i][0];
-          total += Math.sqrt(dx*dx + dy*dy);
+          const dx = path[i + 1][1] - path[i][1];
+          const dy = path[i + 1][0] - path[i][0];
+          total += Math.sqrt(dx * dx + dy * dy);
           dists.push(total);
         }
         return { dists, total };
       };
-      
-      const r2Data = computeDistances(route2);
+
+      const fullPathData = computeDistances(fullRoute);
 
       let reqId: number;
       function animate() {
         if (!mapInstanceRef.current) return;
         const now = Date.now();
         let elapsed = now - activeOrderTime;
-        const duration = 60000;
-        
+        const duration = 180000;
+
         let isDone = false;
         if (elapsed >= duration) {
-           elapsed = duration;
-           isDone = true;
+          elapsed = duration;
+          isDone = true;
         }
 
         const progress = elapsed / duration;
-        
-        const pathInfo = r2Data;
-        const path = route2;
+
+        const pathInfo = fullPathData;
+        const path = fullRoute;
         if (path.length < 2) return;
 
         const targetDist = progress * pathInfo.total;
         let idx = 0;
         for (let i = 0; i < pathInfo.dists.length - 1; i++) {
-           if (targetDist >= pathInfo.dists[i] && targetDist <= pathInfo.dists[i+1]) {
-             idx = i;
-             break;
-           }
+          if (targetDist >= pathInfo.dists[i] && targetDist <= pathInfo.dists[i + 1]) {
+            idx = i;
+            break;
+          }
         }
         if (targetDist >= pathInfo.total) idx = path.length - 2;
-        
-        const segmentLen = pathInfo.dists[idx+1] - pathInfo.dists[idx];
-        const segmentProg = segmentLen === 0 ? 0 : (targetDist - pathInfo.dists[idx]) / segmentLen;
-        
-        const p1 = path[idx] || [0,0];
-        const p2 = path[idx + 1] || p1;
-        
-        const pt = [
-          p1[0] + (p2[0] - p1[0]) * segmentProg,
-          p1[1] + (p2[1] - p1[1]) * segmentProg
-        ];
 
-        const dy = p2[0] - p1[0]; 
-        const dx = p2[1] - p1[1]; 
-        const bearing = Math.atan2(dx, dy) * (180 / Math.PI);
+        const segmentLen = pathInfo.dists[idx + 1] - pathInfo.dists[idx];
+        const segmentProg = segmentLen === 0 ? 0 : (targetDist - pathInfo.dists[idx]) / segmentLen;
+
+        const p1 = path[idx] || [0, 0];
+        const p2 = path[idx + 1] || p1;
+
+        const pt = [p1[0] + (p2[0] - p1[0]) * segmentProg, p1[1] + (p2[1] - p1[1]) * segmentProg];
+
+        const dy = p2[0] - p1[0];
+        const dx = p2[1] - p1[1];
         const remaining = [pt, ...path.slice(idx + 1)];
 
         driverMarker.setLatLng(pt as any);
         activeLineBg.setLatLngs(remaining as any);
         activeLine.setLatLngs(remaining as any);
 
-        const rotIcon = document.getElementById("driver-icon-rotation");
-        if (rotIcon) {
-          rotIcon.style.transform = `rotate(${bearing}deg)`;
+        if (dx !== 0 || dy !== 0) {
+          const bearing = Math.atan2(dx, dy) * (180 / Math.PI);
+          const rotIcon = document.getElementById("driver-icon-rotation");
+          if (rotIcon) {
+            rotIcon.style.transform = `rotate(${bearing}deg)`;
+          }
         }
 
         if (!isDone) {
           reqId = requestAnimationFrame(animate);
         }
       }
-      
+
       reqId = requestAnimationFrame(animate);
       (map as any)._animateReqId = reqId;
-    }
+    }; // end of initMap
+
+    const loadCss = () =>
+      new Promise<void>((resolve) => {
+        let link = document.getElementById("leaflet-css") as HTMLLinkElement | null;
+        if (link) {
+          if (link.sheet) return resolve();
+          link.addEventListener("load", () => resolve());
+          setTimeout(resolve, 1500);
+          return;
+        }
+        link = document.createElement("link");
+        link.id = "leaflet-css";
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        link.onload = () => resolve();
+        link.onerror = () => resolve();
+        document.head.appendChild(link);
+        setTimeout(resolve, 1500);
+      });
+
+    const loadJs = () =>
+      new Promise<void>((resolve) => {
+        if ((window as any).L) return resolve();
+        let script = document.getElementById("leaflet-script") as HTMLScriptElement | null;
+        if (!script) {
+          script = document.createElement("script");
+          script.id = "leaflet-script";
+          script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+          document.head.appendChild(script);
+        }
+        script.addEventListener("load", () => resolve());
+      });
+
+    Promise.all([loadCss(), loadJs()]).then(initMap);
 
     return () => {
+      cancelled = true;
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
       if (mapInstanceRef.current) {
         if ((mapInstanceRef.current as any)._animateReqId) {
           cancelAnimationFrame((mapInstanceRef.current as any)._animateReqId);
@@ -1788,217 +5895,487 @@ function DeliveryTrackingModal({ onClose, currentTheme, activeOrderTime, activeO
 
   const toggleMapSize = () => setIsMapExpanded(!isMapExpanded);
 
+  if (activeOrderType === "pickup") {
+    const pickupThemeColor = "#FF4500";
+    const pickupBg = "#0F0F0F";
+
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "100%" }}
+          transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          className="fixed inset-0 z-[100] flex flex-col font-sans overflow-hidden"
+          style={{ backgroundColor: pickupBg }}
+        >
+          {/* Background Video */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover opacity-40 mix-blend-screen"
+            >
+              <source src="/quero_mais_chamas.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F0F0F]/70 to-[#0F0F0F]"></div>
+          </div>
+
+          {/* Header */}
+          <div className="relative z-10 flex items-center justify-between px-6 pt-12 pb-6">
+            <button
+              onClick={onClose}
+              className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors backdrop-blur-md"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <div className="text-white/50 text-xs font-bold tracking-[0.2em] uppercase">
+              Retirada
+            </div>
+            <div className="w-12 h-12" /> {/* Spacer */}
+          </div>
+
+          <div className="relative z-10 flex-1 overflow-y-auto px-6 pb-12 flex flex-col">
+            {/* Status Section */}
+            <div className="mt-2 mb-10">
+              <h2 className="text-[11vw] sm:text-5xl font-black text-white uppercase tracking-tighter leading-[0.9]">
+                {isDone ? "Seu pedido" : "Fogo na"}<br/>
+                <span style={{ color: pickupThemeColor }}>
+                  {isDone ? "está pronto." : "chapa."}
+                </span>
+              </h2>
+              <p className="mt-5 text-white/60 text-base sm:text-lg font-medium leading-relaxed max-w-sm">
+                {isDone 
+                  ? "Dirija-se até o balcão de retirada e apresente o código abaixo." 
+                  : "Seu pedido está sendo preparado com muito cuidado e ingredientes frescos."}
+              </p>
+            </div>
+
+            {/* Ticket Card */}
+            <div className="bg-white rounded-3xl p-8 shadow-2xl relative overflow-hidden mb-8 shrink-0">
+              {/* Top notch */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full" style={{ backgroundColor: pickupBg }}></div>
+              
+              <div className="flex flex-col items-center justify-center pt-2">
+                <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-1">Código do Pedido</p>
+                <h1 className="text-6xl sm:text-7xl font-black text-black tracking-widest uppercase">
+                  {pickupCode}
+                </h1>
+                
+                {/* Dotted separator */}
+                <div className="w-full border-t-[3px] border-dashed border-gray-100 my-8"></div>
+                
+                <div className="w-full flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-gray-400 text-[10px] sm:text-xs font-bold uppercase mb-1">Previsão</span>
+                    <span className="text-black font-black text-xl sm:text-2xl">{arrivalTimeStr}</span>
+                  </div>
+                  <div className="text-right flex flex-col">
+                    <span className="text-gray-400 text-[10px] sm:text-xs font-bold uppercase mb-1">Status</span>
+                    <span className="font-black text-xl sm:text-2xl" style={{ color: isDone ? "#10B981" : pickupThemeColor }}>
+                      {isDone ? "Pronto" : "Preparando"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stepper progress (minimal) */}
+            {!isDone && (
+              <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-auto shrink-0">
+                <div className="flex justify-between items-end mb-4">
+                  <span className="text-white font-bold text-sm uppercase tracking-wider">Progresso</span>
+                  <span className="text-white/50 text-sm font-bold">{remainingMins} min</span>
+                </div>
+                <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full rounded-full transition-all duration-1000 ease-out"
+                    style={{ 
+                      width: `${progressRatio * 100}%`, 
+                      backgroundColor: pickupThemeColor 
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Actions / Rating */}
+            {isDone && (
+              <div className="mt-auto shrink-0">
+                {ratingState === "done" ? (
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center animate-in fade-in zoom-in-95">
+                    <div className="w-20 h-20 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center mx-auto mb-6">
+                      <Check className="w-10 h-10" />
+                    </div>
+                    <p className="text-white font-black text-xl mb-6">Obrigado pela preferência!</p>
+                    <Button onClick={onClose} className="w-full h-14 rounded-2xl bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200">
+                      Voltar ao Início
+                    </Button>
+                  </div>
+                ) : ratingState === "food" ? (
+                  <div className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center animate-in fade-in zoom-in-95">
+                    <p className="text-white font-black text-xl mb-8">Como estava o lanche?</p>
+                    <div className="flex justify-center gap-3 md:gap-4 mb-2">
+                      {[1,2,3,4,5].map(s => (
+                        <button key={s} className="transition-transform hover:scale-110 active:scale-95" onClick={() => { setFoodRating(s); setTimeout(()=>setRatingState("done"), 300) }}>
+                          <Star className={`size-10 sm:size-12 ${foodRating >= s ? "fill-yellow-400 text-yellow-400" : "text-white/10"}`}/>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <Button onClick={() => setRatingState("food")} className="w-full h-16 rounded-2xl bg-white text-black font-black text-base uppercase tracking-widest hover:scale-[1.02] transition-transform">
+                    Já retirei o pedido
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
+
   return (
     <AnimatePresence>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 50 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed inset-0 z-[100] flex flex-col bg-gray-100" 
+        className="fixed inset-0 z-[100] flex flex-col bg-gray-100"
       >
         <div className="relative flex-1 overflow-hidden">
-          <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
-          
+          <div id="map-container" ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
+
           {/* Overlay Map UI - 99 Style */}
           <div className="absolute top-4 left-4 z-10">
-            <button onClick={onClose} className="bg-white rounded-full p-3 shadow-md border border-gray-100 active:scale-95 transition-transform">
+            <button
+              onClick={onClose}
+              className="bg-white rounded-full p-3 shadow-md border border-gray-100 active:scale-95 transition-transform"
+            >
               <ChevronLeft className="size-6 text-gray-800" />
             </button>
           </div>
 
           <div className="absolute top-4 right-4 z-10 flex flex-col gap-3">
-             <button onClick={toggleMapSize} className="bg-white rounded-full p-3 shadow-md border border-gray-100 active:scale-95 transition-transform text-black flex items-center justify-center">
-               {isMapExpanded ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
-             </button>
+            <button
+              onClick={toggleMapSize}
+              className="bg-white rounded-full p-3 shadow-md border border-gray-100 active:scale-95 transition-transform text-black flex items-center justify-center"
+            >
+              {isMapExpanded ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
+            </button>
           </div>
 
           {isMapExpanded && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="absolute bottom-6 left-6 right-6 z-10"
             >
-               <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100 flex items-center gap-4">
-                  <div className="bg-gray-100 p-3 rounded-full shrink-0">
-                    <MapPin className="size-6 text-black" />
-                  </div>
-<div className="flex-1 min-w-0">
-  <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">Destino</p>
-  <p className="text-sm font-semibold text-gray-900 truncate">{mockRoute.address}</p>
-</div>
+              <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100 flex items-center gap-4">
+                <div className="bg-gray-100 p-3 rounded-full shrink-0">
+                  <MapPin className="size-6 text-black" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">
+                    Destino
+                  </p>
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {mockRoute.address}
+                  </p>
+                </div>
 
-                  {/* Ticket Card */}
-                  <motion.div 
-                     initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                     transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                     className="w-full relative group"
-                   >
-                     
-                     {/* Ambient glow behind card */}
-                     <div className="absolute -inset-3 bg-gradient-to-b from-white/[0.03] via-transparent to-white/[0.02] rounded-[2rem] blur-xl pointer-events-none"></div>
-                     
-                     <div className="relative bg-gradient-to-b from-[#141414] to-[#0d0d0d] border border-white/[0.08] px-6 py-10 rounded-3xl shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] flex flex-col items-center overflow-hidden">
-                       
-                       {/* Animated gradient border sweep */}
-                       <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
-                         <div className="absolute inset-[-1px] rounded-3xl" style={{ background: "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.08), transparent, transparent)", animation: "borderSpin 6s linear infinite" }}></div>
-                       </div>
-                       <div className="absolute inset-[1px] bg-gradient-to-b from-[#141414] to-[#0d0d0d] rounded-[calc(1.5rem-1px)] pointer-events-none"></div>
-                       
-                       {/* Top shimmer line */}
-                       <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                       
-                       {/* Ticket cutouts */}
-                       <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/[0.06] -translate-y-1/2 z-10"></div>
-                       <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/[0.06] -translate-y-1/2 z-10"></div>
-                       
-                       {/* Dashed separator */}
-                       <div className="absolute top-1/2 left-10 right-10 border-t border-dashed border-white/[0.08] -translate-y-1/2 z-0"></div>
-                       
-                       {/* Top Half: Code */}
-                       <div className="flex flex-col items-center justify-center pb-14 h-40 w-full relative z-10">
-                         <div className="mb-5 flex items-center gap-3">
-                           <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/30"></div>
-                           <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/40">Código de Retirada</p>
-                           <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-white/30"></div>
-                         </div>
-                         <h1 className="text-7xl sm:text-8xl font-black tracking-tighter text-white" style={{ textShadow: "0 0 40px rgba(255,255,255,0.08)", animation: "pulseGlow 3s ease-in-out infinite" }}>
-                           #{pickupCode}
-                         </h1>
-                       </div>
-                       
-                       {/* Bottom Half: Status Animation */}
-                       <div className="flex flex-col items-center justify-center pt-14 h-40 w-full relative z-10 gap-4">
-                         <div className="relative flex items-center justify-center">
-                           {/* Pulsing ring */}
-                           <div className="absolute w-20 h-20 rounded-full border border-white/[0.06]" style={{ animation: "iconPulse 2.5s ease-in-out infinite" }}></div>
-                           <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center relative z-20 backdrop-blur-sm">
-                             {stage === "picking_up" ? (
-                                <ChefHat className="size-7 text-white/70" />
-                             ) : stage === "delivering" ? (
-                                <ShoppingBag className="size-7 text-white/70" />
-                             ) : (
-                                <Check className="size-7 text-white/70" />
-                             )}
-                           </div>
-                         </div>
-                         
-                         {/* Loading dots */}
-                         <div className="flex items-center gap-1.5">
-                           {[0, 1, 2].map((dot) => (
-                             <div key={dot} className="w-1.5 h-1.5 rounded-full bg-white/20" style={{ animation: "dotPulse 1.4s ease-in-out infinite", animationDelay: `${dot * 0.2}s` }}></div>
-                           ))}
-                         </div>
-                       </div>
-                     </div>
-                  </motion.div>
+                {/* Ticket Card */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                  className="w-full relative group"
+                >
+                  {/* Ambient glow behind card */}
+                  <div className="absolute -inset-3 bg-gradient-to-b from-white/[0.03] via-transparent to-white/[0.02] rounded-[2rem] blur-xl pointer-events-none"></div>
 
-                  {/* Stepper */}
-                  <div className="relative flex items-center justify-between w-full px-4 mt-4">
-                     <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
-                     
-                     <div className="absolute left-8 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out" 
-                          style={{ 
-                            width: stage === "picking_up" ? "0%" : stage === "delivering" ? "calc(50% - 24px)" : "calc(100% - 48px)", 
-                            backgroundColor: currentTheme.secondary,
-                            boxShadow: `0 0 10px ${currentTheme.secondary}`
-                          }}>
-                     </div>
-                     
-                     <div className="relative z-10 flex flex-col items-center gap-3">
-                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
-                          <ChefHat className="size-4" />
-                       </div>
-                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Cozinha</span>
-                     </div>
-                     
-                     <div className="relative z-10 flex flex-col items-center gap-3">
-                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
-                          <ShoppingBag className="size-4" />
-                       </div>
-                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Embalando</span>
-                     </div>
-                     
-                     <div className="relative z-10 flex flex-col items-center gap-3">
-                       <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}>
-                          <Check className="size-4" />
-                       </div>
-                       <span className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivered" ? "text-white/90" : "text-white/30"}`}>Pronto</span>
-                     </div>
+                  <div className="relative bg-gradient-to-b from-[#141414] to-[#0d0d0d] border border-white/[0.08] px-6 py-10 rounded-3xl shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] flex flex-col items-center overflow-hidden">
+                    {/* Animated gradient border sweep */}
+                    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+                      <div
+                        className="absolute inset-[-1px] rounded-3xl"
+                        style={{
+                          background:
+                            "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.08), transparent, transparent)",
+                          animation: "borderSpin 6s linear infinite",
+                        }}
+                      ></div>
+                    </div>
+                    <div className="absolute inset-[1px] bg-gradient-to-b from-[#141414] to-[#0d0d0d] rounded-[calc(1.5rem-1px)] pointer-events-none"></div>
+
+                    {/* Top shimmer line */}
+                    <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+
+                    {/* Ticket cutouts */}
+                    <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/[0.06] -translate-y-1/2 z-10"></div>
+                    <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/[0.06] -translate-y-1/2 z-10"></div>
+
+                    {/* Dashed separator */}
+                    <div className="absolute top-1/2 left-10 right-10 border-t border-dashed border-white/[0.08] -translate-y-1/2 z-0"></div>
+
+                    {/* Top Half: Code */}
+                    <div className="flex flex-col items-center justify-center pb-14 h-40 w-full relative z-10">
+                      <div className="mb-5 flex items-center gap-3">
+                        <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/30"></div>
+                        <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/40">
+                          Código de Retirada
+                        </p>
+                        <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-white/30"></div>
+                      </div>
+                      <h1
+                        className="text-7xl sm:text-8xl font-black tracking-tighter text-white"
+                        style={{
+                          textShadow: "0 0 40px rgba(255,255,255,0.08)",
+                          animation: "pulseGlow 3s ease-in-out infinite",
+                        }}
+                      >
+                        #{pickupCode}
+                      </h1>
+                    </div>
+
+                    {/* Bottom Half: Status Animation */}
+                    <div className="flex flex-col items-center justify-center pt-14 h-40 w-full relative z-10 gap-4">
+                      <div className="relative flex items-center justify-center">
+                        {/* Pulsing ring */}
+                        <div
+                          className="absolute w-20 h-20 rounded-full border border-white/[0.06]"
+                          style={{ animation: "iconPulse 2.5s ease-in-out infinite" }}
+                        ></div>
+                        <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center relative z-20 backdrop-blur-sm">
+                          {stage === "picking_up" ? (
+                            <Store className="size-7 text-white/70" />
+                          ) : stage === "delivering" ? (
+                            <Bike className="size-7 text-white/70" />
+                          ) : (
+                            <Check className="size-7 text-white/70" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Loading dots */}
+                      <div className="flex items-center gap-1.5">
+                        {[0, 1, 2].map((dot) => (
+                          <div
+                            key={dot}
+                            className="w-1.5 h-1.5 rounded-full bg-white/20"
+                            style={{
+                              animation: "dotPulse 1.4s ease-in-out infinite",
+                              animationDelay: `${dot * 0.2}s`,
+                            }}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-               </div>
+                </motion.div>
+
+                {/* Stepper */}
+                <div className="relative flex items-center justify-between w-full px-4 mt-4">
+                  <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
+
+                  <div
+                    className="absolute left-8 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out"
+                    style={{
+                      width:
+                        stage === "picking_up"
+                          ? "0%"
+                          : stage === "delivering"
+                            ? "calc(50% - 24px)"
+                            : "calc(100% - 48px)",
+                      backgroundColor: currentTheme.secondary,
+                      boxShadow: `0 0 10px ${currentTheme.secondary}`,
+                    }}
+                  ></div>
+
+                  <div className="relative z-10 flex flex-col items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}
+                    >
+                      <Store className="size-4" />
+                    </div>
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}
+                    >
+                      Saiu
+                    </span>
+                  </div>
+
+                  <div className="relative z-10 flex flex-col items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}
+                    >
+                      <Bike className="size-4" />
+                    </div>
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}
+                    >
+                      A Caminho
+                    </span>
+                  </div>
+
+                  <div className="relative z-10 flex flex-col items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}
+                    >
+                      <Check className="size-4" />
+                    </div>
+                    <span
+                      className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivered" ? "text-white/90" : "text-white/30"}`}
+                    >
+                      Chegou
+                    </span>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
         </div>
-        
+
         {/* Bottom Sheet - White minimalist style like 99 */}
-        <motion.div 
-          animate={{ height: isMapExpanded ? 0 : 'auto', opacity: isMapExpanded ? 0 : 1, y: isMapExpanded ? 100 : 0 }}
+        <motion.div
+          animate={{
+            height: isMapExpanded ? 0 : "auto",
+            opacity: isMapExpanded ? 0 : 1,
+            y: isMapExpanded ? 100 : 0,
+          }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
           className="bg-white rounded-t-[32px] -mt-6 relative z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] overflow-hidden flex-shrink-0"
         >
-           <div className="max-w-2xl mx-auto relative z-10 px-6 sm:px-8 py-6">
-              <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8" />
-              
-              {ratingState !== null ? (
-                 <div className="pb-4">
-                    <div className="text-center animate-in fade-in slide-in-from-bottom-4">
-                      <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">Muito Obrigado!</h3>
-                      <p className="text-sm font-medium text-gray-500 mb-8">Sua avaliação foi enviada.</p>
-                      <Button className="w-full h-14 rounded-xl text-lg font-bold bg-black text-white" onClick={onClose}>Concluir</Button>
-                    </div>
-                 </div>
-              ) : (
-                 <div className="pb-4">
-                    <div className="flex items-center justify-between mb-8">
-                      <div>
-                        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-                          A caminho!
-                        </h2>
-                        <p className="text-sm font-medium text-gray-500 mt-1">
-                          Chega em aprox. 15-20 min
-                        </p>
-                      </div>
-                      <div className="text-right bg-gray-50 px-4 py-2.5 rounded-2xl border border-gray-100">
-                         <div className="text-2xl font-black text-black">
-                           18:45
-                         </div>
-                         <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-0.5">
-                           Chegada
-                         </p>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-gray-50 rounded-[24px] p-4 flex items-center gap-4 border border-gray-100">
-                       <div className="size-14 rounded-full overflow-hidden flex-shrink-0 relative">
-                          <img src={MOCK_DRIVERS[activeDriver]?.avatar ?? MOCK_DRIVERS[0].avatar} alt="Entregador" className="w-full h-full object-cover" />
-                       </div>
-                       <div className="flex-1 min-w-0">
-                          <h4 className="text-base font-bold text-gray-900 tracking-tight truncate">{MOCK_DRIVERS[activeDriver]?.name ?? MOCK_DRIVERS[0].name}</h4>
-                          <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5 truncate">
-                             <Bike className="size-3.5" /> {MOCK_DRIVERS[activeDriver]?.vehicle ?? MOCK_DRIVERS[0].vehicle} • {MOCK_DRIVERS[activeDriver]?.plate ?? MOCK_DRIVERS[0].plate}
-                          </p>
-                       </div>
-                       <div className="flex gap-2">
-                          <Button size="icon" className="size-12 rounded-full bg-gray-200 hover:bg-gray-300 text-black shrink-0 transition-transform hover:scale-105 active:scale-95 border-none shadow-none">
-                            <Mail className="size-5" />
-                          </Button>
-                       </div>
-                    </div>
+          <div className="max-w-2xl mx-auto relative z-10 px-6 sm:px-8 py-6">
+            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8" />
 
-                    <div className="w-full mt-6">
-                      <Button 
-                         className="w-full text-sm font-bold uppercase tracking-widest h-14 rounded-[20px] bg-black text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95"
-                         onClick={() => setRatingState("done")}
-                      >
-                        Confirmar Recebimento
-                      </Button>
-                    </div>
-                 </div>
-              )}
-           </div>
+            {ratingState === "driver" ? (
+              <div className="pb-4 animate-in fade-in slide-in-from-bottom-4">
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
+                    Como foi a entrega?
+                  </h3>
+                  <p className="text-sm font-medium text-gray-500">
+                    Avalie o entregador {MOCK_DRIVERS[activeDriver]?.name ?? MOCK_DRIVERS[0].name}
+                  </p>
+                </div>
+                <div className="flex justify-center gap-4 mb-8">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={`driver-star-${star}`}
+                      className="transition-transform hover:scale-110 active:scale-95"
+                      onClick={() => {
+                        setDriverRating(star);
+                        setTimeout(() => setRatingState("food"), 300);
+                      }}
+                    >
+                      <Star className={`size-10 ${driverRating >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : ratingState === "food" ? (
+              <div className="pb-4 animate-in fade-in slide-in-from-bottom-4">
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
+                    E o seu lanche?
+                  </h3>
+                  <p className="text-sm font-medium text-gray-500">
+                    Conta pra gente o que achou do sabor!
+                  </p>
+                </div>
+                <div className="flex justify-center gap-4 mb-8">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={`food-star-${star}`}
+                      className="transition-transform hover:scale-110 active:scale-95"
+                      onClick={() => {
+                        setFoodRating(star);
+                        setTimeout(() => setRatingState("done"), 300);
+                      }}
+                    >
+                      <Star className={`size-10 ${foodRating >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : ratingState === "done" ? (
+              <div className="pb-4 animate-in fade-in slide-in-from-bottom-4">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
+                    Muito Obrigado!
+                  </h3>
+                  <p className="text-sm font-medium text-gray-500 mb-8">
+                    Sua avaliação foi enviada com sucesso.
+                  </p>
+                  <Button
+                    className="w-full h-14 rounded-xl text-lg font-bold bg-black text-white"
+                    onClick={onClose}
+                  >
+                    Concluir
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="pb-4">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">{isDone ? "Chegou!" : "A caminho!"}</h2>
+                    <p className="text-sm font-medium text-gray-500 mt-1">
+                      {isDone ? "Pedido entregue com sucesso." : `Chega em aprox. ${remainingMins} min`}
+                    </p>
+                  </div>
+                  <div className="text-right bg-gray-50 px-4 py-2.5 rounded-2xl border border-gray-100">
+                    <div className="text-2xl font-black text-black">{arrivalTimeStr}</div>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-0.5">
+                      Chegada
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-[24px] p-4 flex items-center gap-4 border border-gray-100">
+                  <div className="size-14 rounded-full overflow-hidden flex-shrink-0 relative">
+                    <img
+                      src={MOCK_DRIVERS[activeDriver]?.avatar ?? MOCK_DRIVERS[0].avatar}
+                      alt="Entregador"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-base font-bold text-gray-900 tracking-tight truncate">
+                      {MOCK_DRIVERS[activeDriver]?.name ?? MOCK_DRIVERS[0].name}
+                    </h4>
+                    <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5 truncate">
+                      <Bike className="size-3.5" />{" "}
+                      {MOCK_DRIVERS[activeDriver]?.vehicle ?? MOCK_DRIVERS[0].vehicle} •{" "}
+                      {MOCK_DRIVERS[activeDriver]?.plate ?? MOCK_DRIVERS[0].plate}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="icon"
+                      className="size-12 rounded-full bg-gray-200 hover:bg-gray-300 text-black shrink-0 transition-transform hover:scale-105 active:scale-95 border-none shadow-none"
+                    >
+                      <Mail className="size-5" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="w-full mt-6">
+                  <Button
+                    className="w-full text-sm font-bold uppercase tracking-widest h-14 rounded-[20px] bg-black text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95"
+                    onClick={() => setRatingState("driver")}
+                  >
+                    Confirmar Recebimento
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>

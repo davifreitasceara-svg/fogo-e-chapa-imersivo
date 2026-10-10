@@ -1,5 +1,5 @@
-const fs = require('fs');
-let c = fs.readFileSync('src/routes/index.tsx', 'utf-8');
+const fs = require("fs");
+let c = fs.readFileSync("src/routes/index.tsx", "utf-8");
 
 const replacement = `<div className="relative flex-1 overflow-hidden">
              <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
@@ -83,7 +83,7 @@ const replaceEndOfDriverCard = `<Mail className="size-5" />
                        </div>
 
                        {stage === "delivered" && (`;
-                       
+
 c = c.replace(endOfDriverCard, replaceEndOfDriverCard);
 
 const endOfModalStr = `                     </div>
@@ -108,4 +108,4 @@ const replaceEndOfModalStr = `                     </div>
 
 c = c.replace(endOfModalStr, replaceEndOfModalStr);
 
-fs.writeFileSync('src/routes/index.tsx', c);
+fs.writeFileSync("src/routes/index.tsx", c);
