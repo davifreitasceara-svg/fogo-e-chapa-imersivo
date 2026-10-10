@@ -205,11 +205,11 @@ function CanMesh({ drink, vIndex, viewMode }: { drink: any, vIndex: number, view
       <mesh castShadow receiveShadow>
         <cylinderGeometry args={[1, 1, 4.0, 64]} />
         <meshPhysicalMaterial 
-          metalness={0.35} 
-          roughness={0.15} 
+          metalness={0.5} 
+          roughness={0.1} 
           clearcoat={1.0} 
-          clearcoatRoughness={0.15} 
-          envMapIntensity={1.5} 
+          clearcoatRoughness={0.05} 
+          envMapIntensity={2.0} 
         >
           <RenderTexture attach="map" anisotropy={16} frames={2}>
             <OrthographicCamera makeDefault left={-3.14} right={3.14} top={2.0} bottom={-2.0} position={[0, 0, 5]} />
@@ -285,7 +285,7 @@ function CanMesh({ drink, vIndex, viewMode }: { drink: any, vIndex: number, view
             {/* SubTitle Text - Highlight/Reflection */}
             <Text 
               position={[-0.17, -1.03, 0.09]} 
-              fontSize={0.35} 
+              fontSize={0.22} 
               color="#ffffff" 
               letterSpacing={-0.02}
               outlineWidth={0.025}
@@ -299,7 +299,7 @@ function CanMesh({ drink, vIndex, viewMode }: { drink: any, vIndex: number, view
             {/* SubTitle Text - Main */}
             <Text 
               position={[-0.15, -1.05, 0.1]} 
-              fontSize={0.35} 
+              fontSize={0.22} 
               color="#1A1A1A" 
               letterSpacing={-0.02}
               outlineWidth={0.02}
@@ -419,13 +419,23 @@ export function Can3DScene({ drinks, activeIndex, singleMode = false, viewMode =
           color="#ffffff" 
         />
         
-        <Environment preset="city" blur={0.15} />
+        <Environment preset="city" blur={0.05} />
         
+        {/* Top Front Light */}
         <spotLight 
           position={[0, 5, 5]} 
-          intensity={3.0} 
+          intensity={2.0} 
           angle={0.8} 
           penumbra={0.2} 
+          color="#ffffff" 
+        />
+
+        {/* Bottom Front Light (Creates a sharp reflection on the lower band) */}
+        <spotLight 
+          position={[1.5, -2, 5]} 
+          intensity={4.0} 
+          angle={0.4} 
+          penumbra={0.3} 
           color="#ffffff" 
         />
         
