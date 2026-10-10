@@ -146,7 +146,7 @@ function GrapeIconGraphic() {
   )
 }
 
-function CanMesh({ drink, vIndex }: { drink: any, vIndex: number }) {
+function CanMesh({ drink, vIndex, viewMode }: { drink: any, vIndex: number, viewMode?: 'carousel' | 'detail' }) {
   const meshRef = useRef<THREE.Group>(null)
 
   useFrame((state, delta) => {
@@ -155,17 +155,36 @@ function CanMesh({ drink, vIndex }: { drink: any, vIndex: number }) {
      // Center can is vIndex === 2
      const diff = vIndex - 2; 
 
+     const isDetail = viewMode === 'detail';
+
      // Calculate target position based on distance from center
-     const targetX = diff * 3.2; 
+     let targetX = diff * 4.0; 
+     if (diff !== 0) {
+       // Add an extra horizontal gap specifically between the center and its direct neighbors
+       targetX += diff > 0 ? 0.8 : -0.8;
+       // Scroll effect: Cans on the side fly massively outward in detail view
+       if (isDetail) {
+         targetX += (diff > 0 ? 15 : -15);
+       }
+     } else {
+       // Center can: Shift left slightly to make room for the fruit image on the right
+       if (isDetail) {
+         targetX = -1.2;
+       }
+     }
+
      const targetY = -0.2 + Math.abs(diff) * 0.4; 
-     const targetZ = -Math.abs(diff) * 3.5; 
+     
+     // Center can at 0, others pushed back
+     const targetZ = vIndex === 2 ? 0.0 : -Math.abs(diff) * 4.2; 
      
      // Tilted outward
      const targetRotZ = -diff * 0.18; 
      // Face slightly towards center
      const targetRotY = Math.PI + 0.15 + diff * 0.4; 
 
-     const targetScale = vIndex === 2 ? 1.0 : 0.85 - Math.abs(diff) * 0.1;
+     // Shrink slightly in detail mode to match reference
+     const targetScale = vIndex === 2 ? (isDetail ? 0.9 : 1.0) : 0.85 - Math.abs(diff) * 0.1;
 
      meshRef.current.position.x = THREE.MathUtils.damp(meshRef.current.position.x, targetX, 5, delta);
      meshRef.current.position.y = THREE.MathUtils.damp(meshRef.current.position.y, targetY, 5, delta);
@@ -370,10 +389,10 @@ function CanMesh({ drink, vIndex }: { drink: any, vIndex: number }) {
   )
 }
 
-export function Can3DScene({ drinks, activeIndex }: { drinks: any[], activeIndex: number }) {
+export function Can3DScene({ drinks, activeIndex, singleMode = false, viewMode = 'carousel' }: { drinks: any[], activeIndex: number, singleMode?: boolean, viewMode?: 'carousel' | 'detail' }) {
   return (
     <div className="w-full h-full">
-      <Canvas shadows camera={{ position: [0, 0, 8.5], fov: 35 }}>
+      <Canvas shadows camera={{ position: [0, 0, 10.0], fov: 35 }}>
         
         <ambientLight intensity={0.9} />
         
@@ -411,13 +430,13 @@ export function Can3DScene({ drinks, activeIndex }: { drinks: any[], activeIndex
         />
         
         {drinks.map((drink, index) => {
-          // Calculate visual index so cans wrap around smoothly
-          // activeIndex = 2 means index 2 gets vIndex 2 (Center)
-          // activeIndex = 3 means index 3 gets vIndex 2 (Center), and index 2 gets vIndex 1 (Left)
           let vIndex = (index - activeIndex + 2 + drinks.length) % drinks.length;
           
+          // In single mode, only render the center can (vIndex === 2)
+          if (singleMode && vIndex !== 2) return null;
+
           return (
-            <CanMesh key={drink.id} drink={drink} vIndex={vIndex} />
+            <CanMesh key={drink.id + '-' + index} drink={drink} vIndex={vIndex} viewMode={viewMode} />
           );
         })}
         
