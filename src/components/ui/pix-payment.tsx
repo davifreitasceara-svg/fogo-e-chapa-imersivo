@@ -9,8 +9,9 @@ type Props = {
 export const PixPayment = ({ totalPrice, onFinish }: Props) => {
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
-  
-  const mockPixCode = "00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913Fogo e Chapa6009Sao Paulo62070503***63041A2B";
+
+  const mockPixCode =
+    "00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913Fogo e Chapa6009Sao Paulo62070503***63041A2B";
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -22,7 +23,7 @@ export const PixPayment = ({ totalPrice, onFinish }: Props) => {
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
   const handleCopy = () => {
@@ -41,9 +42,11 @@ export const PixPayment = ({ totalPrice, onFinish }: Props) => {
       <div className="bg-[#ff9d00]/10 border border-[#ff9d00]/20 rounded-xl p-4 w-full text-center flex flex-col items-center relative overflow-hidden">
         {/* Glow effect behind QR */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-[#ff9d00]/20 rounded-full blur-[40px]" />
-        
+
         <h3 className="text-base font-bold mb-0.5 relative z-10">Escaneie o QR Code</h3>
-        <p className="text-white/60 text-xs mb-3 relative z-10">Abra o app do seu banco e escolha pagar via Pix QR Code.</p>
+        <p className="text-white/60 text-xs mb-3 relative z-10">
+          Abra o app do seu banco e escolha pagar via Pix QR Code.
+        </p>
 
         <div className="relative z-10 bg-white p-3 rounded-2xl shadow-[0_0_30px_rgba(255,157,0,0.2)] mb-4 animate-in zoom-in duration-500">
           <img src={qrCodeUrl} alt="Pix QR Code" className="w-36 h-36 rounded-lg object-contain" />
@@ -51,12 +54,16 @@ export const PixPayment = ({ totalPrice, onFinish }: Props) => {
         </div>
 
         <div className="flex flex-col items-center relative z-10 w-full mb-1">
-          <p className="text-white/60 text-xs uppercase tracking-wider font-bold mb-2">Pix Copia e Cola</p>
-          <button 
+          <p className="text-white/60 text-xs uppercase tracking-wider font-bold mb-2">
+            Pix Copia e Cola
+          </p>
+          <button
             onClick={handleCopy}
             className="w-full flex items-center justify-between bg-black/40 border border-white/10 rounded-lg p-3 hover:border-[#ff9d00]/50 hover:bg-black/60 transition-all duration-300 group"
           >
-            <span className="truncate text-sm opacity-80 font-mono mr-4">{mockPixCode.slice(0, 25)}...</span>
+            <span className="truncate text-sm opacity-80 font-mono mr-4">
+              {mockPixCode.slice(0, 25)}...
+            </span>
             {copied ? (
               <span className="flex items-center text-[#ff9d00] font-bold text-sm shrink-0">
                 <CheckCircle2 className="w-4 h-4 mr-1" /> Copiado
@@ -72,7 +79,10 @@ export const PixPayment = ({ totalPrice, onFinish }: Props) => {
 
       <div className="mt-4 text-center flex flex-col items-center w-full">
         <p className="text-white/50 text-sm mb-1">Aguardando pagamento...</p>
-        <div className="text-2xl font-bold tracking-tighter tabular-nums text-[#ff9d00] mb-4" style={{ fontFamily: "'Barlow Condensed', 'Manrope', sans-serif" }}>
+        <div
+          className="text-2xl font-bold tracking-tighter tabular-nums text-[#ff9d00] mb-4"
+          style={{ fontFamily: "'Barlow Condensed', 'Manrope', sans-serif" }}
+        >
           {formatTime(timeLeft)}
         </div>
       </div>

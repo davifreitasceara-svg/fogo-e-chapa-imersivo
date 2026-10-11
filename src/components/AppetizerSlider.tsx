@@ -1,48 +1,53 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Search, ShoppingBag } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, Search, ShoppingBag } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 const appetizers = [
   {
     id: 101,
-    title1: 'TIRAS',
-    title2: 'DO TRIPA',
-    name: 'Tiras do Tripa',
-    desc: 'Tiras de frango empanado, super crocantes, com uma pegada premium e acompanhadas do nosso molho especial.',
-    price: 'R$ 24,90',
-    tags: ['Frango', 'Crocante'],
-    image: '/appetizer_chicken.png',
-    bgColor: '#ECA02A', // Vibrant Mustard Yellow
-    textColor: '#ffffff',
+    title1: "TIRAS",
+    title2: "DO TRIPA",
+    name: "Tiras do Tripa",
+    desc: "Tiras de frango empanado, super crocantes, com uma pegada premium e acompanhadas do nosso molho especial.",
+    price: "R$ 24,90",
+    tags: ["Frango", "Crocante"],
+    image: "/appetizer_chicken.png",
+    bgColor: "#ECA02A", // Vibrant Mustard Yellow
+    textColor: "#ffffff",
   },
   {
     id: 102,
-    title1: 'TRINCHEIRA',
-    title2: 'DO DAVI',
-    name: 'Trincheira do Davi',
-    desc: 'A nossa clássica batata rústica carregada com uma verdadeira explosão de queijo cheddar derretido e bacon.',
-    price: 'R$ 32,90',
-    tags: ['Cheddar', 'Bacon'],
-    image: '/fries_cheddar.png',
-    bgColor: '#C6311E', // Deep Fiery Red
-    textColor: '#ffffff',
+    title1: "TRINCHEIRA",
+    title2: "DO DAVI",
+    name: "Trincheira do Davi",
+    desc: "A nossa clássica batata rústica carregada com uma verdadeira explosão de queijo cheddar derretido e bacon.",
+    price: "R$ 32,90",
+    tags: ["Cheddar", "Bacon"],
+    image: "/fries_cheddar.png",
+    bgColor: "#C6311E", // Deep Fiery Red
+    textColor: "#ffffff",
   },
   {
     id: 103,
-    title1: 'BATATAS',
-    title2: 'REAIS',
-    name: 'Croquetes Reais',
-    desc: 'Croquetes de batata douradinhos e recheados com muito queijo, no nível da realeza! Perfeitos para compartilhar.',
-    price: 'R$ 28,90',
-    tags: ['Recheado', 'Queijo'],
-    image: '/appetizer_croquettes.png',
-    bgColor: '#C86218', // Warm Golden Orange
-    textColor: '#ffffff',
-  }
+    title1: "BATATAS",
+    title2: "REAIS",
+    name: "Croquetes Reais",
+    desc: "Croquetes de batata douradinhos e recheados com muito queijo, no nível da realeza! Perfeitos para compartilhar.",
+    price: "R$ 28,90",
+    tags: ["Recheado", "Queijo"],
+    image: "/appetizer_croquettes.png",
+    bgColor: "#C86218", // Warm Golden Orange
+    textColor: "#ffffff",
+  },
 ];
 
-
-export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (id: number, event?: React.MouseEvent) => void, currentTheme?: any }) {
+export function AppetizerSlider({
+  onAddToCart,
+  currentTheme,
+}: {
+  onAddToCart?: (id: number, event?: React.MouseEvent) => void;
+  currentTheme?: any;
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isMobile = useIsMobile();
 
@@ -61,7 +66,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
   return (
     <section className="relative w-full min-h-[650px] sm:min-h-[700px] max-h-[850px] overflow-hidden flex items-center">
       {/* Base Animated Background Color */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 z-0"
         animate={{ backgroundColor: currentTheme?.secondary || currentApp.bgColor }}
         transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -101,7 +106,6 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
       </div>
 
       <div className="relative z-20 w-full max-w-[1400px] mx-auto min-h-full flex flex-col md:flex-row items-center pt-16 sm:pt-20 pb-28 sm:pb-36">
-        
         <div className="w-full md:w-5/12 px-8 sm:px-16 flex flex-col justify-center min-h-full z-30 mt-6 md:mt-0">
           <motion.div
             key={currentApp.title1}
@@ -111,56 +115,60 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
             className="flex flex-col mb-4 sm:mb-8"
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-4 sm:mb-6 w-fit shadow-xl">
-               <span className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_white]"></span>
-               <span className="font-display font-bold text-xs tracking-[0.2em] text-white uppercase">Menu de Entradas</span>
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_white]"></span>
+              <span className="font-display font-bold text-xs tracking-[0.2em] text-white uppercase">
+                Menu de Entradas
+              </span>
             </div>
-            
+
             <div className="flex flex-col relative z-10">
-               <span 
-                 className="font-display text-6xl sm:text-[90px] leading-[0.85] font-black tracking-tighter text-transparent italic"
-                 style={{ WebkitTextStroke: "2px rgba(255,255,255,0.9)" }}
-               >
-                 {currentApp.title1}
-               </span>
-               <span className="font-display text-6xl sm:text-[90px] leading-[0.85] font-black tracking-tighter text-white drop-shadow-2xl italic mt-1">
-                 {currentApp.title2}
-               </span>
+              <span
+                className="font-display text-6xl sm:text-[90px] leading-[0.85] font-black tracking-tighter text-transparent italic"
+                style={{ WebkitTextStroke: "2px rgba(255,255,255,0.9)" }}
+              >
+                {currentApp.title1}
+              </span>
+              <span className="font-display text-6xl sm:text-[90px] leading-[0.85] font-black tracking-tighter text-white drop-shadow-2xl italic mt-1">
+                {currentApp.title2}
+              </span>
             </div>
 
             <div className="mt-6 sm:mt-8 max-w-sm relative z-10">
-               <div className="flex flex-wrap gap-2 mb-6">
-                 {currentApp.tags.map(tag => (
-                    <span key={tag} className="px-4 py-1.5 rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest backdrop-blur-md bg-black/20 shadow-lg flex items-center justify-center">
-                      {tag}
-                    </span>
-                 ))}
-               </div>
-               
-               <p className="text-white text-sm sm:text-base font-medium leading-relaxed mb-8 drop-shadow-md opacity-90 border-l-2 border-white/30 pl-4">
-                 {currentApp.desc}
-               </p>
-               
-               <div className="mb-8">
-                 <div className="inline-block bg-white text-black px-6 py-2 rounded-2xl font-display font-black text-3xl sm:text-4xl shadow-2xl transform -rotate-2 border-b-4 border-black/20">
-                   {currentApp.price}
-                 </div>
-               </div>
-               
-               <div className="flex gap-4">
-                  <button 
-                    onClick={(e) => onAddToCart && onAddToCart(currentApp.id, e)}
-                    className="group bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-white hover:text-black transition-all hover:-translate-y-1 shadow-2xl flex items-center gap-3 border border-transparent"
+              <div className="flex flex-wrap gap-2 mb-6">
+                {currentApp.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-4 py-1.5 rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest backdrop-blur-md bg-black/20 shadow-lg flex items-center justify-center"
                   >
-                    <ShoppingBag className="size-4 group-hover:scale-110 transition-transform" />
-                    <span className="tracking-wide">PEDIR AGORA</span>
-                  </button>
-               </div>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <p className="text-white text-sm sm:text-base font-medium leading-relaxed mb-8 drop-shadow-md opacity-90 border-l-2 border-white/30 pl-4">
+                {currentApp.desc}
+              </p>
+
+              <div className="mb-8">
+                <div className="inline-block bg-white text-black px-6 py-2 rounded-2xl font-display font-black text-3xl sm:text-4xl shadow-2xl transform -rotate-2 border-b-4 border-black/20">
+                  {currentApp.price}
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={(e) => onAddToCart && onAddToCart(currentApp.id, e)}
+                  className="group bg-[#2B1B15] text-white px-8 py-4 rounded-full font-bold text-sm w-fit hover:bg-white hover:text-black transition-all hover:-translate-y-1 shadow-2xl flex items-center gap-3 border border-transparent"
+                >
+                  <ShoppingBag className="size-4 group-hover:scale-110 transition-transform" />
+                  <span className="tracking-wide">PEDIR AGORA</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         </div>
 
         <div className="w-full md:w-7/12 relative h-[400px] sm:h-[600px] flex items-center justify-center perspective-[1200px]">
-          
           {appetizers.map((app, index) => {
             let offset = index - currentIndex;
             if (offset < -2) offset += appetizers.length;
@@ -203,7 +211,7 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
 
             // Adjust for mobile screens safely using the useIsMobile hook
             if (isMobile) {
-              x = x * 0.5; 
+              x = x * 0.5;
               y = y * 0.5;
             }
 
@@ -220,11 +228,11 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                   scale,
                   rotate,
                   zIndex,
-                  opacity: offset === 2 ? 0.3 : (offset === -1 ? 0 : 1) // Fades out strongly on the left
+                  opacity: offset === 2 ? 0.3 : offset === -1 ? 0 : 1, // Fades out strongly on the left
                 }}
                 transition={{
                   duration: 0.8,
-                  ease: [0.32, 0.72, 0, 1] // Custom snappy spring-like easing
+                  ease: [0.32, 0.72, 0, 1], // Custom snappy spring-like easing
                 }}
                 onClick={() => {
                   if (offset === 1) slideLeft();
@@ -240,51 +248,72 @@ export function AppetizerSlider({ onAddToCart, currentTheme }: { onAddToCart?: (
                   animate={offset === 0 ? { y: [0, -15, 0] } : { y: 0 }}
                   transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 >
-                  <img 
-                    src={app.image} 
-                    alt={app.name} 
-                    className="w-full object-contain drop-shadow-md" 
+                  <img
+                    src={app.image}
+                    alt={app.name}
+                    className="w-full object-contain drop-shadow-md"
                   />
                 </motion.div>
               </motion.div>
             );
           })}
-
         </div>
       </div>
 
       {/* Footer / Wave Area */}
       <div className="absolute bottom-0 left-0 w-full z-40">
-        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" className="w-full h-[100px] sm:h-[150px] block mb-[-2px] transition-colors duration-700" style={{ color: currentTheme?.secondary || '#FDF8F2' }}>
-          <path fill="currentColor" fillOpacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        <svg
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          className="w-full h-[100px] sm:h-[150px] block mb-[-2px] transition-colors duration-700"
+          style={{ color: currentTheme?.secondary || "#FDF8F2" }}
+        >
+          <path
+            fill="currentColor"
+            fillOpacity="1"
+            d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,229.3C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+          ></path>
         </svg>
-        <div className="w-full h-[100px] flex items-center justify-between px-8 sm:px-16 pb-6 transition-colors duration-700" style={{ backgroundColor: currentTheme?.secondary || '#FDF8F2' }}>
+        <div
+          className="w-full h-[100px] flex items-center justify-between px-8 sm:px-16 pb-6 transition-colors duration-700"
+          style={{ backgroundColor: currentTheme?.secondary || "#FDF8F2" }}
+        >
           {/* Left: Empty space to keep arrows centered */}
           <div className="flex items-center gap-4 w-48"></div>
 
           {/* Center: Navigation Controls */}
           <div className="flex gap-2">
-            <button 
-              onClick={slideLeft} 
+            <button
+              onClick={slideLeft}
               className="group h-12 sm:h-14 px-4 sm:px-5 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-0 border-2 border-transparent hover:border-amber-500/50"
             >
-              <ChevronLeft className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1 -mr-1" strokeWidth={3} />
-              <span className="font-bold text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block">Anterior</span>
+              <ChevronLeft
+                className="size-5 sm:size-6 transition-transform duration-300 group-hover:-translate-x-1 -mr-1"
+                strokeWidth={3}
+              />
+              <span className="font-bold text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block">
+                Anterior
+              </span>
             </button>
-            <button 
-              onClick={slideRight} 
+            <button
+              onClick={slideRight}
               className="group h-12 sm:h-14 px-4 sm:px-5 rounded-full bg-[#2B1B15] flex items-center justify-center shadow-2xl hover:bg-black hover:scale-105 hover:-translate-y-1 transition-all duration-300 text-white gap-0 border-2 border-transparent hover:border-amber-500/50"
             >
-              <span className="font-bold text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block">Próximo</span>
-              <ChevronRight className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1 -ml-1" strokeWidth={3} />
+              <span className="font-bold text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block">
+                Próximo
+              </span>
+              <ChevronRight
+                className="size-5 sm:size-6 transition-transform duration-300 group-hover:translate-x-1 -ml-1"
+                strokeWidth={3}
+              />
             </button>
           </div>
 
           {/* Right: Dots (like the image) */}
           <div className="hidden md:flex gap-2 items-center">
-             <div className="w-2.5 h-2.5 rounded-full bg-[#2B1B15]"></div>
-             <div className="w-2 h-2 rounded-full bg-[#2B1B15]/30"></div>
-             <div className="w-2 h-2 rounded-full bg-[#2B1B15]/30"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#2B1B15]"></div>
+            <div className="w-2 h-2 rounded-full bg-[#2B1B15]/30"></div>
+            <div className="w-2 h-2 rounded-full bg-[#2B1B15]/30"></div>
           </div>
         </div>
       </div>

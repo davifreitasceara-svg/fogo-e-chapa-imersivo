@@ -8,7 +8,8 @@ const run = (cmd, opts = {}) =>
   execSync(cmd, { stdio: opts.silent ? "pipe" : "inherit", encoding: "utf8" });
 
 try {
-  const message = process.argv.slice(2).join(" ").trim() || `chore: sync ${new Date().toLocaleString("pt-BR")}`;
+  const message =
+    process.argv.slice(2).join(" ").trim() || `chore: sync ${new Date().toLocaleString("pt-BR")}`;
 
   // 1. Salva as alterações locais num commit (se houver)
   const pending = run("git status --porcelain", { silent: true }).trim();
@@ -30,7 +31,9 @@ try {
   console.log("\n✔ Sincronizado! O Vercel já está publicando.");
 } catch (err) {
   console.error("\n✖ Não foi possível sincronizar.");
-  console.error("Se houver conflito, resolva os arquivos marcados e rode: git rebase --continue && git push origin main");
+  console.error(
+    "Se houver conflito, resolva os arquivos marcados e rode: git rebase --continue && git push origin main",
+  );
   console.error("Para desistir: git rebase --abort");
   process.exit(1);
 }
