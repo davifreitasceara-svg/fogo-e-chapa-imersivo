@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, LogIn } from "lucide-react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useCart } from "@/context/CartContext";
 
@@ -137,19 +137,18 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
             )}
           </button>
 
-          <a
-            href="/#contato"
-            onClick={(e) => {
-              if (onOpenLogin && typeof window !== "undefined" && window.location.pathname.includes("drinks")) {
+          <button
+            onClick={() => {
+              if (onOpenLogin) {
                 onOpenLogin();
-                return;
+              } else {
+                document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
               }
-              handleNavClick(e, "/#contato");
             }}
-            className="hidden sm:flex items-center justify-center rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 py-2 text-sm transition-colors cursor-pointer"
+            className="hidden sm:flex items-center justify-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 py-2 text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
           >
-            Contact Us
-          </a>
+            <LogIn className="size-4" /> Entrar
+          </button>
 
           {/* Mobile hamburger menu */}
           <button
@@ -187,16 +186,19 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
                 </a>
               ))}
               <div className="pt-2 border-t border-white/10">
-                <a
-                  href="/#contato"
-                  onClick={(e) => {
+                <button
+                  onClick={() => {
                     setOpen(false);
-                    handleNavClick(e, "/#contato");
+                    if (onOpenLogin) {
+                      onOpenLogin();
+                    } else {
+                      document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
+                    }
                   }}
-                  className="block text-center rounded-full border-2 border-white text-white hover:bg-white hover:text-black py-2.5 text-sm font-bold uppercase transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 rounded-full border-2 border-white text-white hover:bg-white hover:text-black py-2.5 text-sm font-bold uppercase transition-all duration-300 active:scale-95 cursor-pointer"
                 >
-                  Contact Us
-                </a>
+                  <LogIn className="size-4" /> Entrar
+                </button>
               </div>
             </div>
           </motion.div>

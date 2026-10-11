@@ -31,6 +31,7 @@ import {
   Maximize2,
   Minimize2,
   Store,
+  LogIn,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ import { Embers } from "@/components/Embers";
 import { Bubbles } from "@/components/Bubbles";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
 import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo";
+import { BurgerBoxLogin } from "@/components/BurgerBoxLogin";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
 import burgerBrasa from "@/assets/burger-brasa.png";
@@ -3764,8 +3766,11 @@ function Index() {
                 />
               </Sheet>
 
-              <Button className="hidden sm:flex rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-colors">
-                Contact Us
+              <Button
+                onClick={() => setAuthOpen(true)}
+                className="hidden sm:flex items-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+              >
+                <LogIn className="w-4 h-4" /> Entrar
               </Button>
             </motion.div>
           </div>
@@ -5458,7 +5463,7 @@ function Index() {
         </div>
       </footer>
 
-      {authOpen && <AuthModal mode={mode} setMode={setMode} onClose={() => setAuthOpen(false)} />}
+      <BurgerBoxLogin open={authOpen} onClose={() => setAuthOpen(false)} />
       <AnimatePresence>
         {activeDrinkName && (
           <DrinkModal
