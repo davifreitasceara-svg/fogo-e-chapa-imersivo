@@ -38,6 +38,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Embers } from "@/components/Embers";
 import { Bubbles } from "@/components/Bubbles";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
+import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
 import burgerBrasa from "@/assets/burger-brasa.png";
@@ -3453,7 +3454,9 @@ function Index() {
   const [slideDirection, setSlideDirection] = useState(1); // 1 = right, -1 = left
 
   const footerRef = useRef<HTMLElement>(null);
+  const footerTriggerRef = useRef<HTMLDivElement>(null);
   const [footerHeight, setFooterHeight] = useState(0);
+  const [isFooterNear, setIsFooterNear] = useState(false);
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -3463,6 +3466,18 @@ function Index() {
       }
     });
     observer.observe(footerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!footerTriggerRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setIsFooterNear(entries[0]?.isIntersecting ?? false);
+      },
+      { rootMargin: "400px" }
+    );
+    observer.observe(footerTriggerRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -3764,17 +3779,16 @@ function Index() {
             {/* Hero Video Background */}
             <div
               className="absolute inset-0 z-0 pointer-events-none transition-colors duration-700"
-              style={{ backgroundColor: currentTheme.bgDark }}
+              style={{
+                backgroundColor: currentTheme.bgDark,
+                transform: "translate3d(0, 0, 0)",
+                contain: "paint layout",
+              }}
             >
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
+              <OptimizedBackgroundVideo
+                src="/quero_mais_chamas.mp4"
                 className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
-              >
-                <source src="/quero_mais_chamas.mp4" type="video/mp4" />
-              </video>
+              />
               <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
             </div>
             {/* Center Text */}
@@ -4639,18 +4653,10 @@ function Index() {
             >
               {/* Background Video */}
               <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
+                <OptimizedBackgroundVideo
+                  src="https://assets.mixkit.co/videos/preview/mixkit-soda-pouring-into-a-glass-with-ice-5324-large.mp4"
                   className="w-full h-full object-cover opacity-20"
-                >
-                  <source
-                    src="https://assets.mixkit.co/videos/preview/mixkit-soda-pouring-into-a-glass-with-ice-5324-large.mp4"
-                    type="video/mp4"
-                  />
-                </video>
+                />
               </div>
 
               <Bubbles count={40} color={currentTheme.secondary} />
@@ -5188,6 +5194,8 @@ function Index() {
               </div>
             </div>
           </section>
+          {/* Sentinel to detect when user scrolls near the footer */}
+          <div ref={footerTriggerRef} className="h-2 w-full pointer-events-none" />
         </main>
       </div>
 
@@ -5197,17 +5205,13 @@ function Index() {
         className="fixed bottom-0 left-0 w-full pt-10 sm:pt-16 transition-colors duration-700 overflow-hidden text-white z-[-1]"
         style={{ backgroundColor: currentTheme.bgVeryDark }}
       >
-        {/* Full Footer Video Background */}
+        {/* Full Footer Video Background - Only decoded/played when near bottom */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
+          <OptimizedBackgroundVideo
+            src="/quero_mais_chamas.mp4"
+            active={isFooterNear}
             className="w-full h-full object-cover object-bottom opacity-40 mix-blend-screen"
-          >
-            <source src="/quero_mais_chamas.mp4" type="video/mp4" />
-          </video>
+          />
           {/* Gradient to darken the top so the form and links are readable */}
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent"></div>
         </div>
@@ -5925,15 +5929,10 @@ function DeliveryTrackingModal({
         >
           {/* Background Video */}
           <div className="absolute inset-0 z-0 pointer-events-none">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
+            <OptimizedBackgroundVideo
+              src="/quero_mais_chamas.mp4"
               className="w-full h-full object-cover opacity-40 mix-blend-screen"
-            >
-              <source src="/quero_mais_chamas.mp4" type="video/mp4" />
-            </video>
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F0F0F]/70 to-[#0F0F0F]"></div>
           </div>
 
