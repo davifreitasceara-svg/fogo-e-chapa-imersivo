@@ -1,5 +1,5 @@
 import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -3338,6 +3338,8 @@ function DrinkModal({
 }
 
 function Index() {
+  const navigate = useNavigate();
+  const router = useRouter();
   const [activeDrinkName, setActiveDrinkName] = useState<string | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
@@ -3641,6 +3643,11 @@ function Index() {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => {
+                    if (link.href === "/drinks") {
+                      e.preventDefault();
+                      navigate({ to: "/drinks" });
+                      return;
+                    }
                     if (link.label === "Delivery") {
                       e.preventDefault();
                       if (activeOrderTime) {
@@ -3661,7 +3668,14 @@ function Index() {
                     },
                   }}
                   whileTap={{ scale: 0.95 }}
-                  onMouseEnter={() => setHoveredNav(link.href)}
+                  onMouseEnter={() => {
+                    setHoveredNav(link.href);
+                    if (link.href === "/drinks") {
+                      try {
+                        router.preloadRoute({ to: "/drinks" });
+                      } catch (err) {}
+                    }
+                  }}
                 >
                   {hoveredNav === link.href && (
                     <motion.span
