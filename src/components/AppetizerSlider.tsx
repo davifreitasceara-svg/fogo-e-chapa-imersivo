@@ -30,7 +30,7 @@ const appetizers = [
   {
     id: 103,
     title1: "BATATAS",
-    title2: "REAalidae",
+    title2: "REAiS",
     name: "Croquetes Reais",
     desc: "Croquetes de batata douradinhos e recheados com muito queijo, no nível da realeza! Perfeitos para compartilhar.",
     price: "R$ 28,90",
