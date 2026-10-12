@@ -53,7 +53,7 @@ const burgers: Item[] = [
 
 const drinks: Item[] = [
   {
-    name: "Seca-nunca",
+    name: "drink",
     description: "Para matar a sede de vez! Muito gelo e refrescância.",
     price: "R$ 12",
     image: drink1,
@@ -118,9 +118,10 @@ export function MenuSection({ onAdd }: { onAdd: () => void }) {
               <button
                 key={tab.id}
                 onClick={() => setActive(tab.id)}
-                className={`relative rounded-full px-6 py-2.5 text-sm font-semibold uppercase transition-colors ${
-                  active === tab.id ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`relative rounded-full px-6 py-2.5 text-sm font-semibold uppercase transition-colors ${active === tab.id
+                    ? "text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {active === tab.id && (
                   <motion.span
@@ -190,4 +191,3 @@ export function MenuSection({ onAdd }: { onAdd: () => void }) {
     </section>
   );
 }
-
