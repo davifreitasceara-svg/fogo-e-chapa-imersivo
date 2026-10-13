@@ -516,9 +516,9 @@ function getJuiceFluidMaterial(initialColor: string) {
   (mat as any).userData = { uTime, uScroll, uClimb };
 
   mat.onBeforeCompile = (shader) => {
-    shader.uniforms.uTime = uTime;
-    shader.uniforms.uScroll = uScroll;
-    shader.uniforms.uClimb = uClimb;
+    shader.uniforms['uTime'] = uTime;
+    shader.uniforms['uScroll'] = uScroll;
+    shader.uniforms['uClimb'] = uClimb;
 
     shader.vertexShader = `
       uniform float uTime;
@@ -588,7 +588,7 @@ function getCoreFluidMaterial() {
   (mat as any).userData = { uClimb };
 
   mat.onBeforeCompile = (shader) => {
-    shader.uniforms.uClimb = uClimb;
+    shader.uniforms['uClimb'] = uClimb;
     shader.vertexShader = `
       varying float vProgress;
       ${shader.vertexShader}

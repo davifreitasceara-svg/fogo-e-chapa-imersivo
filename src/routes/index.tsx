@@ -3614,7 +3614,7 @@ function Index() {
     });
   }
 
-  function addToCart(id: number | undefined) {
+  function addToCart(id: number | undefined, event?: React.MouseEvent) {
     if (id === undefined) return;
     updateQuantity(id, 1);
     setAddedId(id);
@@ -4409,7 +4409,7 @@ function Index() {
                       {/* Combo 1 */}
                       <motion.div 
                         whileHover={{ y: -15, scale: 1.02 }}
-                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-amber-500/40 flex flex-col"
+                        className="relative group rounded-[40px] p-6 sm:p-7 xl:p-8 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-amber-500/40 flex flex-col"
                       >
                         <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-[80px] group-hover:bg-amber-500/30 transition-colors duration-700 pointer-events-none" />
@@ -4431,18 +4431,18 @@ function Index() {
                           />
                         </div>
 
-                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1 w-full">
                           <span className="px-5 py-2 rounded-full bg-amber-500/10 text-amber-500 text-xs font-black tracking-widest border border-amber-500/20 mb-6 shadow-[0_0_15px_rgba(245,158,11,0.2)] uppercase">Triplo Sabor</span>
                           <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Tripa em<br/><span className="text-amber-500">Triplo</span></h4>
                           <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Acompanha tiras do tripa, tripa jr e seca-nunca.</p>
                           
-                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
-                            <div className="flex flex-col">
-                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
-                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">35<span className="text-2xl text-amber-500 font-bold">,00</span></span>
+                          <div className="flex items-center justify-between gap-2.5 w-full mt-auto pt-6 border-t border-white/10">
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-zinc-500 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">Por apenas</span>
+                              <span className="font-display text-3xl sm:text-4xl font-black text-white leading-none whitespace-nowrap">35<span className="text-xl sm:text-2xl text-amber-500 font-bold">,00</span></span>
                             </div>
-                            <button onClick={(e) => addToCart(401, e)} className="h-16 px-8 rounded-full bg-amber-500 text-black font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(245,158,11,0.4)]">
-                              Comprar <Plus className="size-5" />
+                            <button onClick={(e) => addToCart(401, e)} className="h-11 px-4 sm:px-5 rounded-full bg-amber-500 text-black font-black uppercase tracking-wider text-xs flex items-center gap-1.5 hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] shrink-0 cursor-pointer">
+                              Comprar <Plus className="size-4" strokeWidth={3} />
                             </button>
                           </div>
                         </div>
@@ -4451,7 +4451,7 @@ function Index() {
                       {/* Combo 2 */}
                       <motion.div 
                         whileHover={{ y: -15, scale: 1.02 }}
-                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-red-500/40 flex flex-col"
+                        className="relative group rounded-[40px] p-6 sm:p-7 xl:p-8 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-red-500/40 flex flex-col"
                       >
                         <div className="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-[80px] group-hover:bg-red-600/30 transition-colors duration-700 pointer-events-none" />
@@ -4473,18 +4473,18 @@ function Index() {
                           />
                         </div>
 
-                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1 w-full">
                           <span className="px-5 py-2 rounded-full bg-red-500/10 text-red-500 text-xs font-black tracking-widest border border-red-500/20 mb-6 shadow-[0_0_15px_rgba(239,68,68,0.2)] uppercase">Tamanho Família</span>
                           <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Aristo<span className="text-red-500">fome</span></h4>
                           <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?</p>
                           
-                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
-                            <div className="flex flex-col">
-                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
-                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">60<span className="text-2xl text-red-500 font-bold">,00</span></span>
+                          <div className="flex items-center justify-between gap-2.5 w-full mt-auto pt-6 border-t border-white/10">
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-zinc-500 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">Por apenas</span>
+                              <span className="font-display text-3xl sm:text-4xl font-black text-white leading-none whitespace-nowrap">60<span className="text-xl sm:text-2xl text-red-500 font-bold">,00</span></span>
                             </div>
-                            <button onClick={(e) => addToCart(402, e)} className="h-16 px-8 rounded-full bg-red-600 text-white font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-red-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(220,38,38,0.4)]">
-                              Comprar <Plus className="size-5" />
+                            <button onClick={(e) => addToCart(402, e)} className="h-11 px-4 sm:px-5 rounded-full bg-red-600 text-white font-black uppercase tracking-wider text-xs flex items-center gap-1.5 hover:bg-red-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] shrink-0 cursor-pointer">
+                              Comprar <Plus className="size-4" strokeWidth={3} />
                             </button>
                           </div>
                         </div>
@@ -4493,7 +4493,7 @@ function Index() {
                       {/* Combo 3 */}
                       <motion.div 
                         whileHover={{ y: -15, scale: 1.02 }}
-                        className="relative group rounded-[40px] p-6 sm:p-10 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-purple-500/40 flex flex-col"
+                        className="relative group rounded-[40px] p-6 sm:p-7 xl:p-8 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-purple-500/40 flex flex-col"
                       >
                         <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-[80px] group-hover:bg-purple-600/30 transition-colors duration-700 pointer-events-none" />
@@ -4515,18 +4515,18 @@ function Index() {
                           />
                         </div>
 
-                        <div className="relative z-30 flex flex-col items-start text-left flex-1">
+                        <div className="relative z-30 flex flex-col items-start text-left flex-1 w-full">
                           <span className="px-5 py-2 rounded-full bg-purple-500/10 text-purple-400 text-xs font-black tracking-widest border border-purple-500/20 mb-6 shadow-[0_0_15px_rgba(168,85,247,0.2)] uppercase">Premium</span>
                           <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Fome dos<br/><span className="text-purple-400">Reis</span></h4>
                           <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Batatas reais, triplex burguer e gole de Martins. Majestosa.</p>
                           
-                          <div className="flex items-end justify-between w-full mt-auto pt-8 border-t border-white/10">
-                            <div className="flex flex-col">
-                              <span className="text-zinc-500 text-sm font-bold uppercase tracking-wider mb-1">Por apenas</span>
-                              <span className="font-display text-4xl sm:text-5xl font-black text-white leading-none">70<span className="text-2xl text-purple-400 font-bold">,00</span></span>
+                          <div className="flex items-center justify-between gap-2.5 w-full mt-auto pt-6 border-t border-white/10">
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-zinc-500 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">Por apenas</span>
+                              <span className="font-display text-3xl sm:text-4xl font-black text-white leading-none whitespace-nowrap">70<span className="text-xl sm:text-2xl text-purple-400 font-bold">,00</span></span>
                             </div>
-                            <button onClick={(e) => addToCart(403, e)} className="h-16 px-8 rounded-full bg-purple-600 text-white font-black uppercase tracking-wider text-sm flex items-center gap-3 hover:bg-purple-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(147,51,234,0.4)]">
-                              Comprar <Plus className="size-5" />
+                            <button onClick={(e) => addToCart(403, e)} className="h-11 px-4 sm:px-5 rounded-full bg-purple-600 text-white font-black uppercase tracking-wider text-xs flex items-center gap-1.5 hover:bg-purple-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(147,51,234,0.4)] shrink-0 cursor-pointer">
+                              Comprar <Plus className="size-4" strokeWidth={3} />
                             </button>
                           </div>
                         </div>
@@ -5795,8 +5795,11 @@ function DeliveryTrackingModal({
         const dists = [0];
         let total = 0;
         for (let i = 0; i < path.length - 1; i++) {
-          const dx = path[i + 1][1] - path[i][1];
-          const dy = path[i + 1][0] - path[i][0];
+          const pNext = path[i + 1];
+          const pCurr = path[i];
+          if (!pNext || !pCurr) continue;
+          const dx = (pNext[1] ?? 0) - (pCurr[1] ?? 0);
+          const dy = (pNext[0] ?? 0) - (pCurr[0] ?? 0);
           total += Math.sqrt(dx * dx + dy * dy);
           dists.push(total);
         }
@@ -5827,15 +5830,19 @@ function DeliveryTrackingModal({
         const targetDist = progress * pathInfo.total;
         let idx = 0;
         for (let i = 0; i < pathInfo.dists.length - 1; i++) {
-          if (targetDist >= pathInfo.dists[i] && targetDist <= pathInfo.dists[i + 1]) {
+          const dCurr = pathInfo.dists[i] ?? 0;
+          const dNext = pathInfo.dists[i + 1] ?? 0;
+          if (targetDist >= dCurr && targetDist <= dNext) {
             idx = i;
             break;
           }
         }
         if (targetDist >= pathInfo.total) idx = path.length - 2;
 
-        const segmentLen = pathInfo.dists[idx + 1] - pathInfo.dists[idx];
-        const segmentProg = segmentLen === 0 ? 0 : (targetDist - pathInfo.dists[idx]) / segmentLen;
+        const dIdxNext = pathInfo.dists[idx + 1] ?? 0;
+        const dIdxCurr = pathInfo.dists[idx] ?? 0;
+        const segmentLen = dIdxNext - dIdxCurr;
+        const segmentProg = segmentLen === 0 ? 0 : (targetDist - dIdxCurr) / segmentLen;
 
         const p1 = path[idx] || [0, 0];
         const p2 = path[idx + 1] || p1;
@@ -6278,7 +6285,7 @@ function DeliveryTrackingModal({
                     Como foi a entrega?
                   </h3>
                   <p className="text-sm font-medium text-gray-500">
-                    Avalie o entregador {MOCK_DRIVERS[activeDriver]?.name ?? MOCK_DRIVERS[0].name}
+                    Avalie o entregador {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).name}
                   </p>
                 </div>
                 <div className="flex justify-center gap-4 mb-8">
@@ -6358,19 +6365,19 @@ function DeliveryTrackingModal({
                 <div className="bg-gray-50 rounded-[24px] p-4 flex items-center gap-4 border border-gray-100">
                   <div className="size-14 rounded-full overflow-hidden flex-shrink-0 relative">
                     <img
-                      src={MOCK_DRIVERS[activeDriver]?.avatar ?? MOCK_DRIVERS[0].avatar}
+                      src={(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).avatar}
                       alt="Entregador"
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-base font-bold text-gray-900 tracking-tight truncate">
-                      {MOCK_DRIVERS[activeDriver]?.name ?? MOCK_DRIVERS[0].name}
+                      {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).name}
                     </h4>
                     <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5 truncate">
                       <Bike className="size-3.5" />{" "}
-                      {MOCK_DRIVERS[activeDriver]?.vehicle ?? MOCK_DRIVERS[0].vehicle} •{" "}
-                      {MOCK_DRIVERS[activeDriver]?.plate ?? MOCK_DRIVERS[0].plate}
+                      {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).vehicle} •{" "}
+                      {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).plate}
                     </p>
                   </div>
                   <div className="flex gap-2">

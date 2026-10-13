@@ -210,7 +210,7 @@ function DrinksPage() {
     };
   }, [viewMode]);
 
-  const centerDrink = DRINKS_DATA[activeIndex] || DRINKS_DATA[0];
+  const centerDrink = (DRINKS_DATA[activeIndex] || DRINKS_DATA[0])!;
 
   return (
     <motion.div 

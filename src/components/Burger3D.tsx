@@ -20,24 +20,27 @@ function BurgerModel() {
       const target = hovered ? 1 : 0;
       explodeFactor.current = THREE.MathUtils.lerp(explodeFactor.current, target, 5 * delta);
       
-      // Top Bun
-      group.current.children[0].position.y = 1.9 + explodeFactor.current * 1.5;
-      // Tomato
-      group.current.children[1].position.y = 1.6 + explodeFactor.current * 1.0;
-      // Onion
-      group.current.children[2].position.y = 1.45 + explodeFactor.current * 0.8;
-      // Lettuce
-      group.current.children[3].position.y = 1.3 + explodeFactor.current * 0.5;
-      // Cheese 1
-      group.current.children[4].position.y = 1.1 + explodeFactor.current * 0.2;
-      // Meat 1
-      group.current.children[5].position.y = 0.8;
-      // Cheese 2
-      group.current.children[6].position.y = 0.5 - explodeFactor.current * 0.2;
-      // Meat 2
-      group.current.children[7].position.y = 0.2 - explodeFactor.current * 0.4;
-      // Bottom Bun
-      group.current.children[8].position.y = -0.3 - explodeFactor.current * 0.8;
+      const c = group.current.children;
+      if (c && c.length >= 9) {
+        // Top Bun
+        c[0]!.position.y = 1.9 + explodeFactor.current * 1.5;
+        // Tomato
+        c[1]!.position.y = 1.6 + explodeFactor.current * 1.0;
+        // Onion
+        c[2]!.position.y = 1.45 + explodeFactor.current * 0.8;
+        // Lettuce
+        c[3]!.position.y = 1.3 + explodeFactor.current * 0.5;
+        // Cheese 1
+        c[4]!.position.y = 1.1 + explodeFactor.current * 0.2;
+        // Meat 1
+        c[5]!.position.y = 0.8;
+        // Cheese 2
+        c[6]!.position.y = 0.5 - explodeFactor.current * 0.2;
+        // Meat 2
+        c[7]!.position.y = 0.2 - explodeFactor.current * 0.4;
+        // Bottom Bun
+        c[8]!.position.y = -0.3 - explodeFactor.current * 0.8;
+      }
     }
   });
 
