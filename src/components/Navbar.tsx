@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X, LogIn } from "lucide-react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
@@ -19,6 +19,19 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
   const navigate = useNavigate();
   const router = useRouter();
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
+  const [cartBumping, setCartBumping] = useState(false);
+  const prevCount = useRef(cartCount);
+
+  useEffect(() => {
+    if (cartCount > prevCount.current) {
+      setCartBumping(true);
+      const timer = setTimeout(() => setCartBumping(false), 650);
+      prevCount.current = cartCount;
+      return () => clearTimeout(timer);
+    }
+    prevCount.current = cartCount;
+    return undefined;
+  }, [cartCount]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -125,16 +138,66 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
             aria-label={`Sacola de compras com ${cartCount} itens`}
             className="relative flex items-center justify-center size-10 rounded-full text-white hover:bg-white/20 transition-colors cursor-pointer"
           >
-            <ShoppingBag className="size-5" />
-            {cartCount > 0 && (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-black text-black shadow-md"
-              >
-                {cartCount}
-              </motion.span>
-            )}
+            {/* Shockwave Rings on Impact */}
+            <AnimatePresence>
+              {cartBumping && (
+                <>
+                  <motion.span
+                    key="navbar-shockwave-1"
+                    initial={{ scale: 0.8, opacity: 0.95 }}
+                    animate={{ scale: 2.5, opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="absolute inset-0 rounded-full border-2 border-amber-400 pointer-events-none"
+                  />
+                  <motion.span
+                    key="navbar-shockwave-2"
+                    initial={{ scale: 0.9, opacity: 0.75 }}
+                    animate={{ scale: 3.2, opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.75, ease: "easeOut", delay: 0.08 }}
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/40 to-amber-400/40 blur-sm pointer-events-none"
+                  />
+                </>
+              )}
+            </AnimatePresence>
+
+            {/* Shopping Bag Icon with Squash & Stretch Bounce */}
+            <motion.div
+              animate={
+                cartBumping
+                  ? {
+                      scale: [1, 1.45, 0.82, 1.2, 0.95, 1],
+                      rotate: [0, -16, 14, -8, 2, 0],
+                      y: [0, -3, 2, -1, 0],
+                    }
+                  : { scale: 1, rotate: 0, y: 0 }
+              }
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              className="relative flex items-center justify-center"
+            >
+              <ShoppingBag
+                className={`size-5 transition-colors duration-300 ${
+                  cartBumping ? "text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.9)]" : "text-white"
+                }`}
+              />
+            </motion.div>
+
+            {/* Cart Count Badge with Spring Pop */}
+            <AnimatePresence mode="popLayout">
+              {cartCount > 0 && (
+                <motion.span
+                  key={cartCount}
+                  initial={{ scale: 2.2, opacity: 0, rotate: -20 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                  exit={{ scale: 0.5, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 14 }}
+                  className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-[10px] font-black text-black shadow-[0_0_12px_rgba(245,158,11,0.6)] z-10"
+                >
+                  {cartCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
 
           <button

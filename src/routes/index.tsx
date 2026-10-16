@@ -3232,7 +3232,7 @@ const MOCK_ROUTES: any[] = [
     ]
   }
 ]
-;
+  ;
 
 function DrinkModal({
   drinkName,
@@ -3244,7 +3244,7 @@ function DrinkModal({
   products: Product[];
 }) {
   const drink = products.find((p) => p.name === drinkName);
-  
+
   if (!drink) return null;
 
   return (
@@ -3265,11 +3265,11 @@ function DrinkModal({
         >
           <X className="size-6" />
         </button>
-        
+
         {/* Efeito de Líquido no Fundo */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
           <motion.div
-            animate={{ 
+            animate={{
               scale: [1, 1.2, 1],
               rotate: [0, 180, 360],
               borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%"]
@@ -3278,7 +3278,7 @@ function DrinkModal({
             className="w-72 h-72 md:w-96 md:h-96 bg-cyan-400/40 blur-3xl rounded-full absolute mix-blend-screen"
           />
           <motion.div
-            animate={{ 
+            animate={{
               scale: [1.2, 1, 1.2],
               rotate: [360, 180, 0],
               borderRadius: ["60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%"]
@@ -3304,9 +3304,9 @@ function DrinkModal({
             style={{ filter: "contrast(1.15) brightness(1.08) drop-shadow(0px 20px 30px rgba(0,0,0,0.5))" }}
           />
         </motion.div>
-        
+
         {/* Observações / Detalhes */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8, type: "spring" }}
@@ -3315,8 +3315,8 @@ function DrinkModal({
           <h2 className="text-5xl md:text-7xl font-display font-black uppercase text-white tracking-tight mb-4 drop-shadow-xl">
             {drink.name}
           </h2>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
@@ -3324,8 +3324,8 @@ function DrinkModal({
           >
             {drink.description}
           </motion.p>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 1.2, type: "spring", bounce: 0.5 }}
@@ -3604,6 +3604,38 @@ function Index() {
     setTrackingOpen(true);
   };
 
+  interface FlyingCartItem {
+    id: string;
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+    image?: string;
+    name?: string;
+  }
+
+  interface BurstParticle {
+    id: string;
+    x: number;
+    y: number;
+    angle: number;
+    distance: number;
+    color: string;
+    size: number;
+    emoji?: string;
+  }
+
+  interface CartToastItem {
+    id: string;
+    name: string;
+    price: number;
+  }
+
+  const [flyingItems, setFlyingItems] = useState<FlyingCartItem[]>([]);
+  const [cartBumping, setCartBumping] = useState(false);
+  const [burstParticles, setBurstParticles] = useState<BurstParticle[]>([]);
+  const [cartToasts, setCartToasts] = useState<CartToastItem[]>([]);
+
   function updateQuantity(id: number, delta: number) {
     setCart((current) => {
       const newQty = (current[id] || 0) + delta;
@@ -3619,11 +3651,226 @@ function Index() {
     if (id === undefined) return;
     updateQuantity(id, 1);
     setAddedId(id);
-    window.setTimeout(() => setAddedId((current) => (current === id ? null : current)), 1100);
+
+    // Calculate click origin coordinates
+    let startX = window.innerWidth / 2;
+    let startY = window.innerHeight / 2;
+
+    if (event?.currentTarget) {
+      const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+      startX = rect.left + rect.width / 2;
+      startY = rect.top + rect.height / 2;
+    } else if (event && "clientX" in event && event.clientX && event.clientY) {
+      startX = event.clientX;
+      startY = event.clientY;
+    }
+
+    // Target is the shopping bag button in header
+    const cartButton = document.getElementById("nav-cart-trigger");
+    const cartRect = cartButton?.getBoundingClientRect();
+    const endX = cartRect ? cartRect.left + cartRect.width / 2 : window.innerWidth - 64;
+    const endY = cartRect ? cartRect.top + cartRect.height / 2 : 44;
+
+    const prod = products.find((p) => p.id === id);
+    const flyKey = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+    // --- Flying item to cart ---
+    setFlyingItems((prev) => [
+      ...prev,
+      {
+        id: flyKey,
+        startX,
+        startY,
+        endX,
+        endY,
+        ...(prod?.image !== undefined ? { image: prod.image } : {}),
+        ...(prod?.name !== undefined ? { name: prod.name } : {}),
+      } as FlyingCartItem,
+    ]);
+
+    // --- Burst particles explosion at click point ---
+    const burstColors: string[] = ["#f59e0b", "#ef4444", "#fb923c", "#fde68a", "#f97316", "#fbbf24"];
+    const emojis: (string | null)[] = ["🔥", "✨", "💥", null, null, null];
+    const particleCount = 14;
+    const newParticles: BurstParticle[] = Array.from({ length: particleCount }, (_, i) => {
+      const emojiVal = emojis[i % emojis.length];
+      return {
+        id: `${flyKey}-p${i}`,
+        x: startX,
+        y: startY,
+        angle: (360 / particleCount) * i + Math.random() * 20 - 10,
+        distance: 55 + Math.random() * 55,
+        color: burstColors[i % burstColors.length] ?? "#f59e0b",
+        size: 5 + Math.random() * 7,
+        ...(emojiVal !== null ? { emoji: emojiVal } : {}),
+      };
+    });
+    setBurstParticles((prev) => [...prev, ...newParticles]);
+    window.setTimeout(() => {
+      setBurstParticles((prev) => prev.filter((p) => !p.id.startsWith(flyKey)));
+    }, 750);
+
+    // --- Toast notification ---
+    if (prod) {
+      const toastKey = flyKey;
+      setCartToasts((prev) => [...prev, { id: toastKey, name: prod.name, price: prod.price }]);
+      window.setTimeout(() => {
+        setCartToasts((prev) => prev.filter((t) => t.id !== toastKey));
+      }, 2800);
+    }
+
+    // Right when the flying item lands in the bag (~700ms)
+    window.setTimeout(() => {
+      setCartBumping(true);
+      window.setTimeout(() => setCartBumping(false), 650);
+    }, 700);
+
+    // Remove flying item after trajectory completes
+    window.setTimeout(() => {
+      setFlyingItems((prev) => prev.filter((item) => item.id !== flyKey));
+    }, 950);
+
+    window.setTimeout(() => setAddedId((current) => (current === id ? null : current)), 1500);
   }
 
   return (
     <>
+      {/* ═══ Animation Overlay ═══ */}
+      <div className="fixed inset-0 pointer-events-none z-[99999] overflow-hidden">
+
+        {/* Flying Items to Cart */}
+        {flyingItems.map((item) => {
+          const dx = item.endX - item.startX;
+          const dy = item.endY - item.startY;
+          const midX = item.startX + dx * 0.45;
+          const midY =
+            Math.min(item.startY, item.endY) -
+            Math.min(240, Math.max(90, Math.abs(dx) * 0.35 + 80));
+
+          return (
+            <motion.div
+              key={item.id}
+              className="absolute pointer-events-none"
+              initial={{
+                x: item.startX - 28,
+                y: item.startY - 28,
+                scale: 0.35,
+                opacity: 0,
+                rotate: -20,
+              }}
+              animate={{
+                x: [item.startX - 28, midX - 28, item.endX - 28],
+                y: [item.startY - 28, midY - 28, item.endY - 28],
+                scale: [0.35, 1.35, 0.15],
+                opacity: [0, 1, 1, 0.8, 0],
+                rotate: [-20, 18, -12],
+              }}
+              transition={{
+                duration: 0.82,
+                ease: [0.22, 1, 0.36, 1],
+                times: [0, 0.45, 1],
+              }}
+            >
+              <div className="relative size-14 flex items-center justify-center">
+                {/* Fire & ember aura glow */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-red-600 blur-md opacity-90 animate-pulse" />
+                <div className="absolute -inset-1 rounded-full bg-amber-400/40 blur-lg" />
+
+                {/* Circular thumbnail badge */}
+                <div className="relative size-12 rounded-full overflow-hidden border-2 border-amber-300 bg-neutral-900 shadow-[0_0_24px_rgba(245,158,11,0.95)] flex items-center justify-center">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.name || "Item"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Flame className="size-6 text-amber-400" />
+                  )}
+                </div>
+
+                {/* Trailing golden ember sparks */}
+                <span className="absolute -bottom-1 -left-1 size-2.5 rounded-full bg-amber-400 shadow-[0_0_10px_#f59e0b] animate-ping" />
+                <span className="absolute -top-1 -right-1 size-2 rounded-full bg-orange-500 shadow-[0_0_8px_#ea580c]" />
+              </div>
+            </motion.div>
+          );
+        })}
+
+        {/* Burst Particles Explosion at click point */}
+        {burstParticles.map((p) => {
+          const rad = (p.angle * Math.PI) / 180;
+          const tx = Math.cos(rad) * p.distance;
+          const ty = Math.sin(rad) * p.distance;
+          // Anchor at particle origin, offset by -half size so it centers
+          const half = (p.emoji ? (p.size + 4) / 2 : p.size / 2);
+          return (
+            <motion.div
+              key={p.id}
+              className="absolute pointer-events-none flex items-center justify-center"
+              style={{ left: p.x - half, top: p.y - half }}
+              initial={{ scale: 0, opacity: 1, x: 0, y: 0 }}
+              animate={{
+                x: [0, tx],
+                y: [0, ty],
+                scale: [0, 1.5, 0.7],
+                opacity: [1, 1, 0],
+              }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {p.emoji ? (
+                <span style={{ fontSize: p.size + 4 }}>{p.emoji}</span>
+              ) : (
+                <span
+                  style={{
+                    width: p.size,
+                    height: p.size,
+                    borderRadius: "50%",
+                    background: p.color,
+                    boxShadow: `0 0 ${p.size * 2}px ${p.color}`,
+                    display: "block",
+                  }}
+                />
+              )}
+            </motion.div>
+          );
+        })}
+
+        {/* Cart Toast Notifications */}
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-[99999]" style={{ bottom: 28 }}>
+          <AnimatePresence mode="popLayout">
+            {cartToasts.map((toast) => (
+              <motion.div
+                key={toast.id}
+                initial={{ opacity: 0, y: 40, scale: 0.7, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -20, scale: 0.85, filter: "blur(4px)" }}
+                transition={{ type: "spring", stiffness: 420, damping: 22 }}
+                className="flex items-center gap-3 rounded-2xl border border-amber-400/40 bg-black/80 backdrop-blur-xl px-5 py-3 shadow-[0_4px_40px_rgba(245,158,11,0.35)] text-white"
+              >
+                {/* Flame icon */}
+                <span className="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-600 shadow-[0_0_16px_rgba(245,158,11,0.7)] shrink-0">
+                  <Flame className="size-5 text-white fill-white" />
+                </span>
+                {/* Text */}
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-amber-400 leading-none mb-0.5 uppercase tracking-wider">Adicionado à sacola!</span>
+                  <span className="text-sm font-bold text-white leading-snug">{toast.name}</span>
+                </div>
+                {/* Price */}
+                <span className="ml-2 text-sm font-black text-amber-300 shrink-0">
+                  R$ {toast.price.toFixed(2).replace(".", ",")}
+                </span>
+                {/* Checkmark */}
+                <span className="flex size-6 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-400/50 shrink-0">
+                  <Check className="size-3.5 text-emerald-400" strokeWidth={3} />
+                </span>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+      </div>
       <div
         className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}
         style={{ marginBottom: footerHeight }}
@@ -3691,7 +3938,7 @@ function Index() {
                     if (link.href === "/drinks") {
                       try {
                         router.preloadRoute({ to: "/drinks" });
-                      } catch (err) {}
+                      } catch (err) { }
                     }
                   }}
                 >
@@ -3716,43 +3963,89 @@ function Index() {
               <Sheet>
                 <SheetTrigger asChild>
                   <Button
+                    id="nav-cart-trigger"
                     aria-label={`Sacola com ${cartCount} itens`}
                     variant="ghost"
                     size="icon"
-                    className="relative rounded-full text-white hover:bg-white/20 transition-colors"
+                    className="relative rounded-full text-white hover:bg-white/20 transition-colors cursor-pointer"
                   >
-                    <ShoppingBag className="size-5" />
+                    {/* Shockwave Rings on Impact */}
+                    <AnimatePresence>
+                      {cartBumping && (
+                        <>
+                          <motion.span
+                            key="shockwave-1"
+                            initial={{ scale: 0.8, opacity: 0.95 }}
+                            animate={{ scale: 2.5, opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                            className="absolute inset-0 rounded-full border-2 border-amber-400 pointer-events-none"
+                          />
+                          <motion.span
+                            key="shockwave-2"
+                            initial={{ scale: 0.9, opacity: 0.75 }}
+                            animate={{ scale: 3.2, opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.75, ease: "easeOut", delay: 0.08 }}
+                            className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/40 to-amber-400/40 blur-sm pointer-events-none"
+                          />
+                        </>
+                      )}
+                    </AnimatePresence>
 
+                    {/* Shopping Bag Icon with Squash & Stretch Bounce */}
+                    <motion.div
+                      animate={
+                        cartBumping
+                          ? {
+                            scale: [1, 1.45, 0.82, 1.2, 0.95, 1],
+                            rotate: [0, -16, 14, -8, 2, 0],
+                            y: [0, -4, 2, -1, 0],
+                          }
+                          : { scale: 1, rotate: 0, y: 0 }
+                      }
+                      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                      className="relative flex items-center justify-center"
+                    >
+                      <ShoppingBag
+                        className={`size-5 transition-colors duration-300 ${cartBumping ? "text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.9)]" : "text-white"
+                          }`}
+                      />
+                    </motion.div>
+
+                    {/* Cart Count Badge with Spring Pop */}
                     <AnimatePresence mode="popLayout">
                       {cartCount > 0 && (
                         <motion.span
                           key={cartCount}
-                          initial={{ scale: 2.5, opacity: 0, rotate: -15 }}
+                          initial={{ scale: 2.2, opacity: 0, rotate: -20 }}
                           animate={{ scale: 1, opacity: 1, rotate: 0 }}
                           exit={{ scale: 0.5, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                          className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-sm z-10"
+                          transition={{ type: "spring", stiffness: 500, damping: 14 }}
+                          className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-[10px] font-black text-black shadow-[0_0_12px_rgba(245,158,11,0.6)] z-10"
                         >
                           {cartCount}
                         </motion.span>
                       )}
                     </AnimatePresence>
 
+                    {/* Floating +1 / Flame burst */}
                     <AnimatePresence mode="popLayout">
-                      {addedId && (
+                      {cartBumping && (
                         <motion.div
-                          key={`pop-${cartCount}`}
-                          initial={{ opacity: 1, y: 10, scale: 0.5, rotate: 0 }}
+                          key={`bump-pop-${cartCount}`}
+                          initial={{ opacity: 1, y: 0, scale: 0.6 }}
                           animate={{
                             opacity: [1, 1, 0],
-                            y: [-10, -50, -80],
-                            scale: [0.8, 2.2, 2.5],
-                            rotate: [0, 10, -10],
+                            y: [-6, -45, -70],
+                            scale: [0.6, 1.6, 2.0],
+                            rotate: [0, 8, -6],
                           }}
-                          transition={{ duration: 1.2, ease: "easeOut", times: [0, 0.6, 1] }}
-                          className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-amber-400 font-black drop-shadow-[0_0_12px_rgba(251,191,36,0.9)] text-3xl z-[9999]"
+                          transition={{ duration: 0.9, ease: "easeOut", times: [0, 0.5, 1] }}
+                          className="absolute left-1/2 -translate-x-1/2 pointer-events-none text-amber-400 font-black drop-shadow-[0_0_16px_rgba(251,191,36,1)] text-2xl z-[99999] whitespace-nowrap flex items-center gap-0.5"
                         >
-                          +1
+                          <span>+1</span>
+                          <Flame className="size-4 text-orange-500 inline drop-shadow-[0_0_8px_rgba(249,115,22,0.9)]" />
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -4081,7 +4374,7 @@ function Index() {
                                 onClick={(e) =>
                                   addToCart(
                                     (item as any).id ||
-                                      products.find((p) => p.name === item.name)?.id,
+                                    products.find((p) => p.name === item.name)?.id,
                                     e,
                                   )
                                 }
@@ -4122,7 +4415,7 @@ function Index() {
                                 onClick={(e) =>
                                   addToCart(
                                     (item as any).id ||
-                                      products.find((p) => p.name === item.name)?.id,
+                                    products.find((p) => p.name === item.name)?.id,
                                     e,
                                   )
                                 }
@@ -4167,7 +4460,7 @@ function Index() {
                                 onClick={(e) =>
                                   addToCart(
                                     (item as any).id ||
-                                      products.find((p) => p.name === item.name)?.id,
+                                    products.find((p) => p.name === item.name)?.id,
                                     e,
                                   )
                                 }
@@ -4211,7 +4504,7 @@ function Index() {
                                   onClick={(e) =>
                                     addToCart(
                                       (item as any).id ||
-                                        products.find((p) => p.name === item.name)?.id,
+                                      products.find((p) => p.name === item.name)?.id,
                                       e,
                                     )
                                   }
@@ -5405,11 +5698,11 @@ function DeliveryTrackingModal({
   const remainingMins = Math.ceil(remainingMs / 60000);
   const progressRatio = Math.min(1, Math.max(0, elapsedApp / totalDuration));
   const isDone = remainingMs === 0;
-  
+
   let stage = "picking_up";
   if (progressRatio > 0.1) stage = "delivering";
   if (isDone) stage = "delivered";
-  
+
   const arrivalTimeObj = new Date((activeOrderTime || Date.now()) + totalDuration);
   const arrivalTimeStr = arrivalTimeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -5695,14 +5988,14 @@ function DeliveryTrackingModal({
             {/* Status Section */}
             <div className="mt-2 mb-10">
               <h2 className="text-[11vw] sm:text-5xl font-black text-white uppercase tracking-tighter leading-[0.9]">
-                {isDone ? "Seu pedido" : "Fogo na"}<br/>
+                {isDone ? "Seu pedido" : "Fogo na"}<br />
                 <span style={{ color: pickupThemeColor }}>
                   {isDone ? "está pronto." : "chapa."}
                 </span>
               </h2>
               <p className="mt-5 text-white/60 text-base sm:text-lg font-medium leading-relaxed max-w-sm">
-                {isDone 
-                  ? "Dirija-se até o balcão de retirada e apresente o código abaixo." 
+                {isDone
+                  ? "Dirija-se até o balcão de retirada e apresente o código abaixo."
                   : "Seu pedido está sendo preparado com muito cuidado e ingredientes frescos."}
               </p>
             </div>
@@ -5711,16 +6004,16 @@ function DeliveryTrackingModal({
             <div className="bg-white rounded-3xl p-8 shadow-2xl relative overflow-hidden mb-8 shrink-0">
               {/* Top notch */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full" style={{ backgroundColor: pickupBg }}></div>
-              
+
               <div className="flex flex-col items-center justify-center pt-2">
                 <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs mb-1">Código do Pedido</p>
                 <h1 className="text-6xl sm:text-7xl font-black text-black tracking-widest uppercase">
                   {pickupCode}
                 </h1>
-                
+
                 {/* Dotted separator */}
                 <div className="w-full border-t-[3px] border-dashed border-gray-100 my-8"></div>
-                
+
                 <div className="w-full flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-gray-400 text-[10px] sm:text-xs font-bold uppercase mb-1">Previsão</span>
@@ -5744,11 +6037,11 @@ function DeliveryTrackingModal({
                   <span className="text-white/50 text-sm font-bold">{remainingMins} min</span>
                 </div>
                 <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full rounded-full transition-all duration-1000 ease-out"
-                    style={{ 
-                      width: `${progressRatio * 100}%`, 
-                      backgroundColor: pickupThemeColor 
+                    style={{
+                      width: `${progressRatio * 100}%`,
+                      backgroundColor: pickupThemeColor
                     }}
                   />
                 </div>
@@ -5772,9 +6065,9 @@ function DeliveryTrackingModal({
                   <div className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center animate-in fade-in zoom-in-95">
                     <p className="text-white font-black text-xl mb-8">Como estava o lanche?</p>
                     <div className="flex justify-center gap-3 md:gap-4 mb-2">
-                      {[1,2,3,4,5].map(s => (
-                        <button key={s} className="transition-transform hover:scale-110 active:scale-95" onClick={() => { setFoodRating(s); setTimeout(()=>setRatingState("done"), 300) }}>
-                          <Star className={`size-10 sm:size-12 ${foodRating >= s ? "fill-yellow-400 text-yellow-400" : "text-white/10"}`}/>
+                      {[1, 2, 3, 4, 5].map(s => (
+                        <button key={s} className="transition-transform hover:scale-110 active:scale-95" onClick={() => { setFoodRating(s); setTimeout(() => setRatingState("done"), 300) }}>
+                          <Star className={`size-10 sm:size-12 ${foodRating >= s ? "fill-yellow-400 text-yellow-400" : "text-white/10"}`} />
                         </button>
                       ))}
                     </div>
