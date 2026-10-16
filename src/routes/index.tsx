@@ -4045,94 +4045,12 @@ function Index() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-16">
                     {/* LEFT COLUMN */}
                     <div className="flex flex-col gap-12">
-                      {/* Category: PIZZA */}
-                      <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        variants={{
-                          hidden: { opacity: 0, y: 40 },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            transition: {
-                              duration: 0.6,
-                              ease: "easeOut",
-                              staggerChildren: 0.12,
-                              delayChildren: 0.1,
-                            },
-                          },
-                        }}
-                      >
-                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
-                          PIZZAS
-                        </h4>
-                        <div className="flex flex-col gap-5">
-                          {[
-                            { name: "PEPPERONI", price: "12,00", spicy: true },
-                            { name: "MARGHERITA", price: "11,75" },
-                            { name: "FRANGO BBQ", price: "14,25" },
-                            { name: "QUATRO QUEIJOS", price: "13,00" },
-                            { name: "SALAME PICANTE", price: "15,50", spicy: true },
-                            { name: "COGUMELO TRUFADO", price: "16,00" },
-                            { name: "VEGETARIANA", price: "13,00" },
-                          ].map((item) => (
-                            <motion.div
-                              key={item.name}
-                              variants={{
-                                hidden: { opacity: 0, x: -30 },
-                                visible: {
-                                  opacity: 1,
-                                  x: 0,
-                                  transition: { type: "spring", damping: 22, stiffness: 120 },
-                                },
-                              }}
-                              className="flex items-center w-full group"
-                            >
-                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
-                                {item.name}
-                              </span>
-                              {item.spicy && (
-                                <span className="ml-2 text-sm" title="Apimentado">
-                                  🌶️
-                                </span>
-                              )}
-                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
-                              <button
-                                onClick={(e) =>
-                                  addToCart(
-                                    (item as any).id ||
-                                      products.find((p) => p.name === item.name)?.id,
-                                    e,
-                                  )
-                                }
-                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
-                              >
-                                R$ {item.price} <Plus className="size-3" />
-                              </button>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </motion.div>
-
                       {/* Category: BURGERS */}
                       <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        variants={{
-                          hidden: { opacity: 0, y: 40 },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            transition: {
-                              duration: 0.6,
-                              ease: "easeOut",
-                              staggerChildren: 0.12,
-                              delayChildren: 0.1,
-                            },
-                          },
-                        }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                       >
                         <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
                           HAMBÚRGUERES
@@ -4146,17 +4064,9 @@ function Index() {
                             { name: "Davi vs Golias", price: "45,00", badge: "Exagerado" },
                             { name: "Triplex", price: "42,00", badge: "Exagerado" },
                           ].map((item) => (
-                            <motion.div
+                            <div
                               key={item.name}
-                              variants={{
-                                hidden: { opacity: 0, x: -30 },
-                                visible: {
-                                  opacity: 1,
-                                  x: 0,
-                                  transition: { type: "spring", damping: 22, stiffness: 120 },
-                                },
-                              }}
-                              className="flex items-center w-full group"
+                              className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
                             >
                               <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
                                 {item.name}
@@ -4179,29 +4089,17 @@ function Index() {
                               >
                                 R$ {item.price} <Plus className="size-3" />
                               </button>
-                            </motion.div>
+                            </div>
                           ))}
                         </div>
                       </motion.div>
 
                       {/* Category: BATATAS */}
                       <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        variants={{
-                          hidden: { opacity: 0, y: 40 },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            transition: {
-                              duration: 0.6,
-                              ease: "easeOut",
-                              staggerChildren: 0.12,
-                              delayChildren: 0.1,
-                            },
-                          },
-                        }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
+                        transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
                       >
                         <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
                           BATATAS
@@ -4212,17 +4110,9 @@ function Index() {
                             { name: "Trincheira do Davi", price: "22,00" },
                             { name: "Batatas Reais", price: "25,00" },
                           ].map((item) => (
-                            <motion.div
+                            <div
                               key={item.name}
-                              variants={{
-                                hidden: { opacity: 0, x: -30 },
-                                visible: {
-                                  opacity: 1,
-                                  x: 0,
-                                  transition: { type: "spring", damping: 22, stiffness: 120 },
-                                },
-                              }}
-                              className="flex items-center w-full group"
+                              className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
                             >
                               <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
                                 {item.name}
@@ -4240,7 +4130,7 @@ function Index() {
                               >
                                 R$ {item.price} <Plus className="size-3" />
                               </button>
-                            </motion.div>
+                            </div>
                           ))}
                         </div>
                       </motion.div>
@@ -4250,22 +4140,10 @@ function Index() {
                     <div className="flex flex-col gap-12">
                       {/* Category: MOLHOS */}
                       <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        variants={{
-                          hidden: { opacity: 0, y: 40 },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            transition: {
-                              duration: 0.6,
-                              ease: "easeOut",
-                              staggerChildren: 0.12,
-                              delayChildren: 0.1,
-                            },
-                          },
-                        }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
                       >
                         <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
                           MOLHOS
@@ -4277,17 +4155,9 @@ function Index() {
                             { name: "Ketchup", price: "3,00" },
                             { name: "Porções Separadas", price: "8,00" },
                           ].map((item) => (
-                            <motion.div
+                            <div
                               key={item.name}
-                              variants={{
-                                hidden: { opacity: 0, x: -30 },
-                                visible: {
-                                  opacity: 1,
-                                  x: 0,
-                                  transition: { type: "spring", damping: 22, stiffness: 120 },
-                                },
-                              }}
-                              className="flex items-center w-full group"
+                              className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
                             >
                               <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
                                 {item.name}
@@ -4305,29 +4175,17 @@ function Index() {
                               >
                                 R$ {item.price} <Plus className="size-3" />
                               </button>
-                            </motion.div>
+                            </div>
                           ))}
                         </div>
                       </motion.div>
 
                       {/* Category: BEBIDAS */}
                       <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        variants={{
-                          hidden: { opacity: 0, y: 40 },
-                          visible: {
-                            opacity: 1,
-                            y: 0,
-                            transition: {
-                              duration: 0.6,
-                              ease: "easeOut",
-                              staggerChildren: 0.12,
-                              delayChildren: 0.1,
-                            },
-                          },
-                        }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }}
+                        transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
                         className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg"
                       >
                         <Bubbles count={20} />
@@ -4341,17 +4199,9 @@ function Index() {
                               { name: "Gole de Martins", price: "14,00" },
                               { name: "Sprite", price: "8,00" },
                             ].map((item) => (
-                              <motion.div
+                              <div
                                 key={item.name}
-                                variants={{
-                                  hidden: { opacity: 0, x: -30 },
-                                  visible: {
-                                    opacity: 1,
-                                    x: 0,
-                                    transition: { type: "spring", damping: 22, stiffness: 120 },
-                                  },
-                                }}
-                                className="flex items-center w-full group"
+                                className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
                               >
                                 <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors">
                                   {item.name}
@@ -4369,7 +4219,7 @@ function Index() {
                                 >
                                   R$ {item.price} <Plus className="size-3" />
                                 </button>
-                              </motion.div>
+                              </div>
                             ))}
                           </div>
                         </div>
