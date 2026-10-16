@@ -41,6 +41,7 @@ import { Bubbles } from "@/components/Bubbles";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
 import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo";
 import { BurgerBoxLogin } from "@/components/BurgerBoxLogin";
+import { ComboCards } from "@/components/ComboCards";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
 import burgerBrasa from "@/assets/burger-brasa.png";
@@ -300,7 +301,7 @@ const products: Product[] = [
     name: "Tripa em Triplo",
     description: "Tiras do tripa, tripa jr, seca-nunca.",
     price: 35.0,
-    image: burgerClassico,
+    image: burgerBrasa,
     badge: "Especial",
     category: "burger",
   },
@@ -309,7 +310,7 @@ const products: Product[] = [
     name: "Aristofome",
     description: "Davi vs Golias, seca-nunca, tiras do tripa.",
     price: 60.0,
-    image: burgerBrasa,
+    image: burgerInferno,
     badge: "Especial",
     category: "burger",
   },
@@ -318,7 +319,7 @@ const products: Product[] = [
     name: "Fome dos Reis",
     description: "Batatas reais, triplex burguer, gole de Martins.",
     price: 70.0,
-    image: burgerInferno,
+    image: burgerClassico,
     badge: "Premium",
     category: "burger",
   },
@@ -4396,142 +4397,20 @@ function Index() {
                     }}
                     className="mt-16 pt-16 border-t border-white/10"
                   >
-                    <div className="flex flex-col items-center text-center mb-10">
-                      <h4 className="font-display text-4xl sm:text-5xl font-black tracking-tight transition-colors duration-700 text-white">
-                        COMBOS ESPECIAIS
+                    <div className="relative flex flex-col items-center text-center mb-14">
+                      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.22em] text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.2)]">
+                        <Flame className="size-3.5" strokeWidth={2.5} /> Burger + bebida
+                      </span>
+                      <h4 className="font-display text-5xl sm:text-6xl font-black tracking-tight uppercase leading-none bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(249,115,22,0.25)]">
+                        Combos <span className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Especiais</span>
                       </h4>
-                      <p className="mt-3 text-lg font-medium opacity-70 text-white/80">
+                      <div className="mt-5 h-1 w-20 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-red-500" />
+                      <p className="mt-5 max-w-md text-lg font-medium text-white/60">
                         As combinações definitivas para matar qualquer fome.
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1400px] mx-auto px-4 md:px-8">
-                      {/* Combo 1 */}
-                      <motion.div 
-                        whileHover={{ y: -15, scale: 1.02 }}
-                        className="relative group rounded-[40px] p-6 sm:p-7 xl:p-8 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-amber-500/40 flex flex-col"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                        <div className="absolute -top-32 -right-32 w-80 h-80 bg-amber-500/20 rounded-full blur-[80px] group-hover:bg-amber-500/30 transition-colors duration-700 pointer-events-none" />
-                        
-                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
-                          <motion.img 
-                            animate={{ y: [0, -10, 0] }} 
-                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                            src={burgerBrasa}
-                            alt="Burger Brasa"
-                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-amber-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                          />
-                          <motion.img 
-                            animate={{ y: [0, 8, 0] }} 
-                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
-                            src={cocaCola}
-                            alt="Coca Cola"
-                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
-                          />
-                        </div>
-
-                        <div className="relative z-30 flex flex-col items-start text-left flex-1 w-full">
-                          <span className="px-5 py-2 rounded-full bg-amber-500/10 text-amber-500 text-xs font-black tracking-widest border border-amber-500/20 mb-6 shadow-[0_0_15px_rgba(245,158,11,0.2)] uppercase">Triplo Sabor</span>
-                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Tripa em<br/><span className="text-amber-500">Triplo</span></h4>
-                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Acompanha tiras do tripa, tripa jr e seca-nunca.</p>
-                          
-                          <div className="flex items-center justify-between gap-2.5 w-full mt-auto pt-6 border-t border-white/10">
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-zinc-500 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">Por apenas</span>
-                              <span className="font-display text-3xl sm:text-4xl font-black text-white leading-none whitespace-nowrap">35<span className="text-xl sm:text-2xl text-amber-500 font-bold">,00</span></span>
-                            </div>
-                            <button onClick={(e) => addToCart(401, e)} className="h-11 px-4 sm:px-5 rounded-full bg-amber-500 text-black font-black uppercase tracking-wider text-xs flex items-center gap-1.5 hover:bg-amber-400 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(245,158,11,0.4)] shrink-0 cursor-pointer">
-                              Comprar <Plus className="size-4" strokeWidth={3} />
-                            </button>
-                          </div>
-                        </div>
-                      </motion.div>
-
-                      {/* Combo 2 */}
-                      <motion.div 
-                        whileHover={{ y: -15, scale: 1.02 }}
-                        className="relative group rounded-[40px] p-6 sm:p-7 xl:p-8 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-red-500/40 flex flex-col"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-b from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                        <div className="absolute -top-32 -left-32 w-80 h-80 bg-red-600/20 rounded-full blur-[80px] group-hover:bg-red-600/30 transition-colors duration-700 pointer-events-none" />
-                        
-                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
-                          <motion.img 
-                            animate={{ y: [0, -10, 0] }} 
-                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 0.5 }}
-                            src={burgerInferno}
-                            alt="Burger Inferno"
-                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-red-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                          />
-                          <motion.img 
-                            animate={{ y: [0, 8, 0] }} 
-                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1.5 }}
-                            src={beer}
-                            alt="Cerveja"
-                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
-                          />
-                        </div>
-
-                        <div className="relative z-30 flex flex-col items-start text-left flex-1 w-full">
-                          <span className="px-5 py-2 rounded-full bg-red-500/10 text-red-500 text-xs font-black tracking-widest border border-red-500/20 mb-6 shadow-[0_0_15px_rgba(239,68,68,0.2)] uppercase">Tamanho Família</span>
-                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Aristo<span className="text-red-500">fome</span></h4>
-                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Davi vs Golias, seca-nunca, tiras do tripa. Você aguenta?</p>
-                          
-                          <div className="flex items-center justify-between gap-2.5 w-full mt-auto pt-6 border-t border-white/10">
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-zinc-500 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">Por apenas</span>
-                              <span className="font-display text-3xl sm:text-4xl font-black text-white leading-none whitespace-nowrap">60<span className="text-xl sm:text-2xl text-red-500 font-bold">,00</span></span>
-                            </div>
-                            <button onClick={(e) => addToCart(402, e)} className="h-11 px-4 sm:px-5 rounded-full bg-red-600 text-white font-black uppercase tracking-wider text-xs flex items-center gap-1.5 hover:bg-red-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] shrink-0 cursor-pointer">
-                              Comprar <Plus className="size-4" strokeWidth={3} />
-                            </button>
-                          </div>
-                        </div>
-                      </motion.div>
-
-                      {/* Combo 3 */}
-                      <motion.div 
-                        whileHover={{ y: -15, scale: 1.02 }}
-                        className="relative group rounded-[40px] p-6 sm:p-7 xl:p-8 overflow-hidden bg-black/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.6)] transition-all duration-500 hover:border-purple-500/40 flex flex-col"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                        <div className="absolute -top-32 -right-32 w-80 h-80 bg-purple-600/20 rounded-full blur-[80px] group-hover:bg-purple-600/30 transition-colors duration-700 pointer-events-none" />
-                        
-                        <div className="relative h-[250px] w-full flex-shrink-0 flex items-center justify-center mb-8">
-                          <motion.img 
-                            animate={{ y: [0, -10, 0] }} 
-                            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }}
-                            src={burgerClassico}
-                            alt="Burger Clássico"
-                            className="absolute z-20 w-[200px] h-[200px] object-cover rounded-[2rem] border-2 border-purple-900/50 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                          />
-                          <motion.img 
-                            animate={{ y: [0, 8, 0] }} 
-                            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.5 }}
-                            src={lemonade}
-                            alt="Limonada"
-                            className="absolute z-10 w-[140px] h-[140px] object-contain drop-shadow-2xl opacity-90 group-hover:opacity-100 group-hover:rotate-12 transition-all duration-500 -right-2 -bottom-2"
-                          />
-                        </div>
-
-                        <div className="relative z-30 flex flex-col items-start text-left flex-1 w-full">
-                          <span className="px-5 py-2 rounded-full bg-purple-500/10 text-purple-400 text-xs font-black tracking-widest border border-purple-500/20 mb-6 shadow-[0_0_15px_rgba(168,85,247,0.2)] uppercase">Premium</span>
-                          <h4 className="font-display text-4xl sm:text-5xl font-black text-white uppercase mb-4 leading-[0.9] drop-shadow-md">Fome dos<br/><span className="text-purple-400">Reis</span></h4>
-                          <p className="text-zinc-400 text-base sm:text-lg font-medium mb-10">Batatas reais, triplex burguer e gole de Martins. Majestosa.</p>
-                          
-                          <div className="flex items-center justify-between gap-2.5 w-full mt-auto pt-6 border-t border-white/10">
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-zinc-500 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 whitespace-nowrap">Por apenas</span>
-                              <span className="font-display text-3xl sm:text-4xl font-black text-white leading-none whitespace-nowrap">70<span className="text-xl sm:text-2xl text-purple-400 font-bold">,00</span></span>
-                            </div>
-                            <button onClick={(e) => addToCart(403, e)} className="h-11 px-4 sm:px-5 rounded-full bg-purple-600 text-white font-black uppercase tracking-wider text-xs flex items-center gap-1.5 hover:bg-purple-500 hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(147,51,234,0.4)] shrink-0 cursor-pointer">
-                              Comprar <Plus className="size-4" strokeWidth={3} />
-                            </button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
+                    <ComboCards onAdd={(id, e) => addToCart(id, e)} />
                   </motion.div>
                 </motion.div>
               </div>
