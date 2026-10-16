@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Search, ShoppingBag } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, ShoppingBag, Check, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 const appetizers = [
   {
