@@ -42,6 +42,7 @@ import { AppetizerSlider } from "@/components/AppetizerSlider";
 import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo";
 import { BurgerBoxLogin } from "@/components/BurgerBoxLogin";
 import { ComboCards } from "@/components/ComboCards";
+import { DrinkGrid, DrinkSpotlight } from "@/components/DrinkGrid";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
 import burgerBrasa from "@/assets/burger-brasa.png";
@@ -233,9 +234,9 @@ const products: Product[] = [
   {
     id: 202,
     name: "Gole de Martins",
-    description: "Refrescante limão artesanal.",
+    description: "Suco de laranja artesanal com hortelã.",
     price: 14.0,
-    image: lemonade,
+    image: orangeJuice,
     category: "drink",
   },
   {
@@ -243,7 +244,7 @@ const products: Product[] = [
     name: "Sprite Gelada",
     description: "Limão refrescante.",
     price: 8.0,
-    image: sodaSplash,
+    image: lemonade,
     category: "drink",
   },
   {
@@ -283,7 +284,7 @@ const products: Product[] = [
     name: "Gole de Martins",
     description: "Refrescante.",
     price: 14.0,
-    image: lemonade,
+    image: orangeJuice,
     category: "drink",
   },
   {
@@ -291,7 +292,7 @@ const products: Product[] = [
     name: "Sprite",
     description: "Limão.",
     price: 8.0,
-    image: sodaSplash,
+    image: lemonade,
     category: "drink",
   },
 
@@ -3234,117 +3235,11 @@ const MOCK_ROUTES: any[] = [
 ]
   ;
 
-function DrinkModal({
-  drinkName,
-  onClose,
-  products
-}: {
-  drinkName: string;
-  onClose: () => void;
-  products: Product[];
-}) {
-  const drink = products.find((p) => p.name === drinkName);
-
-  if (!drink) return null;
-
-  return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-hidden"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="relative max-w-2xl w-full flex flex-col items-center justify-center h-full"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 md:top-10 right-4 md:right-10 z-50 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md"
-        >
-          <X className="size-6" />
-        </button>
-
-        {/* Efeito de Líquido no Fundo */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360],
-              borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%"]
-            }}
-            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-            className="w-72 h-72 md:w-96 md:h-96 bg-cyan-400/40 blur-3xl rounded-full absolute mix-blend-screen"
-          />
-          <motion.div
-            animate={{
-              scale: [1.2, 1, 1.2],
-              rotate: [360, 180, 0],
-              borderRadius: ["60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%"]
-            }}
-            transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
-            className="w-64 h-64 md:w-80 md:h-80 bg-blue-500/40 blur-2xl rounded-full absolute mix-blend-screen"
-          />
-        </div>
-
-        {/* Bebida Girando e Flutuando */}
-        <motion.div
-          initial={{ y: -300, rotate: -720, scale: 0.5, opacity: 0 }}
-          animate={{ y: 0, rotate: 0, scale: 1, opacity: 1 }}
-          transition={{ type: "spring", damping: 15, stiffness: 60, duration: 1.5 }}
-          className="relative z-10 flex flex-col items-center"
-        >
-          <motion.img
-            animate={{ y: [0, -20, 0], rotate: [0, 5, -5, 0] }}
-            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-            src={drink.image}
-            alt={drink.name}
-            className="w-full max-w-[280px] md:max-w-md h-auto object-contain drop-shadow-2xl mix-blend-normal"
-            style={{ filter: "contrast(1.15) brightness(1.08) drop-shadow(0px 20px 30px rgba(0,0,0,0.5))" }}
-          />
-        </motion.div>
-
-        {/* Observações / Detalhes */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8, type: "spring" }}
-          className="text-center mt-10 z-10 relative"
-        >
-          <h2 className="text-5xl md:text-7xl font-display font-black uppercase text-white tracking-tight mb-4 drop-shadow-xl">
-            {drink.name}
-          </h2>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="text-cyan-100 text-xl md:text-2xl font-medium mb-8 max-w-lg mx-auto drop-shadow-md bg-black/20 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
-          >
-            {drink.description}
-          </motion.p>
-
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1.2, type: "spring", bounce: 0.5 }}
-            className="flex items-center justify-center"
-          >
-            <span className="text-4xl md:text-5xl font-black text-white drop-shadow-2xl bg-cyan-600/30 px-10 py-4 rounded-full border border-cyan-400/50 backdrop-blur-md shadow-[0_0_30px_rgba(34,211,238,0.3)]">
-              R$ {drink.price.toFixed(2).replace('.', ',')}
-            </span>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-}
 
 function Index() {
   const navigate = useNavigate();
   const router = useRouter();
-  const [activeDrinkName, setActiveDrinkName] = useState<string | null>(null);
+  const [activeDrinkId, setActiveDrinkId] = useState<number | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -4821,278 +4716,17 @@ function Index() {
               </div>
             </section>
 
-            {/* Drinks Grid Section */}
-            <section
-              className="w-full py-16 md:py-24 border-t transition-colors duration-700"
-              style={{
-                backgroundColor: currentTheme.bgLight,
-                borderColor: currentTheme.secondaryAlpha,
-              }}
-            >
-              <div className="mx-auto max-w-[1400px] px-5 lg:px-12">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 md:gap-0">
-                  <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="font-display font-black text-5xl md:text-6xl lg:text-[5.5rem] leading-[0.85] uppercase tracking-tighter max-w-xl transition-colors duration-700"
-                    style={{ color: currentTheme.secondary }}
-                  >
-                    DRINKS FOR
-                    <br />
-                    EVERYDAY
-                  </motion.h2>
-
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                  >
-                    <Button
-                      onClick={() =>
-                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
-                      }
-                      className="rounded-full text-white font-black uppercase px-6 py-5 text-sm transition-all duration-700 border-[3px] flex items-center gap-3"
-                      style={{
-                        backgroundColor: currentTheme.secondary,
-                        borderColor: currentTheme.secondary,
-                      }}
-                    >
-                      VIEW ALL MENU{" "}
-                      <ChevronRight
-                        className="size-5 bg-white rounded-full p-0.5 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      />
-                    </Button>
-                  </motion.div>
-                </div>
-
-                {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-y-12 md:gap-y-0">
-                  {/* Item 1 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                    className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pb-16 md:border-b transition-colors duration-700"
-                    style={{ borderColor: currentTheme.secondaryAlpha }}
-                  >
-                    <div className="flex items-baseline justify-between mb-8">
-                      <h3
-                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        COCA
-                        <br />
-                        COLA
-                      </h3>
-                      <button
-                        onClick={(e) => addToCart(201, e)}
-                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        ORDER NOW +
-                      </button>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                      <img
-                        src={cocaCola}
-                        alt="Coca Cola"
-                        onClick={() => setActiveDrinkName("Coca Cola")}
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  {/* Item 2 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
-                    style={{ borderColor: currentTheme.secondaryAlpha }}
-                  >
-                    <div className="flex items-baseline justify-between mb-8">
-                      <h3
-                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        GOLE DE
-                        <br />
-                        MARTINS
-                      </h3>
-                      <button
-                        onClick={(e) => addToCart(202, e)}
-                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        ORDER NOW +
-                      </button>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                      <img
-                        src={orangeJuice}
-                        alt="Suco de Laranja"
-                        onClick={() => setActiveDrinkName("Gole de Martins")}
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  {/* Item 3 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3 }}
-                    className="flex flex-col pl-0 md:pl-8 lg:pl-12 mt-12 md:mt-0 pb-16 md:border-b transition-colors duration-700"
-                    style={{ borderColor: currentTheme.secondaryAlpha }}
-                  >
-                    <div className="flex items-baseline justify-between mb-8">
-                      <h3
-                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        SPRITE
-                        <br />
-                        GELADA
-                      </h3>
-                      <button
-                        onClick={(e) => addToCart(203, e)}
-                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        ORDER NOW +
-                      </button>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                      <img
-                        src={lemonade}
-                        alt="Limonada Suíça"
-                        onClick={() => setActiveDrinkName("Sprite Gelada")}
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  {/* Item 4 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 }}
-                    className="flex flex-col md:border-r pr-0 md:pr-8 lg:pr-12 pt-16 transition-colors duration-700"
-                    style={{ borderColor: currentTheme.secondaryAlpha }}
-                  >
-                    <div className="flex items-baseline justify-between mb-8">
-                      <h3
-                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        CHOPP
-                        <br />
-                        GELADO
-                      </h3>
-                      <button
-                        onClick={(e) => addToCart(204, e)}
-                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        ORDER NOW +
-                      </button>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                      <img
-                        src={beer}
-                        alt="Chopp Gelado"
-                        onClick={() => setActiveDrinkName("Chopp Gelado")}
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  {/* Item 5 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                    className="flex flex-col md:border-r px-0 md:px-8 lg:px-12 pt-16 transition-colors duration-700"
-                    style={{ borderColor: currentTheme.secondaryAlpha }}
-                  >
-                    <div className="flex items-baseline justify-between mb-8">
-                      <h3
-                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        CHÁ
-                        <br />
-                        GELADO
-                      </h3>
-                      <button
-                        onClick={(e) => addToCart(205, e)}
-                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        ORDER NOW +
-                      </button>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                      <img
-                        src={icedTea}
-                        alt="Chá Gelado"
-                        onClick={() => setActiveDrinkName("Chá Gelado")}
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  {/* Item 6 */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.6 }}
-                    className="flex flex-col pl-0 md:pl-8 lg:pl-12 pt-16 transition-colors duration-700"
-                  >
-                    <div className="flex items-baseline justify-between mb-8">
-                      <h3
-                        className="font-display font-black text-2xl lg:text-3xl leading-none uppercase transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        SECA-
-                        <br />
-                        NUNCA
-                      </h3>
-                      <button
-                        onClick={(e) => addToCart(206, e)}
-                        className="font-black text-xs uppercase underline tracking-wider whitespace-nowrap ml-4 transition-colors duration-700"
-                        style={{ color: currentTheme.secondary }}
-                      >
-                        ORDER NOW +
-                      </button>
-                    </div>
-                    <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-                      <img
-                        src={guarana}
-                        alt="Seca-nunca"
-                        onClick={() => setActiveDrinkName("Seca-nunca")}
-                        className="w-full max-w-[280px] h-auto object-contain mix-blend-multiply cursor-pointer transition-transform hover:scale-105 active:scale-95"
-                        style={{ filter: "contrast(1.15) brightness(1.08)" }}
-                      />
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
-            </section>
+            {/* Drinks Grid Section - click a glass to spill it */}
+            <DrinkGrid
+              theme={currentTheme}
+              cart={cart}
+              addedId={addedId}
+              onAdd={(id, e) => addToCart(id, e)}
+              onOpen={(id) => setActiveDrinkId(id)}
+              onViewMenu={() =>
+                document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
+              }
+            />
           </div>
 
           {/* New Section Based on the Print */}
@@ -5487,11 +5121,16 @@ function Index() {
 
       <BurgerBoxLogin open={authOpen} onClose={() => setAuthOpen(false)} />
       <AnimatePresence>
-        {activeDrinkName && (
-          <DrinkModal
-            drinkName={activeDrinkName}
-            onClose={() => setActiveDrinkName(null)}
-            products={products}
+        {activeDrinkId !== null && (
+          <DrinkSpotlight
+            key="drink-spotlight"
+            drinkId={activeDrinkId}
+            theme={currentTheme}
+            quantity={cart[activeDrinkId] ?? 0}
+            onClose={() => setActiveDrinkId(null)}
+            onAdd={(id) => addToCart(id)}
+            onRemove={(id) => updateQuantity(id, -1)}
+            onNavigate={(id) => setActiveDrinkId(id)}
           />
         )}
       </AnimatePresence>
