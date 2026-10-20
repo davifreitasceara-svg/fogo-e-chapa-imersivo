@@ -3393,7 +3393,7 @@ function Index() {
   // Dynamic theme based on the currently selected burger
   const currentTheme = useMemo(() => {
     switch (heroIndex) {
-      case 0: // BRASA BACON - Purple
+      case 0: // BRASA BACON (Davi vs Golias) - Purple
         return {
           bgLight: "#F5F0FA",
           bgDark: "#150824",
@@ -3402,8 +3402,14 @@ function Index() {
           secondary: "#4B168C",
           secondaryAlpha: "rgba(75, 22, 140, 0.15)",
           textDark: "#10031F",
+          gradient: "linear-gradient(90deg, #f0abfc 0%, #c084fc 25%, #a855f7 50%, #7e22ce 75%, #c084fc 88%, #f0abfc 100%)",
+          glowColor: "rgba(168, 85, 247, 0.45)",
+          badgeBg: "rgba(168, 85, 247, 0.15)",
+          badgeBorder: "rgba(192, 132, 252, 0.35)",
+          badgeText: "#d8b4fe",
+          accentColor: "#c084fc",
         };
-      case 1: // INFERNO PICANTE - Red
+      case 1: // INFERNO PICANTE (Triplex) - Red
         return {
           bgLight: "#FAF0F0",
           bgDark: "#260602",
@@ -3412,8 +3418,14 @@ function Index() {
           secondary: "#C41E00",
           secondaryAlpha: "rgba(196, 30, 0, 0.15)",
           textDark: "#1F0400",
+          gradient: "linear-gradient(90deg, #fde047 0%, #fb923c 25%, #ef4444 50%, #b91c1c 75%, #fb923c 88%, #fde047 100%)",
+          glowColor: "rgba(239, 68, 68, 0.45)",
+          badgeBg: "rgba(239, 68, 68, 0.15)",
+          badgeBorder: "rgba(248, 113, 113, 0.35)",
+          badgeText: "#fca5a5",
+          accentColor: "#ef4444",
         };
-      case 2: // CHAPA CLÁSSICO - Green
+      case 2: // CHAPA CLÁSSICO (X Burguer) - Green
         return {
           bgLight: "#F0FAF4",
           bgDark: "#0B1F13",
@@ -3422,6 +3434,12 @@ function Index() {
           secondary: "#00A144",
           secondaryAlpha: "rgba(0, 161, 68, 0.15)",
           textDark: "#05140B",
+          gradient: "linear-gradient(90deg, #bef264 0%, #4ade80 25%, #22c55e 50%, #15803d 75%, #4ade80 88%, #bef264 100%)",
+          glowColor: "rgba(34, 197, 94, 0.45)",
+          badgeBg: "rgba(34, 197, 94, 0.15)",
+          badgeBorder: "rgba(74, 222, 128, 0.35)",
+          badgeText: "#86efac",
+          accentColor: "#22c55e",
         };
       case 3: // MAC SENAI FELIZ - Yellow/Blue
         return {
@@ -3432,6 +3450,12 @@ function Index() {
           secondary: "#0070C0",
           secondaryAlpha: "rgba(0, 112, 192, 0.15)",
           textDark: "#03101F",
+          gradient: "linear-gradient(90deg, #67e8f9 0%, #38bdf8 25%, #3b82f6 50%, #1d4ed8 75%, #38bdf8 88%, #67e8f9 100%)",
+          glowColor: "rgba(59, 130, 246, 0.45)",
+          badgeBg: "rgba(59, 130, 246, 0.15)",
+          badgeBorder: "rgba(56, 189, 248, 0.35)",
+          badgeText: "#93c5fd",
+          accentColor: "#38bdf8",
         };
       case 4: // TRIPA JR - Orange
         return {
@@ -3442,6 +3466,12 @@ function Index() {
           secondary: "#FF8C00",
           secondaryAlpha: "rgba(255, 140, 0, 0.15)",
           textDark: "#261100",
+          gradient: "linear-gradient(90deg, #fef08a 0%, #fbbf24 25%, #f97316 50%, #c2410c 75%, #fb923c 88%, #fef08a 100%)",
+          glowColor: "rgba(249, 115, 22, 0.45)",
+          badgeBg: "rgba(249, 115, 22, 0.15)",
+          badgeBorder: "rgba(251, 191, 36, 0.35)",
+          badgeText: "#fed7aa",
+          accentColor: "#f97316",
         };
       case 5: // MINI BURGUER - Teal
         return {
@@ -3452,6 +3482,12 @@ function Index() {
           secondary: "#00BFA5",
           secondaryAlpha: "rgba(0, 191, 165, 0.15)",
           textDark: "#001A16",
+          gradient: "linear-gradient(90deg, #a7f3d0 0%, #2dd4bf 25%, #14b8a6 50%, #0f766e 75%, #2dd4bf 88%, #a7f3d0 100%)",
+          glowColor: "rgba(20, 184, 166, 0.45)",
+          badgeBg: "rgba(20, 184, 166, 0.15)",
+          badgeBorder: "rgba(45, 212, 191, 0.35)",
+          badgeText: "#99f6e4",
+          accentColor: "#2dd4bf",
         };
       default:
         return {
@@ -3462,6 +3498,12 @@ function Index() {
           secondary: "#4B168C",
           secondaryAlpha: "rgba(75, 22, 140, 0.15)",
           textDark: "#10031F",
+          gradient: "linear-gradient(90deg, #fef08a 0%, #fbbf24 25%, #f97316 50%, #c2410c 75%, #fb923c 88%, #fef08a 100%)",
+          glowColor: "rgba(249, 115, 22, 0.45)",
+          badgeBg: "rgba(249, 115, 22, 0.15)",
+          badgeBorder: "rgba(251, 191, 36, 0.35)",
+          badgeText: "#fed7aa",
+          accentColor: "#f97316",
         };
     }
   }, [heroIndex]);
@@ -4436,13 +4478,44 @@ function Index() {
                     className="mt-16 pt-16 border-t border-white/10"
                   >
                     <div className="relative flex flex-col items-center text-center mb-14">
-                      <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.22em] text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.2)]">
-                        <Flame className="size-3.5" strokeWidth={2.5} /> Burger + bebida
+                      <span
+                        className="mb-4 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.22em] transition-all duration-700"
+                        style={{
+                          backgroundColor: currentTheme.badgeBg,
+                          borderColor: currentTheme.badgeBorder,
+                          borderWidth: "1px",
+                          borderStyle: "solid",
+                          color: currentTheme.badgeText,
+                          boxShadow: `0 0 20px ${currentTheme.glowColor}`,
+                        }}
+                      >
+                        <Flame className="size-3.5" strokeWidth={2.5} style={{ color: currentTheme.badgeText }} /> Burger + bebida
                       </span>
-                      <h4 className="font-display text-5xl sm:text-6xl font-black tracking-tight uppercase leading-none bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(249,115,22,0.25)]">
-                        Combos <span className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Especiais</span>
+                      <h4
+                        className="font-display text-5xl sm:text-6xl font-black tracking-tight uppercase leading-none transition-all duration-700"
+                        style={{
+                          filter: `drop-shadow(0 4px 28px ${currentTheme.glowColor})`,
+                        }}
+                      >
+                        <span className="bg-gradient-to-b from-white via-white to-white/60 bg-clip-text text-transparent">
+                          Combos{" "}
+                        </span>
+                        <span
+                          className="animate-gradient-text inline-block transition-all duration-700"
+                          style={{
+                            backgroundImage: currentTheme.gradient,
+                          }}
+                        >
+                          Especiais
+                        </span>
                       </h4>
-                      <div className="mt-5 h-1 w-20 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-red-500" />
+                      <div
+                        className="mt-5 h-1.5 w-24 rounded-full animate-gradient-bar transition-all duration-700"
+                        style={{
+                          backgroundImage: currentTheme.gradient,
+                          boxShadow: `0 0 20px ${currentTheme.glowColor}`,
+                        }}
+                      />
                       <p className="mt-5 max-w-md text-lg font-medium text-white/60">
                         As combinações definitivas para matar qualquer fome.
                       </p>

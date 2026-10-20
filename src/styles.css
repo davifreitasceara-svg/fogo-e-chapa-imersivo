@@ -404,3 +404,43 @@
     transform: scale(1.2);
   }
 }
+
+/* Animated Flowing Gradient for Text and Accent Bars */
+@keyframes fluidGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background-size: 250% 250%;
+  animation: fluidGradientFlow 4s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+  will-change: background-position;
+}
+
+.animate-gradient-bar {
+  background-size: 250% 250%;
+  animation: fluidGradientFlow 4s ease-in-out infinite;
+  will-change: background-position;
+}
+
+/* Força ocultar completamente o cursor nativo do mouse na área do carrinho para aparecer APENAS a espátula */
+.cart-spatula-area,
+.cart-spatula-area *,
+.cart-spatula-area *::before,
+.cart-spatula-area *::after,
+[data-cart-sheet],
+[data-cart-sheet] * {
+  cursor: none !important;
+}

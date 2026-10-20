@@ -70,6 +70,203 @@ export function CartCheckoutSheet({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseIn, setIsMouseIn] = useState(false);
 
+  // Listener global para garantir que o cursor de espátula NUNCA se perca ou trave durante arraste rápido
+  useEffect(() => {
+    const handleGlobalPointerMove = (e: PointerEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    const handleGlobalPointerUp = () => {
+      setIsMouseDown(false);
+    };
+    window.addEventListener("pointermove", handleGlobalPointerMove, { passive: true });
+    window.addEventListener("pointerup", handleGlobalPointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handleGlobalPointerMove);
+      window.removeEventListener("pointerup", handleGlobalPointerUp);
+    };
+  }, []);
+
+  // Estado para arrastar o card ou botão da lixeira para a esquerda e diminuir a quantidade
+  const [dragState, setDraggingState] = useState<{
+    id: number;
+    startX: number;
+    startY: number;
+    currentX: number;
+    currentY: number;
+    maxLeft: number;
+    initialQty: number;
+    fromTrashBtn: boolean;
+    isDraggingHorizontal: boolean;
+  } | null>(null);
+
+  // Itens sendo excluídos com animação de saída suave
+  const [deletingIds, setDeletingIds] = useState<number[]>([]);
+  const wasDraggingRef = useRef(false);
+
+  const triggerDelete = (id: number, qty: number) => {
+    setDeletingIds((prev) => [...prev, id]);
+    setTimeout(() => {
+      updateQuantity(id, -qty);
+      setDeletingIds((prev) => prev.filter((item) => item !== id));
+    }, 260);
+  };
+
+  const handleCardPointerDown = (
+    e: React.PointerEvent,
+    id: number,
+    initialQty: number,
+    fromTrashBtn = false,
+  ) => {
+    const target = e.target as HTMLElement | null;
+    if (!fromTrashBtn && target?.closest("button, input, [data-prevent-drag]")) {
+      return;
+    }
+
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {}
+
+    setIsMouseDown(true);
+    setIsMouseIn(true);
+    setMousePos({ x: e.clientX, y: e.clientY });
+
+    setDraggingState({
+      id,
+      startX: e.clientX,
+      startY: e.clientY,
+      currentX: e.clientX,
+      currentY: e.clientY,
+      maxLeft: 0,
+      initialQty,
+      fromTrashBtn,
+      isDraggingHorizontal: fromTrashBtn,
+    });
+  };
+
+  const handleCardPointerMove = (e: React.PointerEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+    if (!dragState) return;
+
+    const currentX = e.clientX;
+    const currentY = e.clientY;
+    const diffX = dragState.startX - currentX;
+    const diffY = currentY - dragState.startY;
+
+    let isHoriz = dragState.isDraggingHorizontal;
+    if (!isHoriz) {
+      if (Math.abs(diffX) > 8 && Math.abs(diffX) > Math.abs(diffY)) {
+        isHoriz = true;
+      } else if (Math.abs(diffY) > 12) {
+        setDraggingState(null);
+        return;
+      }
+    }
+
+    if (isHoriz) {
+      const leftDrag = Math.max(0, diffX);
+      setDraggingState((prev) =>
+        prev
+          ? {
+              ...prev,
+              currentX,
+              currentY,
+              maxLeft: Math.max(prev.maxLeft, leftDrag),
+              isDraggingHorizontal: true,
+            }
+          : null,
+      );
+    }
+  };
+
+  const handleCardPointerUp = (e: React.PointerEvent, id: number) => {
+    if (!dragState || dragState.id !== id) {
+      setDraggingState(null);
+      setIsMouseDown(false);
+      return;
+    }
+
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {}
+
+    setIsMouseDown(false);
+    const leftDrag = Math.max(0, dragState.startX - dragState.currentX);
+    const maxLeft = dragState.maxLeft;
+    const fromTrashBtn = dragState.fromTrashBtn;
+    const initialQty = dragState.initialQty;
+
+    // Se foi clique simples no botão de lixeira (< 12px), remove o item
+    if (fromTrashBtn && maxLeft < 12) {
+      triggerDelete(id, initialQty);
+      setDraggingState(null);
+      return;
+    }
+
+    // Se arrastou para a esquerda
+    if (dragState.isDraggingHorizontal && maxLeft >= 16) {
+      wasDraggingRef.current = true;
+      setTimeout(() => {
+        wasDraggingRef.current = false;
+      }, 200);
+
+      if (initialQty === 1) {
+        if (leftDrag >= 75) {
+          triggerDelete(id, initialQty);
+        }
+      } else {
+        const stepSize = 38;
+        const deadZone = 14;
+        const decreaseUnits = Math.min(
+          initialQty,
+          Math.floor(Math.max(0, leftDrag - deadZone) / stepSize),
+        );
+        const isFull = decreaseUnits >= initialQty || leftDrag >= 170;
+
+        if (isFull) {
+          triggerDelete(id, initialQty);
+        } else if (decreaseUnits > 0) {
+          updateQuantity(id, -decreaseUnits);
+        }
+      }
+    }
+
+    setDraggingState(null);
+  };
+
+  const handleCardPointerCancel = () => {
+    setDraggingState(null);
+    setIsMouseDown(false);
+  };
+
+  // Expansão da área de clique do mouse (espátula ~45px de raio):
+  // Se o usuário clicar próximo a qualquer botão interativo, o botão é acionado!
+  const handleSheetClick = (e: React.MouseEvent) => {
+    if (wasDraggingRef.current) return;
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("button, a, input, select, textarea, [role='button']")) {
+      return;
+    }
+
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    const sampleRadii = [18, 30, 42];
+    const angles = [0, 45, 90, 135, 180, 225, 270, 315];
+
+    for (const r of sampleRadii) {
+      for (const deg of angles) {
+        const rad = (deg * Math.PI) / 180;
+        const px = clickX + Math.cos(rad) * r;
+        const py = clickY + Math.sin(rad) * r;
+        const el = document.elementFromPoint(px, py) as HTMLElement | null;
+        const btn = el?.closest("button, [role='button']") as HTMLElement | null;
+        if (btn && btn.isConnected) {
+          btn.click();
+          return;
+        }
+      }
+    }
+  };
+
   // Limpa o timeout do loading se o componente desmontar
   useEffect(
     () => () => {
@@ -197,38 +394,54 @@ export function CartCheckoutSheet({
 
   return (
     <SheetContent
+      data-cart-sheet="true"
       style={{
         backgroundColor: currentTheme.bgDark,
         color: currentTheme.bgLight,
         borderColor: currentTheme.secondaryAlpha,
       }}
-      className={`flex w-full flex-col sm:max-w-md border-l-[1px] p-0 font-sans shadow-2xl transition-all duration-500 ease-in-out [&_*]:cursor-none cursor-none overflow-hidden`}
+      className={`flex w-full flex-col sm:max-w-md border-l-[1px] p-0 font-sans shadow-2xl transition-all duration-500 ease-in-out cart-spatula-area overflow-hidden`}
     >
       <div
-        className="flex flex-col w-full h-full relative"
+        data-cart-sheet="true"
+        className="flex flex-col w-full h-full relative cart-spatula-area"
+        onClick={handleSheetClick}
         onMouseMove={(e) => {
           setMousePos({ x: e.clientX, y: e.clientY });
           if (!isMouseIn) setIsMouseIn(true);
         }}
-        onMouseLeave={() => setIsMouseIn(false)}
+        onMouseEnter={() => setIsMouseIn(true)}
+        onMouseLeave={() => {
+          if (!dragState) setIsMouseIn(false);
+        }}
         onMouseDown={() => setIsMouseDown(true)}
         onMouseUp={() => setIsMouseDown(false)}
       >
         {/* Cursor Espátula Customizado */}
         <AnimatePresence>
-          {isMouseIn && (
+          {(isMouseIn || dragState !== null) && (
             <motion.div
               className="fixed top-0 left-0 pointer-events-none z-[99999]"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{
-                x: mousePos.x - 20,
-                y: mousePos.y - 20,
+                x: mousePos.x - 24,
+                y: mousePos.y - 14,
                 opacity: 1,
-                scale: isMouseDown ? 0.8 : 1,
-                rotate: isMouseDown ? 15 : 45,
+                scale: dragState ? 0.92 : isMouseDown ? 0.85 : 1,
+                rotate: dragState
+                  ? Math.max(12, 28 - (dragState.isDraggingHorizontal ? Math.min(18, (dragState.startX - dragState.currentX) * 0.1) : 0))
+                  : isMouseDown ? 25 : 45,
               }}
               exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ type: "spring", stiffness: 800, damping: 25, mass: 0.5 }}
+              transition={{
+                type: "spring",
+                stiffness: dragState || isMouseDown ? 1800 : 900,
+                damping: dragState || isMouseDown ? 45 : 28,
+                mass: 0.15,
+              }}
+              style={{
+                transformOrigin: "40% 30%",
+              }}
             >
               <svg
                 width="80"
@@ -236,7 +449,11 @@ export function CartCheckoutSheet({
                 viewBox="0 0 100 100"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                style={{ filter: "drop-shadow(3px 12px 10px rgba(0,0,0,0.5))" }}
+                style={{
+                  filter: dragState
+                    ? "drop-shadow(0 0 16px rgba(255, 157, 0, 0.75)) drop-shadow(3px 12px 10px rgba(0,0,0,0.5))"
+                    : "drop-shadow(3px 12px 10px rgba(0,0,0,0.5))",
+                }}
               >
                 <defs>
                   <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -487,59 +704,236 @@ export function CartCheckoutSheet({
                     Object.entries(cart).map(([idStr, quantity]) => {
                       const product = products.find((p: any) => p.id === parseInt(idStr));
                       if (!product) return null;
+
+                      const prodId = product.id;
+                      const initialCount = quantity as number;
+                      const isDraggingThis = dragState?.id === prodId;
+                      const isDeletingThis = deletingIds.includes(prodId);
+
+                      const deltaX =
+                        isDraggingThis && dragState
+                          ? dragState.startX - dragState.currentX
+                          : 0;
+                      const leftDrag = Math.max(0, deltaX);
+
+                      // Curva de amortecimento suave elástica (rubber-banding)
+                      const calculateVisualX = (drag: number) => {
+                        if (drag <= 0) return 0;
+                        if (drag < 150) return drag;
+                        const maxVisual = 240;
+                        const excess = drag - 150;
+                        return 150 + (maxVisual - 150) * (1 - Math.exp(-excess / 110));
+                      };
+                      const visualX = calculateVisualX(leftDrag);
+
+                      let unitsToDecrease = 0;
+                      let isFullDelete = false;
+
+                      if (initialCount === 1) {
+                        isFullDelete = isDraggingThis && leftDrag >= 75;
+                        unitsToDecrease = isFullDelete ? 1 : 0;
+                      } else {
+                        const stepSize = 38;
+                        const deadZone = 14;
+                        unitsToDecrease = isDraggingThis
+                          ? Math.min(
+                              initialCount,
+                              Math.floor(Math.max(0, leftDrag - deadZone) / stepSize),
+                            )
+                          : 0;
+                        isFullDelete =
+                          isDraggingThis &&
+                          (unitsToDecrease >= initialCount || leftDrag >= 170);
+                        if (isFullDelete) {
+                          unitsToDecrease = initialCount;
+                        }
+                      }
+
+                      const displayedQty = Math.max(0, initialCount - unitsToDecrease);
+
                       return (
                         <div
                           key={product.id}
-                          className="relative flex gap-5 items-center p-4 rounded-3xl bg-white/5 border border-white/10 group transition-all duration-300 hover:bg-white/10 hover:border-white/20"
+                          className="relative rounded-3xl overflow-hidden select-none transition-all duration-300"
+                          style={{
+                            opacity: isDeletingThis ? 0 : 1,
+                            maxHeight: isDeletingThis ? 0 : "200px",
+                            marginBottom: isDeletingThis ? 0 : undefined,
+                            transition: isDeletingThis
+                              ? "max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0.15s, opacity 0.25s ease, margin 0.28s ease 0.15s"
+                              : undefined,
+                          }}
                         >
-                          <button
-                            onClick={() => updateQuantity(product.id, -(quantity as number))}
-                            className="absolute -top-2 -right-2 w-8 h-8 bg-black border border-white/10 text-white/60 rounded-full flex items-center justify-center transition-all duration-300 hover:bg-red-500 hover:text-white hover:border-red-500 hover:scale-110 z-10 shadow-lg"
+                          {/* Fundo de Ação Revelado Atrás do Pedido Inteiro */}
+                          <div
+                            className={`absolute inset-0 rounded-3xl overflow-hidden transition-all duration-300 flex items-center justify-end pr-6 ${
+                              isFullDelete
+                                ? "bg-gradient-to-l from-red-600/35 via-red-950/45 to-transparent border border-red-500/50 shadow-[inset_0_0_24px_rgba(239,68,68,0.35)]"
+                                : unitsToDecrease > 0
+                                  ? "bg-gradient-to-l from-amber-500/25 via-orange-950/40 to-transparent border border-amber-500/40 shadow-[inset_0_0_20px_rgba(245,158,11,0.2)]"
+                                  : "bg-white/[0.03] border border-white/5"
+                            }`}
                           >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                          <div className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 bg-black/20 shadow-inner border border-white/5">
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-                            />
-                          </div>
-                          <div className="flex-1 py-1">
-                            <h4 className="font-bold text-lg text-white leading-tight tracking-tight">
-                              {product.name}
-                            </h4>
-                            <p className="text-sm mt-1 text-[#ff9d00] font-bold">
-                              {formatPrice(product.price)}
-                            </p>
+                            <div className="flex flex-col items-end gap-1.5 z-10">
+                              {isFullDelete ? (
+                                <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-600/30 border border-red-500/60 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
+                                  <Trash2 className="w-4 h-4 text-red-300 animate-bounce" />
+                                  <span className="text-red-200 font-black text-xs uppercase tracking-wider">
+                                    Solte para excluir tudo
+                                  </span>
+                                </div>
+                              ) : unitsToDecrease > 0 ? (
+                                <div className="flex flex-col items-end gap-1">
+                                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]">
+                                    <Minus className="w-3.5 h-3.5 text-amber-300" />
+                                    <span className="text-amber-300 font-black text-xs uppercase tracking-wider">
+                                      -{unitsToDecrease} {unitsToDecrease > 1 ? "pedidos" : "pedido"}
+                                    </span>
+                                  </div>
+                                  <span className="text-[11px] font-bold text-white/70 tracking-tight">
+                                    Restam <strong className="text-amber-300 font-extrabold">{displayedQty}</strong> no carrinho
+                                  </span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1.5 text-white/40 text-xs font-semibold">
+                                  <span className="inline-block animate-[pulse_1.5s_infinite]">←</span>
+                                  <span>Arraste para diminuir</span>
+                                </div>
+                              )}
+                            </div>
 
-                            <div className="flex items-center gap-4 mt-3 bg-black/40 w-fit rounded-full px-1 py-1 border border-white/10">
-                              <button
-                                onClick={() => updateQuantity(product.id, -1)}
-                                className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all p-1.5"
-                              >
-                                <Minus className="w-3.5 h-3.5" />
-                              </button>
-                              <div className="w-5 text-center overflow-hidden flex items-center justify-center">
-                                <AnimatePresence mode="popLayout" initial={false}>
-                                  <motion.span
-                                    key={quantity as number}
-                                    initial={{ y: 8, opacity: 0, scale: 0.7 }}
-                                    animate={{ y: 0, opacity: 1, scale: 1 }}
-                                    exit={{ y: -8, opacity: 0, scale: 0.7 }}
-                                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                                    className="text-sm font-black text-white inline-block"
-                                  >
-                                    {quantity as number}
-                                  </motion.span>
-                                </AnimatePresence>
+                            {/* Barra de progresso do arrasto na borda inferior */}
+                            {isDraggingThis && (
+                              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 overflow-hidden">
+                                <div
+                                  className={`h-full transition-all duration-75 ${
+                                    isFullDelete
+                                      ? "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
+                                      : "bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.6)]"
+                                  }`}
+                                  style={{
+                                    width: `${Math.min(
+                                      100,
+                                      (leftDrag / (initialCount === 1 ? 75 : 170)) * 100,
+                                    )}%`,
+                                  }}
+                                />
                               </div>
+                            )}
+                          </div>
+
+                          {/* O CARD DO PEDIDO INTEIRO (QUE DESLIZA PARA A ESQUERDA) */}
+                          <div
+                            onPointerDown={(e) => handleCardPointerDown(e, prodId, initialCount, false)}
+                            onPointerMove={handleCardPointerMove}
+                            onPointerUp={(e) => handleCardPointerUp(e, prodId)}
+                            onPointerCancel={handleCardPointerCancel}
+                            style={{
+                              transform: isDeletingThis
+                                ? "translateX(-120%) rotate(-6deg) scale(0.9)"
+                                : isDraggingThis
+                                  ? `translateX(-${visualX}px) rotate(-${Math.min(3.5, visualX * 0.016)}deg) scale(0.985)`
+                                  : "translateX(0px) rotate(0deg) scale(1)",
+                              opacity: isDeletingThis ? 0 : 1,
+                              filter: isDeletingThis ? "blur(4px)" : "none",
+                              transition: isDraggingThis
+                                ? "none"
+                                : isDeletingThis
+                                  ? "transform 0.26s cubic-bezier(0.2, 0, 0, 1), opacity 0.26s ease, filter 0.26s ease"
+                                  : "transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease",
+                            }}
+                            className={`relative flex gap-5 items-center p-4 rounded-3xl bg-[#141414] border transition-colors duration-300 select-none shadow-xl cursor-grab ${
+                              isDraggingThis
+                                ? "border-amber-500/40 shadow-2xl bg-[#1a1714] cursor-grabbing"
+                                : "border-white/10 hover:bg-[#1a1a1a] hover:border-white/20"
+                            }`}
+                          >
+                            {/* Botão de Lixeira fixo no topo do card do pedido */}
+                            <div className="absolute -top-2.5 -right-2.5 z-20 touch-none">
                               <button
-                                onClick={() => updateQuantity(product.id, 1)}
-                                className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all p-1.5"
+                                data-trash-btn="true"
+                                onPointerDown={(e) => {
+                                  e.stopPropagation();
+                                  handleCardPointerDown(e, prodId, initialCount, true);
+                                }}
+                                onPointerMove={handleCardPointerMove}
+                                onPointerUp={(e) => handleCardPointerUp(e, prodId)}
+                                onPointerCancel={handleCardPointerCancel}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 shadow-xl border select-none touch-none relative after:absolute after:-inset-3 after:content-[''] ${
+                                  isDraggingThis
+                                    ? isFullDelete
+                                      ? "bg-red-600 border-red-400 text-white scale-110 shadow-[0_0_20px_rgba(220,38,38,0.7)]"
+                                      : unitsToDecrease > 0
+                                        ? "bg-amber-500 border-amber-300 text-black scale-110 shadow-[0_0_15px_rgba(245,158,11,0.6)]"
+                                        : "bg-white/20 border-white/40 text-white scale-105"
+                                    : "bg-black border-white/10 text-white/60 hover:bg-red-500 hover:text-white hover:border-red-500 hover:scale-110"
+                                }`}
+                                title="Arraste para diminuir ou clique para excluir"
                               >
-                                <Plus className="w-3.5 h-3.5" />
+                                <Trash2 className="w-4 h-4 pointer-events-none" />
                               </button>
+                            </div>
+
+                            {/* Imagem do produto */}
+                            <div className="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0 bg-black/20 shadow-inner border border-white/5 pointer-events-none">
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110 pointer-events-none"
+                              />
+                            </div>
+
+                            {/* Informações e Contadores */}
+                            <div className="flex-1 py-1">
+                              <h4 className="font-bold text-lg text-white leading-tight tracking-tight">
+                                {product.name}
+                              </h4>
+                              <p className="text-sm mt-1 text-[#ff9d00] font-bold">
+                                {formatPrice(product.price)}
+                              </p>
+
+                              <div className="flex items-center gap-3 mt-3 bg-black/40 w-fit rounded-full px-1.5 py-1 border border-white/10">
+                                <button
+                                  data-prevent-drag="true"
+                                  onPointerDown={(e) => e.stopPropagation()}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateQuantity(product.id, -1);
+                                  }}
+                                  className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all w-8 h-8 flex items-center justify-center relative after:absolute after:-inset-3 after:content-['']"
+                                  title="Diminuir 1"
+                                >
+                                  <Minus className="w-3.5 h-3.5 pointer-events-none" />
+                                </button>
+                                <div className="min-w-6 text-center overflow-hidden flex items-center justify-center px-1">
+                                  <AnimatePresence mode="popLayout" initial={false}>
+                                    <motion.span
+                                      key={displayedQty}
+                                      initial={{ y: 8, opacity: 0, scale: 0.7 }}
+                                      animate={{ y: 0, opacity: 1, scale: 1 }}
+                                      exit={{ y: -8, opacity: 0, scale: 0.7 }}
+                                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                                      className={`text-sm font-black inline-block transition-colors ${
+                                        isDraggingThis ? "text-amber-400 scale-110" : "text-white"
+                                      }`}
+                                    >
+                                      {displayedQty}
+                                    </motion.span>
+                                  </AnimatePresence>
+                                </div>
+                                <button
+                                  data-prevent-drag="true"
+                                  onPointerDown={(e) => e.stopPropagation()}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateQuantity(product.id, 1);
+                                  }}
+                                  className="text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-all w-8 h-8 flex items-center justify-center relative after:absolute after:-inset-3 after:content-['']"
+                                  title="Aumentar 1"
+                                >
+                                  <Plus className="w-3.5 h-3.5 pointer-events-none" />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
