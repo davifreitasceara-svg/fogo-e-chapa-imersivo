@@ -59,7 +59,7 @@ export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.85, opacity: 0, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative z-10 w-full max-w-[520px] my-auto py-6 select-none"
+            className="relative z-10 w-full max-w-[520px] my-auto py-6 select-none scale-[0.88] xs:scale-[0.95] sm:scale-100 origin-center"
             style={{ perspective: "1400px", perspectiveOrigin: "50% 36%" }}
           >
             {/* Botão de Fechar Modal */}

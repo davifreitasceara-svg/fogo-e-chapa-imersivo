@@ -38,36 +38,36 @@ function Gallery() {
 
   return (
     <div className="min-h-screen bg-zinc-950 font-sans w-full relative overflow-hidden flex flex-col items-center justify-center">
-      <div className="fixed top-8 left-8 z-50">
-        <Link to="/" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors uppercase tracking-[0.2em] text-sm font-bold bg-zinc-900/50 p-3 rounded-full backdrop-blur-md border border-white/10">
+      <div className="fixed top-4 left-4 sm:top-8 sm:left-8 z-50">
+        <Link to="/" className="flex items-center gap-2 text-white/70 hover:text-white transition-colors uppercase tracking-[0.18em] text-xs sm:text-sm font-bold bg-zinc-900/80 px-3.5 py-2 sm:p-3 rounded-full backdrop-blur-md border border-white/10 shadow-lg">
           <ArrowLeft size={16} /> Voltar
         </Link>
       </div>
 
-      <div className="flex flex-col lg:flex-row min-h-screen w-full items-center justify-center bg-zinc-950 px-8 py-20 lg:py-8 gap-12 max-w-7xl mx-auto">
-        <div className="w-full lg:w-3/5 flex flex-col items-center justify-center relative h-[50vh] lg:h-[80vh] z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
+      <div className="flex flex-col lg:flex-row min-h-screen w-full items-center justify-center bg-zinc-950 px-4 sm:px-8 py-16 sm:py-20 lg:py-8 gap-8 lg:gap-12 max-w-7xl mx-auto">
+        <div className="w-full lg:w-3/5 flex flex-col items-center justify-center relative h-[42vh] xs:h-[48vh] sm:h-[55vh] lg:h-[75vh] z-10">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none z-0"></div>
           
           {/* THE REAL 3D BURGER */}
           <Burger3D />
           
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/40 uppercase tracking-[0.3em] text-[10px] font-bold z-20 pointer-events-none animate-pulse text-center w-full">
+          <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-white/40 uppercase tracking-[0.25em] text-[10px] font-bold z-20 pointer-events-none animate-pulse text-center w-full px-4">
             Toque e arraste para girar 360º livremente
           </div>
         </div>
 
-        <div className="w-full lg:w-2/5 flex flex-col items-center lg:items-start justify-center text-center lg:text-left text-white mt-8 lg:mt-0 z-20 relative">
-          <div className="flex items-center gap-4 mb-4">
-            <span className="h-px w-8 bg-orange-500"></span>
-            <span className="text-orange-500/80 uppercase tracking-widest text-xs font-black">Experiência 3D Real</span>
+        <div className="w-full lg:w-2/5 flex flex-col items-center lg:items-start justify-center text-center lg:text-left text-white mt-4 sm:mt-8 lg:mt-0 z-20 relative">
+          <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <span className="h-px w-6 sm:w-8 bg-orange-500"></span>
+            <span className="text-orange-500/80 uppercase tracking-widest text-[11px] sm:text-xs font-black">Experiência 3D Real</span>
           </div>
 
-          <h1 className={`text-6xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tighter ${info.color} mb-6 leading-none`}>
+          <h1 className={`text-4xl xs:text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black uppercase tracking-tighter ${info.color} mb-4 sm:mb-6 leading-none`}>
             {info.title} <br />
-            <span className="text-white text-5xl sm:text-6xl lg:text-7xl">{info.subtitle}</span>
+            <span className="text-white text-3xl xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">{info.subtitle}</span>
           </h1>
           
-          <p className="text-zinc-400 text-lg sm:text-xl font-medium tracking-wide leading-relaxed max-w-md">
+          <p className="text-zinc-400 text-sm sm:text-base lg:text-xl font-medium tracking-wide leading-relaxed max-w-md">
             {info.desc}
           </p>
 

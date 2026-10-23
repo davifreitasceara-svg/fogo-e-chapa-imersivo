@@ -69,9 +69,15 @@ export function CartCheckoutSheet({
   const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMouseIn, setIsMouseIn] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   // Listener global para garantir que o cursor de espátula NUNCA se perca ou trave durante arraste rápido
   useEffect(() => {
+    if (isTouchDevice) return;
     const handleGlobalPointerMove = (e: PointerEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
@@ -84,7 +90,7 @@ export function CartCheckoutSheet({
       window.removeEventListener("pointermove", handleGlobalPointerMove);
       window.removeEventListener("pointerup", handleGlobalPointerUp);
     };
-  }, []);
+  }, [isTouchDevice]);
 
   // Estado para arrastar o card ou botão da lixeira para a esquerda e diminuir a quantidade
   const [dragState, setDraggingState] = useState<{
@@ -419,7 +425,7 @@ export function CartCheckoutSheet({
       >
         {/* Cursor Espátula Customizado */}
         <AnimatePresence>
-          {(isMouseIn || dragState !== null) && (
+          {!isTouchDevice && (isMouseIn || dragState !== null) && (
             <motion.div
               className="fixed top-0 left-0 pointer-events-none z-[99999]"
               initial={{ opacity: 0, scale: 0.5 }}

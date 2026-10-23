@@ -3355,6 +3355,14 @@ function Index() {
   const footerTriggerRef = useRef<HTMLDivElement>(null);
   const [footerHeight, setFooterHeight] = useState(0);
   const [isFooterNear, setIsFooterNear] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -3810,23 +3818,31 @@ function Index() {
       </div>
       <div
         className={`min-h-screen overflow-x-clip transition-colors duration-700 ease-in-out ${currentSlide.bgClass} text-foreground`}
-        style={{ marginBottom: footerHeight }}
+        style={{ marginBottom: isDesktop ? footerHeight : 0 }}
       >
-        <header className="fixed inset-x-0 top-0 z-50 bg-black/20 backdrop-blur-md border-b border-white/10 transition-colors duration-700">
-          <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 lg:px-8">
+        <header className="fixed inset-x-0 top-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/10 transition-colors duration-700">
+          <div className="mx-auto flex h-16 sm:h-20 lg:h-24 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <motion.div
               className="flex items-center gap-2"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white">
+              <a
+                href="#inicio"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsNavOpen(false);
+                  document.getElementById("inicio")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="font-display text-lg sm:text-2xl font-black tracking-tighter text-white hover:opacity-90 transition-opacity cursor-pointer"
+              >
                 FOGO E CHAPA
-              </span>
+              </a>
             </motion.div>
 
             <motion.nav
-              className="hidden md:flex items-center gap-1 text-sm font-bold text-white bg-white/10 backdrop-blur-sm rounded-full px-2 py-2"
+              className="hidden md:flex items-center gap-1 text-sm font-bold text-white bg-white/10 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10"
               initial="hidden"
               animate="visible"
               variants={{
@@ -3836,10 +3852,10 @@ function Index() {
               onMouseLeave={() => setHoveredNav(null)}
             >
               {[
-                { href: "#about", label: "About" },
-                { href: "#menu", label: "Menu" },
-                { href: "#delivery", label: "Delivery" },
-                { href: "/drinks", label: "Drinks" },
+                { href: "#menu", label: "Cardápio" },
+                { href: "#gallery", label: "Galeria 3D" },
+                { href: "/drinks", label: "Bebidas" },
+                { href: "#contato", label: "Onde Estamos" },
               ].map((link) => (
                 <motion.a
                   key={link.href}
@@ -3850,16 +3866,12 @@ function Index() {
                       navigate({ to: "/drinks" });
                       return;
                     }
-                    if (link.label === "Delivery") {
+                    if (link.href.startsWith("#")) {
                       e.preventDefault();
-                      if (activeOrderTime) {
-                        setTrackingOpen(true);
-                      } else {
-                        document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" });
-                      }
+                      document.getElementById(link.href.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
                     }
                   }}
-                  className="relative px-5 py-2 rounded-full z-10"
+                  className="relative px-4 lg:px-5 py-2 rounded-full z-10 transition-colors cursor-pointer"
                   variants={{
                     hidden: { opacity: 0, y: -20, filter: "blur(6px)" },
                     visible: {
@@ -3892,7 +3904,7 @@ function Index() {
             </motion.nav>
 
             <motion.div
-              className="flex items-center gap-4"
+              className="flex items-center gap-2.5 sm:gap-4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -3904,7 +3916,7 @@ function Index() {
                     aria-label={`Sacola com ${cartCount} itens`}
                     variant="ghost"
                     size="icon"
-                    className="relative rounded-full text-white hover:bg-white/20 transition-colors cursor-pointer"
+                    className="relative rounded-full text-white hover:bg-white/20 transition-colors cursor-pointer size-9 sm:size-10"
                   >
                     {/* Shockwave Rings on Impact */}
                     <AnimatePresence>
@@ -3945,7 +3957,7 @@ function Index() {
                       className="relative flex items-center justify-center"
                     >
                       <ShoppingBag
-                        className={`size-5 transition-colors duration-300 ${cartBumping ? "text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.9)]" : "text-white"
+                        className={`size-4 sm:size-5 transition-colors duration-300 ${cartBumping ? "text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.9)]" : "text-white"
                           }`}
                       />
                     </motion.div>
@@ -3959,7 +3971,7 @@ function Index() {
                           animate={{ scale: 1, opacity: 1, rotate: 0 }}
                           exit={{ scale: 0.5, opacity: 0 }}
                           transition={{ type: "spring", stiffness: 500, damping: 14 }}
-                          className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-[10px] font-black text-black shadow-[0_0_12px_rgba(245,158,11,0.6)] z-10"
+                          className="absolute -right-1 -top-1 flex size-4 sm:size-5 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-[9px] sm:text-[10px] font-black text-black shadow-[0_0_12px_rgba(245,158,11,0.6)] z-10"
                         >
                           {cartCount}
                         </motion.span>
@@ -3999,12 +4011,102 @@ function Index() {
 
               <Button
                 onClick={() => setAuthOpen(true)}
-                className="hidden sm:flex items-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                className="hidden sm:flex items-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-5 py-1.5 text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
               >
-                <LogIn className="w-4 h-4" /> Entrar
+                <LogIn className="w-3.5 h-3.5" /> Entrar
               </Button>
+
+              {/* Mobile Hamburger Button */}
+              <button
+                onClick={() => setIsNavOpen((prev) => !prev)}
+                className="flex md:hidden items-center justify-center size-9 sm:size-10 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all cursor-pointer active:scale-95"
+                aria-label={isNavOpen ? "Fechar menu" : "Abrir menu"}
+              >
+                {isNavOpen ? <X className="size-4" /> : <Menu className="size-4" />}
+              </button>
             </motion.div>
           </div>
+
+          {/* Mobile Navigation Drawer */}
+          <AnimatePresence>
+            {isNavOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden md:hidden bg-black/95 backdrop-blur-2xl border-b border-white/15 px-5 py-4 flex flex-col gap-2.5 shadow-2xl"
+              >
+                <a
+                  href="#inicio"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    document.getElementById("inicio")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                >
+                  Início
+                </a>
+                <a
+                  href="#menu"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                >
+                  Cardápio
+                </a>
+                <a
+                  href="#gallery"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                >
+                  Galeria 3D
+                </a>
+                <a
+                  href="/drinks"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    navigate({ to: "/drinks" });
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors flex items-center justify-between"
+                >
+                  <span>Bebidas Exclusivas</span>
+                  <span className="text-[10px] bg-amber-500/25 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">Lata 3D</span>
+                </a>
+                <a
+                  href="#contato"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                >
+                  Onde Estamos / Local
+                </a>
+                <div className="pt-2 border-t border-white/10 flex items-center gap-3">
+                  <Button
+                    onClick={() => {
+                      setIsNavOpen(false);
+                      setAuthOpen(true);
+                    }}
+                    className="w-full rounded-full bg-white text-black font-bold py-2 text-xs hover:bg-gray-200 transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <LogIn className="size-3.5" /> Entrar na Conta
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </header>
 
         <main className="relative">
@@ -4248,33 +4350,33 @@ function Index() {
               </div>
 
               {/* Menu Card Container */}
-              <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+              <div className="relative z-10 mx-auto max-w-6xl px-3 sm:px-6 lg:px-8">
                 <motion.div
                   initial={{ opacity: 0, y: 100, scale: 0.97 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, amount: 0.05 }}
                   transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                  className="rounded-[32px] sm:rounded-[40px] p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700 bg-[#0a0a0a] text-white border border-white/10"
+                  className="rounded-[28px] sm:rounded-[40px] p-4 xs:p-6 sm:p-10 md:p-14 shadow-2xl origin-bottom transition-colors duration-700 bg-[#0a0a0a] text-white border border-white/10"
                 >
                   {/* Menu Card Header */}
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 sm:mb-16 gap-6 border-b-2 border-white/10 pb-6 transition-colors duration-700">
-                    <h3 className="font-display text-5xl sm:text-6xl font-black tracking-tighter transition-colors duration-700 text-white">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-16 gap-4 sm:gap-6 border-b-2 border-white/10 pb-5 sm:pb-6 transition-colors duration-700">
+                    <h3 className="font-display text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter transition-colors duration-700 text-white">
                       CARDÁPIO
                     </h3>
-                    <div className="flex gap-3">
-                      <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                      <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 rounded-full text-[11px] sm:text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5">
                         <span className="text-amber-500 text-sm">★</span> Avaliação 4.9
                       </span>
-                      <span className="px-4 py-2 bg-white/5 rounded-full text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5">
+                      <span className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 rounded-full text-[11px] sm:text-xs font-bold text-white border border-white/10 shadow-sm flex items-center gap-1.5">
                         <span className="text-red-500 text-sm">♥</span> Favorito Local
                       </span>
                     </div>
                   </div>
 
                   {/* 2-Column Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-16">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 xl:gap-x-16 gap-y-10 sm:gap-y-16">
                     {/* LEFT COLUMN */}
-                    <div className="flex flex-col gap-12">
+                    <div className="flex flex-col gap-10 sm:gap-12">
                       {/* Category: BURGERS */}
                       <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -4282,10 +4384,10 @@ function Index() {
                         viewport={{ once: true, amount: 0.1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                       >
-                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                        <h4 className="font-display text-2xl sm:text-3xl font-black mb-5 sm:mb-6 tracking-tight transition-colors duration-700 text-white">
                           HAMBÚRGUERES
                         </h4>
-                        <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-4 sm:gap-5">
                           {[
                             { name: "X Burguer", price: "25,00" },
                             { name: "Mac Sesi Feliz", price: "28,00" },
@@ -4296,17 +4398,19 @@ function Index() {
                           ].map((item) => (
                             <div
                               key={item.name}
-                              className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
+                              className="flex items-center justify-between w-full group transition-transform duration-200 hover:translate-x-1 gap-2 sm:gap-3"
                             >
-                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
-                                {item.name}
-                              </span>
-                              {item.badge && (
-                                <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-amber-500/20 text-amber-500 rounded-full">
-                                  {item.badge}
+                              <div className="flex items-center min-w-0 flex-1 gap-1.5 sm:gap-2">
+                                <span className="font-bold text-white text-base sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors truncate">
+                                  {item.name}
                                 </span>
-                              )}
-                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                                {item.badge && (
+                                  <span className="shrink-0 px-2 py-0.5 text-[10px] sm:text-xs font-bold bg-amber-500/20 text-amber-500 rounded-full">
+                                    {item.badge}
+                                  </span>
+                                )}
+                                <div className="border-b-[2px] sm:border-b-[3px] border-dotted border-white/20 flex-1 min-w-[8px] opacity-50 relative top-0.5 sm:top-1" />
+                              </div>
                               <button
                                 onClick={(e) =>
                                   addToCart(
@@ -4315,7 +4419,7 @@ function Index() {
                                     e,
                                   )
                                 }
-                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                                className="shrink-0 font-bold text-white border-[1.5px] border-white/20 rounded-full px-2.5 sm:px-3 py-1 text-xs sm:text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
                               >
                                 R$ {item.price} <Plus className="size-3" />
                               </button>
@@ -4331,10 +4435,10 @@ function Index() {
                         viewport={{ once: true, amount: 0.1 }}
                         transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
                       >
-                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                        <h4 className="font-display text-2xl sm:text-3xl font-black mb-5 sm:mb-6 tracking-tight transition-colors duration-700 text-white">
                           BATATAS
                         </h4>
-                        <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-4 sm:gap-5">
                           {[
                             { name: "Tiras do Tripa", price: "15,00" },
                             { name: "Trincheira do Davi", price: "22,00" },
@@ -4342,12 +4446,14 @@ function Index() {
                           ].map((item) => (
                             <div
                               key={item.name}
-                              className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
+                              className="flex items-center justify-between w-full group transition-transform duration-200 hover:translate-x-1 gap-2 sm:gap-3"
                             >
-                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
-                                {item.name}
-                              </span>
-                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                              <div className="flex items-center min-w-0 flex-1 gap-1.5 sm:gap-2">
+                                <span className="font-bold text-white text-base sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors truncate">
+                                  {item.name}
+                                </span>
+                                <div className="border-b-[2px] sm:border-b-[3px] border-dotted border-white/20 flex-1 min-w-[8px] opacity-50 relative top-0.5 sm:top-1" />
+                              </div>
                               <button
                                 onClick={(e) =>
                                   addToCart(
@@ -4356,7 +4462,7 @@ function Index() {
                                     e,
                                   )
                                 }
-                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                                className="shrink-0 font-bold text-white border-[1.5px] border-white/20 rounded-full px-2.5 sm:px-3 py-1 text-xs sm:text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
                               >
                                 R$ {item.price} <Plus className="size-3" />
                               </button>
@@ -4367,7 +4473,7 @@ function Index() {
                     </div>
 
                     {/* RIGHT COLUMN */}
-                    <div className="flex flex-col gap-12">
+                    <div className="flex flex-col gap-10 sm:gap-12">
                       {/* Category: MOLHOS */}
                       <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -4375,10 +4481,10 @@ function Index() {
                         viewport={{ once: true, amount: 0.1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                       >
-                        <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white">
+                        <h4 className="font-display text-2xl sm:text-3xl font-black mb-5 sm:mb-6 tracking-tight transition-colors duration-700 text-white">
                           MOLHOS
                         </h4>
-                        <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-4 sm:gap-5">
                           {[
                             { name: "Azeite de Oliveira", price: "4,00" },
                             { name: "Maionese Temperada", price: "5,00" },
@@ -4387,12 +4493,14 @@ function Index() {
                           ].map((item) => (
                             <div
                               key={item.name}
-                              className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
+                              className="flex items-center justify-between w-full group transition-transform duration-200 hover:translate-x-1 gap-2 sm:gap-3"
                             >
-                              <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors">
-                                {item.name}
-                              </span>
-                              <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                              <div className="flex items-center min-w-0 flex-1 gap-1.5 sm:gap-2">
+                                <span className="font-bold text-white text-base sm:text-xl tracking-tight group-hover:text-amber-500 transition-colors truncate">
+                                  {item.name}
+                                </span>
+                                <div className="border-b-[2px] sm:border-b-[3px] border-dotted border-white/20 flex-1 min-w-[8px] opacity-50 relative top-0.5 sm:top-1" />
+                              </div>
                               <button
                                 onClick={(e) =>
                                   addToCart(
@@ -4401,7 +4509,7 @@ function Index() {
                                     e,
                                   )
                                 }
-                                className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                                className="shrink-0 font-bold text-white border-[1.5px] border-white/20 rounded-full px-2.5 sm:px-3 py-1 text-xs sm:text-sm bg-white/5 shadow-sm group-hover:bg-white/10 hover:scale-105 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
                               >
                                 R$ {item.price} <Plus className="size-3" />
                               </button>
@@ -4416,14 +4524,14 @@ function Index() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.1 }}
                         transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-                        className="relative p-6 -mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg"
+                        className="relative p-4 sm:p-6 -mx-2 sm:-mx-6 rounded-3xl border border-white/5 bg-white/5 overflow-hidden shadow-lg"
                       >
                         <Bubbles count={20} />
                         <div className="relative z-10">
-                          <h4 className="font-display text-3xl font-black mb-6 tracking-tight transition-colors duration-700 text-white flex items-center gap-2">
+                          <h4 className="font-display text-2xl sm:text-3xl font-black mb-5 sm:mb-6 tracking-tight transition-colors duration-700 text-white flex items-center gap-2">
                             BEBIDAS <span className="text-xl">🫧</span>
                           </h4>
-                          <div className="flex flex-col gap-5">
+                          <div className="flex flex-col gap-4 sm:gap-5">
                             {[
                               { name: "Seca-nunca", price: "12,00" },
                               { name: "Gole de Martins", price: "14,00" },
@@ -4431,12 +4539,14 @@ function Index() {
                             ].map((item) => (
                               <div
                                 key={item.name}
-                                className="flex items-center w-full group transition-transform duration-200 hover:translate-x-1"
+                                className="flex items-center justify-between w-full group transition-transform duration-200 hover:translate-x-1 gap-2 sm:gap-3"
                               >
-                                <span className="font-bold text-white text-lg sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors">
-                                  {item.name}
-                                </span>
-                                <div className="border-b-[3px] border-dotted border-white/20 flex-1 mx-4 opacity-50 relative top-1"></div>
+                                <div className="flex items-center min-w-0 flex-1 gap-1.5 sm:gap-2">
+                                  <span className="font-bold text-white text-base sm:text-xl tracking-tight group-hover:text-cyan-400 transition-colors truncate">
+                                    {item.name}
+                                  </span>
+                                  <div className="border-b-[2px] sm:border-b-[3px] border-dotted border-white/20 flex-1 min-w-[8px] opacity-50 relative top-0.5 sm:top-1" />
+                                </div>
                                 <button
                                   onClick={(e) =>
                                     addToCart(
@@ -4445,7 +4555,7 @@ function Index() {
                                       e,
                                     )
                                   }
-                                  className="font-bold text-white border-[1.5px] border-white/20 rounded-full px-3 py-1 text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 transition-all flex items-center gap-1 cursor-pointer"
+                                  className="shrink-0 font-bold text-white border-[1.5px] border-white/20 rounded-full px-2.5 sm:px-3 py-1 text-xs sm:text-sm bg-white/5 shadow-sm group-hover:bg-cyan-500/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
                                 >
                                   R$ {item.price} <Plus className="size-3" />
                                 </button>
@@ -4693,10 +4803,10 @@ function Index() {
                     >
                       {/* Top Word (FRESHLY style) */}
                       <h2
-                        className="font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black uppercase tracking-tighter ml-6 md:ml-12 transition-all duration-700"
+                        className="font-display text-[15vw] sm:text-[11vw] md:text-[8vw] lg:text-[6.5vw] xl:text-[5.5rem] leading-[0.85] font-black uppercase tracking-tighter ml-3 sm:ml-6 md:ml-12 transition-all duration-700"
                         style={{
                           color: currentTheme.secondary,
-                          textShadow: `6px 6px 0px ${currentTheme.secondaryAlpha}`,
+                          textShadow: `4px 4px 0px ${currentTheme.secondaryAlpha}`,
                         }}
                       >
                         NOSSOS
@@ -4712,7 +4822,7 @@ function Index() {
 
                         {/* The text itself */}
                         <h2
-                          className="relative font-display text-[17vw] md:text-[10vw] leading-[0.85] font-black text-white uppercase tracking-tighter px-4 py-2 transform -skew-y-3 -rotate-2 transition-all duration-700"
+                          className="relative font-display text-[15vw] sm:text-[11vw] md:text-[8vw] lg:text-[6.5vw] xl:text-[5.5rem] leading-[0.85] font-black text-white uppercase tracking-tighter px-3 sm:px-4 py-1.5 sm:py-2 transform -skew-y-3 -rotate-2 transition-all duration-700"
                           style={{
                             WebkitTextStroke: `2px ${currentTheme.secondary}`,
                           }}
@@ -4729,16 +4839,16 @@ function Index() {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.4, duration: 0.8 }}
-                    className="mt-14 md:mt-20 max-w-[320px] pl-6 md:pl-10"
+                    className="mt-8 sm:mt-14 md:mt-20 max-w-[320px] pl-3 sm:pl-6 md:pl-10"
                   >
                     <h3
-                      className="font-display font-black text-xl mb-3 tracking-tighter uppercase transition-colors duration-700"
+                      className="font-display font-black text-lg sm:text-xl mb-3 tracking-tighter uppercase transition-colors duration-700"
                       style={{ color: currentTheme.secondary }}
                     >
                       NOSSA HISTÓRIA
                     </h3>
                     <p
-                      className="text-sm leading-relaxed mb-8 font-medium transition-colors duration-700 opacity-80"
+                      className="text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 font-medium transition-colors duration-700 opacity-80"
                       style={{ color: currentTheme.primary }}
                     >
                       Refrigerantes gelados e bebidas feitas para refrescar o seu dia. Encontre a
@@ -4748,7 +4858,7 @@ function Index() {
                       onClick={() =>
                         document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
                       }
-                      className="rounded-full text-white font-black uppercase px-6 py-6 text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit"
+                      className="rounded-full text-white font-black uppercase px-6 py-5 sm:py-6 text-xs sm:text-sm transition-all duration-700 border-[3px] flex items-center gap-3 w-fit cursor-pointer active:scale-95"
                       style={{
                         backgroundColor: currentTheme.secondary,
                         borderColor: currentTheme.secondary,
@@ -4764,7 +4874,7 @@ function Index() {
                 </div>
 
                 {/* Right Content - Generated Soda Cup Image */}
-                <div className="w-full md:w-[50%] relative min-h-[400px] md:min-h-[700px] flex justify-end items-center order-1 md:order-2">
+                <div className="w-full md:w-[50%] relative min-h-[300px] sm:min-h-[420px] md:min-h-[600px] lg:min-h-[700px] flex justify-center md:justify-end items-center order-1 md:order-2 overflow-hidden md:overflow-visible">
                   {/* Main Soda Drink Image */}
                   <motion.div
                     initial={{ opacity: 0, x: 100 }}
@@ -4776,13 +4886,13 @@ function Index() {
                       damping: 15,
                       duration: 1.2,
                     }}
-                    className="relative z-20 w-full max-w-[700px] md:max-w-[900px] lg:max-w-[1000px] flex justify-end md:-mr-12 lg:-mr-32 xl:-mr-48"
+                    className="relative z-20 w-full max-w-[340px] sm:max-w-[480px] md:max-w-[750px] lg:max-w-[900px] flex justify-center md:justify-end md:-mr-10 lg:-mr-24"
                     style={{ mixBlendMode: "multiply" }}
                   >
                     <img
                       src={sodaSplash}
                       alt="Refrigerante Gelado"
-                      className="w-full h-auto object-contain scale-110 md:scale-125 lg:scale-150 origin-right"
+                      className="w-full h-auto object-contain scale-100 sm:scale-105 md:scale-120 lg:scale-135 origin-center md:origin-right"
                     />
                   </motion.div>
                 </div>
@@ -4804,8 +4914,8 @@ function Index() {
 
           {/* New Section Based on the Print */}
           <section
-            className="relative w-full overflow-hidden bg-[#FCFBF9] py-32 flex flex-col items-center justify-center text-center z-10"
-            style={{ minHeight: "80vh" }}
+            className="relative w-full overflow-hidden bg-[#FCFBF9] py-16 sm:py-24 md:py-32 flex flex-col items-center justify-center text-center z-10"
+            style={{ minHeight: "70vh" }}
           >
             {/* Floating Burgers */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -4817,7 +4927,7 @@ function Index() {
                 transition={{ duration: 1, type: "spring", bounce: 0.4 }}
                 src={heroBurger}
                 alt=""
-                className="absolute top-[15%] left-[5%] md:left-[10%] w-32 md:w-48 drop-shadow-2xl"
+                className="absolute top-[15%] left-[3%] md:left-[10%] w-20 sm:w-28 md:w-48 drop-shadow-2xl"
               />
               {/* Mid Left (Blurred) */}
               <motion.img
@@ -4827,7 +4937,7 @@ function Index() {
                 transition={{ duration: 1.2, delay: 0.1, type: "spring", bounce: 0.3 }}
                 src={heroBurger}
                 alt=""
-                className="absolute top-[45%] -left-[10%] md:-left-[5%] w-48 md:w-72 blur-md drop-shadow-2xl"
+                className="absolute top-[45%] -left-[10%] md:-left-[5%] w-28 sm:w-40 md:w-72 blur-md drop-shadow-2xl opacity-60 sm:opacity-95"
               />
               {/* Bottom Left */}
               <motion.img
@@ -4837,7 +4947,7 @@ function Index() {
                 transition={{ duration: 1.1, delay: 0.2, type: "spring", bounce: 0.4 }}
                 src={heroBurger}
                 alt=""
-                className="absolute bottom-[5%] md:bottom-[10%] left-[5%] md:left-[15%] w-40 md:w-64 blur-[2px] drop-shadow-2xl"
+                className="absolute bottom-[5%] md:bottom-[10%] left-[3%] md:left-[15%] w-24 sm:w-36 md:w-64 blur-[2px] drop-shadow-2xl opacity-60 sm:opacity-100"
               />
 
               {/* Top Right */}
@@ -4848,7 +4958,7 @@ function Index() {
                 transition={{ duration: 1, delay: 0.1, type: "spring", bounce: 0.4 }}
                 src={heroBurger}
                 alt=""
-                className="absolute top-[20%] right-[5%] md:right-[15%] w-24 md:w-32 drop-shadow-2xl"
+                className="absolute top-[20%] right-[3%] md:right-[15%] w-16 sm:w-24 md:w-32 drop-shadow-2xl"
               />
               {/* Mid Right (Blurred) */}
               <motion.img
@@ -4858,7 +4968,7 @@ function Index() {
                 transition={{ duration: 1.2, delay: 0.15, type: "spring", bounce: 0.3 }}
                 src={heroBurger}
                 alt=""
-                className="absolute top-[40%] right-[0%] md:right-[5%] w-36 md:w-56 blur-md drop-shadow-2xl"
+                className="absolute top-[40%] right-[0%] md:right-[5%] w-24 sm:w-36 md:w-56 blur-md drop-shadow-2xl opacity-60 sm:opacity-95"
               />
               {/* Bottom Right */}
               <motion.img
@@ -4868,25 +4978,25 @@ function Index() {
                 transition={{ duration: 1.1, delay: 0.25, type: "spring", bounce: 0.4 }}
                 src={heroBurger}
                 alt=""
-                className="absolute bottom-[10%] md:bottom-[15%] right-[5%] md:right-[10%] w-48 md:w-80 drop-shadow-2xl"
+                className="absolute bottom-[10%] md:bottom-[15%] right-[3%] md:right-[10%] w-28 sm:w-44 md:w-80 drop-shadow-2xl opacity-60 sm:opacity-100"
               />
             </div>
 
             <div className="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center">
               {/* Badge */}
               <div
-                className="font-black uppercase text-xs tracking-[0.2em] px-4 py-1.5 rounded-md mb-8 flex items-center gap-2 shadow-sm transition-colors duration-700"
+                className="font-black uppercase text-[10px] sm:text-xs tracking-[0.2em] px-3.5 sm:px-4 py-1.5 rounded-md mb-6 sm:mb-8 flex items-center gap-2 shadow-sm transition-colors duration-700"
                 style={{
                   backgroundColor: currentTheme.secondaryAlpha,
                   color: currentTheme.secondary,
                 }}
               >
-                NOVIDADE • ABERTO AGORA <ArrowUpRight className="w-4 h-4 font-black stroke-[3px]" />
+                NOVIDADE • ABERTO AGORA <ArrowUpRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 font-black stroke-[3px]" />
               </div>
 
               {/* Title */}
               <h2
-                className="font-display font-black text-[12vw] md:text-[6rem] lg:text-[8rem] leading-[0.85] uppercase tracking-tighter mb-8 drop-shadow-sm transition-colors duration-700"
+                className="font-display font-black text-[12vw] sm:text-[9vw] md:text-[5.5rem] lg:text-[7rem] leading-[0.88] uppercase tracking-tighter mb-6 sm:mb-8 drop-shadow-sm transition-colors duration-700"
                 style={{ color: currentTheme.secondary }}
               >
                 HAMBÚRGUER PERFEITO,
@@ -4895,19 +5005,19 @@ function Index() {
               </h2>
 
               {/* Subtitle */}
-              <p className="font-bold text-[#222222] text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-snug">
+              <p className="font-bold text-[#222222] text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-10 leading-snug px-2">
                 Nós mantemos a simplicidade. Comida de verdade com ingredientes honestos.
-                <br />
+                <br className="hidden sm:inline" />
                 Todo o resto é apenas ruído.
               </p>
 
               {/* Buttons */}
-              <div className="flex flex-col items-center gap-5">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 w-full max-w-xs sm:max-w-none px-4">
                 <Button
                   onClick={() =>
                     document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="rounded-full text-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1"
+                  className="w-full sm:w-auto rounded-full text-white font-bold px-8 sm:px-12 py-5 sm:py-7 text-xs sm:text-sm md:text-base uppercase tracking-widest transition-all duration-700 ease-in-out shadow-xl hover:-translate-y-1 active:scale-95 cursor-pointer"
                   style={{ backgroundColor: currentTheme.secondary }}
                 >
                   FAZER PEDIDO
@@ -4916,15 +5026,15 @@ function Index() {
                   onClick={() =>
                     document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="rounded-full bg-white font-bold px-12 py-7 text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1"
+                  className="w-full sm:w-auto rounded-full bg-white font-bold px-8 sm:px-12 py-5 sm:py-7 text-xs sm:text-sm md:text-base uppercase tracking-widest border-0 transition-all duration-700 ease-in-out shadow-xl hover:bg-gray-100 hover:-translate-y-1 active:scale-95 cursor-pointer"
                   style={{ color: currentTheme.secondary }}
                 >
                   VER CARDÁPIO
                 </Button>
-                <div className="text-[#d0d0d0] font-bold text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-3 mt-6">
-                  <ArrowDown className="w-4 h-4" /> PSIU... POR AQUI{" "}
-                  <ArrowDown className="w-4 h-4" />
-                </div>
+              </div>
+              <div className="text-[#a0a0a0] font-bold text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.2em] flex items-center gap-2 sm:gap-3 mt-6 sm:mt-8">
+                <ArrowDown className="w-3.5 sm:w-4 h-3.5 sm:h-4" /> PSIU... POR AQUI{" "}
+                <ArrowDown className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
               </div>
             </div>
           </section>
@@ -4936,7 +5046,7 @@ function Index() {
       <footer
         ref={footerRef}
         id="contato"
-        className="fixed bottom-0 left-0 w-full pt-10 sm:pt-16 transition-colors duration-700 overflow-hidden text-white z-[-1]"
+        className={`${isDesktop ? "fixed bottom-0 left-0 z-[-1]" : "relative z-10"} w-full pt-10 sm:pt-16 transition-colors duration-700 overflow-hidden text-white`}
         style={{ backgroundColor: currentTheme.bgVeryDark }}
       >
         {/* Full Footer Video Background - Only decoded/played when near bottom */}
@@ -4952,26 +5062,26 @@ function Index() {
 
         <div className="mx-auto max-w-7xl px-5 lg:px-8 relative z-10 flex flex-col gap-8 lg:gap-10">
           {/* Top Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0 pb-6 border-b border-white/10">
-            <div className="flex gap-6 font-display font-black text-lg">
-              <a href="#cardapio" className="hover:text-white/80 transition-colors">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 pb-6 border-b border-white/10">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 font-display font-black text-sm sm:text-base md:text-lg">
+              <a href="#menu" className="hover:text-white/80 transition-colors">
                 MENU
               </a>
-              <a href="#promocoes" className="hover:text-white/80 transition-colors">
-                PROMOÇÕES
+              <a href="#gallery" className="hover:text-white/80 transition-colors">
+                GALERIA
               </a>
-              <a href="#avaliacoes" className="hover:text-white/80 transition-colors">
-                AVALIAÇÕES
+              <a href="/drinks" className="hover:text-white/80 transition-colors">
+                BEBIDAS
               </a>
               <a href="#contato" className="hover:text-white/80 transition-colors">
                 LOCAL
               </a>
             </div>
-            <div className="text-4xl font-black font-display tracking-tighter uppercase flex items-center gap-1">
+            <div className="text-3xl sm:text-4xl font-black font-display tracking-tighter uppercase flex items-center gap-1">
               FOGO
               <span
                 style={{ backgroundColor: currentTheme.secondary }}
-                className="rounded-full text-white size-8 flex items-center justify-center text-2xl -mt-1"
+                className="rounded-full text-white size-7 sm:size-8 flex items-center justify-center text-xl sm:text-2xl -mt-1"
               >
                 &
               </span>
@@ -4982,7 +5092,7 @@ function Index() {
                 document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
               }
               variant="outline"
-              className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-8"
+              className="font-bold uppercase tracking-wider rounded-full border-2 hover:bg-white hover:text-black transition-colors px-6 sm:px-8 py-2 text-xs sm:text-sm cursor-pointer"
               style={{
                 borderColor: currentTheme.secondary,
                 color: "white",
@@ -4994,75 +5104,30 @@ function Index() {
           </div>
 
           {/* Main Grid Layout */}
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            <div className="space-y-3 font-bold text-sm uppercase relative z-10">
-              <a href="#cardapio" className="block hover:text-white/70 transition-colors">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8">
+            <div className="space-y-3 font-bold text-xs sm:text-sm uppercase relative z-10">
+              <a href="#menu" className="block hover:text-white/70 transition-colors">
                 MENU
               </a>
-              <a href="#promocoes" className="block hover:text-white/70 transition-colors">
-                PROMOÇÕES
+              <a href="#gallery" className="block hover:text-white/70 transition-colors">
+                GALERIA 3D
               </a>
-              <a href="#avaliacoes" className="block hover:text-white/70 transition-colors">
-                AVALIAÇÕES
+              <a href="/drinks" className="block hover:text-white/70 transition-colors">
+                BEBIDAS NA LATA
               </a>
               <a href="#contato" className="block hover:text-white/70 transition-colors">
                 ONDE ESTAMOS
               </a>
             </div>
-            <div className="space-y-3 font-bold text-sm uppercase relative z-10">
-              <a href="#" className="block hover:text-white/70 transition-colors">
+            <div className="space-y-3 font-bold text-xs sm:text-sm uppercase relative z-10">
+              <a href="/privacidade" className="block hover:text-white/70 transition-colors">
                 POLÍTICA DE PRIVACIDADE
               </a>
-              <a href="#" className="block hover:text-white/70 transition-colors">
+              <a href="/termos" className="block hover:text-white/70 transition-colors">
                 TERMOS DE SERVIÇO
               </a>
-              <a href="#" className="block hover:text-white/70 transition-colors">
+              <a href="/reembolso" className="block hover:text-white/70 transition-colors">
                 POLÍTICA DE REEMBOLSO
-              </a>
-            </div>
-            <div className="space-y-4 relative z-10">
-              <a href="#" className="flex items-center gap-3 group">
-                <div
-                  className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105"
-                  style={{ backgroundColor: currentTheme.secondary }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M16.365 11.454c-.015-3.084 2.52-4.557 2.634-4.627-1.436-2.102-3.659-2.387-4.453-2.417-1.895-.19-3.704 1.115-4.664 1.115-.961 0-2.454-1.09-4.004-1.061-2.02.028-3.882 1.173-4.919 3.003-2.096 3.651-.537 9.07 1.503 12.032 1.002 1.455 2.179 3.086 3.754 3.031 1.498-.057 2.062-.962 3.865-.962 1.787 0 2.308.962 3.865.932 1.614-.029 2.63-1.47 3.616-2.918 1.144-1.671 1.614-3.29 1.642-3.376-.037-.014-3.153-1.214-3.138-4.32z" />
-                    <path d="M10.985 5.566c.82-.99 1.373-2.368 1.222-3.74-.112.005-.23.012-.34.012-1.353 0-2.825-.85-3.67-1.859-.757-.9-1.391-2.327-1.21-3.67 1.464.113 2.802.99 3.658 1.956.76.85 1.326 2.197 1.19 3.51-.1.006-.21.006-.31.006-1.39.006-2.784-.81-3.64-1.78z" />
-                  </svg>
-                </div>
-                <div className="text-xs">
-                  Baixar na
-                  <br />
-                  <span className="font-bold text-sm">App Store</span>
-                </div>
-              </a>
-              <a href="#" className="flex items-center gap-3 group">
-                <div
-                  className="size-10 rounded-full flex items-center justify-center text-white transition-transform group-hover:scale-105"
-                  style={{ backgroundColor: currentTheme.secondary }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M4.685 1.298c-.4.2-.785.643-.785 1.306v18.791c0 .663.385 1.106.785 1.306.4.2.97.106 1.442-.17L21.36 12.91c.471-.277.74-.75.74-1.16 0-.41-.269-.882-.74-1.158L6.127 1.469c-.472-.277-1.042-.371-1.442-.17z" />
-                  </svg>
-                </div>
-                <div className="text-xs">
-                  Baixar no
-                  <br />
-                  <span className="font-bold text-sm">Google Play</span>
-                </div>
               </a>
             </div>
 
@@ -5075,10 +5140,10 @@ function Index() {
                   <MapPin className="size-5" />
                 </div>
                 <div className="text-sm font-bold">
-                  Rua das Brasas, 217
+                  Av. Beira Mar, 3120
                   <br />
                   <span className="text-xs font-normal opacity-70">
-                    São Paulo, SP 05414, Brasil
+                    Meireles, Fortaleza - CE, 60165-121
                   </span>
                 </div>
               </div>
@@ -5090,72 +5155,20 @@ function Index() {
                   <Clock3 className="size-5" />
                 </div>
                 <div className="text-sm font-bold">
-                  +55 11 9999-9999
+                  Horário de Funcionamento
                   <br />
-                  <span className="text-xs font-normal opacity-70">Ter-Dom, 18h - 23h</span>
+                  <span className="text-xs font-normal opacity-70">
+                    Terça a Domingo: 18h às 23h30
+                  </span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Bottom Grid Layout for Newsletter and Socials */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8 mt-2 items-end relative z-10">
-            <div className="lg:col-span-3">
-              <h3
-                className="font-display font-black text-xl mb-3 uppercase tracking-wide drop-shadow-md"
-                style={{ color: currentTheme.secondary }}
-              >
-                NUNCA PERCA UMA PROMOÇÃO
-              </h3>
-              <form
-                className="flex max-w-sm h-12 shadow-xl"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}
-              >
-                <input
-                  type="email"
-                  placeholder="nome@email.com"
-                  className="flex-1 bg-black/50 backdrop-blur-sm border border-white/30 rounded-l-md px-4 text-sm focus:outline-none focus:border-white transition-colors text-white placeholder-white/50"
-                />
-                <Button
-                  type="submit"
-                  className="font-bold hover:brightness-110 transition-all text-white rounded-l-none h-full px-6"
-                  style={{ backgroundColor: currentTheme.secondary }}
-                >
-                  ASSINAR
-                </Button>
-              </form>
-              <p className="text-xs mt-2 opacity-70 leading-relaxed font-medium">
-                Receba combos exclusivos direto no seu e-mail.
-                <br />
-                Sem spam, prometemos.
-              </p>
-            </div>
-
-            <div className="lg:col-span-2 flex justify-start lg:justify-end items-center gap-3">
-              <span className="text-sm font-bold mr-2">Siga-nos:</span>
-              <a
-                href="#"
-                className="size-10 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg"
-                style={{ backgroundColor: currentTheme.secondary }}
-              >
-                <Instagram className="size-5" />
-              </a>
-              <a
-                href="#"
-                className="size-10 rounded-full flex items-center justify-center font-bold text-lg text-white hover:scale-110 transition-transform shadow-lg"
-                style={{ backgroundColor: currentTheme.secondary }}
-              >
-                T
-              </a>
             </div>
           </div>
         </div>
 
         {/* Giant Text Bottom Edge */}
-        <div className="w-full relative mt-16 md:mt-24 pb-8 pt-8 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center transition-colors duration-700">
-          <div className="relative z-10 font-display font-black uppercase text-[15vw] sm:text-[16vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[4vw] drop-shadow-2xl">
+        <div className="w-full relative mt-12 sm:mt-16 md:mt-24 pb-6 sm:pb-8 pt-6 sm:pt-8 overflow-hidden select-none pointer-events-none flex flex-col justify-center items-center transition-colors duration-700">
+          <div className="relative z-10 font-display font-black uppercase text-[14vw] sm:text-[15vw] leading-[0.8] tracking-tight flex items-center justify-between w-full px-[3vw] sm:px-[4vw] drop-shadow-2xl">
             {/* FOGO with Outline Style */}
             <span
               className="text-transparent transition-colors duration-700"
@@ -5174,7 +5187,7 @@ function Index() {
                 duration: 2,
                 ease: "easeInOut",
               }}
-              className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[16vw] sm:w-[15vw] max-w-[180px] shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-2 pb-[1.5vw]"
+              className="inline-flex items-center justify-center rounded-full text-white aspect-square w-[14vw] sm:w-[15vw] max-w-[160px] shadow-[0_0_40px_rgba(0,0,0,0.5)] transition-colors duration-700 mx-1 sm:mx-2 pb-[1vw]"
               style={{ backgroundColor: currentTheme.secondary }}
             >
               &
@@ -5186,7 +5199,7 @@ function Index() {
             </span>
           </div>
 
-          <div className="relative z-10 mt-12 text-white/50 text-[10px] sm:text-sm font-bold tracking-[0.5em] uppercase">
+          <div className="relative z-10 mt-8 sm:mt-12 text-white/50 text-[9px] sm:text-xs font-bold tracking-[0.4em] sm:tracking-[0.5em] uppercase text-center px-4">
             A verdadeira experiência do fogo
           </div>
         </div>

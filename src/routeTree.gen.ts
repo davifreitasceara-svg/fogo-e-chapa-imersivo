@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
+import { Route as ReembolsoRouteImport } from './routes/reembolso'
+import { Route as TermosRouteImport } from './routes/termos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +31,70 @@ const GalleryRoute = GalleryRouteImport.update({
   path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReembolsoRoute = ReembolsoRouteImport.update({
+  id: '/reembolso',
+  path: '/reembolso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosRoute = TermosRouteImport.update({
+  id: '/termos',
+  path: '/termos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/drinks': typeof DrinksRoute
   '/gallery': typeof GalleryRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/reembolso': typeof ReembolsoRoute
+  '/termos': typeof TermosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/drinks': typeof DrinksRoute
   '/gallery': typeof GalleryRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/reembolso': typeof ReembolsoRoute
+  '/termos': typeof TermosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/drinks': typeof DrinksRoute
   '/gallery': typeof GalleryRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/reembolso': typeof ReembolsoRoute
+  '/termos': typeof TermosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/drinks' | '/gallery'
+  fullPaths:
+    '/' | '/drinks' | '/gallery' | '/privacidade' | '/reembolso' | '/termos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/drinks' | '/gallery'
-  id: '__root__' | '/' | '/drinks' | '/gallery'
+  to: '/' | '/drinks' | '/gallery' | '/privacidade' | '/reembolso' | '/termos'
+  id:
+    | '__root__'
+    | '/'
+    | '/drinks'
+    | '/gallery'
+    | '/privacidade'
+    | '/reembolso'
+    | '/termos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DrinksRoute: typeof DrinksRoute
   GalleryRoute: typeof GalleryRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  ReembolsoRoute: typeof ReembolsoRoute
+  TermosRoute: typeof TermosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +120,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reembolso': {
+      id: '/reembolso'
+      path: '/reembolso'
+      fullPath: '/reembolso'
+      preLoaderRoute: typeof ReembolsoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos': {
+      id: '/termos'
+      path: '/termos'
+      fullPath: '/termos'
+      preLoaderRoute: typeof TermosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +148,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DrinksRoute: DrinksRoute,
   GalleryRoute: GalleryRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  ReembolsoRoute: ReembolsoRoute,
+  TermosRoute: TermosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

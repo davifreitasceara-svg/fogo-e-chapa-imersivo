@@ -244,18 +244,18 @@ function DrinksPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.5 }}
-              className="mt-auto w-full max-w-[1600px] mx-auto flex items-end justify-between z-10 pb-12 px-8 sm:px-16 absolute bottom-0 left-0 right-0 pointer-events-auto"
+              className="mt-auto w-full max-w-[1600px] mx-auto flex flex-col xl:flex-row items-center xl:items-end justify-between z-10 pb-6 sm:pb-12 px-4 sm:px-8 md:px-16 absolute bottom-0 left-0 right-0 pointer-events-auto gap-4"
             >
           
-          {/* Left Text */}
+          {/* Left Text - Desktop only to prevent overlapping */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="flex-1 pb-2"
+            className="hidden xl:block flex-1 pb-2"
           >
             <div className="inline-block p-6 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">
-              <h1 className="text-4xl sm:text-[2.75rem] font-black text-white leading-[1.05] tracking-tight">
+              <h1 className="text-3xl lg:text-4xl xl:text-[2.5rem] font-black text-white leading-[1.05] tracking-tight">
                 Sabor refrescante.<br /> 
                 <span className="text-white/70">Nada mais.</span>
               </h1>
@@ -263,21 +263,22 @@ function DrinksPage() {
           </motion.div>
 
           {/* Centered Info & Arrows */}
-          <div className="absolute left-1/2 bottom-12 -translate-x-1/2 flex items-center gap-6 sm:gap-12">
+          <div className="w-full xl:w-auto xl:absolute xl:left-1/2 xl:bottom-12 xl:-translate-x-1/2 flex items-center justify-center gap-3 sm:gap-6 md:gap-10 mx-auto px-2">
             
             <button 
               onClick={shiftLeft}
-              className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors"
+              className="size-10 sm:size-12 shrink-0 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors cursor-pointer active:scale-95 shadow-md"
+              aria-label="Bebida anterior"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={18} />
             </button>
             
-            <div className="flex flex-col items-center min-w-[280px]">
+            <div className="flex flex-col items-center max-w-[260px] xs:max-w-[300px] sm:max-w-none text-center">
               <motion.h2 
                 key={centerDrink.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-5xl sm:text-6xl font-black text-white lowercase tracking-tighter mb-2"
+                className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black text-white lowercase tracking-tighter mb-1 sm:mb-2 truncate max-w-full"
               >
                 {centerDrink.name}
               </motion.h2>
@@ -285,7 +286,7 @@ function DrinksPage() {
                 key={centerDrink.id + "sub"}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-white font-bold text-sm flex items-center gap-2"
+                className="text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center"
               >
                 <span>0{DRINKS_DATA.findIndex(d => d.id === centerDrink.id) + 1} / 0{DRINKS_DATA.length}</span>
                 <span>·</span>
@@ -293,17 +294,19 @@ function DrinksPage() {
               </motion.div>
               
               {/* Pagination Dots */}
-              <div className="flex gap-2 mt-6">
+              <div className="flex gap-2 mt-3 sm:mt-5">
                 {DRINKS_DATA.map((d, i) => (
-                  <div 
+                  <button 
                     key={d.id} 
-                    className={`h-2 rounded-full transition-all duration-300 ${i === activeIndex ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} 
+                    onClick={() => setActiveIndex(i)}
+                    aria-label={`Ver bebida ${d.name}`}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${i === activeIndex ? 'w-6 bg-white' : 'w-2 bg-white/40'}`} 
                   />
                 ))}
               </div>
 
               {/* Botões de Ação */}
-              <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-3 sm:mt-5">
                 <button
                   onClick={() => {
                     addToCart({
@@ -313,10 +316,10 @@ function DrinksPage() {
                     });
                     toast.success(`${centerDrink.name} adicionado à sacola!`);
                   }}
-                  className="px-6 py-2.5 rounded-full bg-white text-black hover:bg-white/90 font-black text-xs uppercase tracking-wider transition-all shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer"
+                  className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-white text-black hover:bg-white/90 font-black text-[11px] sm:text-xs uppercase tracking-wider transition-all shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-1.5 sm:gap-2 cursor-pointer"
                 >
-                  <ShoppingBag size={16} />
-                  <span>Adicionar à Sacola · {centerDrink.price}</span>
+                  <ShoppingBag size={14} className="sm:size-4" />
+                  <span>Adicionar · {centerDrink.price}</span>
                 </button>
 
                 <button
@@ -324,7 +327,7 @@ function DrinksPage() {
                     setViewMode('detail');
                     setDetailScroll(0);
                   }}
-                  className="px-5 py-2.5 rounded-full bg-white/15 hover:bg-white text-white hover:text-black font-extrabold text-xs uppercase tracking-wider backdrop-blur-md border border-white/20 transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
+                  className="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/15 hover:bg-white text-white hover:text-black font-extrabold text-[11px] sm:text-xs uppercase tracking-wider backdrop-blur-md border border-white/20 transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer"
                 >
                   Ver Detalhes ↓
                 </button>
@@ -333,31 +336,32 @@ function DrinksPage() {
 
             <button 
               onClick={shiftRight}
-              className="w-12 h-12 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors"
+              className="size-10 sm:size-12 shrink-0 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors cursor-pointer active:scale-95 shadow-md"
+              aria-label="Próxima bebida"
             >
-              <ArrowRight size={20} />
+              <ArrowRight size={18} />
             </button>
 
           </div>
 
-            {/* Right spacer for centering balance & Scroll Indicator */}
-            <div 
-              onClick={() => {
-                setViewMode('detail');
-                setDetailScroll(0);
-              }}
-              className="flex-1 flex flex-col items-end justify-end pb-4 cursor-pointer group"
+          {/* Right spacer for centering balance & Scroll Indicator */}
+          <div 
+            onClick={() => {
+              setViewMode('detail');
+              setDetailScroll(0);
+            }}
+            className="hidden xl:flex flex-1 flex-col items-end justify-end pb-4 cursor-pointer group"
+          >
+            <motion.div 
+              animate={{ y: [0, 10, 0] }} 
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="flex flex-col items-center opacity-60 group-hover:opacity-100 transition-opacity"
             >
-              <motion.div 
-                animate={{ y: [0, 10, 0] }} 
-                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                className="flex flex-col items-center opacity-60 group-hover:opacity-100 transition-opacity"
-              >
-                <span className="text-white text-xs font-bold uppercase tracking-widest mb-2 group-hover:text-yellow-300 transition-colors">Role p/ baixo</span>
-                <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
-              </motion.div>
-            </div>
+              <span className="text-white text-xs font-bold uppercase tracking-widest mb-2 group-hover:text-yellow-300 transition-colors">Role p/ baixo</span>
+              <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
             </motion.div>
+          </div>
+          </motion.div>
           )}
         </AnimatePresence>
 
@@ -365,17 +369,17 @@ function DrinksPage() {
         <AnimatePresence>
           {viewMode === 'detail' && (
             <motion.div 
-              initial={{ opacity: 0, y: 100 }}
+              initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="absolute inset-0 w-full max-w-[1600px] mx-auto px-8 sm:px-16 flex items-center pointer-events-none z-10 pt-20 pb-12"
+              exit={{ opacity: 0, y: 60 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="absolute inset-0 w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex flex-col lg:flex-row items-center justify-between pointer-events-none z-10 pt-16 sm:pt-20 pb-8 sm:pb-12 overflow-y-auto lg:overflow-hidden"
             >
               {/* Left Text Content */}
-              <div className="flex-1 flex flex-col space-y-6 pointer-events-auto" style={{ color: centerDrink.textColor }}>
+              <div className="flex-1 w-full flex flex-col space-y-3 sm:space-y-5 pointer-events-auto max-w-xl py-4" style={{ color: centerDrink.textColor }}>
                 <motion.span 
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 0.8, y: 0 }} transition={{ delay: 0.1 }}
-                  className="inline-block px-4 py-1.5 rounded-full border-2 text-xs font-bold tracking-widest uppercase w-max"
+                  className="inline-block px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border-2 text-[10px] sm:text-xs font-bold tracking-widest uppercase w-max"
                   style={{ borderColor: centerDrink.textColor }}
                 >
                   {centerDrink.indexLabel}
@@ -384,7 +388,7 @@ function DrinksPage() {
                 <motion.h2 
                   key={centerDrink.id + "title"}
                   initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-                  className="text-7xl sm:text-[8rem] font-black leading-none tracking-tighter lowercase drop-shadow-md"
+                  className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem] xl:text-[7.5rem] font-black leading-none tracking-tighter lowercase drop-shadow-md"
                 >
                   {centerDrink.logoText}
                 </motion.h2>
@@ -394,18 +398,18 @@ function DrinksPage() {
                   initial={{ opacity: 0, y: 15 }} 
                   animate={{ opacity: 1, y: 0 }} 
                   transition={{ delay: 0.4 }}
-                  className="space-y-3 max-w-md"
+                  className="space-y-2 sm:space-y-3 max-w-md"
                 >
-                  <p className="text-xl sm:text-2xl font-bold leading-snug">
+                  <p className="text-base sm:text-xl lg:text-2xl font-bold leading-snug">
                     {centerDrink.fullDesc}
                   </p>
 
                   {/* Ingredientes Detalhados */}
                   <div className="pt-2 pb-1 border-t border-current/20">
-                    <span className="text-xs font-black uppercase tracking-wider opacity-75 block mb-1">
+                    <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider opacity-75 block mb-1">
                       Ingredientes Naturais:
                     </span>
-                    <p className="text-sm font-medium leading-relaxed opacity-90">
+                    <p className="text-xs sm:text-sm font-medium leading-relaxed opacity-90">
                       {centerDrink.ingredients}
                     </p>
                   </div>
@@ -415,7 +419,7 @@ function DrinksPage() {
                     {centerDrink.ingredientTags?.map((tag: string, idx: number) => (
                       <span
                         key={idx}
-                        className="px-3 py-1 rounded-full text-xs font-bold bg-white/15 backdrop-blur-sm border border-white/20"
+                        className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-white/15 backdrop-blur-sm border border-white/20"
                         style={{ borderColor: centerDrink.textColor }}
                       >
                         ✦ {tag}
@@ -426,15 +430,15 @@ function DrinksPage() {
                 
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                  className="flex flex-wrap items-center gap-4 pt-4"
+                  className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2 sm:pt-4"
                 >
-                  <span className="border-2 px-5 py-2 rounded-full font-bold text-sm bg-white/10 backdrop-blur-sm" style={{ borderColor: centerDrink.textColor }}>
+                  <span className="border-2 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full font-bold text-xs sm:text-sm bg-white/10 backdrop-blur-sm" style={{ borderColor: centerDrink.textColor }}>
                     {centerDrink.kcal}
                   </span>
-                  <span className="border-2 px-5 py-2 rounded-full font-bold text-sm bg-white/10 backdrop-blur-sm" style={{ borderColor: centerDrink.textColor }}>
+                  <span className="border-2 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full font-bold text-xs sm:text-sm bg-white/10 backdrop-blur-sm" style={{ borderColor: centerDrink.textColor }}>
                     {centerDrink.juice}
                   </span>
-                  <span className="border-2 px-5 py-2 rounded-full font-bold text-sm bg-white/10 backdrop-blur-sm" style={{ borderColor: centerDrink.textColor }}>
+                  <span className="border-2 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full font-bold text-xs sm:text-sm bg-white/10 backdrop-blur-sm" style={{ borderColor: centerDrink.textColor }}>
                     {centerDrink.sugar}
                   </span>
 
@@ -447,26 +451,26 @@ function DrinksPage() {
                       });
                       toast.success(`${centerDrink.name} adicionado à sacola!`);
                     }}
-                    className="flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white text-black hover:bg-white/90 font-black text-sm uppercase tracking-wider transition-all transform hover:scale-105 active:scale-95 shadow-2xl cursor-pointer"
+                    className="flex items-center gap-2 px-5 py-2 sm:px-6 sm:py-2.5 rounded-full bg-white text-black hover:bg-white/90 font-black text-xs sm:text-sm uppercase tracking-wider transition-all transform hover:scale-105 active:scale-95 shadow-2xl cursor-pointer"
                   >
-                    <ShoppingBag size={18} />
-                    <span>Adicionar à Sacola · {centerDrink.price}</span>
+                    <ShoppingBag size={16} />
+                    <span>Adicionar · {centerDrink.price}</span>
                   </button>
                 </motion.div>
 
-                {/* Interactive Scroll / Waterfall Controller (Posicionado aqui para não obstruir a lata no centro) */}
+                {/* Interactive Scroll / Waterfall Controller */}
                 <motion.div 
                   initial={{ opacity: 0, y: 15 }} 
                   animate={{ opacity: 1, y: 0 }} 
                   transition={{ delay: 0.6 }}
-                  className="flex flex-wrap items-center gap-3 pt-4 select-none"
+                  className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2 sm:pt-4 select-none"
                 >
                   <button
                     onClick={() => setDetailScroll((prev) => (prev > 0.85 ? 0 : Math.min(1, prev + 0.35)))}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/20 text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                    className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/20 text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
                   >
-                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse" />
-                    <span className="text-xs font-black uppercase tracking-wider">
+                    <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+                    <span className="text-[11px] sm:text-xs font-black uppercase tracking-wider">
                       {detailScroll > 0.85 ? "Reiniciar Cascata" : "Rolar / Acelerar Líquido"}
                     </span>
                   </button>
@@ -476,12 +480,12 @@ function DrinksPage() {
                       setViewMode('carousel');
                       setDetailScroll(0);
                     }}
-                    className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white text-xs font-black uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-black uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     ← Carrossel
                   </button>
 
-                  <div className="w-24 h-2 bg-white/25 rounded-full overflow-hidden">
+                  <div className="w-20 sm:w-24 h-2 bg-white/25 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-white rounded-full transition-[width] duration-75 ease-out"
                       style={{ width: `${Math.max(12, detailScroll * 100)}%` }}
@@ -491,23 +495,23 @@ function DrinksPage() {
               </div>
 
               {/* Center spacer for 3D Can to shine through */}
-              <div className="w-[20%] md:w-[30%]"></div>
+              <div className="hidden lg:block w-[15%] xl:w-[25%]"></div>
 
               {/* Right Fruit Image */}
-              <div className="flex-1 flex justify-end h-[40vh] md:h-[60vh] relative pointer-events-auto pr-8 overflow-hidden items-center">
+              <div className="w-full lg:flex-1 flex justify-center lg:justify-end h-[220px] sm:h-[300px] lg:h-[55vh] relative pointer-events-auto pr-0 lg:pr-8 overflow-hidden items-center mt-4 lg:mt-0">
                 <motion.div
                   key={centerDrink.id}
-                  initial={{ opacity: 0, scale: 0.88, y: 140 }}
+                  initial={{ opacity: 0, scale: 0.88, y: 40 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.88, y: 140 }}
+                  exit={{ opacity: 0, scale: 0.88, y: 40 }}
                   transition={{ type: "spring", stiffness: 85, damping: 18, delay: 0.15 }}
-                  whileHover={{ scale: 1.03, y: -6, transition: { duration: 0.3 } }}
-                  className="h-full w-full max-w-md rounded-[2.5rem] p-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.45)] cursor-pointer overflow-hidden flex items-center justify-center"
+                  whileHover={{ scale: 1.03, y: -4, transition: { duration: 0.3 } }}
+                  className="h-full w-full max-w-xs sm:max-w-sm rounded-[2rem] sm:rounded-[2.5rem] p-2 bg-white/10 backdrop-blur-md border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.45)] cursor-pointer overflow-hidden flex items-center justify-center"
                 >
                   <img
                     src={centerDrink.fruitImage}
                     alt={centerDrink.name}
-                    className="w-full h-full object-cover rounded-[2.1rem]"
+                    className="w-full h-full object-cover rounded-[1.7rem] sm:rounded-[2.1rem]"
                   />
                 </motion.div>
               </div>

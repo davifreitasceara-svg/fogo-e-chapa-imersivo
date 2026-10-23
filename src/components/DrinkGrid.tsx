@@ -20,6 +20,7 @@ import lemonade from "@/assets/lemonade.jpg";
 import beer from "@/assets/beer.jpg";
 import icedTea from "@/assets/iced-tea.jpg";
 import guarana from "@/assets/guarana.jpg";
+import { LiquidSpillCanvas } from "./LiquidSpillCanvas";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Types                                   */
@@ -93,10 +94,10 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
     },
     coords: {
       pourX: 96,
-      pourY: 26,
-      landX: 114,
+      pourY: 35,
+      landX: 130,
       floorY: 92,
-      pivotOrigin: "65% 88%",
+      pivotOrigin: "64% 90%",
     },
   },
   {
@@ -115,11 +116,11 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
       glow: "#fef08a",
     },
     coords: {
-      pourX: 95,
-      pourY: 28,
-      landX: 113,
+      pourX: 96,
+      pourY: 34,
+      landX: 130,
       floorY: 92,
-      pivotOrigin: "65% 88%",
+      pivotOrigin: "64% 90%",
     },
   },
   {
@@ -138,11 +139,11 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
       foam: "#ffffff",
     },
     coords: {
-      pourX: 97,
-      pourY: 26,
-      landX: 115,
+      pourX: 102,
+      pourY: 34,
+      landX: 132,
       floorY: 92,
-      pivotOrigin: "65% 88%",
+      pivotOrigin: "65% 90%",
     },
   },
   {
@@ -162,11 +163,11 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
       foam: "#fffbeb",
     },
     coords: {
-      pourX: 99,
-      pourY: 26,
-      landX: 117,
+      pourX: 100,
+      pourY: 30,
+      landX: 131,
       floorY: 92,
-      pivotOrigin: "67% 88%",
+      pivotOrigin: "66% 90%",
     },
   },
   {
@@ -184,11 +185,11 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
       glow: "#fdba74",
     },
     coords: {
-      pourX: 100,
-      pourY: 27,
-      landX: 118,
+      pourX: 101,
+      pourY: 35,
+      landX: 131,
       floorY: 92,
-      pivotOrigin: "68% 88%",
+      pivotOrigin: "66% 90%",
     },
   },
   {
@@ -208,11 +209,11 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
       foam: "#f0fdf4",
     },
     coords: {
-      pourX: 97,
-      pourY: 25,
-      landX: 115,
+      pourX: 100,
+      pourY: 27,
+      landX: 131,
       floorY: 92,
-      pivotOrigin: "66% 88%",
+      pivotOrigin: "65% 90%",
     },
   },
 ];
@@ -381,424 +382,6 @@ function playPourPhysicsSound(liquid: DrinkLiquid, big = false) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                         Fluid Stream & Splash Elements                     */
-/* -------------------------------------------------------------------------- */
-
-const rand = (min: number, max: number) => min + Math.random() * (max - min);
-
-type FluidSpillOverlayProps = {
-  liquid: DrinkLiquid;
-  coords: DrinkCoordinates;
-  isPouring: boolean;
-  puddleVisible: boolean;
-  big?: boolean;
-};
-
-function FluidSpillOverlay({
-  liquid,
-  coords,
-  isPouring,
-  puddleVisible,
-  big = false,
-}: FluidSpillOverlayProps) {
-  const { pourX, pourY, landX, floorY } = coords;
-  const dxTotal = landX - pourX;
-  const dyTotal = floorY - pourY;
-
-  // Stream geometry with realistic fluid continuity (Conservation of Mass: A*v = const)
-  // At the lip: stream width ~3.4 units (viewBox space)
-  // Stream geometry with realistic fluid projectile motion & continuity (A*v = const)
-  // Liquid leaves the tipped rim with outward horizontal velocity (vx > 0)
-  // It arches over in a true parabolic leap, tapers in freefall, and fans out at impact
-  const ribbonPaths = useMemo(() => {
-    // 1. Outer boundary curve (upper lip -> outward parabolic crest -> tapered midfall -> impact flare)
-    const pOuter0 = `${pourX + 0.6} ${pourY - 1.8}`;
-    const cOuter1 = `${pourX + dxTotal * 0.65} ${pourY + dyTotal * 0.15}`;
-    const cOuter2 = `${landX + 1.8} ${pourY + dyTotal * 0.68}`;
-    const pOuter1 = `${landX + 3.4} ${floorY}`;
-
-    // 2. Inner boundary curve (lower lip -> inner parabolic crest -> tapered midfall -> impact flare)
-    const pInner0 = `${pourX - 1.8} ${pourY + 2.0}`;
-    const cInner1 = `${pourX + dxTotal * 0.42} ${pourY + dyTotal * 0.18}`;
-    const cInner2 = `${landX - 1.8} ${pourY + dyTotal * 0.68}`;
-    const pInner1 = `${landX - 3.4} ${floorY}`;
-
-    // Complete closed fluid ribbon
-    const fluidRibbon = `M ${pOuter0} C ${cOuter1}, ${cOuter2}, ${pOuter1} L ${pInner1} C ${cInner2}, ${cInner1}, ${pInner0} Z`;
-
-    // Primary central parabolic flowing spine
-    const spine = `M ${pourX} ${pourY} C ${pourX + dxTotal * 0.55} ${pourY + dyTotal * 0.16}, ${landX} ${pourY + dyTotal * 0.68}, ${landX} ${floorY}`;
-
-    // Secondary inner refraction vein (slightly offset to create twisting liquid depth)
-    const innerVein = `M ${pourX - 0.5} ${pourY + 0.8} C ${pourX + dxTotal * 0.52} ${pourY + dyTotal * 0.18}, ${landX - 0.8} ${pourY + dyTotal * 0.66}, ${landX - 0.5} ${floorY - 1}`;
-
-    // Outer edge sheen highlight
-    const outerSheen = `M ${pOuter0} C ${cOuter1}, ${cOuter2}, ${pOuter1}`;
-
-    return { fluidRibbon, spine, innerVein, outerSheen };
-  }, [dxTotal, dyTotal, floorY, landX, pourX, pourY]);
-
-  // Airborne satellite droplets (parabolic freefall under gravity)
-  const airborneDrops = useMemo(
-    () =>
-      Array.from({ length: big ? 16 : 12 }, (_, i) => ({
-        id: i,
-        size: rand(2.6, big ? 6.5 : 5.0),
-        outX: rand(4, 16),
-        landOffset: rand(-4, 6),
-        delay: rand(0.04, 0.45),
-        duration: rand(0.38, 0.55),
-      })),
-    [big],
-  );
-
-  // Impact splash fountain droplets (parabolic fountain bursting upward and outward)
-  const splashFountain = useMemo(
-    () =>
-      Array.from({ length: big ? 20 : 15 }, (_, i) => ({
-        id: i,
-        size: rand(3.8, big ? 8.5 : 6.8),
-        dx: rand(-22, 25),
-        up: rand(12, 28),
-        delay: rand(0.04, 0.45),
-        duration: rand(0.35, 0.52),
-      })),
-    [big],
-  );
-
-  // Surface tension satellite spatter beads around puddle
-  const puddleBeads = useMemo(
-    () =>
-      Array.from({ length: 7 }, (_, i) => ({
-        id: i,
-        x: rand(-26, 26),
-        y: rand(-8, 8),
-        size: rand(2.2, 4.2),
-      })),
-    [],
-  );
-
-  const glossy = `radial-gradient(circle at 35% 30%, ${liquid.light} 0%, ${liquid.color} 70%)`;
-
-  return (
-    <div className="pointer-events-none absolute inset-0 z-20 overflow-visible select-none" aria-hidden>
-      {/* ------------------------------------------------------------------ */}
-      {/* 1. ORGANIC VISCOUS PUDDLE (Natural surface tension & wet glare)     */}
-      {/* ------------------------------------------------------------------ */}
-      <AnimatePresence>
-        {puddleVisible && (
-          <motion.div
-            key="puddle"
-            className="absolute z-10"
-            style={{
-              left: `${landX}%`,
-              top: `${floorY}%`,
-              width: big ? "56%" : "46%",
-              height: "11%",
-              x: "-50%",
-              y: "-50%",
-            }}
-            initial={{ scale: 0.15, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.88 }}
-            exit={{ scale: 1.05, opacity: 0 }}
-            transition={{
-              scale: { duration: 0.48, ease: [0.16, 1, 0.3, 1] },
-              opacity: { duration: 0.65, ease: "easeInOut" },
-            }}
-          >
-            {/* Table soft contact shadow */}
-            <div
-              className="absolute inset-0 rounded-[50%] blur-sm"
-              style={{ background: "rgba(0, 0, 0, 0.14)", transform: "translateY(2px) scale(0.98)" }}
-            />
-
-            {/* Main viscous puddle: smooth organic fluid body with surface tension rim */}
-            <div
-              className="absolute inset-0"
-              style={{
-                borderRadius: "56% 44% 60% 40% / 46% 54% 46% 54%",
-                background: `radial-gradient(ellipse at 46% 38%, ${liquid.light} 0%, ${liquid.color} 72%, ${liquid.color} 100%)`,
-                boxShadow: `inset 0 1px 2px rgba(255, 255, 255, 0.55), inset 0 -1.5px 3px rgba(0, 0, 0, 0.18), 0 2px 8px ${liquid.color}33`,
-              }}
-            />
-
-            {/* Specular wet surface glare */}
-            <div
-              className="absolute rounded-[50%] blur-[0.6px]"
-              style={{
-                left: "22%",
-                top: "16%",
-                width: "36%",
-                height: "30%",
-                background: "linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.08) 80%)",
-              }}
-            />
-
-            {/* Satellite spatter droplets scattered on table */}
-            {puddleBeads.map((b) => (
-              <span
-                key={`pb-${b.id}`}
-                className="absolute rounded-full"
-                style={{
-                  left: `calc(50% + ${b.x}px)`,
-                  top: `calc(50% + ${b.y}px)`,
-                  width: b.size,
-                  height: b.size * 0.85,
-                  background: glossy,
-                  boxShadow: `0 1px 2px rgba(0, 0, 0, 0.12)`,
-                }}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 2. CONCENTRIC SHOCKWAVE RIPPLES (Continuous table wave pulses)    */}
-      {/* ------------------------------------------------------------------ */}
-      <AnimatePresence>
-        {isPouring && (
-          <>
-            <motion.div
-              key="ripple-1"
-              className="absolute z-10 rounded-[50%] border-2"
-              style={{
-                left: `${landX}%`,
-                top: `${floorY}%`,
-                width: big ? "42%" : "34%",
-                height: "8%",
-                x: "-50%",
-                y: "-50%",
-                borderColor: liquid.light,
-              }}
-              initial={{ scale: 0.1, opacity: 0.9 }}
-              animate={{ scale: 2.2, opacity: 0 }}
-              transition={{ duration: 0.75, repeat: Infinity, ease: "easeOut" }}
-            />
-            <motion.div
-              key="ripple-2"
-              className="absolute z-10 rounded-[50%] border"
-              style={{
-                left: `${landX}%`,
-                top: `${floorY}%`,
-                width: big ? "50%" : "40%",
-                height: "9%",
-                x: "-50%",
-                y: "-50%",
-                borderColor: "rgba(255, 255, 255, 0.85)",
-              }}
-              initial={{ scale: 0.1, opacity: 0.85 }}
-              animate={{ scale: 1.9, opacity: 0 }}
-              transition={{ duration: 0.75, delay: 0.32, repeat: Infinity, ease: "easeOut" }}
-            />
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 3. CONTINUOUS PARABOLIC FLUID STREAM (Active while tilting)         */}
-      {/* ------------------------------------------------------------------ */}
-      <AnimatePresence>
-        {isPouring && (
-          <motion.div
-            key="stream-container"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="absolute inset-0 z-30 overflow-visible"
-          >
-            {/* SVG Parabolic Fluid Ribbon & Multi-Strand Flowing Spine */}
-            <svg
-              viewBox="0 0 100 100"
-              className="absolute inset-0 h-full w-full overflow-visible"
-              fill="none"
-            >
-              <defs>
-                {/* Vertical Stream Depth Gradient */}
-                <linearGradient
-                  id={`fluid-flow-grad-${pourX}-${pourY}`}
-                  x1={`${pourX}%`}
-                  y1={`${pourY}%`}
-                  x2={`${landX}%`}
-                  y2={`${floorY}%`}
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop offset="0%" stopColor={liquid.light} stopOpacity="0.95" />
-                  <stop offset="25%" stopColor={liquid.light} stopOpacity="0.95" />
-                  <stop offset="65%" stopColor={liquid.color} stopOpacity="1" />
-                  <stop offset="100%" stopColor={liquid.light} stopOpacity="0.95" />
-                </linearGradient>
-              </defs>
-
-              {/* 3.1 MAIN FLUID RIBBON (Tapered 2D Volume with outward parabolic momentum) */}
-              <motion.path
-                d={ribbonPaths.fluidRibbon}
-                fill={`url(#fluid-flow-grad-${pourX}-${pourY})`}
-                opacity={0.92}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.92 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.12 }}
-              />
-
-              {/* 3.2 TRANSLUCENT LIGHT CORE RIBBON */}
-              <path
-                d={ribbonPaths.spine}
-                stroke={liquid.light}
-                strokeWidth={big ? 4.0 : 2.6}
-                strokeLinecap="round"
-                opacity={0.65}
-              />
-
-              {/* 3.3 SECONDARY INNER REFRACTION VEIN (Twisting liquid depth) */}
-              <motion.path
-                d={ribbonPaths.innerVein}
-                stroke={liquid.light}
-                strokeWidth={big ? 1.6 : 1.0}
-                strokeLinecap="round"
-                strokeDasharray="8 6 12 8"
-                animate={{ strokeDashoffset: [0, -140] }}
-                transition={{ duration: 0.44, repeat: Infinity, ease: "linear" }}
-                opacity={0.75}
-              />
-
-              {/* 3.4 PRIMARY FLOWING SPECULAR SPINE (Rushing downward at high speed!) */}
-              <motion.path
-                d={ribbonPaths.spine}
-                stroke="rgba(255, 255, 255, 0.92)"
-                strokeWidth={big ? 2.0 : 1.4}
-                strokeLinecap="round"
-                strokeDasharray="14 8 22 10"
-                animate={{ strokeDashoffset: [0, -108] }}
-                transition={{ duration: 0.38, repeat: Infinity, ease: "linear" }}
-              />
-
-              {/* 3.5 SPECULAR OUTER EDGE SHEEN */}
-              <path
-                d={ribbonPaths.outerSheen}
-                stroke="rgba(255, 255, 255, 0.7)"
-                strokeWidth={big ? 0.9 : 0.6}
-                strokeLinecap="round"
-                opacity={0.8}
-              />
-
-              {/* 3.6 IMPACT SPLASH CROWN (Coronet of liquid erupting upward at impact site) */}
-              <motion.g
-                transform={`translate(${landX}, ${floorY})`}
-                animate={{ scaleY: [0.75, 1.3, 0.8], scaleX: [0.9, 1.15, 0.95] }}
-                transition={{ duration: 0.32, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <path
-                  d="M -7 0 C -6 -4, -5 -7, -4.5 -8 C -4 -5, -3 -3, -2 -6 C -1 -9, 0 -10, 1 -7 C 2 -4, 3 -7, 4 -9 C 5 -6, 6 -4, 7 0 Z"
-                  fill={liquid.light}
-                  opacity={0.85}
-                />
-                <circle cx="-4.5" cy="-8" r="0.9" fill="#ffffff" opacity={0.9} />
-                <circle cx="-2" cy="-6" r="0.8" fill={liquid.light} />
-                <circle cx="1" cy="-7" r="1.0" fill="#ffffff" opacity={0.95} />
-                <circle cx="4" cy="-9" r="0.85" fill={liquid.light} />
-              </motion.g>
-            </svg>
-
-            {/* 3.7 GLASS RIM MENISCUS BEAD (Oriented along the rim to seal the mouth) */}
-            <div
-              className="absolute z-40 rounded-full"
-              style={{
-                left: `${pourX}%`,
-                top: `${pourY}%`,
-                width: big ? 16 : 12,
-                height: big ? 10 : 7.5,
-                transform: "translate(-50%, -50%) rotate(-25deg)",
-                background: `radial-gradient(ellipse at 40% 35%, ${liquid.light} 0%, ${liquid.color} 75%)`,
-                boxShadow: `0 2px 6px ${liquid.color}66`,
-              }}
-            />
-
-            {/* 3.8 IMPACT CONTACT SPOT FLARE */}
-            <motion.div
-              className="absolute z-40 rounded-full"
-              style={{
-                left: `${landX}%`,
-                top: `${floorY}%`,
-                width: big ? 18 : 14,
-                height: big ? 9 : 7,
-                x: "-50%",
-                y: "-50%",
-                background: `radial-gradient(circle at 50% 50%, #ffffff 0%, ${liquid.light} 55%, ${liquid.color} 90%)`,
-                boxShadow: `0 0 10px ${liquid.light}aa`,
-              }}
-              animate={{ scale: [0.85, 1.25, 0.85], opacity: [0.85, 1, 0.85] }}
-              transition={{ duration: 0.35, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* 3.9 AIRBORNE SATELLITE TEARDROP DROPLETS (Gravitational acceleration in freefall) */}
-            {airborneDrops.map((d) => (
-              <motion.span
-                key={`dr-${d.id}`}
-                className="absolute z-30 pointer-events-none"
-                style={{
-                  width: d.size,
-                  height: d.size * 1.35,
-                  marginLeft: -d.size / 2,
-                  marginTop: -d.size / 2,
-                  background: glossy,
-                  borderRadius: "50% 50% 50% 50% / 65% 65% 35% 35%",
-                  boxShadow: `0 1px 3px ${liquid.color}55`,
-                }}
-                initial={{ left: `${pourX}%`, top: `${pourY}%`, opacity: 0.95 }}
-                animate={{
-                  left: [`${pourX}%`, `${pourX + d.outX}%`, `${landX + d.landOffset}%`],
-                  top: [`${pourY}%`, `${pourY + dyTotal * 0.42}%`, `${floorY}%`],
-                  opacity: [0.95, 1, 0],
-                }}
-                transition={{
-                  duration: d.duration,
-                  delay: d.delay,
-                  repeat: Infinity,
-                  repeatDelay: 0.12,
-                  ease: "easeIn",
-                }}
-              />
-            ))}
-
-            {/* 3.10 IMPACT SPLASH FOUNTAIN BEADS (Upward & outward parabolic splash) */}
-            {splashFountain.map((c) => (
-              <motion.span
-                key={`sp-${c.id}`}
-                className="absolute z-30 rounded-full pointer-events-none"
-                style={{
-                  width: c.size,
-                  height: c.size,
-                  marginLeft: -c.size / 2,
-                  marginTop: -c.size / 2,
-                  background: glossy,
-                  boxShadow: `0 1px 3px ${liquid.color}55`,
-                }}
-                initial={{ left: `${landX}%`, top: `${floorY}%`, opacity: 0 }}
-                animate={{
-                  left: [`${landX}%`, `${landX + c.dx * 0.55}%`, `${landX + c.dx}%`],
-                  top: [`${floorY}%`, `${floorY - c.up}%`, `${floorY + 1}%`],
-                  opacity: [0, 1, 0],
-                  scale: [0.6, 1.25, 0.35],
-                }}
-                transition={{
-                  duration: c.duration,
-                  delay: c.delay,
-                  repeat: Infinity,
-                  repeatDelay: 0.18,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
 /*                              Spillable glass                               */
 /* -------------------------------------------------------------------------- */
 
@@ -864,48 +447,48 @@ export function SpillableGlass({
     setPuddleVisible(true);
 
     // Dynamic glass tilt timeline:
-    // 0.00s - 0.06s: Anticipation dip (-2deg)
-    // 0.06s - 0.18s: Rapid tip to 27deg (pivoting on bottom-right base corner)
-    // 0.18s - 1.40s: HELD AT 27deg with reactive micro-vibrations from pouring liquid
-    // 1.40s: Pour finishes
-    // 1.42s - 1.76s: Returns upright with elastic overshoot (-3deg -> 1deg -> 0deg)
+    // 0.00s - 0.05s: Subtle anticipation lift & pre-tilt
+    // 0.05s - 0.19s: Fluid tilt to 34.5° (real beverage pouring angle)
+    // 0.19s - 1.46s: Held pouring with organic micro-tremors from releasing fluid weight
+    // 1.46s: Stream drains smoothly into pinch droplets
+    // 1.48s - 1.86s: Elastic return with inertia overshoot (-3.8° -> 1.4° -> 0°)
     if (!reduceMotion) {
       controls.stop();
       void controls.start({
-        rotate: [0, -2, 27, 26.3, 27.4, 26.6, 27.1, 27, -3, 1, 0],
-        x: [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        y: [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        rotate: [0, -2.5, 34.5, 33.7, 34.9, 34.0, 34.6, 34.2, 34.0, -3.8, 1.4, -0.4, 0],
+        x: [0, -1, 1, 0.5, 1.2, 0.8, 1.0, 0.5, 0, 0, 0, 0, 0],
+        y: [0, -2, -1, -0.5, -1.2, -0.8, -1.0, -0.5, 0, 0, 0, 0, 0],
         transition: {
-          duration: 1.76,
-          times: [0, 0.04, 0.12, 0.32, 0.52, 0.68, 0.78, 0.81, 0.90, 0.96, 1],
+          duration: 1.86,
+          times: [0, 0.04, 0.13, 0.32, 0.50, 0.65, 0.76, 0.82, 0.85, 0.92, 0.96, 0.98, 1],
           ease: "easeInOut",
         },
       });
     }
 
-    // Liquid stream turns ON at 180ms (as glass reaches full tilt)
+    // Liquid stream turns ON at 130ms (as glass tilts past pouring threshold)
     const tStart = window.setTimeout(() => {
       setIsPouring(true);
-    }, 180);
+    }, 130);
     timersRef.current.push(tStart);
 
-    // Liquid stream turns OFF at 1400ms (1.22s of pouring, cleanly before glass rights itself)
+    // Liquid stream turns OFF at 1460ms (1.33s of rich continuous flow)
     const tEnd = window.setTimeout(() => {
       setIsPouring(false);
-    }, 1400);
+    }, 1460);
     timersRef.current.push(tEnd);
 
-    // Table settle clack sound when glass base touches down (at 1.74s)
+    // Table settle clack sound when glass base touches down (at 1.82s)
     const tClack = window.setTimeout(() => {
       if (!muted) playGlassSettleSound();
-    }, 1740);
+    }, 1820);
     timersRef.current.push(tClack);
 
-    // Puddle stays visible on table, then dissolves smoothly at 2.7s
+    // Puddle stays visible on table, then dissolves smoothly at 2.85s
     const tPuddle = window.setTimeout(() => {
       setPuddleVisible(false);
       isBusyRef.current = false;
-    }, 2700);
+    }, 2850);
     timersRef.current.push(tPuddle);
   }, [big, controls, liquid, muted, onSpill, reduceMotion]);
 
@@ -945,15 +528,6 @@ export function SpillableGlass({
         }}
       />
 
-      {/* Synchronized Fluid Spill Overlay (Stream, Droplets, Splash, Puddle) */}
-      <FluidSpillOverlay
-        liquid={liquid}
-        coords={coords}
-        isPouring={isPouring}
-        puddleVisible={puddleVisible}
-        big={big}
-      />
-
       {/* Glass Element with pivot transform */}
       <motion.div
         className="relative z-10 block h-full w-full"
@@ -978,6 +552,15 @@ export function SpillableGlass({
           />
         </motion.div>
       </motion.div>
+
+      {/* Synchronized Canvas 2D Fluid Simulation (Stream, Droplets, Splash Crown, Puddle) - positioned in front */}
+      <LiquidSpillCanvas
+        liquid={liquid}
+        coords={coords}
+        isPouring={isPouring}
+        puddleVisible={puddleVisible}
+        big={big}
+      />
 
       {/* Interactive hover hint (cleanly hidden while pouring or when puddle is present) */}
       {showHint && !isPouring && !puddleVisible && (
@@ -1251,7 +834,7 @@ export function DrinkGrid({
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="max-w-xl font-display text-5xl font-black uppercase leading-[0.85] tracking-tighter transition-colors duration-700 md:text-6xl lg:text-[5.5rem]"
+              className="max-w-xl font-display text-4xl xs:text-5xl font-black uppercase leading-[0.85] tracking-tighter transition-colors duration-700 md:text-6xl lg:text-[5.5rem]"
               style={{ color: theme.secondary }}
             >
               DRINKS FOR
