@@ -1,13 +1,7 @@
-import { type MouseEvent } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import { Check, Crown, Flame, Plus, Users, type LucideIcon } from "lucide-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, ChevronLeft, ChevronRight, Crown, Flame, ShoppingBag, Sparkles, Users, type LucideIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import burgerBrasa from "@/assets/burger-brasa.png";
 import burgerInferno from "@/assets/burger-inferno.png";
@@ -20,18 +14,17 @@ type Combo = {
   id: number;
   tag: string;
   tagIcon: LucideIcon;
-  titleTop: string;
-  titleAccent: string;
-  /** Renders title on a single line ("Aristo" + "fome") instead of two lines. */
-  inline?: boolean;
+  title1: string;
+  title2: string;
+  desc: string;
   items: string[];
   price: number;
   burger: { src: string; alt: string };
   drink: { src: string; alt: string };
-  /** Accent as "r, g, b" so it can be reused inside rgba() for glows. */
+  side?: string;
   rgb: string;
-  accentText: string;
-  button: string;
+  accentColor: string;
+  bgWatermark: string;
 };
 
 const COMBOS: Combo[] = [
@@ -39,289 +32,395 @@ const COMBOS: Combo[] = [
     id: 401,
     tag: "Triplo Sabor",
     tagIcon: Flame,
-    titleTop: "Tripa em",
-    titleAccent: "Triplo",
+    title1: "TRIPA EM",
+    title2: "TRIPLO",
+    desc: "A combinação suprema com tiras crocantes, burger na brasa artesanal e o legítimo Seca-nunca trincando de gelado.",
     items: ["Tiras do tripa", "Tripa jr", "Seca-nunca"],
     price: 35,
     burger: { src: burgerBrasa, alt: "Burger Brasa" },
     drink: { src: cocaColaCutout, alt: "Refrigerante gelado" },
+    side: "/appetizer_chicken.png",
     rgb: "245, 158, 11",
-    accentText: "text-amber-400",
-    button: "bg-amber-500 text-black hover:bg-amber-400",
+    accentColor: "#f59e0b",
+    bgWatermark: "TRIPLO",
   },
   {
     id: 402,
     tag: "Tamanho Família",
     tagIcon: Users,
-    titleTop: "Aristo",
-    titleAccent: "fome",
-    inline: true,
+    title1: "ARISTO",
+    title2: "FOME",
+    desc: "Para quem não brinca em serviço: o colossal Davi vs Golias com chopp artesanal e porção reforçada de tiras.",
     items: ["Davi vs Golias", "Seca-nunca", "Tiras do tripa"],
     price: 60,
     burger: { src: burgerInferno, alt: "Burger Inferno" },
     drink: { src: beerCutout, alt: "Chopp gelado" },
+    side: "/fries_cheddar.png",
     rgb: "239, 68, 68",
-    accentText: "text-red-500",
-    button: "bg-red-600 text-white hover:bg-red-500",
+    accentColor: "#ef4444",
+    bgWatermark: "ARISTO",
   },
   {
     id: 403,
-    tag: "Premium",
+    tag: "Seleção Real",
     tagIcon: Crown,
-    titleTop: "Fome dos",
-    titleAccent: "Reis",
+    title1: "FOME DOS",
+    title2: "REIS",
+    desc: "Experiência gastronômica da realeza: burger triplex premium, batatas reais e suco natural Gole de Martins.",
     items: ["Batatas reais", "Triplex burguer", "Gole de Martins"],
     price: 70,
     burger: { src: burgerClassico, alt: "Burger Clássico" },
     drink: { src: lemonadeCutout, alt: "Gole de Martins" },
+    side: "/appetizer_croquettes.png",
     rgb: "168, 85, 247",
-    accentText: "text-purple-400",
-    button: "bg-purple-600 text-white hover:bg-purple-500",
+    accentColor: "#a855f7",
+    bgWatermark: "REIS",
   },
 ];
 
-// Deterministic ember layout (avoids SSR/client hydration mismatch from Math.random).
-const EMBERS = Array.from({ length: 7 }, (_, i) => ({
-  left: `${18 + ((i * 37) % 64)}%`,
-  delay: (i % 4) * 0.7 + i * 0.15,
-  duration: 2.6 + (i % 3) * 0.6,
+// Rising ember particles floating around the active combo
+const EMBERS = Array.from({ length: 8 }, (_, i) => ({
+  left: `${15 + ((i * 31) % 70)}%`,
+  delay: (i % 4) * 0.5 + i * 0.12,
+  duration: 2.8 + (i % 3) * 0.7,
   size: 2 + (i % 3),
 }));
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
-};
+const formatBRL = (value: number) =>
+  value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-function ComboCard({
-  combo,
-  index,
+export function ComboCards({
   onAdd,
 }: {
-  combo: Combo;
-  index: number;
   onAdd: (id: number, e: React.MouseEvent) => void;
 }) {
-  const reduceMotion = useReducedMotion();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const isMobile = useIsMobile();
 
-  // Normalised pointer position inside the card (-0.5 … 0.5) drives tilt + parallax.
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 160, damping: 18, mass: 0.4 });
-  const sy = useSpring(py, { stiffness: 160, damping: 18, mass: 0.4 });
-
-  const rotateX = useTransform(sy, [-0.5, 0.5], [7, -7]);
-  const rotateY = useTransform(sx, [-0.5, 0.5], [-9, 9]);
-  const burgerX = useTransform(sx, [-0.5, 0.5], [-10, 10]);
-  const burgerY = useTransform(sy, [-0.5, 0.5], [-6, 6]);
-  const drinkX = useTransform(sx, [-0.5, 0.5], [-22, 22]);
-  const drinkY = useTransform(sy, [-0.5, 0.5], [-10, 10]);
-
-  // Spotlight that follows the cursor (pixel coords).
-  const mx = useMotionValue(-400);
-  const my = useMotionValue(-400);
-  const spotlight = useMotionTemplate`radial-gradient(420px circle at ${mx}px ${my}px, rgba(${combo.rgb}, 0.16), transparent 65%)`;
-
-  const handleMove = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    mx.set(x);
-    my.set(y);
-    if (reduceMotion) return;
-    px.set(x / rect.width - 0.5);
-    py.set(y / rect.height - 0.5);
+  const slideLeft = () => {
+    setCurrentIndex((prev) => (prev === COMBOS.length - 1 ? 0 : prev + 1));
   };
 
-  const handleLeave = () => {
-    px.set(0);
-    py.set(0);
-    mx.set(-400);
-    my.set(-400);
+  const slideRight = () => {
+    setCurrentIndex((prev) => (prev === 0 ? COMBOS.length - 1 : prev - 1));
   };
 
-  const TagIcon = combo.tagIcon;
+  const currentCombo = COMBOS[currentIndex]!;
+  const TagIcon = currentCombo.tagIcon;
 
   return (
-    <motion.div variants={cardVariants} className="h-full" style={{ perspective: 1200 }}>
-      <motion.article
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="group relative h-full rounded-[38px] p-px"
-      >
-        {/* Gradient border (brightens on hover) */}
-        <div
-          className="absolute inset-0 rounded-[38px] opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background: `linear-gradient(160deg, rgba(${combo.rgb}, 0.55), rgba(255,255,255,0.06) 35%, rgba(255,255,255,0.02) 65%, rgba(${combo.rgb}, 0.35))`,
-          }}
-        />
+    <div className="relative w-full overflow-hidden select-none py-6 sm:py-10">
+      {/* Dynamic Ambient Background Glow */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-40 transition-opacity duration-700"
+        animate={{
+          background: `radial-gradient(ellipse 70% 60% at 65% 50%, rgba(${currentCombo.rgb}, 0.22) 0%, transparent 80%)`,
+        }}
+        transition={{ duration: 0.8 }}
+      />
 
-        <div className="relative flex h-full flex-col overflow-hidden rounded-[37px] bg-[#0b0b0d]/95 p-6 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] backdrop-blur-2xl sm:p-7 xl:p-8">
-          {/* Cursor spotlight */}
-          <motion.div
-            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            style={{ background: spotlight }}
-          />
-          {/* Top ambient glow */}
-          <div
-            className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-[90px] transition-opacity duration-700 opacity-50 group-hover:opacity-90"
-            style={{ backgroundColor: `rgba(${combo.rgb}, 0.35)` }}
-          />
+      {/* Giant Typography Watermark Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none select-none opacity-[0.04]">
+        <motion.div
+          key={currentCombo.bgWatermark}
+          initial={{ opacity: 0, scale: 0.92, y: 30 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="font-display font-black text-white text-[26vw] md:text-[20vw] lg:text-[17vw] leading-none whitespace-nowrap tracking-tighter"
+        >
+          {currentCombo.bgWatermark}
+        </motion.div>
+      </div>
 
-          {/* ───── Product stage ───── */}
-          <div className="relative mb-6 h-[260px] w-full shrink-0 sm:h-[270px]">
-            {/* Slow rotating halo ring */}
-            <div
-              className="absolute left-1/2 top-[46%] h-[210px] w-[210px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed opacity-40 motion-safe:animate-[spin_28s_linear_infinite]"
-              style={{ borderColor: `rgba(${combo.rgb}, 0.45)` }}
-            />
-            <div
-              className="absolute left-1/2 top-[46%] h-[160px] w-[160px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
-              style={{ background: `radial-gradient(circle, rgba(${combo.rgb}, 0.45), transparent 70%)` }}
-            />
-
-            {/* Rising embers */}
-            {EMBERS.map((ember, i) => (
-              <motion.span
-                key={i}
-                className="pointer-events-none absolute bottom-10 rounded-full"
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col md:flex-row items-center px-4 sm:px-8 lg:px-12">
+        {/* ==================================================================== */}
+        {/* LEFT COLUMN: HERO INFORMATION (Title, Items, Price, CTA)             */}
+        {/* ==================================================================== */}
+        <div className="w-full md:w-5/12 flex flex-col justify-center z-30 pt-4 pb-6 md:py-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentCombo.id}
+              initial={{ opacity: 0, x: -35 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 25 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="flex flex-col"
+            >
+              {/* Badge Tag */}
+              <div
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-4 sm:mb-6 w-fit backdrop-blur-md shadow-lg"
                 style={{
-                  left: ember.left,
-                  width: ember.size,
-                  height: ember.size,
-                  backgroundColor: `rgb(${combo.rgb})`,
-                  boxShadow: `0 0 8px 2px rgba(${combo.rgb}, 0.8)`,
+                  backgroundColor: `rgba(${currentCombo.rgb}, 0.14)`,
+                  borderColor: `rgba(${currentCombo.rgb}, 0.38)`,
+                  color: currentCombo.accentColor,
                 }}
-                animate={reduceMotion ? {} : { y: [0, -170], opacity: [0, 1, 0], x: [0, i % 2 ? 12 : -12] }}
-                transition={{
-                  duration: ember.duration,
-                  delay: ember.delay + index * 0.3,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                }}
-              />
-            ))}
-
-            {/* Floor shadow + reflection glow */}
-            <div className="absolute bottom-3 left-1/2 h-6 w-[78%] -translate-x-1/2 rounded-[100%] bg-black/80 blur-md" />
-            <div
-              className="absolute bottom-2 left-1/2 h-3 w-[60%] -translate-x-1/2 rounded-[100%] blur-lg transition-opacity duration-500 opacity-60 group-hover:opacity-100"
-              style={{ backgroundColor: `rgba(${combo.rgb}, 0.6)` }}
-            />
-
-            {/* Drink (behind, offset right — deeper parallax) */}
-            <motion.div
-              className="absolute bottom-5 right-[4%] z-10 sm:right-[6%]"
-              style={{ x: drinkX, y: drinkY, translateZ: 30 }}
-            >
-              <motion.img
-                src={combo.drink.src}
-                alt={combo.drink.alt}
-                loading="lazy"
-                draggable={false}
-                animate={reduceMotion ? {} : { y: [0, -6, 0] }}
-                transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.8 + index * 0.4 }}
-                className="h-[150px] w-auto rotate-[7deg] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:rotate-[12deg] group-hover:scale-105 sm:h-[165px]"
-              />
-            </motion.div>
-
-            {/* Burger (hero, front) */}
-            <motion.div
-              className="absolute bottom-6 left-[2%] z-20 sm:left-[4%]"
-              style={{ x: burgerX, y: burgerY, translateZ: 60 }}
-            >
-              <motion.img
-                src={combo.burger.src}
-                alt={combo.burger.alt}
-                loading="lazy"
-                draggable={false}
-                animate={reduceMotion ? {} : { y: [0, -10, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: index * 0.5 }}
-                className="w-[215px] object-contain drop-shadow-[0_25px_30px_rgba(0,0,0,0.9)] transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3 sm:w-[230px]"
-              />
-            </motion.div>
-          </div>
-
-          {/* ───── Content ───── */}
-          <div className="relative z-30 flex w-full flex-1 flex-col items-start text-left">
-            <span
-              className="mb-5 inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-[11px] font-black uppercase tracking-[0.18em]"
-              style={{
-                color: `rgb(${combo.rgb})`,
-                borderColor: `rgba(${combo.rgb}, 0.3)`,
-                backgroundColor: `rgba(${combo.rgb}, 0.08)`,
-                boxShadow: `0 0 18px rgba(${combo.rgb}, 0.18)`,
-              }}
-            >
-              <TagIcon className="size-3.5" strokeWidth={2.5} />
-              {combo.tag}
-            </span>
-
-            <h4 className="mb-5 font-display text-4xl font-black uppercase leading-[0.9] text-white drop-shadow-md sm:text-5xl">
-              {combo.titleTop}
-              {!combo.inline && <br />}
-              <span className={combo.accentText}>{combo.titleAccent}</span>
-            </h4>
-
-            <ul className="mb-8 flex flex-col gap-2.5">
-              {combo.items.map((item) => (
-                <li key={item} className="flex items-center gap-2.5 text-[15px] font-medium text-zinc-300">
-                  <span
-                    className="flex size-5 shrink-0 items-center justify-center rounded-full"
-                    style={{ backgroundColor: `rgba(${combo.rgb}, 0.15)`, color: `rgb(${combo.rgb})` }}
-                  >
-                    <Check className="size-3" strokeWidth={3.5} />
-                  </span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-auto flex w-full items-end justify-between gap-3 border-t border-white/10 pt-6">
-              <div className="flex min-w-0 flex-col">
-                <span className="mb-1 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-zinc-500">
-                  Por apenas
-                </span>
-                <span className="flex items-start whitespace-nowrap font-display font-black leading-none text-white">
-                  <span className="mr-1 mt-1 text-sm font-bold text-zinc-400">R$</span>
-                  <span className="text-4xl sm:text-[2.6rem]">{combo.price}</span>
-                  <span className={`mt-1 text-xl font-bold ${combo.accentText}`}>,00</span>
+              >
+                <TagIcon className="size-4 animate-pulse" />
+                <span className="font-display font-black text-xs tracking-[0.2em] uppercase">
+                  {currentCombo.tag}
                 </span>
               </div>
 
-              <motion.button
-                type="button"
-                whileTap={{ scale: 0.94 }}
-                onClick={(e) => onAdd(combo.id, e)}
-                aria-label={`Adicionar combo ${combo.titleTop} ${combo.titleAccent} ao carrinho`}
-                className={`group/btn relative flex h-12 shrink-0 cursor-pointer items-center gap-2 overflow-hidden rounded-full px-5 text-xs font-black uppercase tracking-wider transition-all duration-300 hover:scale-105 ${combo.button}`}
-                style={{ boxShadow: `0 10px 30px -6px rgba(${combo.rgb}, 0.65)` }}
-              >
-                {/* Shine sweep */}
-                <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-white/40 blur-sm transition-transform duration-700 ease-out group-hover/btn:translate-x-[420%]" />
-                <span className="relative">Comprar</span>
-                <span className="relative flex size-5 items-center justify-center rounded-full bg-black/15 transition-transform duration-300 group-hover/btn:rotate-90">
-                  <Plus className="size-3.5" strokeWidth={3} />
+              {/* Huge Stylized Headline */}
+              <div className="flex flex-col">
+                <span
+                  className="font-display text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-[80px] leading-[0.88] font-black tracking-tighter text-transparent italic"
+                  style={{ WebkitTextStroke: "2px rgba(255,255,255,0.9)" }}
+                >
+                  {currentCombo.title1}
                 </span>
-              </motion.button>
-            </div>
-          </div>
-        </div>
-      </motion.article>
-    </motion.div>
-  );
-}
+                <span
+                  className="font-display text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-[80px] leading-[0.88] font-black tracking-tighter italic mt-1 drop-shadow-2xl"
+                  style={{ color: currentCombo.accentColor }}
+                >
+                  {currentCombo.title2}
+                </span>
+              </div>
 
-export function ComboCards({ onAdd }: { onAdd: (id: number, e: React.MouseEvent) => void }) {
-  return (
-    <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-4 md:grid-cols-2 md:px-8 lg:grid-cols-3 lg:gap-10">
-      {COMBOS.map((combo, i) => (
-        <div key={combo.id} className={`h-full ${i === 2 ? "md:col-span-2 md:mx-auto md:w-1/2 lg:col-span-1 lg:w-full" : ""}`}>
-          <ComboCard combo={combo} index={i} onAdd={onAdd} />
+              {/* Combo Contents List with Icons */}
+              <div className="mt-5 sm:mt-6 max-w-sm">
+                <div className="flex flex-col gap-2.5 mb-5">
+                  {currentCombo.items.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-3 text-white/90 text-xs sm:text-sm font-semibold tracking-wide"
+                    >
+                      <span
+                        className="flex size-5 shrink-0 items-center justify-center rounded-full shadow-sm"
+                        style={{
+                          backgroundColor: `rgba(${currentCombo.rgb}, 0.22)`,
+                          color: currentCombo.accentColor,
+                        }}
+                      >
+                        <Check className="size-3 stroke-[3]" />
+                      </span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-white/75 text-xs sm:text-sm font-medium leading-relaxed mb-6 border-l-2 border-white/20 pl-3 sm:pl-4">
+                  {currentCombo.desc}
+                </p>
+
+                {/* Price Tag & Order Button */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                  <div
+                    className="inline-block px-5 sm:px-6 py-2 rounded-2xl font-display font-black text-2xl sm:text-3xl md:text-4xl shadow-2xl transform -rotate-2 border-b-4 border-black/30 text-black"
+                    style={{ backgroundColor: currentCombo.accentColor }}
+                  >
+                    {formatBRL(currentCombo.price)}
+                  </div>
+
+                  <motion.button
+                    type="button"
+                    whileTap={{ scale: 0.94 }}
+                    whileHover={{ scale: 1.04 }}
+                    onClick={(e) => onAdd(currentCombo.id, e)}
+                    className="group flex items-center gap-2.5 sm:gap-3 rounded-full bg-white text-black px-6 sm:px-8 py-3.5 sm:py-4 font-black text-xs sm:text-sm uppercase tracking-wider shadow-2xl transition-all duration-300 hover:bg-[#2B1B15] hover:text-white cursor-pointer active:scale-95"
+                  >
+                    <ShoppingBag className="size-4 transition-transform group-hover:scale-110" />
+                    <span>PEDIR COMBO</span>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
-      ))}
+
+        {/* ==================================================================== */}
+        {/* RIGHT COLUMN: 3D FREE-FLOATING COMBO STAGE (SEM FORMATO DE CAIXA)    */}
+        {/* ==================================================================== */}
+        <div className="w-full md:w-7/12 relative h-[320px] xs:h-[380px] sm:h-[450px] md:h-[520px] lg:h-[580px] flex items-center justify-center perspective-[1400px] overflow-hidden md:overflow-visible">
+          {/* Dynamic Floor Shadow & Radiant Halo under active combo */}
+          <div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[72%] h-16 rounded-[100%] bg-black/85 blur-2xl pointer-events-none transition-all duration-700"
+          />
+          <motion.div
+            aria-hidden
+            animate={{
+              boxShadow: `0 0 90px 30px rgba(${currentCombo.rgb}, 0.35)`,
+            }}
+            transition={{ duration: 0.8 }}
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[48%] h-10 rounded-[100%] pointer-events-none"
+          />
+
+          {/* Floating Embers */}
+          {EMBERS.map((ember, i) => (
+            <motion.span
+              key={i}
+              className="pointer-events-none absolute bottom-12 rounded-full z-30"
+              style={{
+                left: ember.left,
+                width: ember.size,
+                height: ember.size,
+                backgroundColor: currentCombo.accentColor,
+                boxShadow: `0 0 10px 2px rgba(${currentCombo.rgb}, 0.9)`,
+              }}
+              animate={{
+                y: [0, -200],
+                opacity: [0, 1, 0],
+                x: [0, i % 2 ? 14 : -14],
+              }}
+              transition={{
+                duration: ember.duration,
+                delay: ember.delay,
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+
+          {/* 3D Diagonal Floating Carousel of Combos */}
+          {COMBOS.map((combo, index) => {
+            let offset = index - currentIndex;
+            if (offset < -1) offset += COMBOS.length;
+            if (offset > 1) offset -= COMBOS.length;
+
+            const isVisible = offset >= -1 && offset <= 1;
+            if (!isVisible) return null;
+
+            let x = 0;
+            let y = 0;
+            let scale = 1;
+            let zIndex = 20;
+            let rotate = 0;
+            let opacity = 1;
+
+            if (offset === 0) {
+              x = 0;
+              y = 0;
+              scale = isMobile ? 1.08 : 1.25;
+              zIndex = 30;
+              rotate = 0;
+              opacity = 1;
+            } else if (offset === 1) {
+              x = isMobile ? 110 : 220;
+              y = isMobile ? -35 : -70;
+              scale = isMobile ? 0.65 : 0.76;
+              zIndex = 15;
+              rotate = 12;
+              opacity = 0.42;
+            } else if (offset === -1) {
+              x = isMobile ? -110 : -220;
+              y = isMobile ? 35 : 70;
+              scale = isMobile ? 0.65 : 0.76;
+              zIndex = 15;
+              rotate = -12;
+              opacity = 0.42;
+            }
+
+            const isActive = offset === 0;
+
+            return (
+              <motion.div
+                key={combo.id}
+                className="absolute top-1/2 left-1/2 cursor-pointer will-change-transform"
+                initial={false}
+                animate={{
+                  x: `calc(-50% + ${x}px)`,
+                  y: `calc(-50% + ${y}px)`,
+                  scale,
+                  rotate,
+                  zIndex,
+                  opacity,
+                }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.32, 0.72, 0, 1],
+                }}
+                onClick={() => {
+                  if (offset === 1) slideLeft();
+                  if (offset === -1) slideRight();
+                }}
+                style={{ width: isMobile ? "280px" : "420px" }}
+              >
+                {/* Floating Elements Arena - Burger + Drink + Side composited in 3D */}
+                <motion.div
+                  className="relative w-full aspect-[4/3] flex items-center justify-center select-none"
+                  animate={isActive ? { y: [0, -12, 0] } : { y: 0 }}
+                  transition={{ y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" } }}
+                >
+                  {/* Drink (Behind, offset right) */}
+                  <motion.div
+                    className="absolute -right-2 sm:-right-4 bottom-4 sm:bottom-6 z-10 w-[42%] pointer-events-none"
+                    animate={isActive ? { rotate: [6, 10, 6] } : { rotate: 6 }}
+                    transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <img
+                      src={combo.drink.src}
+                      alt={combo.drink.alt}
+                      draggable={false}
+                      className="w-full object-contain drop-shadow-[0_20px_24px_rgba(0,0,0,0.85)] filter contrast-110"
+                    />
+                  </motion.div>
+
+                  {/* Burger (Foreground Hero) */}
+                  <motion.div
+                    className="absolute left-2 sm:left-4 bottom-1 sm:bottom-3 z-20 w-[72%] pointer-events-none"
+                    animate={isActive ? { scale: [1, 1.02, 1] } : { scale: 1 }}
+                    transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <img
+                      src={combo.burger.src}
+                      alt={combo.burger.alt}
+                      draggable={false}
+                      className="w-full object-contain drop-shadow-[0_28px_32px_rgba(0,0,0,0.92)] filter contrast-110"
+                    />
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ==================================================================== */}
+      {/* BOTTOM CONTROLS: PREVIOUS / NEXT ARROWS & INDICATOR DOTS             */}
+      {/* ==================================================================== */}
+      <div className="relative z-30 w-full flex items-center justify-center gap-4 mt-6 sm:mt-10">
+        <button
+          type="button"
+          onClick={slideRight}
+          className="group flex items-center gap-1.5 h-12 px-5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-transparent transition-all duration-300 shadow-xl cursor-pointer"
+          aria-label="Combo anterior"
+        >
+          <ChevronLeft className="size-5 transition-transform group-hover:-translate-x-1" />
+          <span className="font-display font-black text-xs uppercase tracking-wider hidden sm:inline">
+            Anterior
+          </span>
+        </button>
+
+        {/* Indicator dots */}
+        <div className="flex items-center gap-2 px-3">
+          {COMBOS.map((c, i) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setCurrentIndex(i)}
+              className="h-2.5 rounded-full transition-all duration-500 cursor-pointer"
+              style={{
+                width: currentIndex === i ? "28px" : "8px",
+                backgroundColor: currentIndex === i ? currentCombo.accentColor : "rgba(255,255,255,0.25)",
+              }}
+              aria-label={`Ir para combo ${c.tag}`}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={slideLeft}
+          className="group flex items-center gap-1.5 h-12 px-5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-transparent transition-all duration-300 shadow-xl cursor-pointer"
+          aria-label="Próximo combo"
+        >
+          <span className="font-display font-black text-xs uppercase tracking-wider hidden sm:inline">
+            Próximo
+          </span>
+          <ChevronRight className="size-5 transition-transform group-hover:translate-x-1" />
+        </button>
+      </div>
     </div>
   );
 }
