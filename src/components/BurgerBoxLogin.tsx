@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Flame, Mail, Lock, Eye, EyeOff, RotateCcw, PackageCheck, Sparkles, LogIn } from "lucide-react";
+import { X, Flame, Mail, Lock, Eye, EyeOff, Sparkles, Check, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import burgerClassico from "@/assets/burger-classico.png";
 
@@ -9,27 +9,74 @@ interface BurgerBoxLoginProps {
   onClose: () => void;
 }
 
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
+      <path
+        fill="#EA4335"
+        d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"
+      />
+      <path
+        fill="#4285F4"
+        d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 12s.7 2.3 1.9 4.7l3.7-1.9z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z"
+      />
+    </svg>
+  );
+}
+
+function GitHubIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-4 fill-current" aria-hidden="true">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
+  );
+}
+
+function AppleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-4 fill-current" aria-hidden="true">
+      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.47c.66-.82 1.11-1.96.99-3.1-.96.04-2.11.64-2.8 1.45-.61.71-1.14 1.87-1 2.98 1.07.08 2.16-.54 2.81-1.33z" />
+    </svg>
+  );
+}
+
 export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
-  const [isOpenBox, setIsOpenBox] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("davifreitasceara@gmail.com");
+  const [password, setPassword] = useState("••••••••");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Reseta para caixa fechada ao abrir o modal
-  useEffect(() => {
-    if (open) {
-      setIsOpenBox(false);
-      setIsSubmitting(false);
-    }
-  }, [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      toast.success("Login realizado com sucesso! Bem-vindo ao Fogo e Chapa 🔥");
+      toast.success(
+        mode === "login"
+          ? "Login realizado com sucesso! Bem-vindo ao Fogo e Chapa 🔥"
+          : "Conta criada com sucesso! Aproveite seus benefícios 🔥",
+      );
+      onClose();
+    }, 600);
+  };
+
+  const handleOAuthLogin = (provider: string) => {
+    toast.success(`Autenticando via ${provider}...`);
+    setTimeout(() => {
+      toast.success(`Conectado com sucesso via ${provider}! 🔥`);
       onClose();
     }, 700);
   };
@@ -41,9 +88,9 @@ export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
           className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
           role="dialog"
           aria-modal="true"
-          aria-label="Login na Caixa de Hambúrguer"
+          aria-label="Acessar sua conta"
         >
-          {/* Backdrop cinematográfico escuro com blur */}
+          {/* Backdrop escuro cinematográfico com blur suave */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -53,456 +100,222 @@ export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
             className="fixed inset-0 bg-black/85 backdrop-blur-md"
           />
 
-          {/* PALCO 3D COM PERSPECTIVA ISOMÉTRICA DA MESA */}
+          {/* PALCO MODAL 3D LIVRE (SEM FORMATO DE CAIXA DE PAPELÃO) */}
           <motion.div
-            initial={{ scale: 0.85, opacity: 0, y: 30 }}
+            initial={{ scale: 0.88, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.85, opacity: 0, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative z-10 w-full max-w-[520px] my-auto py-6 select-none scale-[0.88] xs:scale-[0.95] sm:scale-100 origin-center"
-            style={{ perspective: "1400px", perspectiveOrigin: "50% 36%" }}
+            exit={{ scale: 0.88, opacity: 0, y: 20 }}
+            transition={{ type: "spring", damping: 24, stiffness: 280 }}
+            className="relative z-10 w-full max-w-[460px] my-auto select-none"
+            style={{ perspective: 1200 }}
           >
-            {/* Botão de Fechar Modal */}
-            <button
-              onClick={onClose}
-              className="absolute -top-3 right-2 z-50 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold tracking-wider uppercase transition-colors backdrop-blur-md border border-white/20 cursor-pointer shadow-lg"
-              aria-label="Fechar janela"
-            >
-              <span>Fechar</span>
-              <X className="w-3.5 h-3.5" />
-            </button>
+            {/* HERO BURGER LIVRE 3D FLUTUANTE (O MODELO BONITO BEM FORMADO) */}
+            <div className="relative -mb-16 z-20 flex justify-center pointer-events-none">
+              {/* Sombra de contato e reflexo de brasa no chão */}
+              <div className="absolute bottom-2 w-48 h-8 rounded-full bg-black/80 blur-xl" />
+              <div className="absolute bottom-3 w-36 h-6 rounded-full bg-amber-500/25 blur-lg" />
 
-            {/* Sombra de oclusão de contato realista na mesa */}
-            <div
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[88%] h-16 rounded-[100%] bg-black/80 blur-2xl pointer-events-none transition-all duration-700"
-              style={{
-                transform: isOpenBox
-                  ? "translate(-50%, 24px) scale(1.18)"
-                  : "translate(-50%, 10px) scale(0.96)",
-              }}
-            />
-
-            {/* ================================================================= */}
-            {/* CAIXA CLAMSHELL KRAFT "SENTADA" NA MESA (GEOMETRIA REAL DA FOTO)  */}
-            {/* ================================================================= */}
-            <div
-              className="relative w-full transition-transform duration-700 ease-[cubic-bezier(0.2,0.9,0.3,1)]"
-              style={{
-                transformStyle: "preserve-3d",
-                transform: "rotateX(24deg) rotateY(-4deg)",
-              }}
-            >
-              {/* =============================================================== */}
-              {/* 1. TAMPA SUPERIOR (CLAMSHELL LID) - HINGED AT REAR SEAM         */}
-              {/* =============================================================== */}
-              <div
-                onClick={() => {
-                  if (!isOpenBox) setIsOpenBox(true);
+              <motion.div
+                animate={{
+                  y: [0, -10, 0],
+                  rotateZ: [0, 1.5, -1.5, 0],
                 }}
-                className={`relative w-full z-40 transition-all duration-750 ease-[cubic-bezier(0.2,0.9,0.3,1)] ${
-                  !isOpenBox ? "cursor-pointer group" : ""
-                }`}
-                style={{
-                  transformOrigin: "top center",
-                  transformStyle: "preserve-3d",
-                  transform: isOpenBox
-                    ? "rotateX(-115deg) translateY(-32px) translateZ(44px)"
-                    : "rotateX(0deg) translateY(0px) translateZ(0px)",
+                transition={{
+                  duration: 4.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
                 }}
+                className="relative w-40 sm:w-44"
               >
-                {/* ESTRUTURA DA TAMPA: CASCA HOLLOW (ABAS LATERAIS + TETO + ABA FRONTAL) */}
-                <div
-                  className="relative w-full rounded-t-2xl overflow-visible transition-shadow duration-700"
-                  style={{
-                    background:
-                      "linear-gradient(155deg, #c79a66 0%, #b2824e 40%, #996937 75%, #7a4d21 100%)",
-                    boxShadow: isOpenBox
-                      ? "0 -28px 60px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.4)"
-                      : "0 18px 45px rgba(0,0,0,0.65), inset 0 2px 5px rgba(255,255,255,0.4), inset 0 -4px 12px rgba(0,0,0,0.4)",
-                  }}
+                <img
+                  src={burgerClassico}
+                  alt="Hambúrguer Fogo e Chapa"
+                  draggable={false}
+                  className="w-full object-contain drop-shadow-[0_24px_30px_rgba(0,0,0,0.9)] filter contrast-110"
+                />
+              </motion.div>
+            </div>
+
+            {/* CONTAINER GLASSMORPHISM LUXUOSO */}
+            <div className="relative overflow-hidden rounded-[36px] bg-[#0d0d10]/95 border border-white/10 p-6 sm:p-8 pt-20 shadow-[0_30px_100px_rgba(0,0,0,0.85)] backdrop-blur-2xl">
+              {/* Radial Glow interno quente no topo */}
+              <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-gradient-to-b from-amber-500/30 via-orange-600/15 to-transparent blur-3xl" />
+
+              {/* Botão Fechar Modal */}
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute top-5 right-5 z-30 flex size-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all cursor-pointer shadow-lg"
+                aria-label="Fechar janela"
+              >
+                <X className="size-4" />
+              </button>
+
+              {/* Tag Fogo e Chapa Club */}
+              <div className="flex flex-col items-center text-center">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 mb-3 shadow-md">
+                  <Flame className="size-3.5 animate-pulse" />
+                  <span className="font-display font-black text-[10px] tracking-[0.2em] uppercase">
+                    Fogo & Chapa Club
+                  </span>
+                </div>
+
+                <h3 className="font-display text-2xl sm:text-3xl font-black uppercase text-white tracking-tight">
+                  {mode === "login" ? "Entrar na sua Conta" : "Criar sua Conta"}
+                </h3>
+                <p className="mt-1 text-xs sm:text-sm text-white/60 max-w-xs">
+                  {mode === "login"
+                    ? "Acompanhe seus pedidos em tempo real e resgate brasas de fidelidade."
+                    : "Cadastre-se e ganhe desconto exclusivo no seu primeiro combo."}
+                </p>
+              </div>
+
+              {/* Tabs Switcher: Entrar / Cadastrar */}
+              <div className="grid grid-cols-2 p-1 mt-5 rounded-2xl bg-white/5 border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setMode("login")}
+                  className={`py-2 rounded-xl font-display font-black text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                    mode === "login"
+                      ? "bg-amber-500 text-black shadow-lg"
+                      : "text-white/60 hover:text-white"
+                  }`}
                 >
-                  {/* Textura de papelão kraft natural com microfibras */}
-                  <div
-                    className="absolute inset-0 rounded-t-2xl pointer-events-none opacity-20 mix-blend-multiply"
-                    style={{
-                      backgroundImage: `radial-gradient(#4d2605 1px, transparent 1px)`,
-                      backgroundSize: "5px 5px",
-                    }}
-                  />
+                  Entrar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className={`py-2 rounded-xl font-display font-black text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                    mode === "signup"
+                      ? "bg-amber-500 text-black shadow-lg"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  Cadastrar
+                </button>
+              </div>
 
-                  {/* ABA LATERAL ESQUERDA DA TAMPA (COM CORTE CHANFRADO A 45° DA FOTO) */}
-                  <div
-                    className="absolute top-1 -left-3.5 w-7 h-28 pointer-events-none transition-transform duration-700"
-                    style={{
-                      transformOrigin: "right center",
-                      transform: isOpenBox ? "rotateY(-35deg)" : "rotateY(0deg)",
-                    }}
-                  >
-                    <svg viewBox="0 0 28 112" className="w-full h-full drop-shadow-md">
-                      {/* Parede lateral trapezoidal com corte chanfrado */}
-                      <polygon
-                        points="28,0 4,20 4,92 28,112"
-                        fill={isOpenBox ? "#f7f4ed" : "#946637"}
-                        stroke="#754b20"
-                        strokeWidth="1"
-                      />
-                      {/* Vinco diagonal de dobra da embalagem */}
-                      <line x1="28" y1="56" x2="4" y2="20" stroke="#5a3310" strokeWidth="1" />
-                      <line x1="28" y1="56" x2="4" y2="92" stroke="#5a3310" strokeWidth="1" />
-                    </svg>
+              {/* FORMULÁRIO DE LOGIN / CADASTRO */}
+              <form onSubmit={handleSubmit} className="mt-5 space-y-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold text-white/70 uppercase tracking-wider mb-1">
+                    E-mail
+                  </label>
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors focus-within:border-amber-500/60 focus-within:bg-white/10">
+                    <Mail className="size-4 text-white/50" />
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="seu@email.com"
+                      className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
+                    />
                   </div>
+                </div>
 
-                  {/* ABA LATERAL DIREITA DA TAMPA (COM CORTE CHANFRADO A 45° DA FOTO) */}
-                  <div
-                    className="absolute top-1 -right-3.5 w-7 h-28 pointer-events-none transition-transform duration-700"
-                    style={{
-                      transformOrigin: "left center",
-                      transform: isOpenBox ? "rotateY(35deg)" : "rotateY(0deg)",
-                    }}
-                  >
-                    <svg viewBox="0 0 28 112" className="w-full h-full drop-shadow-md">
-                      <polygon
-                        points="0,0 24,20 24,92 0,112"
-                        fill={isOpenBox ? "#f7f4ed" : "#946637"}
-                        stroke="#754b20"
-                        strokeWidth="1"
-                      />
-                      <line x1="0" y1="56" x2="24" y2="20" stroke="#5a3310" strokeWidth="1" />
-                      <line x1="0" y1="56" x2="24" y2="92" stroke="#5a3310" strokeWidth="1" />
-                    </svg>
-                  </div>
-
-                  {/* PAINEL CENTRAL DA TAMPA */}
-                  <div className="relative z-10 px-6 pt-7 pb-4 flex flex-col items-center text-center">
-                    {/* QUANDO A CAIXA ESTÁ FECHADA: DESIGN ARTESANAL DA EMBALAGEM KRAFT */}
-                    {!isOpenBox ? (
-                      <div className="w-full flex flex-col items-center">
-                        {/* Carimbo Artesanal Fogo e Chapa queimado na brasa */}
-                        <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#4d2807]/75 flex flex-col items-center justify-center p-1.5 rotate-[-2deg] bg-[#b88856]/40 shadow-inner mb-2.5">
-                          <Flame className="w-8 h-8 text-[#401f04]" />
-                          <span className="font-display font-black text-[11px] tracking-tight text-[#401f04] uppercase leading-none mt-1">
-                            FOGO E CHAPA
-                          </span>
-                          <span className="text-[8px] font-bold text-[#5a320d] tracking-widest uppercase">
-                            BURGERS NA BRASA
-                          </span>
-                        </div>
-
-                        <h3 className="font-display text-2xl font-black text-[#361904] uppercase tracking-tighter">
-                          Caixa de Hamburguer
-                        </h3>
-                        <p className="text-[11px] text-[#543111] font-bold uppercase tracking-wider mb-1">
-                          Embalagem Clamshell Delivery • Chapa Quente
-                        </p>
-
-                        {/* Furos de respiro de vapor típicos de caixa de hambúrguer */}
-                        <div className="flex items-center gap-6 my-2 text-[#5a320d]">
-                          <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest">
-                            <span className="size-2 rounded-full border border-[#4d2807] bg-[#754b20]/60 inline-block" />
-                            <span>Respiro</span>
-                          </div>
-                          <span className="text-[10px] opacity-40">•</span>
-                          <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest">
-                            <span className="size-2 rounded-full border border-[#4d2807] bg-[#754b20]/60 inline-block" />
-                            <span>Anti-Vapor</span>
-                          </div>
-                        </div>
-
-                        {/* Botão chamativo de abrir a caixa */}
-                        <div className="mt-2 flex flex-col items-center">
-                          <motion.div
-                            animate={{ y: [0, -4, 0] }}
-                            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-lg shadow-orange-950/70 border border-orange-400/40 group-hover:scale-105 transition-transform"
-                          >
-                            <PackageCheck className="w-4 h-4" />
-                            <span>Clique para abrir a caixa</span>
-                          </motion.div>
-                          <span className="text-[10px] text-[#4d290c] font-extrabold uppercase tracking-widest mt-1.5">
-                            Toque na caixa para abrir a tampa e entrar
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      /* QUANDO A CAIXA ESTÁ ABERTA: O INTERIOR BRANCO DA TAMPA VOLTADO AO USUÁRIO */
-                      <div className="w-full py-4 flex flex-col items-center">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3d2007]/15 text-[#301704] text-[11px] font-bold uppercase tracking-wider mb-1">
-                          <Flame className="w-3.5 h-3.5 text-orange-700" />
-                          <span>Tampa Aberta a 115°</span>
-                        </div>
-                        <p className="text-[11px] text-[#543111] font-semibold">
-                          O formulário de login está pronto na bandeja abaixo.
-                        </p>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsOpenBox(false);
-                          }}
-                          className="mt-2 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#422206]/20 hover:bg-[#422206]/35 text-[#2b1302] text-xs font-bold tracking-wider uppercase transition-colors cursor-pointer"
-                        >
-                          <RotateCcw className="w-3 h-3" />
-                          <span>Fechar tampa</span>
-                        </button>
-                      </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-[11px] font-bold text-white/70 uppercase tracking-wider">
+                      Senha
+                    </label>
+                    {mode === "login" && (
+                      <button
+                        type="button"
+                        onClick={() => toast.info("Instruções de recuperação enviadas para seu e-mail!")}
+                        className="text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+                      >
+                        Esqueceu?
+                      </button>
                     )}
                   </div>
-
-                  {/* ABA FRONTAL DA TAMPA COM LINGUETA ARREDONDADA DE ENCAIXE (TUCK TAB DA FOTO) */}
-                  <div className="relative w-full flex flex-col items-center pt-1 pb-1">
-                    {/* Linha de vinco da aba frontal */}
-                    <div className="w-4/5 h-[1.5px] bg-[#5c3410]/60 rounded-full" />
-                    {/* Lingueta de trava arredondada projetada para fora */}
-                    <div
-                      className="w-24 h-5 rounded-b-2xl border-x-2 border-b-2 shadow-md flex items-center justify-center -mt-[1px] transition-colors duration-500"
-                      style={{
-                        background: isOpenBox
-                          ? "linear-gradient(180deg, #f7f4ed 0%, #eee7dc 100%)"
-                          : "linear-gradient(180deg, #8c5d2e 0%, #75471c 100%)",
-                        borderColor: isOpenBox ? "#d6cbba" : "#4f2b0b",
-                      }}
-                    >
-                      {/* Ranhura decorativa de encaixe na lingueta */}
-                      <div
-                        className="w-8 h-1 rounded-full"
-                        style={{
-                          backgroundColor: isOpenBox ? "#c7b7a1" : "#996735",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* FORRO INTERNO BRANCO DA TAMPA (Visível ao abrir a 115° como na foto!) */}
-                  {isOpenBox && (
-                    <div
-                      className="absolute inset-x-2 top-0 h-8 rounded-b-xl border-b border-gray-200/80 shadow-inner"
-                      style={{
-                        background:
-                          "linear-gradient(180deg, #ffffff 0%, #f6f3eb 70%, #ede5d7 100%)",
-                      }}
+                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors focus-within:border-amber-500/60 focus-within:bg-white/10">
+                    <Lock className="size-4 text-white/50" />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
                     />
-                  )}
-                </div>
-              </div>
-
-              {/* =============================================================== */}
-              {/* 2. BANDEJA INFERIOR (CLAMSHELL BASE TRAY) - SENTADA NA MESA     */}
-              {/* =============================================================== */}
-              <div
-                className={`relative w-full z-30 rounded-b-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] border-x-2 border-b-2 border-[#73461b] ${
-                  isOpenBox ? "pt-5 -mt-3 min-h-[400px]" : "pt-2 -mt-1 min-h-[140px]"
-                }`}
-                style={{
-                  background:
-                    "linear-gradient(180deg, #996a39 0%, #825425 45%, #663e17 100%)",
-                  boxShadow: isOpenBox
-                    ? "0 35px 70px -10px rgba(0,0,0,0.95), inset 0 10px 30px rgba(0,0,0,0.6)"
-                    : "0 12px 25px rgba(0,0,0,0.55)",
-                }}
-              >
-                {/* PAREDE LATERAL CHANFRADA ESQUERDA DA BANDEJA (PINCH-FOLD DA FOTO) */}
-                <div className="absolute top-2 -left-3.5 w-7 h-24 pointer-events-none">
-                  <svg viewBox="0 0 28 96" className="w-full h-full drop-shadow-sm">
-                    <polygon points="28,0 4,16 4,80 28,96" fill="#75481c" stroke="#523110" strokeWidth="1" />
-                    <line x1="28" y1="48" x2="4" y2="48" stroke="#4a2a0a" strokeWidth="1" />
-                  </svg>
-                </div>
-
-                {/* PAREDE LATERAL CHANFRADA DIREITA DA BANDEJA (PINCH-FOLD DA FOTO) */}
-                <div className="absolute top-2 -right-3.5 w-7 h-24 pointer-events-none">
-                  <svg viewBox="0 0 28 96" className="w-full h-full drop-shadow-sm">
-                    <polygon points="0,0 24,16 24,80 0,96" fill="#75481c" stroke="#523110" strokeWidth="1" />
-                    <line x1="0" y1="48" x2="24" y2="48" stroke="#4a2a0a" strokeWidth="1" />
-                  </svg>
-                </div>
-
-                {/* SLIT FRONTAL DE ENCAIXE PARA A LINGUETA DA TAMPA */}
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-28 h-1.5 bg-[#3b1f07] rounded-full shadow-inner border-t border-[#261203]" />
-
-                {/* FORRO INTERNO BRANCO DA BANDEJA (CAVIDADE BRANCA ALIMENTAR DA FOTO) */}
-                <div
-                  className={`mx-3 sm:mx-4.5 mb-3.5 rounded-xl transition-all duration-500 border border-gray-200 relative overflow-hidden ${
-                    isOpenBox ? "p-4 sm:p-5 opacity-100" : "p-3 opacity-95"
-                  }`}
-                  style={{
-                    background:
-                      "linear-gradient(175deg, #ffffff 0%, #f7f4ed 50%, #eee6da 100%)",
-                    boxShadow:
-                      "inset 0 6px 18px rgba(0,0,0,0.08), 0 8px 25px rgba(0,0,0,0.25)",
-                  }}
-                >
-                  {/* ============================================================= */}
-                  {/* O HAMBÚRGUER + LOGIN EM PÉ (ERGUENDO-SE NA VERTICAL DA CAIXA) */}
-                  {/* ============================================================= */}
-                  <div
-                    className="relative z-10 w-full flex flex-col items-center transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                    style={{
-                      // COMPENSA A INCLINAÇÃO DA MESA (rotateX -24deg) PARA FICAR 100% "EM PÉ" E VIRADO AO USUÁRIO
-                      transform: isOpenBox
-                        ? "rotateX(-24deg) translateY(-8px) translateZ(42px)"
-                        : "rotateX(0deg) scale(0.9)",
-                      transformStyle: "preserve-3d",
-                    }}
-                  >
-                    {/* HAMBÚRGUER EM PÉ (SAINDO DA CAIXA COMO NA FOTO) */}
-                    <div className="relative -mt-6 sm:-mt-8 mb-1 flex justify-center">
-                      <motion.div
-                        initial={false}
-                        animate={{
-                          scale: isOpenBox ? 1.05 : 0.85,
-                          y: isOpenBox ? -2 : 4,
-                        }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className="relative w-36 sm:w-40 h-24 sm:h-26"
-                      >
-                        <img
-                          src={burgerClassico}
-                          alt="Burger Fogo e Chapa"
-                          className="w-full h-full object-contain drop-shadow-[0_16px_22px_rgba(0,0,0,0.45)]"
-                        />
-                        {/* Vapor de chapa quente subindo do hambúrguer */}
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-1 pointer-events-none">
-                          <span className="w-1.5 h-3 bg-gray-400/30 blur-[1px] rounded-full animate-pulse" />
-                          <span className="w-1.5 h-4 bg-orange-400/40 blur-[1px] rounded-full animate-pulse delay-100" />
-                        </div>
-                      </motion.div>
-                    </div>
-
-                    {/* TÍTULO DO LOGIN EM PÉ */}
-                    <div className="text-center mb-3">
-                      <div className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-orange-700 bg-orange-100/90 border border-orange-200 px-2.5 py-0.5 rounded-full mb-1 shadow-sm">
-                        <Flame className="w-3 h-3 text-orange-600" /> Fogo e Chapa Club
-                      </div>
-                      <h4 className="font-display text-2xl sm:text-3xl font-black text-[#2e1707] uppercase tracking-tight">
-                        {isOpenBox ? "Entrar na sua Conta" : "Caixa Fechada"}
-                      </h4>
-                      <p className="text-xs text-[#6e4e30] font-medium">
-                        {isOpenBox
-                          ? "Peça direto da chapa com descontos exclusivos."
-                          : "Clique na caixa para abrir a tampa e fazer login."}
-                      </p>
-                    </div>
-
-                    {/* FORMULÁRIO DE LOGIN EM PÉ (FLEXBOX) */}
-                    <form onSubmit={handleSubmit} className="w-full space-y-3">
-                      {/* INPUT E-MAIL (Background translúcido papel craft) */}
-                      <div className="space-y-1 text-left">
-                        <label className="block text-[11px] font-bold text-[#4a2e16] uppercase tracking-wider pl-1">
-                          E-mail
-                        </label>
-                        <div className="relative flex items-center rounded-xl bg-[#cba882]/25 border border-[#b89164]/70 backdrop-blur-sm px-3.5 py-2.5 transition-all duration-300 focus-within:border-orange-600 focus-within:bg-[#cba882]/35 focus-within:shadow-[0_0_15px_rgba(234,88,12,0.25)]">
-                          <Mail className="w-4 h-4 text-[#734b22] mr-2.5 shrink-0" />
-                          <input
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="seu.email@exemplo.com"
-                            className="w-full bg-transparent text-[#261204] placeholder-[#8c6742] text-sm outline-none font-semibold"
-                          />
-                        </div>
-                      </div>
-
-                      {/* INPUT SENHA (Background translúcido papel craft) */}
-                      <div className="space-y-1 text-left">
-                        <div className="flex justify-between items-center pl-1 pr-0.5">
-                          <label className="text-[11px] font-bold text-[#4a2e16] uppercase tracking-wider">
-                            Senha
-                          </label>
-                          <a
-                            href="#esqueci"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toast.info("Enviamos as instruções para o seu e-mail!");
-                            }}
-                            className="text-[10px] font-bold text-orange-700 hover:text-orange-900 transition-colors"
-                          >
-                            Esqueceu a senha?
-                          </a>
-                        </div>
-                        <div className="relative flex items-center rounded-xl bg-[#cba882]/25 border border-[#b89164]/70 backdrop-blur-sm px-3.5 py-2.5 transition-all duration-300 focus-within:border-orange-600 focus-within:bg-[#cba882]/35 focus-within:shadow-[0_0_15px_rgba(234,88,12,0.25)]">
-                          <Lock className="w-4 h-4 text-[#734b22] mr-2.5 shrink-0" />
-                          <input
-                            type={showPassword ? "text" : "password"}
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••••••"
-                            className="w-full bg-transparent text-[#261204] placeholder-[#8c6742] text-sm outline-none font-semibold"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="text-[#734b22] hover:text-[#261204] transition-colors ml-2 cursor-pointer"
-                            aria-label={showPassword ? "Ocultar senha" : "Exibir senha"}
-                          >
-                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* BOTÃO 'ENTRAR' (Hover scale suave + paleta Fogo e Chapa) */}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full mt-2 group relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 py-3.5 px-6 font-display font-black text-white text-sm uppercase tracking-wider shadow-lg shadow-orange-950/50 transition-transform duration-300 ease-out hover:scale-105 active:scale-95 hover:shadow-orange-500/40 cursor-pointer disabled:opacity-75"
-                      >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                          {isSubmitting ? (
-                            <>
-                              <Flame className="w-4 h-4 animate-spin" />
-                              <span>Entrando...</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>Entrar</span>
-                              <Flame className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </>
-                          )}
-                        </span>
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
-                      </button>
-                    </form>
-
-                    {/* Rodapé do formulário */}
-                    <div className="mt-3.5 pt-2.5 border-t border-[#dfcfb9] w-full flex items-center justify-between text-xs text-[#6e4e30]">
-                      <span>
-                        Não tem conta?{" "}
-                        <button
-                          type="button"
-                          onClick={() => toast.info("Criando nova conta na brasa...")}
-                          className="font-bold text-orange-700 hover:underline cursor-pointer"
-                        >
-                          Cadastre-se
-                        </button>
-                      </span>
-
-                      {!isOpenBox ? (
-                        <button
-                          type="button"
-                          onClick={() => setIsOpenBox(true)}
-                          className="font-bold text-orange-700 hover:underline cursor-pointer"
-                        >
-                          Abrir caixa
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setIsOpenBox(false)}
-                          className="font-bold text-[#8c6136] hover:underline cursor-pointer flex items-center gap-1"
-                        >
-                          <RotateCcw className="w-3 h-3" /> Fechar tampa
-                        </button>
-                      )}
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-white/50 hover:text-white transition-colors cursor-pointer"
+                      aria-label={showPassword ? "Ocultar senha" : "Ver senha"}
+                    >
+                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
                   </div>
                 </div>
 
-                {/* Borda chanfrada inferior da bandeja */}
-                <div className="w-full h-2.5 bg-[#523010]/40 flex justify-center items-center">
-                  <div className="w-32 h-1 bg-[#7d5022] rounded-full" />
-                </div>
+                {/* Botão Entrar / Cadastrar */}
+                <motion.button
+                  type="submit"
+                  disabled={isSubmitting}
+                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="w-full mt-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 hover:from-amber-400 hover:to-orange-400 py-3.5 font-display font-black text-xs uppercase tracking-widest text-black shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <span className="animate-spin text-sm">⏳</span>
+                  ) : (
+                    <>
+                      <span>{mode === "login" ? "Entrar na Brasa" : "Concluir Cadastro"}</span>
+                      <Flame className="size-4" />
+                    </>
+                  )}
+                </motion.button>
+              </form>
+
+              {/* Divisor Social */}
+              <div className="my-5 flex items-center gap-3 text-[11px] text-white/40 uppercase tracking-widest">
+                <span className="h-px flex-1 bg-white/10" />
+                <span>ou acesse com</span>
+                <span className="h-px flex-1 bg-white/10" />
               </div>
+
+              {/* Botões Sociais: Google, GitHub, Apple */}
+              <div className="grid grid-cols-3 gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin("Google")}
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 py-2.5 text-xs font-bold text-white transition-all hover:bg-white/15 hover:border-white/25 cursor-pointer shadow-sm"
+                >
+                  <GoogleIcon />
+                  <span className="hidden xs:inline">Google</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin("GitHub")}
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 py-2.5 text-xs font-bold text-white transition-all hover:bg-white/15 hover:border-white/25 cursor-pointer shadow-sm"
+                >
+                  <GitHubIcon />
+                  <span className="hidden xs:inline">GitHub</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOAuthLogin("Apple")}
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 py-2.5 text-xs font-bold text-white transition-all hover:bg-white/15 hover:border-white/25 cursor-pointer shadow-sm"
+                >
+                  <AppleIcon />
+                  <span className="hidden xs:inline">Apple</span>
+                </button>
+              </div>
+
+              {/* Rodapé Alternar Modo */}
+              <p className="mt-5 text-center text-xs text-white/50">
+                {mode === "login" ? "Ainda não tem conta?" : "Já é cadastrado?"}{" "}
+                <button
+                  type="button"
+                  onClick={() => setMode(mode === "login" ? "signup" : "login")}
+                  className="font-bold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+                >
+                  {mode === "login" ? "Cadastre-se grátis" : "Fazer login"}
+                </button>
+              </p>
             </div>
           </motion.div>
         </div>
