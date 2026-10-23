@@ -495,47 +495,82 @@ export function LiquidSpillCanvas({
         const firstCenter = centerPts[0];
 
         if (firstLeft && firstRight && firstCenter && centerPts.length >= 2) {
-          // 2.0 In-Glass Fluid Reservoir & Overflow Crest (ZERO GAP GUARANTEE)
-          // Renders a smooth, rounded bulb welling up from inside the rim and spilling over
-          if (sTail < 0.15) {
+          // 2.0 In-Glass Deep Fluid Funnel & Overflow Lip (Líquido Saindo de DENTRO do Copo)
+          // Renders a rich, volumetric fluid column welling up from inside the glass opening and cascading over the lip
+          if (sTail < 0.18) {
             ctx.save();
+            const throatX = pourX - boxW * 0.11;
+            const throatY = pourY - boxH * 0.075;
+
+            // 2.0.1 Deep fluid column inside the glass throat
+            ctx.beginPath();
+            ctx.moveTo(throatX - baseWidth * 0.4, throatY - baseWidth * 0.25);
+            ctx.quadraticCurveTo(
+              pourX - baseWidth * 0.55,
+              pourY - baseWidth * 0.35,
+              pourX + baseWidth * 0.25,
+              pourY - baseWidth * 0.05,
+            );
+            ctx.quadraticCurveTo(
+              pourX + baseWidth * 0.35,
+              pourY + baseWidth * 0.45,
+              pourX - baseWidth * 0.2,
+              pourY + baseWidth * 0.55,
+            );
+            ctx.quadraticCurveTo(
+              throatX + baseWidth * 0.35,
+              throatY + baseWidth * 0.45,
+              throatX - baseWidth * 0.4,
+              throatY - baseWidth * 0.25,
+            );
+            ctx.closePath();
+
+            const throatGrad = ctx.createLinearGradient(throatX, throatY, pourX, pourY);
+            throatGrad.addColorStop(0, rgbaStr(liquid.glow || liquid.light, 0.98));
+            throatGrad.addColorStop(0.35, rgbaStr(liquid.light, 0.98));
+            throatGrad.addColorStop(0.75, rgbaStr(liquid.color, 0.96));
+            throatGrad.addColorStop(1, rgbaStr(liquid.color, 0.88));
+            ctx.fillStyle = throatGrad;
+            ctx.fill();
+
+            // 2.0.2 Viscous Meniscus Bead welling up over the rim lip
             ctx.beginPath();
             ctx.ellipse(
-              pourX - baseWidth * 0.28,
-              pourY + baseWidth * 0.10,
-              baseWidth * 0.85,
-              baseWidth * 0.56,
-              0.40,
+              pourX - baseWidth * 0.12,
+              pourY + baseWidth * 0.08,
+              baseWidth * 0.75,
+              baseWidth * 0.52,
+              0.38,
               0,
               Math.PI * 2,
             );
             const tongueGrad = ctx.createRadialGradient(
-              pourX - baseWidth * 0.42,
+              pourX - baseWidth * 0.25,
               pourY,
               2,
-              pourX - baseWidth * 0.28,
-              pourY + baseWidth * 0.10,
-              baseWidth * 0.85,
+              pourX - baseWidth * 0.12,
+              pourY + baseWidth * 0.08,
+              baseWidth * 0.75,
             );
-            tongueGrad.addColorStop(0, rgbaStr(liquid.glow || liquid.light, 0.98));
-            tongueGrad.addColorStop(0.35, rgbaStr(liquid.light, 0.96));
-            tongueGrad.addColorStop(0.85, rgbaStr(liquid.color, 0.94));
-            tongueGrad.addColorStop(1, rgbaStr(liquid.color, 0.80));
+            tongueGrad.addColorStop(0, rgbaStr(liquid.glow || liquid.light, 1));
+            tongueGrad.addColorStop(0.40, rgbaStr(liquid.light, 0.98));
+            tongueGrad.addColorStop(0.85, rgbaStr(liquid.color, 0.95));
+            tongueGrad.addColorStop(1, rgbaStr(liquid.color, 0.82));
             ctx.fillStyle = tongueGrad;
             ctx.fill();
 
-            // Specular fluid crest glint over the rim
+            // 2.0.3 Specular fluid crest glint over the rim lip
             ctx.beginPath();
             ctx.ellipse(
-              pourX - baseWidth * 0.15,
-              pourY + baseWidth * 0.05,
-              baseWidth * 0.45,
-              baseWidth * 0.20,
-              0.35,
+              pourX - baseWidth * 0.06,
+              pourY + baseWidth * 0.02,
+              baseWidth * 0.42,
+              baseWidth * 0.18,
+              0.32,
               0,
               Math.PI * 2,
             );
-            ctx.fillStyle = "rgba(255, 255, 255, 0.70)";
+            ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
             ctx.fill();
             ctx.restore();
           }
