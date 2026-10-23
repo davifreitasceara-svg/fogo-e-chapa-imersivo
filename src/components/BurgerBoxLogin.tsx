@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Flame, Mail, Lock, Eye, EyeOff, Sparkles, Check, Heart, Smile, Zap } from "lucide-react";
+import { X, Flame, Mail, Lock, Eye, EyeOff, Sparkles, Check } from "lucide-react";
 import { toast } from "sonner";
-import burgerClassico from "@/assets/burger-classico.png";
 
 interface BurgerBoxLoginProps {
   open: boolean;
@@ -94,52 +93,12 @@ function AppleIcon() {
   );
 }
 
-// Floating spark particle
-interface Spark {
-  id: number;
-  x: number;
-  y: number;
-  text: string;
-}
-
-const BURGER_PUNS = [
-  "🔥 Chapa Quente!",
-  "🧀 +1 Queijo derretido!",
-  "🥓 Bacon crocante!",
-  "🚀 Bora pro lanche!",
-  "🍔 Delícia artesanal!",
-  "⚡ Modo Brasa Turbo!",
-  "👑 Sabor dos Reis!",
-];
-
 export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("davifreitasceara@gmail.com");
   const [password, setPassword] = useState("••••••••");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isTypingPassword, setIsTypingPassword] = useState(false);
-
-  // Fun Burger Clicker Easter Egg
-  const [burgerBounces, setBurgerBounces] = useState(0);
-  const [sparks, setSparks] = useState<Spark[]>([]);
-
-  const handleBurgerClick = () => {
-    playBurgerSizzleSound();
-    setBurgerBounces((prev) => prev + 1);
-
-    const newSpark: Spark = {
-      id: Date.now() + Math.random(),
-      x: (Math.random() - 0.5) * 60,
-      y: -30 - Math.random() * 25,
-      text: BURGER_PUNS[burgerBounces % BURGER_PUNS.length] || "🔥 Delícia!",
-    };
-    setSparks((prev) => [...prev.slice(-3), newSpark]);
-
-    setTimeout(() => {
-      setSparks((prev) => prev.filter((s) => s.id !== newSpark.id));
-    }, 1200);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,101 +154,7 @@ export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
             style={{ perspective: 1400 }}
           >
             {/* ================================================================ */}
-            {/* 1. HERO BURGER 3D FLUTUANTE E INTERATIVO (O MODELO BONITO)        */}
-            {/* ================================================================ */}
-            <div className="relative -mb-16 z-30 flex flex-col items-center justify-center">
-              {/* Sombra de oclusão de contato dinâmica no topo do card */}
-              <div className="absolute bottom-2 w-44 h-8 rounded-full bg-black/90 blur-xl pointer-events-none" />
-              <div className="absolute bottom-3 w-32 h-6 rounded-full bg-amber-500/30 blur-lg pointer-events-none" />
-
-              {/* Fumaça e vapor quente aromático saindo do pão de brioche */}
-              <div className="absolute top-1 pointer-events-none flex gap-6">
-                <motion.div
-                  animate={{
-                    y: [-4, -28, -44],
-                    x: [-2, 6, 12],
-                    opacity: [0, 0.5, 0],
-                    scale: [0.6, 1.2, 1.6],
-                  }}
-                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeOut" }}
-                  className="size-7 rounded-full bg-amber-100/35 blur-md"
-                />
-                <motion.div
-                  animate={{
-                    y: [-2, -24, -40],
-                    x: [2, -5, -10],
-                    opacity: [0, 0.45, 0],
-                    scale: [0.7, 1.3, 1.7],
-                  }}
-                  transition={{ duration: 3.2, repeat: Infinity, delay: 0.8, ease: "easeOut" }}
-                  className="size-8 rounded-full bg-orange-100/30 blur-md"
-                />
-              </div>
-
-              {/* Floating Sparks Popups ao clicar no Burger */}
-              <AnimatePresence>
-                {sparks.map((spark) => (
-                  <motion.div
-                    key={spark.id}
-                    initial={{ opacity: 0, y: 0, scale: 0.5, x: spark.x }}
-                    animate={{ opacity: 1, y: spark.y, scale: 1.1 }}
-                    exit={{ opacity: 0, y: spark.y - 20, scale: 0.8 }}
-                    transition={{ duration: 0.9, ease: "easeOut" }}
-                    className="absolute -top-3 z-40 pointer-events-none whitespace-nowrap rounded-full bg-amber-500 text-black px-3 py-1 font-display font-black text-xs shadow-2xl border border-amber-300"
-                  >
-                    {spark.text}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {/* O Hambúrguer Flutuante Clicável */}
-              <motion.div
-                key={burgerBounces}
-                onClick={handleBurgerClick}
-                whileHover={{ scale: 1.1, rotateZ: 3, cursor: "pointer" }}
-                whileTap={{ scale: 0.92, rotateZ: -4 }}
-                animate={
-                  isTypingPassword
-                    ? {
-                        // Quando está digitando a senha: burger balança de ladinho em modo "segredo"
-                        rotateY: [0, 15, -15, 0],
-                        y: [-2, -8, -2],
-                      }
-                    : {
-                        y: [0, -10, 0],
-                        rotateZ: [0, 1.5, -1.5, 0],
-                      }
-                }
-                transition={{
-                  duration: isTypingPassword ? 1.4 : 4.0,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="relative w-40 sm:w-44 group cursor-pointer"
-                title="Clique no hambúrguer para uma surpresa crocante!"
-              >
-                <img
-                  src={burgerClassico}
-                  alt="Hambúrguer Fogo e Chapa"
-                  draggable={false}
-                  className="w-full object-contain drop-shadow-[0_24px_30px_rgba(0,0,0,0.95)] filter contrast-110 group-hover:brightness-110 transition-all duration-300"
-                />
-
-                {/* Óculos escuros secretos quando a senha é oculta e focada */}
-                {isTypingPassword && !showPassword && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="absolute top-[38%] left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-black/90 border border-amber-400 text-[10px] font-black text-amber-300 shadow-md flex items-center gap-1"
-                  >
-                    <span>🕶️ Segredo</span>
-                  </motion.div>
-                )}
-              </motion.div>
-            </div>
-
-            {/* ================================================================ */}
-            {/* 2. CARD GLASSMORPHISM COM BORDA LUMINOSA ANIMADA                 */}
+            {/* CARD GLASSMORPHISM COM BORDA LUMINOSA ANIMADA                    */}
             {/* ================================================================ */}
             <div className="relative p-[1.5px] rounded-[38px] overflow-hidden bg-gradient-to-b from-amber-500/40 via-white/10 to-transparent shadow-[0_30px_100px_rgba(0,0,0,0.9)]">
               {/* Animated Aurora Glow Border Sweep */}
@@ -302,7 +167,7 @@ export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
                 }}
               />
 
-              <div className="relative overflow-hidden rounded-[37px] bg-[#0d0d10]/95 p-6 sm:p-8 pt-20 backdrop-blur-3xl">
+              <div className="relative overflow-hidden rounded-[37px] bg-[#0d0d10]/95 p-6 sm:p-8 pt-8 backdrop-blur-3xl">
                 {/* Radial Glow quente de brasa no interior */}
                 <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 h-64 w-64 rounded-full bg-gradient-to-b from-amber-500/25 via-orange-600/10 to-transparent blur-3xl" />
 
@@ -414,8 +279,6 @@ export function BurgerBoxLogin({ open, onClose }: BurgerBoxLoginProps) {
                         type={showPassword ? "text" : "password"}
                         required
                         value={password}
-                        onFocus={() => setIsTypingPassword(true)}
-                        onBlur={() => setIsTypingPassword(false)}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
                         className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
