@@ -21,6 +21,7 @@ import beer from "@/assets/beer.jpg";
 import icedTea from "@/assets/iced-tea.jpg";
 import guarana from "@/assets/guarana.jpg";
 import { LiquidSpillCanvas } from "./LiquidSpillCanvas";
+import { SecaNuncaGlassFx } from "./SecaNuncaGlassFx";
 
 /* -------------------------------------------------------------------------- */
 /*                                    Types                                   */
@@ -209,9 +210,9 @@ export const DRINK_SHOWCASE: DrinkItem[] = [
       foam: "#f0fdf4",
     },
     coords: {
-      pourX: 100,
-      pourY: 27,
-      landX: 131,
+      pourX: 96,
+      pourY: 34,
+      landX: 130,
       floorY: 92,
       pivotOrigin: "65% 90%",
     },
@@ -408,6 +409,7 @@ export function SpillableGlass({
   className = "",
   showHint = true,
 }: SpillableGlassProps) {
+  const isSecaNunca = alt.toLowerCase().includes("seca") || alt.toLowerCase().includes("nunca");
   const controls = useAnimationControls();
   const reduceMotion = useReducedMotion();
 
@@ -454,16 +456,30 @@ export function SpillableGlass({
     // 1.48s - 1.86s: Elastic return with inertia overshoot (-3.8° -> 1.4° -> 0°)
     if (!reduceMotion) {
       controls.stop();
-      void controls.start({
-        rotate: [0, -2.5, 34.5, 33.7, 34.9, 34.0, 34.6, 34.2, 34.0, -3.8, 1.4, -0.4, 0],
-        x: [0, -1, 1, 0.5, 1.2, 0.8, 1.0, 0.5, 0, 0, 0, 0, 0],
-        y: [0, -2, -1, -0.5, -1.2, -0.8, -1.0, -0.5, 0, 0, 0, 0, 0],
-        transition: {
-          duration: 1.86,
-          times: [0, 0.04, 0.13, 0.32, 0.50, 0.65, 0.76, 0.82, 0.85, 0.92, 0.96, 0.98, 1],
-          ease: "easeInOut",
-        },
-      });
+      if (isSecaNunca) {
+        // High-energy crisp tilt with ice-cube inertia
+        void controls.start({
+          rotate: [0, -3.2, 35.2, 34.2, 35.5, 34.5, 35.1, 34.6, 34.4, -4.2, 1.8, -0.6, 0],
+          x: [0, -1.5, 1.5, 0.8, 1.6, 1.0, 1.2, 0.6, 0, 0, 0, 0, 0],
+          y: [0, -3.5, -1.5, -0.8, -1.6, -1.0, -1.2, -0.6, 0, 0, 0, 0, 0],
+          transition: {
+            duration: 1.86,
+            times: [0, 0.04, 0.12, 0.30, 0.48, 0.64, 0.76, 0.82, 0.85, 0.92, 0.96, 0.98, 1],
+            ease: "easeInOut",
+          },
+        });
+      } else {
+        void controls.start({
+          rotate: [0, -2.5, 34.5, 33.7, 34.9, 34.0, 34.6, 34.2, 34.0, -3.8, 1.4, -0.4, 0],
+          x: [0, -1, 1, 0.5, 1.2, 0.8, 1.0, 0.5, 0, 0, 0, 0, 0],
+          y: [0, -2, -1, -0.5, -1.2, -0.8, -1.0, -0.5, 0, 0, 0, 0, 0],
+          transition: {
+            duration: 1.86,
+            times: [0, 0.04, 0.13, 0.32, 0.50, 0.65, 0.76, 0.82, 0.85, 0.92, 0.96, 0.98, 1],
+            ease: "easeInOut",
+          },
+        });
+      }
     }
 
     // Liquid stream turns ON at 130ms (as glass tilts past pouring threshold)
@@ -490,7 +506,7 @@ export function SpillableGlass({
       isBusyRef.current = false;
     }, 2850);
     timersRef.current.push(tPuddle);
-  }, [big, controls, liquid, muted, onSpill, reduceMotion]);
+  }, [big, controls, isSecaNunca, liquid, muted, onSpill, reduceMotion]);
 
   return (
     <div
@@ -537,7 +553,7 @@ export function SpillableGlass({
         transition={{ type: "spring", stiffness: 300, damping: 18 }}
       >
         <motion.div
-          className="block h-full w-full select-none"
+          className="relative block h-full w-full select-none"
           style={{ transformOrigin: coords.pivotOrigin }}
           animate={controls}
         >
@@ -550,6 +566,9 @@ export function SpillableGlass({
             className="h-full w-full object-contain select-none"
             style={{ filter: "contrast(1.15) brightness(1.08)" }}
           />
+
+          {/* Test Special Glass Visual Effects exclusively for Seca-nunca */}
+          {isSecaNunca && <SecaNuncaGlassFx isPouring={isPouring} />}
         </motion.div>
       </motion.div>
 
