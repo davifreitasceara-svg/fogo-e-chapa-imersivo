@@ -4265,7 +4265,7 @@ function Index() {
                     {[currentSlide.titleLine1, currentSlide.titleLine2].map((line, i) => (
                       <div key={i} className="overflow-hidden">
                         <motion.h1
-                          className={`font-display text-[20vw] sm:text-[18vw] leading-[0.85] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
+                          className={`font-display text-[14vw] sm:text-[18vw] leading-[0.88] font-black uppercase tracking-tighter ${currentSlide.titleColor}`}
                           variants={{
                             hidden: {
                               y: "100%",
@@ -4300,9 +4300,9 @@ function Index() {
                 </AnimatePresence>
               </div>
 
-              {/* Center Image - perfectly centered on title */}
+              {/* Center Image - no mobile fica no fluxo natural entre o título e os controles; no desktop fica absoluto */}
               <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65vw] sm:w-[42vw] max-w-[520px] pointer-events-auto cursor-pointer z-20 group"
+                className="relative sm:absolute sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-[72vw] sm:w-[42vw] max-w-[320px] sm:max-w-[520px] pointer-events-auto cursor-pointer z-20 group my-2 sm:my-0 flex items-center justify-center"
                 style={{ perspective: "1200px" }}
                 title="Clique para adicionar este hambúrguer à sacola!"
                 onClick={(e) => {
@@ -4357,6 +4357,30 @@ function Index() {
                     className={`w-full h-auto object-contain drop-shadow-2xl ${currentSlide.id === "brasa" ? "scale-x-[-1]" : ""} ${currentSlide.id === "inferno" ? "hue-rotate-15 saturate-150" : ""}`}
                   />
                 </AnimatePresence>
+
+                {/* Mobile Navigation Arrows (acopladas elegantemente nas laterais do hambúrguer) */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevHero();
+                  }}
+                  aria-label="Hambúrguer anterior"
+                  className="sm:hidden absolute -left-2 top-1/2 -translate-y-1/2 z-30 size-10 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/25 flex items-center justify-center active:scale-90 shadow-2xl cursor-pointer"
+                >
+                  <ChevronLeft className="size-5" strokeWidth={2.5} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextHero();
+                  }}
+                  aria-label="Próximo hambúrguer"
+                  className="sm:hidden absolute -right-2 top-1/2 -translate-y-1/2 z-30 size-10 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/25 flex items-center justify-center active:scale-90 shadow-2xl cursor-pointer"
+                >
+                  <ChevronRight className="size-5" strokeWidth={2.5} />
+                </button>
               </div>
 
               {/* Floating Badges */}
@@ -4372,8 +4396,7 @@ function Index() {
                 </motion.div>
               ))}
 
-              {/* Carousel Arrows - Desktop & Mobile */}
-              {/* Desktop Left */}
+              {/* Carousel Arrows - Desktop */}
               <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
                 <Button
                   onClick={prevHero}
@@ -4384,7 +4407,6 @@ function Index() {
                   <ChevronLeft className="size-8" />
                 </Button>
               </div>
-              {/* Desktop Right */}
               <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
                 <Button
                   onClick={nextHero}
@@ -4396,31 +4418,9 @@ function Index() {
                 </Button>
               </div>
 
-              {/* Mobile Navigation Arrows (compact and positioned safely on edges) */}
-              <div className="sm:hidden absolute top-[44%] left-2.5 -translate-y-1/2 z-30 pointer-events-auto">
-                <button
-                  type="button"
-                  onClick={prevHero}
-                  aria-label="Hambúrguer anterior"
-                  className="size-11 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center active:scale-90 shadow-xl cursor-pointer"
-                >
-                  <ChevronLeft className="size-6" strokeWidth={2.5} />
-                </button>
-              </div>
-              <div className="sm:hidden absolute top-[44%] right-2.5 -translate-y-1/2 z-30 pointer-events-auto">
-                <button
-                  type="button"
-                  onClick={nextHero}
-                  aria-label="Próximo hambúrguer"
-                  className="size-11 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center active:scale-90 shadow-xl cursor-pointer"
-                >
-                  <ChevronRight className="size-6" strokeWidth={2.5} />
-                </button>
-              </div>
-
-              {/* Mobile Burger Switcher Dots & Counter */}
-              <div className="sm:hidden flex flex-col items-center gap-1.5 z-30 mt-6 mb-1">
-                <div className="flex items-center gap-3 bg-black/45 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full shadow-lg">
+              {/* Mobile Burger Switcher Dots & Counter (agora com posição dedicada abaixo do hambúrguer, sem sobreposição) */}
+              <div className="sm:hidden flex flex-col items-center gap-1.5 z-30 mt-1 mb-3">
+                <div className="flex items-center gap-3 bg-black/55 backdrop-blur-xl border border-white/20 px-3.5 py-1.5 rounded-full shadow-2xl">
                   <div className="flex gap-1.5 items-center">
                     {carouselSlides.map((_, i) => (
                       <button
@@ -4430,36 +4430,36 @@ function Index() {
                           setHeroIndex(i);
                         }}
                         aria-label={`Ver hambúrguer ${i + 1}`}
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          i === heroIndex ? "w-6 bg-white" : "w-2 bg-white/40"
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          i === heroIndex ? "w-5 bg-white" : "w-1.5 bg-white/40"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-[11px] font-black text-white tracking-wider">
+                  <span className="text-[11px] font-black text-white/90 tracking-wider tabular-nums">
                     0{heroIndex + 1} / 0{carouselSlides.length}
                   </span>
                 </div>
-                <p className="text-[10px] text-white/70 font-semibold uppercase tracking-widest select-none">
+                <p className="text-[9px] text-white/70 font-bold uppercase tracking-widest select-none">
                   ← Deslize para trocar de sabor →
                 </p>
               </div>
 
-              {/* Action Buttons */}
-              <div className="relative z-30 mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+              {/* Action Buttons - alinhados lado a lado no celular para economizar altura vertical e evitar cortes */}
+              <div className="relative z-30 mt-1 sm:mt-8 flex flex-row gap-3 justify-center items-center w-full px-4 sm:px-0 max-w-xs sm:max-w-none">
                 <Button
                   onClick={() =>
                     document.getElementById("menu")?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className={`rounded-full text-white font-bold px-8 py-6 text-lg transition-colors duration-700 ease-in-out hover:opacity-90 ${currentSlide.buttonBg}`}
+                  className={`flex-1 sm:flex-initial rounded-full text-white font-black px-5 sm:px-8 py-3.5 sm:py-6 text-sm sm:text-lg transition-all duration-500 ease-in-out hover:opacity-90 shadow-2xl active:scale-95 ${currentSlide.buttonBg}`}
                 >
                   Ver Cardápio
                 </Button>
                 <Button
                   onClick={() =>
-                    document.getElementById("sobre")?.scrollIntoView({ behavior: "smooth" })
+                    document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className={`rounded-full bg-white font-bold px-8 py-6 text-lg border-0 transition-colors duration-700 ease-in-out hover:bg-gray-100 ${currentSlide.buttonText}`}
+                  className={`flex-1 sm:flex-initial rounded-full bg-white/15 hover:bg-white text-white hover:text-black font-black px-5 sm:px-8 py-3.5 sm:py-6 text-sm sm:text-lg backdrop-blur-md border border-white/30 transition-all duration-500 ease-in-out active:scale-95 shadow-2xl ${currentSlide.buttonText}`}
                 >
                   Onde Estamos
                 </Button>
