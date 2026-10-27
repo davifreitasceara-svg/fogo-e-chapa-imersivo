@@ -3904,13 +3904,18 @@ function Index() {
               {[
                 { href: "#menu", label: "Cardápio" },
                 { href: "#gallery", label: "Galeria 3D" },
-                { href: "#drinks", label: "Bebidas" },
+                { href: "/drinks", label: "Bebidas" },
                 { href: "#contato", label: "Onde Estamos" },
               ].map((link) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
                   onClick={(e) => {
+                    if (link.href === "/drinks") {
+                      e.preventDefault();
+                      navigate({ to: "/drinks" });
+                      return;
+                    }
                     if (link.href.startsWith("#")) {
                       e.preventDefault();
                       document.getElementById(link.href.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
