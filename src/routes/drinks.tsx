@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, ShoppingBag } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { LoginModal } from "@/components/LoginModal";
-import { Can3DScene } from "@/components/Can3D";
+import { Can3DScene, MOBILE_DETAIL_SECTIONS } from "@/components/Can3D";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 import drinkLimao from "@/assets/drink-limao.jpg";
@@ -115,12 +115,78 @@ const DRINKS_DATA = [
   },
 ];
 
+const MOBILE_SECTION_LABELS = ["Sabor", "Ingredientes", "Nutrição", "Peça já"];
+
+// Card de vidro das seções mobile: anima ao entrar na tela (quando a lata termina o giro e trava de frente)
+function MobileCard({
+  children,
+  scrollerRef,
+}: {
+  children: React.ReactNode;
+  scrollerRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ root: scrollerRef, amount: 0.7 }}
+      transition={{ type: "spring", stiffness: 140, damping: 18 }}
+      className="w-full rounded-[1.75rem] bg-black/35 backdrop-blur-xl border border-white/20 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function DrinksPage() {
   const [activeIndex, setActiveIndex] = useState(2); // 2 is Mango (center)
   const [loginOpen, setLoginOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'carousel' | 'detail'>('carousel');
   const [detailScroll, setDetailScroll] = useState(0);
+  const [mobileSection, setMobileSection] = useState(0);
   const { addToCart } = useCart();
+
+  // --- Vitrine mobile: o scroll vira rotação da lata (1 seção = 1 giro de 360°) ---
+  const mobileScrollerRef = useRef<HTMLDivElement | null>(null);
+  const scrollRafRef = useRef<number | null>(null);
+  const lastSnapRef = useRef(0);
+
+  const handleMobileScroll = useCallback(() => {
+    if (scrollRafRef.current !== null) return;
+    scrollRafRef.current = requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      const el = mobileScrollerRef.current;
+      if (!el) return;
+      const max = el.scrollHeight - el.clientHeight;
+      const p = max > 0 ? Math.min(1, Math.max(0, el.scrollTop / max)) : 0;
+      setDetailScroll(p);
+
+      const pos = p * (MOBILE_DETAIL_SECTIONS - 1);
+      const nearest = Math.round(pos);
+      setMobileSection(nearest);
+
+      // Quando trava exatamente de frente em uma nova seção: pequeno feedback tátil
+      if (Math.abs(pos - nearest) < 0.015 && nearest !== lastSnapRef.current) {
+        lastSnapRef.current = nearest;
+        if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+          try { navigator.vibrate(12); } catch {}
+        }
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (viewMode === 'carousel') {
+      setMobileSection(0);
+      lastSnapRef.current = 0;
+    }
+    return () => {
+      if (scrollRafRef.current !== null) {
+        cancelAnimationFrame(scrollRafRef.current);
+        scrollRafRef.current = null;
+      }
+    };
+  }, [viewMode]);
 
   const shiftLeft = () => {
     if (viewMode === 'detail') return;
@@ -146,6 +212,8 @@ function DrinksPage() {
           setDetailScroll(Math.min(0.2, (delta - 40) * 0.0015));
         }
       } else if (viewMode === 'detail') {
+        // No mobile a rolagem nativa (com snap) controla a lata
+        if (typeof window !== 'undefined' && window.innerWidth < 768) return;
         if (delta > 0) {
           // Rola para baixo: acelera suco e inclina lata
           setDetailScroll((prev) => Math.min(1, prev + delta * 0.0015));
@@ -386,7 +454,169 @@ function DrinksPage() {
           )}
         </AnimatePresence>
 
-        {/* --- DETAIL MODE: INFORMATION LAYER --- */}
+        {/* --- DETAIL MODE (MOBILE): VITRINE GIRATÓRIA COM SNAP --- */}
+        {/* Cada seção = 1 giro completo de 360° da lata. O scroll-snap trava a rolagem sempre com a lata de frente. */}
+        <AnimatePresence>
+          {viewMode === 'detail' && (
+            <motion.div
+              key="mobile-detail"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="md:hidden absolute inset-0 z-10 pointer-events-auto"
+            >
+              {/* Barra superior fixa */}
+              <div className="absolute top-[84px] inset-x-0 z-30 flex items-center justify-between px-4 pointer-events-none">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setViewMode('carousel');
+                    setDetailScroll(0);
+                  }}
+                  className="pointer-events-auto inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/50 backdrop-blur-md text-white text-[11px] font-black uppercase tracking-wider shadow-lg border border-white/20 active:scale-95 cursor-pointer"
+                >
+                  <ArrowLeft size={14} /> Voltar
+                </button>
+                <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/15 tabular-nums">
+                  {MOBILE_SECTION_LABELS[mobileSection]} · {mobileSection + 1}/{MOBILE_DETAIL_SECTIONS}
+                </span>
+              </div>
+
+              {/* Indicador vertical de giros (direita) */}
+              <div className="absolute right-3 top-[36%] -translate-y-1/2 z-30 flex flex-col items-center gap-2 pointer-events-none">
+                {Array.from({ length: MOBILE_DETAIL_SECTIONS }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={`w-1.5 rounded-full transition-all duration-300 ${i === mobileSection ? 'h-6 bg-white' : 'h-1.5 bg-white/40'}`}
+                  />
+                ))}
+              </div>
+
+              {/* Container com scroll-snap obrigatório */}
+              <div
+                ref={mobileScrollerRef}
+                onScroll={handleMobileScroll}
+                className="absolute inset-0 overflow-y-auto snap-y snap-mandatory overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                style={{ WebkitOverflowScrolling: "touch" }}
+              >
+                {/* 1. Apresentação */}
+                <section className="snap-start snap-always h-full flex flex-col justify-end px-4 pb-8">
+                  <MobileCard scrollerRef={mobileScrollerRef}>
+                    <span className="inline-block px-3 py-1 rounded-full border border-white/40 text-[10px] font-bold tracking-widest uppercase text-white/85">
+                      {centerDrink.indexLabel}
+                    </span>
+                    <h2 className="mt-2 text-5xl font-black leading-none tracking-tighter lowercase text-white drop-shadow-md">
+                      {centerDrink.logoText}
+                    </h2>
+                    <p className="mt-3 text-[15px] font-bold leading-snug text-white/95">
+                      {centerDrink.fullDesc}
+                    </p>
+                    <motion.p
+                      animate={{ y: [0, 5, 0] }}
+                      transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                      className="mt-4 text-[10px] font-black uppercase tracking-widest text-white/70"
+                    >
+                      ↓ Role para girar a lata
+                    </motion.p>
+                  </MobileCard>
+                </section>
+
+                {/* 2. Ingredientes */}
+                <section className="snap-start snap-always h-full flex flex-col justify-end px-4 pb-8">
+                  <MobileCard scrollerRef={mobileScrollerRef}>
+                    <span className="text-[11px] font-black uppercase tracking-wider text-white/70">
+                      Ingredientes Naturais
+                    </span>
+                    <p className="mt-2 text-sm font-medium leading-relaxed text-white/95">
+                      {centerDrink.ingredients}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {centerDrink.ingredientTags?.map((tag: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className="px-2.5 py-1 rounded-full text-[10px] font-bold text-white bg-white/15 border border-white/25"
+                        >
+                          ✦ {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </MobileCard>
+                </section>
+
+                {/* 3. Tabela nutricional */}
+                <section className="snap-start snap-always h-full flex flex-col justify-end px-4 pb-8">
+                  <MobileCard scrollerRef={mobileScrollerRef}>
+                    <span className="text-[11px] font-black uppercase tracking-wider text-white/70">
+                      Por lata · 330 ml
+                    </span>
+                    <div className="mt-3 grid grid-cols-3 gap-2">
+                      {[
+                        { label: "Energia", value: centerDrink.kcal },
+                        { label: "Fruta", value: centerDrink.juice },
+                        { label: "Açúcar", value: centerDrink.sugar },
+                      ].map((stat) => (
+                        <div
+                          key={stat.label}
+                          className="rounded-2xl bg-white/10 border border-white/20 px-2 py-3 text-center"
+                        >
+                          <div className="text-[9px] font-black uppercase tracking-widest text-white/60">
+                            {stat.label}
+                          </div>
+                          <div className="mt-1 text-sm font-black text-white leading-tight">
+                            {stat.value}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </MobileCard>
+                </section>
+
+                {/* 4. Comprar */}
+                <section className="snap-start snap-always h-full flex flex-col justify-end px-4 pb-8">
+                  <MobileCard scrollerRef={mobileScrollerRef}>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={centerDrink.fruitImage}
+                        alt={centerDrink.name}
+                        className="size-16 rounded-2xl object-cover border border-white/25 shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <div className="text-[11px] font-black uppercase tracking-wider text-white/70">
+                          Gelada e pronta
+                        </div>
+                        <div className="text-lg font-black text-white truncate">{centerDrink.name}</div>
+                        <div className="text-2xl font-black text-white">{centerDrink.price}</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        addToCart({
+                          name: centerDrink.name,
+                          price: centerDrink.price,
+                          image: centerDrink.fruitImage,
+                        });
+                        toast.success(`${centerDrink.name} adicionado à sacola!`);
+                      }}
+                      className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-full bg-white text-black font-black text-sm uppercase tracking-wider shadow-2xl active:scale-95 cursor-pointer"
+                    >
+                      <ShoppingBag size={16} /> Adicionar à sacola
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => mobileScrollerRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+                      className="mt-2 w-full py-2 text-[11px] font-black uppercase tracking-wider text-white/75 cursor-pointer"
+                    >
+                      ↑ Girar de volta ao início
+                    </button>
+                  </MobileCard>
+                </section>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* --- DETAIL MODE (DESKTOP/TABLET): INFORMATION LAYER --- */}
         <AnimatePresence>
           {viewMode === 'detail' && (
             <motion.div 
@@ -394,35 +624,9 @@ function DrinksPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 60 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="absolute inset-0 w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex flex-col lg:flex-row items-center justify-between z-10 pt-16 sm:pt-20 pb-24 sm:pb-12 overflow-y-auto lg:overflow-hidden pointer-events-auto"
+              className="absolute inset-0 w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 hidden md:flex flex-col lg:flex-row items-center justify-between z-10 pt-16 sm:pt-20 pb-24 sm:pb-12 overflow-y-auto lg:overflow-hidden pointer-events-auto"
               style={{ WebkitOverflowScrolling: "touch" }}
-              onScroll={(e) => {
-                const el = e.currentTarget;
-                const max = el.scrollHeight - el.clientHeight;
-                const p = max > 0 ? el.scrollTop / max : 0;
-                setDetailScroll(Math.min(1, Math.max(0, p)));
-              }}
             >
-              {/* Sticky Bar no Topo para Mobile */}
-              <div className="sticky top-0 z-30 lg:hidden w-full flex items-center justify-between py-2 px-1 mb-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setViewMode('carousel');
-                    setDetailScroll(0);
-                  }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-md text-white text-xs font-black uppercase tracking-wider shadow-lg border border-white/20 transition-transform active:scale-95 cursor-pointer"
-                >
-                  <ArrowLeft size={14} /> Voltar ao Carrossel
-                </button>
-                <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/90 border border-white/10">
-                  Lata 3D Interativa
-                </span>
-              </div>
-
-              {/* Espaço reservado para visualização da Lata 3D no topo em telas mobile */}
-              <div className="h-[210px] sm:h-[250px] lg:hidden w-full shrink-0 pointer-events-none" />
-
               {/* Left Text Content */}
               <div className="flex-1 w-full flex flex-col space-y-3 sm:space-y-5 max-w-xl py-2 sm:py-4" style={{ color: centerDrink.textColor }}>
                 <motion.span 
