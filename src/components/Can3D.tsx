@@ -1150,9 +1150,9 @@ export function Can3DScene({
   return (
     <div className="w-full h-full">
       <Canvas 
-        dpr={[1, isMobile ? 1.25 : 1.75]}
+        dpr={[1, isMobile ? 1.15 : 1.5]}
         camera={{ position: [0, 0, 10.0], fov: 35 }}
-        gl={{ powerPreference: "high-performance", antialias: true, alpha: true, stencil: false }}
+        gl={{ powerPreference: "high-performance", antialias: !isMobile, alpha: true, stencil: false, depth: true }}
       >
         <ResponsiveCamera />
         <TexturePrewarmer drinks={drinks} />

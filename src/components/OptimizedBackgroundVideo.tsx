@@ -20,7 +20,7 @@ export function OptimizedBackgroundVideo({
   src,
   webmSrc,
   active = true,
-  className = "w-full h-full object-cover opacity-[0.55] mix-blend-screen",
+  className = "w-full h-full object-cover opacity-50",
   style,
   objectPosition,
 }: OptimizedBackgroundVideoProps) {
@@ -97,12 +97,8 @@ export function OptimizedBackgroundVideo({
       ref={containerRef}
       className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
       style={{
-        isolation: "isolate",
-        contain: "paint layout",
-        transform: "translate3d(0, 0, 0)",
-        willChange: "transform",
-        backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden",
+        contain: "strict",
+        transform: "translateZ(0)",
       }}
     >
       <video
@@ -116,11 +112,7 @@ export function OptimizedBackgroundVideo({
         disableRemotePlayback
         className={className}
         style={{
-          transform: "translate3d(0, 0, 0)",
-          willChange: "transform",
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
-          contain: "paint",
+          transform: "translateZ(0)",
           objectPosition,
           ...style,
         }}

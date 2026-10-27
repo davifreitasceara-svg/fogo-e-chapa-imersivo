@@ -86,7 +86,7 @@ export function AppetizerSlider({
     <section 
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className="relative w-full min-h-[620px] sm:min-h-[700px] md:max-h-[850px] overflow-hidden flex items-center"
+      className="relative w-full min-h-[620px] sm:min-h-[700px] md:max-h-[850px] overflow-hidden flex items-center content-auto"
     >
       {/* Base Animated Background Color */}
       <motion.div
@@ -246,7 +246,12 @@ export function AppetizerSlider({
                 style={{ width: isMobile ? "250px" : "360px" }}
               >
                 {isActive && (
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-white/20 rounded-full blur-[60px] -z-10" />
+                  <div 
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full -z-10 pointer-events-none"
+                    style={{
+                      background: "radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 45%, transparent 70%)"
+                    }}
+                  />
                 )}
                 <motion.div
                   className="w-full h-full"

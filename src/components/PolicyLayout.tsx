@@ -72,7 +72,7 @@ export function PolicyLayout({
         <OptimizedBackgroundVideo
           src="/quero_mais_chamas.mp4"
           active={true}
-          className="w-full h-full object-cover opacity-35 mix-blend-screen scale-105"
+          className="w-full h-full object-cover opacity-30 scale-105"
         />
         {/* Deep cinematic gradient veil */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/80 to-black pointer-events-none" />
