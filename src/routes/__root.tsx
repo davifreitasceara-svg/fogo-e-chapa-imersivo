@@ -125,6 +125,7 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 import { CartProvider } from "../context/CartContext";
+import { AuthProvider } from "../context/AuthContext";
 import { CartSidebar } from "../components/CartSidebar";
 
 function RootComponent() {
@@ -132,11 +133,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <CartProvider><Outlet /><CartSidebar /></CartProvider> breaks all child routes. */}
-      <CartProvider>
-        <Outlet />
-        <CartSidebar />
-      </CartProvider>
+      {/* Required: nested routes render here. */}
+      <AuthProvider>
+        <CartProvider>
+          <Outlet />
+          <CartSidebar />
+        </CartProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

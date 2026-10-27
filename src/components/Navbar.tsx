@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X, LogIn } from "lucide-react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { href: "/#about", label: "About" },
@@ -12,6 +13,7 @@ const navLinks = [
 ];
 
 export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
+  const { user } = useAuth();
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState("");
@@ -200,18 +202,43 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
             </AnimatePresence>
           </button>
 
-          <button
-            onClick={() => {
-              if (onOpenLogin) {
-                onOpenLogin();
-              } else {
-                document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
-            className="hidden sm:flex items-center justify-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 py-2 text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            <LogIn className="size-4" /> Entrar
-          </button>
+          {user ? (
+            <button
+              onClick={() => {
+                if (onOpenLogin) onOpenLogin();
+              }}
+              className="hidden sm:flex items-center justify-center gap-2 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/50 hover:bg-amber-500/25 font-bold px-4 py-1.5 text-xs transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+              title="Acessar meu perfil e endereços"
+            >
+              {(user.user_metadata as Record<string, any> | undefined)?.["avatar_url"] ||
+              (user.user_metadata as Record<string, any> | undefined)?.["picture"] ? (
+                <img
+                  src={
+                    ((user.user_metadata as Record<string, any> | undefined)?.["avatar_url"] as string) ||
+                    ((user.user_metadata as Record<string, any> | undefined)?.["picture"] as string)
+                  }
+                  alt="Avatar"
+                  className="size-5 rounded-full object-cover border border-amber-400"
+                />
+              ) : null}
+              <span className="max-w-[120px] truncate">
+                {((user.user_metadata as Record<string, any> | undefined)?.["full_name"] as string)?.split(" ")[0] || "Minha Conta"}
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (onOpenLogin) {
+                  onOpenLogin();
+                } else {
+                  document.getElementById("contato")?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+              className="hidden sm:flex items-center justify-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-6 py-2 text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <LogIn className="size-4" /> Entrar
+            </button>
+          )}
 
           {/* Mobile hamburger menu */}
           <button
@@ -260,7 +287,13 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
                   }}
                   className="w-full flex items-center justify-center gap-2 rounded-full border-2 border-white text-white hover:bg-white hover:text-black py-2.5 text-sm font-bold uppercase transition-all duration-300 active:scale-95 cursor-pointer"
                 >
-                  <LogIn className="size-4" /> Entrar
+                  {user ? (
+                    <span>Minha Conta ({((user.user_metadata as Record<string, any> | undefined)?.["full_name"] as string)?.split(" ")[0] || "Conectado"})</span>
+                  ) : (
+                    <>
+                      <LogIn className="size-4" /> Entrar com Google
+                    </>
+                  )}
                 </button>
               </div>
             </div>

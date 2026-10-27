@@ -1,6 +1,11 @@
 import { CartCheckoutSheet } from "../components/CartCheckoutSheet";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
+import {
+  RESTAURANT_COORDS,
+  findDeliveryPointByText,
+  type LatLng,
+} from "@/lib/deliveryPoints";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowDown,
@@ -41,6 +46,8 @@ import { Bubbles } from "@/components/Bubbles";
 import { AppetizerSlider } from "@/components/AppetizerSlider";
 import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo";
 import { BurgerBoxLogin } from "@/components/BurgerBoxLogin";
+import { UserProfileModal } from "@/components/UserProfileModal";
+import { useAuth } from "@/context/AuthContext";
 import { ComboCards } from "@/components/ComboCards";
 import { DrinkGrid, DrinkSpotlight } from "@/components/DrinkGrid";
 import heroBurger from "@/assets/hero-burger.png";
@@ -393,6 +400,15 @@ const MOCK_DRIVERS = [
 ];
 
 const MOCK_ROUTES: any[] = [
+  {
+    name: "SESI SENAI Parangaba",
+    address: "SESI SENAI Parangaba • Av. João Pessoa, 6754",
+    start: [-3.743457,-38.537248],
+    restaurant: [-3.754824,-38.549215],
+    customer: [-3.769087,-38.562593],
+    route1: [[-3.743457,-38.537248],[-3.743961,-38.537703],[-3.743999,-38.537737],[-3.74379,-38.537981],[-3.743749,-38.538031],[-3.743781,-38.538058],[-3.744611,-38.5388],[-3.744781,-38.538608],[-3.745047,-38.53831],[-3.74592,-38.539099],[-3.746765,-38.539873],[-3.746777,-38.539884],[-3.747436,-38.540453],[-3.747492,-38.5405],[-3.747519,-38.540527],[-3.747592,-38.540605],[-3.747625,-38.54064],[-3.747676,-38.540686],[-3.748158,-38.541123],[-3.74872,-38.541633],[-3.74903,-38.541913],[-3.74936,-38.542208],[-3.749709,-38.542526],[-3.749958,-38.542751],[-3.749982,-38.542773],[-3.75002,-38.54281],[-3.750064,-38.542849],[-3.750261,-38.543038],[-3.750475,-38.543227],[-3.750847,-38.543553],[-3.750891,-38.543592],[-3.750936,-38.543633],[-3.751325,-38.543987],[-3.751642,-38.544267],[-3.751723,-38.544339],[-3.751766,-38.544379],[-3.75213,-38.544716],[-3.752342,-38.544918],[-3.752464,-38.545029],[-3.752512,-38.545073],[-3.752558,-38.545115],[-3.752932,-38.545453],[-3.753286,-38.545768],[-3.753331,-38.545808],[-3.753381,-38.545849],[-3.753652,-38.546065],[-3.753884,-38.546247],[-3.753898,-38.546258],[-3.75395,-38.546299],[-3.753999,-38.546339],[-3.754647,-38.546864],[-3.754713,-38.546917],[-3.755117,-38.547259],[-3.755171,-38.547307],[-3.755396,-38.547494],[-3.75556,-38.547641],[-3.755729,-38.547787],[-3.755698,-38.547833],[-3.754979,-38.548959],[-3.754824,-38.549215]],
+    route2: [[-3.754824,-38.549215],[-3.754979,-38.548959],[-3.755698,-38.547833],[-3.755729,-38.547787],[-3.75578,-38.547825],[-3.755902,-38.547929],[-3.756121,-38.54811],[-3.756461,-38.548369],[-3.756838,-38.548674],[-3.757134,-38.548905],[-3.757323,-38.549059],[-3.75741,-38.549129],[-3.757874,-38.549509],[-3.757909,-38.549537],[-3.758366,-38.549934],[-3.758929,-38.550396],[-3.758954,-38.550416],[-3.758979,-38.550436],[-3.758811,-38.550765],[-3.758848,-38.5508],[-3.758871,-38.550821],[-3.759001,-38.550941],[-3.75952,-38.55142],[-3.759886,-38.551753],[-3.760603,-38.552374],[-3.760675,-38.552437],[-3.760704,-38.552462],[-3.760864,-38.552595],[-3.760982,-38.552676],[-3.761535,-38.553149],[-3.761767,-38.553357],[-3.762104,-38.553659],[-3.76281,-38.554319],[-3.763544,-38.554952],[-3.764268,-38.555585],[-3.764899,-38.556147],[-3.764941,-38.556082],[-3.76572,-38.556536],[-3.765282,-38.557318],[-3.764891,-38.558032],[-3.764589,-38.558643],[-3.76456,-38.558717],[-3.76468,-38.55877],[-3.764973,-38.558891],[-3.765291,-38.559023],[-3.765502,-38.559109],[-3.766194,-38.559392],[-3.766212,-38.559399],[-3.766575,-38.559542],[-3.766649,-38.559602],[-3.766881,-38.559699],[-3.766908,-38.55971],[-3.767236,-38.559846],[-3.767451,-38.559934],[-3.76756,-38.55998],[-3.768233,-38.560257],[-3.768593,-38.560401],[-3.768775,-38.560477],[-3.768954,-38.560551],[-3.769606,-38.560821],[-3.769742,-38.560878],[-3.769776,-38.560891],[-3.770137,-38.561042],[-3.770253,-38.561089],[-3.770566,-38.561219],[-3.770682,-38.561266],[-3.770801,-38.561314],[-3.770837,-38.561329],[-3.770919,-38.561363],[-3.770978,-38.561387],[-3.771027,-38.56141],[-3.771064,-38.56144],[-3.771121,-38.561499],[-3.771172,-38.561568],[-3.771158,-38.561611],[-3.770939,-38.562285],[-3.77066,-38.563002],[-3.769715,-38.562667],[-3.769418,-38.562566],[-3.769329,-38.562538],[-3.769249,-38.562536],[-3.769175,-38.562551],[-3.769095,-38.562587],[-3.769087,-38.562593]]
+  },
   {
     "start": [
       -3.73086,
@@ -3239,11 +3255,15 @@ const MOCK_ROUTES: any[] = [
 function Index() {
   const navigate = useNavigate();
   const router = useRouter();
+  const { user } = useAuth();
   const [activeDrinkId, setActiveDrinkId] = useState<number | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
+  const [deliveryAddress, setDeliveryAddress] = useState<string>("SESI SENAI Parangaba • Av. João Pessoa, 6754");
+  const [deliveryCoords, setDeliveryCoords] = useState<LatLng | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [trackingOpen, setTrackingOpen] = useState(false);
   const [activeOrderTime, setActiveOrderTime] = useState<number | null>(null);
   const [activeOrderType, setActiveOrderType] = useState<"delivery" | "pickup" | null>(null);
@@ -3536,16 +3556,22 @@ function Index() {
     };
   }, [authOpen]);
 
-  const handleCheckout = (address: string, orderType?: "delivery" | "pickup" | null) => {
+  const handleCheckout = (
+    address: string,
+    orderType?: "delivery" | "pickup" | null,
+    coords?: LatLng | null,
+  ) => {
     if (Object.keys(cart).length === 0) return;
 
     // In a real app, this would send an API request.
-    // For demonstration, we just clear the cart and open the tracking modal!
+    // O motoboy sai antes da Hamburgueria, coleta o pedido e segue até o destino escolhido
     setCart({});
     setActiveOrderTime(Date.now());
     setActiveOrderType(orderType || "delivery");
     setActiveDriver(Math.floor(Math.random() * MOCK_DRIVERS.length));
-    setActiveRoute(Math.floor(Math.random() * MOCK_ROUTES.length));
+    setActiveRoute(0);
+    setDeliveryAddress(address?.trim() || "SESI SENAI Parangaba • Av. João Pessoa, 6754");
+    setDeliveryCoords(coords ?? null);
     setTrackingOpen(true);
   };
 
@@ -4009,12 +4035,37 @@ function Index() {
                 />
               </Sheet>
 
-              <Button
-                onClick={() => setAuthOpen(true)}
-                className="hidden sm:flex items-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-5 py-1.5 text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
-              >
-                <LogIn className="w-3.5 h-3.5" /> Entrar
-              </Button>
+              {user ? (
+                <Button
+                  onClick={() => setProfileOpen(true)}
+                  className="hidden sm:flex items-center gap-2 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/50 hover:bg-amber-500/25 font-bold px-3.5 py-1.5 text-xs transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                  title="Acessar meu perfil e endereços"
+                >
+                  {(user.user_metadata as Record<string, any> | undefined)?.["avatar_url"] ||
+                  (user.user_metadata as Record<string, any> | undefined)?.["picture"] ? (
+                    <img
+                      src={
+                        ((user.user_metadata as Record<string, any> | undefined)?.["avatar_url"] as string) ||
+                        ((user.user_metadata as Record<string, any> | undefined)?.["picture"] as string)
+                      }
+                      alt="Avatar"
+                      className="size-5 rounded-full object-cover border border-amber-400"
+                    />
+                  ) : (
+                    <UserRound className="size-3.5 text-amber-400" />
+                  )}
+                  <span className="max-w-[120px] truncate">
+                    {((user.user_metadata as Record<string, any> | undefined)?.["full_name"] as string)?.split(" ")[0] || "Minha Conta"}
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setAuthOpen(true)}
+                  className="hidden sm:flex items-center gap-2 rounded-full bg-transparent text-white border-2 border-white hover:bg-white hover:text-black font-bold px-5 py-1.5 text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                >
+                  <LogIn className="w-3.5 h-3.5" /> Entrar com Google
+                </Button>
+              )}
 
               {/* Mobile Hamburger Button */}
               <button
@@ -4097,11 +4148,24 @@ function Index() {
                   <Button
                     onClick={() => {
                       setIsNavOpen(false);
-                      setAuthOpen(true);
+                      if (user) {
+                        setProfileOpen(true);
+                      } else {
+                        setAuthOpen(true);
+                      }
                     }}
                     className="w-full rounded-full bg-white text-black font-bold py-2 text-xs hover:bg-gray-200 transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
-                    <LogIn className="size-3.5" /> Entrar na Conta
+                    {user ? (
+                      <>
+                        <UserRound className="size-3.5 text-amber-600" />
+                        <span>Minha Conta ({((user.user_metadata as Record<string, any> | undefined)?.["full_name"] as string)?.split(" ")[0] || "Conectado"})</span>
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="size-3.5" /> Entrar com Google
+                      </>
+                    )}
                   </Button>
                 </div>
               </motion.div>
@@ -5206,6 +5270,11 @@ function Index() {
       </footer>
 
       <BurgerBoxLogin open={authOpen} onClose={() => setAuthOpen(false)} />
+      <UserProfileModal
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        onOpenTracking={() => setTrackingOpen(true)}
+      />
       <AnimatePresence>
         {activeDrinkId !== null && (
           <DrinkSpotlight
@@ -5228,6 +5297,8 @@ function Index() {
             activeOrderType={activeOrderType}
             activeDriver={activeDriver}
             activeRoute={activeRoute}
+            deliveryAddress={deliveryAddress}
+            destinationCoords={deliveryCoords}
             onClose={() => setTrackingOpen(false)}
             currentTheme={currentTheme}
           />
@@ -5396,6 +5467,7 @@ function DeliveryTrackingModal({
   activeOrderType,
   activeDriver,
   activeRoute,
+  deliveryAddress,
 }: {
   onClose: () => void;
   currentTheme: any;
@@ -5403,6 +5475,7 @@ function DeliveryTrackingModal({
   activeOrderType?: "delivery" | "pickup" | null;
   activeDriver: number;
   activeRoute: number;
+  deliveryAddress?: string;
 }) {
   const [ratingState, setRatingState] = useState<"driver" | "food" | "done" | null>(null);
   const [driverRating, setDriverRating] = useState(0);
@@ -5424,15 +5497,73 @@ function DeliveryTrackingModal({
   const progressRatio = Math.min(1, Math.max(0, elapsedApp / totalDuration));
   const isDone = remainingMs === 0;
 
-  let stage = "picking_up";
-  if (progressRatio > 0.1) stage = "delivering";
-  if (isDone) stage = "delivered";
+  const mockRoute = MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0];
+  const route1Len = mockRoute.route1?.length || 10;
+  const route2Len = mockRoute.route2?.length || 10;
+  const restaurantRatio = route1Len / Math.max(1, route1Len + route2Len);
+
+  let stage: "to_restaurant" | "at_restaurant" | "delivering" | "delivered" = "to_restaurant";
+  if (isDone || progressRatio >= 0.99) {
+    stage = "delivered";
+  } else if (progressRatio > restaurantRatio + 0.05) {
+    stage = "delivering";
+  } else if (progressRatio >= restaurantRatio - 0.04) {
+    stage = "at_restaurant";
+  } else {
+    stage = "to_restaurant";
+  }
 
   const arrivalTimeObj = new Date((activeOrderTime || Date.now()) + totalDuration);
   const arrivalTimeStr = arrivalTimeObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   const pickupCode = "B7F9";
-  const mockRoute = MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0];
+
+  // Telemetria realista do GPS (vida real)
+  const remainingDistanceKm = useMemo(() => {
+    if (isDone || progressRatio >= 0.99) return "0 m";
+    const totalKm = 5.4;
+    const remaining = Math.max(0.05, totalKm * (1 - progressRatio));
+    if (remaining < 1) {
+      return `${Math.round(remaining * 1000)} m`;
+    }
+    return `${remaining.toFixed(1)} km`;
+  }, [isDone, progressRatio]);
+
+  const currentSpeed = useMemo(() => {
+    if (stage === "at_restaurant" || stage === "delivered") return 0;
+    const base = 42;
+    const jitter = Math.sin(currentTime / 1200) * 3;
+    return Math.round(base + jitter);
+  }, [stage, currentTime]);
+
+  const currentStreetName = useMemo(() => {
+    if (stage === "delivered") {
+      return "Portaria Principal • SESI SENAI Parangaba";
+    }
+    if (stage === "at_restaurant") {
+      return "Hamburgueria Fogo & Chapa • Coleta de Pedido";
+    }
+    if (stage === "to_restaurant") {
+      if (progressRatio < restaurantRatio * 0.4) {
+        return "Rua Instituto do Ceará • Benfica";
+      } else if (progressRatio < restaurantRatio * 0.8) {
+        return "Av. da Universidade • Benfica";
+      } else {
+        return "Av. 13 de Maio • Chegando na Loja";
+      }
+    }
+    // stage === 'delivering'
+    const deliverProg = (progressRatio - restaurantRatio) / Math.max(0.01, 1 - restaurantRatio);
+    if (deliverProg < 0.25) {
+      return "Av. 13 de Maio • Saindo da Loja";
+    } else if (deliverProg < 0.6) {
+      return "Av. João Pessoa • Tráfego Fluindo";
+    } else if (deliverProg < 0.85) {
+      return "Av. Dr. Silas Munguba • Próx. Parangaba";
+    } else {
+      return "Chegando ao SESI SENAI Parangaba";
+    }
+  }, [stage, progressRatio, restaurantRatio]);
 
   useEffect(() => {
     if (activeOrderType === "pickup" || !mapRef.current) return;
@@ -5478,19 +5609,48 @@ function DeliveryTrackingModal({
       const style = document.createElement("style");
       style.innerHTML = `
         .leaflet-container img { max-width: none !important; max-height: none !important; }
+        .leaflet-custom-tooltip {
+          background: rgba(15, 15, 15, 0.94) !important;
+          color: #ffffff !important;
+          border: 1px solid rgba(255, 255, 255, 0.25) !important;
+          border-radius: 8px !important;
+          padding: 3px 8px !important;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.6) !important;
+          font-size: 11px !important;
+          font-weight: 800 !important;
+          white-space: nowrap !important;
+        }
+        .leaflet-custom-tooltip::before {
+          border-top-color: rgba(15, 15, 15, 0.94) !important;
+        }
+        @keyframes gps-radar-wave {
+          0% { transform: scale(0.65); opacity: 0.9; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
+        .gps-radar-ring {
+          position: absolute;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: rgba(245, 158, 11, 0.25);
+          border: 2px solid rgba(245, 158, 11, 0.85);
+          animation: gps-radar-wave 1.6s ease-out infinite;
+          pointer-events: none;
+        }
       `;
       document.head.appendChild(style);
 
-      const driverStart = mockRoute.start || [-3.731, -38.527];
-      const customer = mockRoute.customer || [-3.735, -38.52];
+      const driverStart = mockRoute.start || (mockRoute.route1 && mockRoute.route1[0]) || [-3.7435, -38.5372];
+      const restaurantPos = mockRoute.restaurant || (mockRoute.route1 && mockRoute.route1[mockRoute.route1.length - 1]) || driverStart;
+      const customer = mockRoute.customer || [-3.76854, -38.5619];
       const route1 = mockRoute.route1 || [];
       const route2 = mockRoute.route2 || [];
       const fullRoute = [...route1, ...route2];
 
       const polyline = L.polyline(fullRoute, {
-        color: "#9CA3AF",
+        color: "#6b7280",
         weight: 6,
-        opacity: 0.6,
+        opacity: 0.45,
         lineCap: "round",
         lineJoin: "round",
       }).addTo(map);
@@ -5500,15 +5660,15 @@ function DeliveryTrackingModal({
       fitRoute();
 
       const activeLineBg = L.polyline([], {
-        color: "white",
-        weight: 10,
-        opacity: 1,
+        color: "#ffffff",
+        weight: 9,
+        opacity: 0.95,
         lineCap: "round",
         lineJoin: "round",
       }).addTo(map);
       const activeLine = L.polyline([], {
-        color: "black",
-        weight: 5,
+        color: "#f59e0b",
+        weight: 5.5,
         opacity: 1,
         lineCap: "round",
         lineJoin: "round",
@@ -5522,20 +5682,40 @@ function DeliveryTrackingModal({
           iconAnchor: [size / 2, size / 2],
         });
 
-      L.marker(driverStart, { icon: createDot("#ef4444", "🍔", 24) }).addTo(map); // Restaurant
-      L.marker(customer, { icon: createDot("black", "📍", 36) }).addTo(map);
+      // Marcador da Hamburgueria Fogo & Chapa
+      const restaurantMarker = L.marker(restaurantPos, { icon: createDot("#ea580c", "🍔", 34) }).addTo(map);
+      restaurantMarker.bindTooltip("🍔 Fogo & Chapa (Hamburgueria)", {
+        permanent: true,
+        direction: "top",
+        offset: [0, -18],
+        className: "leaflet-custom-tooltip font-bold text-[10px]",
+      });
+
+      // Marcador do Destino (SESI SENAI Parangaba)
+      const customerMarker = L.marker(customer, { icon: createDot("#10b981", "📍", 36) }).addTo(map);
+      customerMarker.bindTooltip("📍 SESI SENAI Parangaba", {
+        permanent: true,
+        direction: "top",
+        offset: [0, -20],
+        className: "leaflet-custom-tooltip font-bold text-[10px]",
+      });
 
       const driverIcon = L.divIcon({
         className: "custom-div-icon",
-        html: `<div style="width: 44px; height: 44px; background-color: white; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 10;">
-                 <div id="driver-icon-rotation" style="width: 32px; height: 32px; background-color: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s linear;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><path d="M12 2L22 20L12 16L2 20L12 2Z"/></svg>
+        html: `<div style="position: relative; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;">
+                 <div class="gps-radar-ring"></div>
+                 <div id="driver-icon-rotation" style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; transition: transform 0.15s linear;">
+                   <div style="position: absolute; top: -22px; width: 28px; height: 26px; background: linear-gradient(to top, rgba(251, 191, 36, 0.85), rgba(251, 191, 36, 0)); clip-path: polygon(30% 100%, 70% 100%, 100% 0%, 0% 0%); filter: blur(0.5px); pointer-events: none;"></div>
+                   <div style="width: 40px; height: 40px; background: #0c0a09; border: 2.5px solid #f59e0b; border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.6), 0 0 14px rgba(245,158,11,0.5); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                     🏍️
+                   </div>
                  </div>
                </div>`,
-        iconSize: [44, 44],
-        iconAnchor: [22, 22],
+        iconSize: [52, 52],
+        iconAnchor: [26, 26],
       });
 
+      // O entregador inicia ANTES de chegar na hamburgueria!
       const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
 
       const computeDistances = (path: number[][]) => {
@@ -5810,6 +5990,27 @@ function DeliveryTrackingModal({
     );
   }
 
+  const currentDriver =
+    MOCK_DRIVERS[activeDriver] ??
+    MOCK_DRIVERS[0] ?? {
+      name: "Entregador",
+      vehicle: "Honda CG 160",
+      plate: "FOG-2024",
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    };
+
+  const handleRecenter = () => {
+    const m = mapInstanceRef.current;
+    const L = (window as any).L;
+    if (!m || !L) return;
+    m.invalidateSize();
+    const r = (MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0])!;
+    const pts = [...(r.route1 || []), ...(r.route2 || [])];
+    if (pts.length > 1) {
+      m.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
+    }
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -5817,333 +6018,251 @@ function DeliveryTrackingModal({
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 50 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed inset-0 z-[100] flex flex-col bg-gray-100"
+        className="fixed inset-0 z-[100] flex flex-col bg-gray-100 font-sans"
       >
-        <div className="relative flex-1 overflow-hidden">
+        {/* ÁREA DO MAPA GPS - OCUPA A TELA INTEIRA */}
+        <div className="relative flex-1 w-full h-full overflow-hidden">
           <div id="map-container" ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
 
-          {/* Overlay Map UI - 99 Style */}
-          <div className="absolute top-4 left-4 z-10">
+          {/* CONTROLES SUPERIORES FLUTUANTES SOBRE O MAPA */}
+          <div className="absolute top-4 left-4 z-20">
             <button
               onClick={onClose}
-              className="bg-white rounded-full p-3 shadow-md border border-gray-100 active:scale-95 transition-transform"
+              className="bg-white/95 backdrop-blur-md rounded-full size-11 shadow-lg border border-gray-200/60 active:scale-95 transition-all flex items-center justify-center cursor-pointer hover:bg-white"
+              title="Voltar ao início"
             >
               <ChevronLeft className="size-6 text-gray-800" />
             </button>
           </div>
 
-          <div className="absolute top-4 right-4 z-10 flex flex-col gap-3">
+          {/* HUD CENTRAL DE TELEMETRIA AO VIVO (VIDA REAL) */}
+          <div className="absolute top-4 left-16 right-28 z-20 flex justify-center pointer-events-none">
+            <div className="bg-[#111111]/95 backdrop-blur-md px-3.5 py-1.5 rounded-2xl shadow-xl border border-white/15 flex items-center gap-2.5 pointer-events-auto max-w-[340px] sm:max-w-md">
+              <div className="size-8 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex flex-col items-center justify-center font-black shrink-0 leading-none">
+                <span className="text-xs">{currentSpeed > 0 ? currentSpeed : "0"}</span>
+                <span className="text-[7px] font-mono opacity-80">km/h</span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <span className={`size-2 rounded-full shrink-0 ${isDone ? "bg-emerald-400" : "bg-amber-400 animate-ping"}`} />
+                  <span className="text-xs font-black text-white truncate">
+                    {currentStreetName}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-[10px] text-white/60 font-semibold truncate mt-0.5">
+                  <span className="text-amber-400 font-bold">Ao vivo</span>
+                  <span>•</span>
+                  <span>Faltam {remainingDistanceKm}</span>
+                  <span>•</span>
+                  <span>Chegada: {arrivalTimeStr}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* BOTÕES DO LADO DIREITO (RE-CENTRALIZAR & MAXIMIZAR MAPA) */}
+          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+            <button
+              onClick={handleRecenter}
+              className="bg-white/95 backdrop-blur-md rounded-full size-11 shadow-lg border border-gray-200/60 active:scale-95 transition-all text-gray-800 flex items-center justify-center cursor-pointer hover:bg-white"
+              title="Re-centralizar rota no mapa"
+            >
+              <Navigation className="size-5 text-gray-700" />
+            </button>
+
             <button
               onClick={toggleMapSize}
-              className="bg-white rounded-full p-3 shadow-md border border-gray-100 active:scale-95 transition-transform text-black flex items-center justify-center"
+              className="bg-white/95 backdrop-blur-md rounded-full size-11 shadow-lg border border-gray-200/60 active:scale-95 transition-all text-black flex items-center justify-center cursor-pointer hover:bg-white"
+              title={isMapExpanded ? "Mostrar detalhes" : "Maximizar mapa GPS"}
             >
               {isMapExpanded ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
             </button>
           </div>
 
+          {/* PILL COMPACTA FLUTUANTE QUANDO O MAPA ESTIVER MAXIMIZADO */}
           {isMapExpanded && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute bottom-6 left-6 right-6 z-10"
+              exit={{ opacity: 0, y: 20 }}
+              className="absolute bottom-6 left-4 right-4 z-20 flex justify-center pointer-events-none"
             >
-              <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100 flex items-center gap-4">
-                <div className="bg-gray-100 p-3 rounded-full shrink-0">
-                  <MapPin className="size-6 text-black" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-0.5">
-                    Destino
-                  </p>
-                  <p className="text-sm font-semibold text-gray-900 truncate">
-                    {mockRoute.address}
-                  </p>
-                </div>
-
-                {/* Ticket Card */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                  className="w-full relative group"
-                >
-                  {/* Ambient glow behind card */}
-                  <div className="absolute -inset-3 bg-gradient-to-b from-white/[0.03] via-transparent to-white/[0.02] rounded-[2rem] blur-xl pointer-events-none"></div>
-
-                  <div className="relative bg-gradient-to-b from-[#141414] to-[#0d0d0d] border border-white/[0.08] px-6 py-10 rounded-3xl shadow-[0_25px_60px_-10px_rgba(0,0,0,0.7)] flex flex-col items-center overflow-hidden">
-                    {/* Animated gradient border sweep */}
-                    <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
-                      <div
-                        className="absolute inset-[-1px] rounded-3xl"
-                        style={{
-                          background:
-                            "conic-gradient(from 0deg, transparent, rgba(255,255,255,0.08), transparent, transparent)",
-                          animation: "borderSpin 6s linear infinite",
-                        }}
-                      ></div>
-                    </div>
-                    <div className="absolute inset-[1px] bg-gradient-to-b from-[#141414] to-[#0d0d0d] rounded-[calc(1.5rem-1px)] pointer-events-none"></div>
-
-                    {/* Top shimmer line */}
-                    <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-
-                    {/* Ticket cutouts */}
-                    <div className="absolute -left-5 top-1/2 w-10 h-10 rounded-full bg-black border-r border-white/[0.06] -translate-y-1/2 z-10"></div>
-                    <div className="absolute -right-5 top-1/2 w-10 h-10 rounded-full bg-black border-l border-white/[0.06] -translate-y-1/2 z-10"></div>
-
-                    {/* Dashed separator */}
-                    <div className="absolute top-1/2 left-10 right-10 border-t border-dashed border-white/[0.08] -translate-y-1/2 z-0"></div>
-
-                    {/* Top Half: Code */}
-                    <div className="flex flex-col items-center justify-center pb-14 h-40 w-full relative z-10">
-                      <div className="mb-5 flex items-center gap-3">
-                        <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/30"></div>
-                        <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-white/40">
-                          Código de Retirada
-                        </p>
-                        <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-white/30"></div>
-                      </div>
-                      <h1
-                        className="text-7xl sm:text-8xl font-black tracking-tighter text-white"
-                        style={{
-                          textShadow: "0 0 40px rgba(255,255,255,0.08)",
-                          animation: "pulseGlow 3s ease-in-out infinite",
-                        }}
-                      >
-                        #{pickupCode}
-                      </h1>
-                    </div>
-
-                    {/* Bottom Half: Status Animation */}
-                    <div className="flex flex-col items-center justify-center pt-14 h-40 w-full relative z-10 gap-4">
-                      <div className="relative flex items-center justify-center">
-                        {/* Pulsing ring */}
-                        <div
-                          className="absolute w-20 h-20 rounded-full border border-white/[0.06]"
-                          style={{ animation: "iconPulse 2.5s ease-in-out infinite" }}
-                        ></div>
-                        <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center relative z-20 backdrop-blur-sm">
-                          {stage === "picking_up" ? (
-                            <Store className="size-7 text-white/70" />
-                          ) : stage === "delivering" ? (
-                            <Bike className="size-7 text-white/70" />
-                          ) : (
-                            <Check className="size-7 text-white/70" />
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Loading dots */}
-                      <div className="flex items-center gap-1.5">
-                        {[0, 1, 2].map((dot) => (
-                          <div
-                            key={dot}
-                            className="w-1.5 h-1.5 rounded-full bg-white/20"
-                            style={{
-                              animation: "dotPulse 1.4s ease-in-out infinite",
-                              animationDelay: `${dot * 0.2}s`,
-                            }}
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Stepper */}
-                <div className="relative flex items-center justify-between w-full px-4 mt-4">
-                  <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-[2px] bg-white/10 rounded-full"></div>
-
-                  <div
-                    className="absolute left-8 top-1/2 -translate-y-1/2 h-[2px] rounded-full transition-all duration-1000 ease-out"
-                    style={{
-                      width:
-                        stage === "picking_up"
-                          ? "0%"
-                          : stage === "delivering"
-                            ? "calc(50% - 24px)"
-                            : "calc(100% - 48px)",
-                      backgroundColor: currentTheme.secondary,
-                      boxShadow: `0 0 10px ${currentTheme.secondary}`,
-                    }}
-                  ></div>
-
-                  <div className="relative z-10 flex flex-col items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}
-                    >
-                      <Store className="size-4" />
-                    </div>
-                    <span
-                      className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "picking_up" || stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}
-                    >
-                      Saiu
-                    </span>
-                  </div>
-
-                  <div className="relative z-10 flex flex-col items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivering" || stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}
-                    >
-                      <Bike className="size-4" />
-                    </div>
-                    <span
-                      className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivering" || stage === "delivered" ? "text-white/90" : "text-white/30"}`}
-                    >
-                      A Caminho
-                    </span>
-                  </div>
-
-                  <div className="relative z-10 flex flex-col items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 border ${stage === "delivered" ? "bg-white text-black border-transparent shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110" : "bg-[#0B0D14] text-white/30 border-white/10"}`}
-                    >
-                      <Check className="size-4" />
-                    </div>
-                    <span
-                      className={`text-[10px] font-bold uppercase tracking-wider absolute -bottom-6 whitespace-nowrap ${stage === "delivered" ? "text-white/90" : "text-white/30"}`}
-                    >
-                      Chegou
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <button
+                onClick={() => setIsMapExpanded(false)}
+                className="pointer-events-auto bg-black/90 backdrop-blur-md text-white px-5 py-2.5 rounded-full shadow-2xl border border-white/20 flex items-center gap-3 hover:bg-black transition-all active:scale-95 cursor-pointer"
+              >
+                <div className="size-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                <span className="text-xs font-bold truncate max-w-[240px] sm:max-w-none">
+                  🏍️ {currentDriver.name} • {currentSpeed > 0 ? `${currentSpeed} km/h` : "Parado"} • {currentStreetName}
+                </span>
+                <span className="text-[10px] text-amber-300 font-extrabold uppercase bg-amber-400/20 px-2 py-0.5 rounded-full border border-amber-400/40 shrink-0">
+                  Ver Detalhes
+                </span>
+              </button>
             </motion.div>
           )}
         </div>
 
-        {/* Bottom Sheet - White minimalist style like 99 */}
+        {/* BOTTOM SHEET COMPACTO E ELEGANTE (NÃO TAPA O GPS) */}
         <motion.div
           animate={{
             height: isMapExpanded ? 0 : "auto",
             opacity: isMapExpanded ? 0 : 1,
-            y: isMapExpanded ? 100 : 0,
+            y: isMapExpanded ? 80 : 0,
           }}
-          transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="bg-white rounded-t-[32px] -mt-6 relative z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] overflow-hidden flex-shrink-0"
+          transition={{ type: "spring", damping: 28, stiffness: 260 }}
+          className="bg-white rounded-t-[28px] sm:rounded-t-[32px] relative z-30 shadow-[0_-12px_40px_rgba(0,0,0,0.15)] overflow-hidden shrink-0 border-t border-gray-100"
         >
-          <div className="max-w-2xl mx-auto relative z-10 px-6 sm:px-8 py-6">
-            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8" />
+          <div className="max-w-xl mx-auto px-5 sm:px-6 pt-3 pb-5">
+            {/* Handle sutil para minimizar */}
+            <button
+              type="button"
+              onClick={toggleMapSize}
+              className="w-full flex justify-center py-1 cursor-pointer group"
+              title="Clique para expandir o mapa GPS"
+            >
+              <div className="w-10 h-1 bg-gray-300 rounded-full group-hover:bg-gray-400 transition-colors" />
+            </button>
 
             {ratingState === "driver" ? (
-              <div className="pb-4 animate-in fade-in slide-in-from-bottom-4">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
-                    Como foi a entrega?
-                  </h3>
-                  <p className="text-sm font-medium text-gray-500">
-                    Avalie o entregador {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).name}
-                  </p>
+              <div className="py-2 animate-in fade-in">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-bold text-gray-900">Como foi a entrega?</h3>
+                  <p className="text-xs text-gray-500">Avalie o entregador {currentDriver.name}</p>
                 </div>
-                <div className="flex justify-center gap-4 mb-8">
+                <div className="flex justify-center gap-3 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`driver-star-${star}`}
-                      className="transition-transform hover:scale-110 active:scale-95"
+                      className="transition-transform hover:scale-110 active:scale-95 cursor-pointer"
                       onClick={() => {
                         setDriverRating(star);
                         setTimeout(() => setRatingState("food"), 300);
                       }}
                     >
-                      <Star className={`size-10 ${driverRating >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+                      <Star className={`size-8 ${driverRating >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
                     </button>
                   ))}
                 </div>
               </div>
             ) : ratingState === "food" ? (
-              <div className="pb-4 animate-in fade-in slide-in-from-bottom-4">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
-                    E o seu lanche?
-                  </h3>
-                  <p className="text-sm font-medium text-gray-500">
-                    Conta pra gente o que achou do sabor!
-                  </p>
+              <div className="py-2 animate-in fade-in">
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-bold text-gray-900">E o seu lanche?</h3>
+                  <p className="text-xs text-gray-500">Conta pra gente o que achou do sabor!</p>
                 </div>
-                <div className="flex justify-center gap-4 mb-8">
+                <div className="flex justify-center gap-3 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={`food-star-${star}`}
-                      className="transition-transform hover:scale-110 active:scale-95"
+                      className="transition-transform hover:scale-110 active:scale-95 cursor-pointer"
                       onClick={() => {
                         setFoodRating(star);
                         setTimeout(() => setRatingState("done"), 300);
                       }}
                     >
-                      <Star className={`size-10 ${foodRating >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+                      <Star className={`size-8 ${foodRating >= star ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
                     </button>
                   ))}
                 </div>
               </div>
             ) : ratingState === "done" ? (
-              <div className="pb-4 animate-in fade-in slide-in-from-bottom-4">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">
-                    Muito Obrigado!
-                  </h3>
-                  <p className="text-sm font-medium text-gray-500 mb-8">
-                    Sua avaliação foi enviada com sucesso.
-                  </p>
-                  <Button
-                    className="w-full h-14 rounded-xl text-lg font-bold bg-black text-white"
-                    onClick={onClose}
-                  >
-                    Concluir
-                  </Button>
-                </div>
+              <div className="py-2 text-center animate-in fade-in">
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Muito Obrigado!</h3>
+                <p className="text-xs text-gray-500 mb-4">Sua avaliação foi enviada com sucesso.</p>
+                <Button className="w-full h-11 rounded-xl text-sm font-bold bg-black text-white hover:bg-gray-800 cursor-pointer" onClick={onClose}>
+                  Concluir
+                </Button>
               </div>
             ) : (
-              <div className="pb-4">
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">{isDone ? "Chegou!" : "A caminho!"}</h2>
-                    <p className="text-sm font-medium text-gray-500 mt-1">
-                      {isDone ? "Pedido entregue com sucesso." : `Chega em aprox. ${remainingMins} min`}
-                    </p>
+              <div className="space-y-3 pt-1">
+                {/* Linha 1: Status & Tempo Estimado */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <div>
+                      <h4 className="text-sm font-black text-gray-900 leading-tight">
+                        {stage === "to_restaurant" && "Indo retirar na Hamburgueria Fogo & Chapa"}
+                        {stage === "at_restaurant" && "Pedido coletado na Fogo & Chapa!"}
+                        {stage === "delivering" && "A caminho do SESI SENAI Parangaba!"}
+                        {stage === "delivered" && "Pedido Entregue no SESI SENAI!"}
+                      </h4>
+                      <p className="text-[11px] font-medium text-gray-500 truncate max-w-[240px] sm:max-w-md">
+                        {stage === "to_restaurant"
+                          ? "O entregador está se deslocando até a hamburgueria para buscar seu pedido"
+                          : stage === "at_restaurant"
+                          ? "Lanche conferido e embalado na chapa! Saindo rumo à Parangaba..."
+                          : stage === "delivering"
+                          ? `Destino: ${deliveryAddress || mockRoute.address}`
+                          : "Bom apetite! Entregador na portaria do SESI SENAI"}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right bg-gray-50 px-4 py-2.5 rounded-2xl border border-gray-100">
-                    <div className="text-2xl font-black text-black">{arrivalTimeStr}</div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-0.5">
-                      Chegada
-                    </p>
+
+                  <div className="text-right bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shrink-0">
+                    <div className="text-base font-black text-black leading-none">{arrivalTimeStr}</div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">
+                      {isDone ? "Concluído" : `~${remainingMins} min`}
+                    </span>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-[24px] p-4 flex items-center gap-4 border border-gray-100">
-                  <div className="size-14 rounded-full overflow-hidden flex-shrink-0 relative">
-                    <img
-                      src={(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).avatar}
-                      alt="Entregador"
-                      className="w-full h-full object-cover"
-                    />
+                {/* Barra de Progresso Fina */}
+                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-1000"
+                    style={{ width: `${progressRatio * 100}%` }}
+                  />
+                </div>
+
+                {/* Telemetria ao Vivo da Vida Real */}
+                <div className="flex items-center justify-between text-[11px] bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                  <span className="flex items-center gap-1.5 font-bold text-gray-800 truncate">
+                    <span className="size-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
+                    <span className="truncate">{currentStreetName}</span>
+                  </span>
+                  <div className="flex items-center gap-2 font-bold shrink-0 ml-2">
+                    <span className="text-amber-600 bg-amber-500/10 px-2 py-0.5 rounded-md font-mono text-[10px]">
+                      {currentSpeed > 0 ? `${currentSpeed} km/h` : "0 km/h"}
+                    </span>
+                    <span className="text-gray-300">•</span>
+                    <span className="text-gray-700">{remainingDistanceKm}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-base font-bold text-gray-900 tracking-tight truncate">
-                      {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).name}
-                    </h4>
-                    <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5 truncate">
-                      <Bike className="size-3.5" />{" "}
-                      {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).vehicle} •{" "}
-                      {(MOCK_DRIVERS[activeDriver] ?? MOCK_DRIVERS[0]!).plate}
-                    </p>
+                </div>
+
+                {/* Linha 2: Entregador + Ações Compactas */}
+                <div className="flex items-center justify-between gap-3 pt-0.5">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="size-10 rounded-full overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+                      <img src={currentDriver.avatar} alt={currentDriver.name} className="size-full object-cover" />
+                    </div>
+                    <div className="min-w-0">
+                      <h5 className="text-xs font-bold text-gray-900 truncate">{currentDriver.name}</h5>
+                      <p className="text-[10px] text-gray-500 truncate flex items-center gap-1">
+                        <Bike className="size-3 text-gray-400" />
+                        <span>{currentDriver.vehicle} • {currentDriver.plate}</span>
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
+
+                  <div className="flex items-center gap-2 shrink-0">
                     <Button
                       size="icon"
-                      className="size-12 rounded-full bg-gray-200 hover:bg-gray-300 text-black shrink-0 transition-transform hover:scale-105 active:scale-95 border-none shadow-none"
+                      variant="outline"
+                      className="size-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 border-none cursor-pointer"
+                      title="Enviar mensagem"
+                      onClick={() => alert(`Mensagem enviada para ${currentDriver.name}: "Olá! Estou aguardando meu pedido."`)}
                     >
-                      <Mail className="size-5" />
+                      <Mail className="size-4" />
+                    </Button>
+
+                    <Button
+                      className="h-9 px-3.5 rounded-xl text-xs font-bold bg-black hover:bg-gray-800 text-white shadow-md active:scale-95 transition-all cursor-pointer"
+                      onClick={() => setRatingState("driver")}
+                    >
+                      Confirmar
                     </Button>
                   </div>
-                </div>
-
-                <div className="w-full mt-6">
-                  <Button
-                    className="w-full text-sm font-bold uppercase tracking-widest h-14 rounded-[20px] bg-black text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-95"
-                    onClick={() => setRatingState("driver")}
-                  >
-                    Confirmar Recebimento
-                  </Button>
                 </div>
               </div>
             )}

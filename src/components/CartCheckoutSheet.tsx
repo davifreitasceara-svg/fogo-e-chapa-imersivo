@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   Trash2,
@@ -13,9 +13,23 @@ import {
   Banknote,
   QrCode,
   CheckCircle2,
+  MapPin,
+  Bookmark,
+  Crown,
+  Gift,
+  Flame,
+  Sparkles,
+  Search,
+  X,
+  Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { CreditCardForm } from "./ui/credit-card-form";
 import { PixPayment } from "./ui/pix-payment";
+import { useAuth } from "@/context/AuthContext";
+import { useUserAddresses } from "@/hooks/useUserAddresses";
+import { useLoyalty } from "@/hooks/useLoyalty";
+import { DELIVERY_POINTS, normalizeText, type LatLng } from "@/lib/deliveryPoints";
 
 const STEP_ORDER = ["cart", "type", "details", "review", "payment", "credit_card", "pix"] as const;
 const STEP_PROGRESS: Record<string, number> = {
@@ -27,6 +41,29 @@ const STEP_PROGRESS: Record<string, number> = {
   credit_card: 1,
   pix: 1,
 };
+
+interface AddressSuggestionItem {
+  title: string;
+  address: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  badge?: string;
+  keywords: string[];
+  coords?: LatLng | null;
+}
+
+// Pontos de entrega reais (com coordenadas) compartilhados com o GPS do motoboy
+const FORTALEZA_ADDRESS_SUGGESTIONS: AddressSuggestionItem[] = DELIVERY_POINTS.map((p) => ({
+  title: `${p.emoji} ${p.title}`,
+  address: p.address,
+  number: p.number,
+  complement: p.complement,
+  neighborhood: p.neighborhood,
+  badge: p.badge,
+  keywords: p.keywords,
+  coords: p.coords,
+}));
 
 const stepVariants = {
   enter: (dir: number) => ({ x: dir * 48, opacity: 0, filter: "blur(6px)" }),
@@ -47,10 +84,154 @@ export function CartCheckoutSheet({
   const [orderType, setOrderType] = useState<"delivery" | "pickup" | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [changeAmount, setChangeAmount] = useState<string>("");
+  const { user } = useAuth();
+  const { addresses, saveAddress, deleteAddress } = useUserAddresses();
+  const { freeBurgersCount, processOrderRewards, redeemFreeBurger } = useLoyalty();
+  const [saveAddressForFuture, setSaveAddressForFuture] = useState(true);
+  const [isUsingNewAddress, setIsUsingNewAddress] = useState(false);
+  const [isRedeemingFreeBurger, setIsRedeemingFreeBurger] = useState(false);
+
   const [address, setAddress] = useState("");
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
+  const [isAddressFocused, setIsAddressFocused] = useState(false);
+  const [onlineSuggestions, setOnlineSuggestions] = useState<AddressSuggestionItem[]>([]);
+  const [isSearchingOnline, setIsSearchingOnline] = useState(false);
+  // Coordenadas reais do destino escolhido (ponto de entrega ou resultado do mapa)
+  const [selectedCoords, setSelectedCoords] = useState<LatLng | null>(null);
+
+  const addressContainerRef = useRef<HTMLDivElement>(null);
+
+  // Preenchimento automático com nome do Google se o usuário estiver logado
+  useEffect(() => {
+    if (user && !name) {
+      const meta = user.user_metadata as Record<string, any> | undefined;
+      const fullName = (meta?.["full_name"] as string) || (meta?.["name"] as string);
+      if (fullName) setName(fullName);
+    }
+  }, [user, name]);
+
+  // O endereço NÃO é mais preenchido automaticamente: o usuário escolhe um endereço
+  // salvo, um ponto de entrega ou digita o próprio endereço.
+  const applyAddress = (item: {
+    address: string;
+    number?: string;
+    complement?: string;
+    name?: string;
+    coords?: LatLng | null;
+  }) => {
+    if (item.name) setName(item.name);
+    setAddress(item.address);
+    setNumber(item.number || "");
+    setComplement(item.complement || "");
+    setSelectedCoords(item.coords ?? null);
+    setIsAddressFocused(false);
+  };
+
+  // Fechar dropdown de sugestões ao clicar fora do campo
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (addressContainerRef.current && !addressContainerRef.current.contains(event.target as Node)) {
+        setIsAddressFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Busca online em tempo real no OpenStreetMap (Fortaleza/CE) com debounce
+  useEffect(() => {
+    const q = address.trim();
+    if (q.length < 3) {
+      setOnlineSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        setIsSearchingOnline(true);
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            q + ", Fortaleza, CE"
+          )}&addressdetails=1&limit=4`,
+          { headers: { "Accept-Language": "pt-BR" } }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          const parsed = (data || []).map((item: any) => {
+            const road = item.address?.road || item.display_name.split(",")[0] || item.name;
+            const suburb =
+              item.address?.suburb ||
+              item.address?.neighbourhood ||
+              item.address?.city_district ||
+              "Fortaleza";
+            const houseNumber = item.address?.house_number || "";
+            return {
+              title: road,
+              address: road,
+              number: houseNumber,
+              complement: "",
+              neighborhood: suburb,
+              badge: "🌐 Mapa",
+              keywords: [],
+              coords: [parseFloat(item.lat), parseFloat(item.lon)] as LatLng,
+            };
+          });
+          setOnlineSuggestions(parsed);
+        }
+      } catch {
+        // Fallback silencioso nas sugestões locais
+      } finally {
+        setIsSearchingOnline(false);
+      }
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [address]);
+
+  // Busca e sugestão dinâmica de endereços em tempo real ao digitar a primeira letra
+  const matchingSuggestions = useMemo<AddressSuggestionItem[]>(() => {
+    const q = normalizeText(address);
+    if (!q) return [];
+
+    // 1. Endereços salvos do próprio usuário que combinem com a busca
+    const userSaved: AddressSuggestionItem[] = addresses
+      .filter(
+        (a) =>
+          normalizeText(a.address).includes(q) ||
+          (a.title && normalizeText(a.title).includes(q)) ||
+          (a.complement && normalizeText(a.complement).includes(q))
+      )
+      .map((a) => ({
+        title: a.title || "Endereço Salvo",
+        address: a.address,
+        number: a.number,
+        complement: a.complement || "",
+        neighborhood: "Salvo no seu perfil",
+        badge: "⭐ Salvo",
+        keywords: [],
+        coords: null,
+      }));
+
+    // 2. Pontos de entrega reais de Fortaleza
+    const predefined = FORTALEZA_ADDRESS_SUGGESTIONS.filter(
+      (item) =>
+        normalizeText(item.title).includes(q) ||
+        normalizeText(item.address).includes(q) ||
+        normalizeText(item.neighborhood).includes(q) ||
+        item.keywords.some((k) => normalizeText(k).includes(q))
+    );
+
+    // 3. Resultados online em tempo real (evitando duplicatas com a lista já existente)
+    const onlineFiltered = onlineSuggestions.filter(
+      (onl) =>
+        !userSaved.some((u) => u.address.toLowerCase() === onl.address.toLowerCase()) &&
+        !predefined.some((p) => p.address.toLowerCase() === onl.address.toLowerCase())
+    );
+
+    return [...userSaved, ...predefined, ...onlineFiltered].slice(0, 6);
+  }, [address, addresses, onlineSuggestions]);
   const [detailsError, setDetailsError] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState<{
@@ -317,6 +498,27 @@ export function CartCheckoutSheet({
 
   const totalPrice = Math.max(0, subtotal - discountAmount + deliveryFee);
 
+  // Calcula carimbos previstos para este pedido: Burger = +1, Combo = +2
+  const potentialStamps = Object.entries(cart).reduce((acc, [idStr, quantity]) => {
+    const prodId = parseInt(idStr, 10);
+    const qty = typeof quantity === "number" ? quantity : 0;
+    if (qty <= 0) return acc;
+    const product = products.find((p: any) => p.id === prodId);
+    if (!product) return acc;
+    const name = (product.name || "").toLowerCase();
+    const id = product.id;
+    const isCombo =
+      (id >= 400 && id < 500) ||
+      name.includes("combo") ||
+      name.includes("triplo") ||
+      name.includes("aristofome") ||
+      name.includes("fome dos reis");
+    const isBurger = product.category === "burger" && !isCombo && id < 100;
+    if (isCombo) return acc + qty * 2;
+    if (isBurger) return acc + qty * 1;
+    return acc;
+  }, 0);
+
   const formatPrice = (price: number) => {
     return price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   };
@@ -328,8 +530,18 @@ export function CartCheckoutSheet({
       else if (orderType === "pickup") setStep("review");
     } else if (step === "details") {
       if (!name.trim() || !address.trim() || !number.trim()) {
-        setDetailsError("Informacoes incompletas");
+        setDetailsError("Informações incompletas");
         return;
+      }
+      if (saveAddressForFuture && address.trim()) {
+        saveAddress({
+          title: "Endereço Principal",
+          name: name.trim(),
+          address: address.trim(),
+          number: number.trim(),
+          complement: complement.trim() || undefined,
+          is_default: true,
+        });
       }
       setDetailsError("");
       setStep("review");
@@ -367,8 +579,39 @@ export function CartCheckoutSheet({
     }, 1200);
   };
 
-  const finishOrder = () => {
-    handleCheckout(address, orderType);
+  const finishOrder = async () => {
+    // Se o cliente escolheu resgatar um Burger Grátis da fidelidade neste pedido
+    if (isRedeemingFreeBurger) {
+      try {
+        await redeemFreeBurger();
+      } catch (err) {
+        console.warn("Erro ao resgatar burger grátis:", err);
+      }
+      setIsRedeemingFreeBurger(false);
+    }
+
+    // Processa carimbos da fidelidade: 1 carimbo por burger, 2 carimbos por combo!
+    try {
+      const reward = await processOrderRewards(cart, products);
+      if (reward.stampsEarned > 0) {
+        if (reward.completedCycle) {
+          toast.success(
+            `🎉 PARABÉNS! Você ganhou +${reward.stampsEarned} carimbos e COMPLETOU A CARTELA! Ganhou 1 BURGER GRÁTIS! 🍔🔥`,
+            { duration: 7000 },
+          );
+        } else {
+          toast.success(
+            `🔥 Pedido confirmado! +${reward.stampsEarned} carimbos na sua cartela Fogo & Chapa (${reward.newStampsCount}/10)!`,
+            { duration: 5000 },
+          );
+        }
+      }
+    } catch (e) {
+      console.warn("Erro ao processar fidelidade:", e);
+    }
+
+    const fullAddress = [address, number, complement].filter(Boolean).join(", ");
+    handleCheckout(fullAddress || address, orderType, selectedCoords);
     setStep("cart");
     setPaymentMethod(null);
     setOrderType(null);
@@ -1004,7 +1247,150 @@ export function CartCheckoutSheet({
               )}
 
               {step === "details" && (
-                <div className="space-y-6 mt-4 text-white">
+                <div className="space-y-5 mt-4 text-white">
+                  {/* Banner de endereços salvos / login */}
+                  {user ? (
+                    addresses.length > 0 && (
+                      <div className="space-y-2.5 pb-2 border-b border-white/10">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <Bookmark className="size-3.5 fill-amber-400" />
+                            Seus Endereços Salvos ({addresses.length})
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsUsingNewAddress(true);
+                              applyAddress({ address: "" });
+                            }}
+                            className="text-[11px] font-bold text-amber-400/80 hover:text-amber-300 underline transition-colors cursor-pointer"
+                          >
+                            + Digitar outro
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-2 max-h-[170px] overflow-y-auto pr-1">
+                          {addresses.map((addr) => {
+                            const isSelected =
+                              address.trim() === addr.address.trim() &&
+                              number.trim() === addr.number.trim();
+                            return (
+                              <div
+                                key={addr.id}
+                                onClick={() => {
+                                  setIsUsingNewAddress(false);
+                                  applyAddress({
+                                    address: addr.address,
+                                    number: addr.number,
+                                    complement: addr.complement || "",
+                                    name: addr.name || undefined,
+                                    coords: null,
+                                  });
+                                }}
+                                className={`group relative flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
+                                  isSelected
+                                    ? "bg-amber-500/15 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
+                                    : "bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10"
+                                }`}
+                              >
+                                <div className="flex items-center gap-3 min-w-0 flex-1">
+                                  <div
+                                    className={`size-8 rounded-xl flex items-center justify-center shrink-0 ${
+                                      isSelected ? "bg-amber-500 text-black font-bold" : "bg-white/10 text-white/70"
+                                    }`}
+                                  >
+                                    <MapPin className="size-4" />
+                                  </div>
+                                  <div className="text-left min-w-0 flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-bold text-xs text-white truncate">
+                                        {addr.title || "Endereço"}
+                                      </span>
+                                      {isSelected && (
+                                        <span className="text-[9px] bg-amber-500 text-black font-extrabold px-1.5 py-0.5 rounded-full shrink-0">
+                                          USANDO ESTE
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-[11px] text-white/70 truncate mt-0.5">
+                                      {addr.address}, {addr.number} {addr.complement ? `• ${addr.complement}` : ""}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteAddress(addr.id);
+                                  }}
+                                  className="opacity-0 group-hover:opacity-100 p-1.5 text-white/40 hover:text-red-400 hover:bg-white/10 rounded-lg transition-all ml-2"
+                                  title="Excluir este endereço"
+                                >
+                                  <Trash2 className="size-3.5" />
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-200">
+                      <span className="text-base">💡</span>
+                      <span className="leading-snug">
+                        Conecte sua <strong>Conta Google</strong> no topo da página para salvar seus endereços e pedir com 1 clique!
+                      </span>
+                    </div>
+                  )}
+
+                  {/* PONTOS DE ENTREGA DO MOTOBOY (locais reais de Fortaleza) */}
+                  <div className="space-y-2.5 pb-2 border-b border-white/10">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <MapPin className="size-3.5" />
+                        Pontos de Entrega ({DELIVERY_POINTS.length})
+                      </span>
+                      <span className="text-[10px] text-white/40 font-semibold">GPS com rota real 🏍️</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 max-h-[176px] overflow-y-auto pr-1">
+                      {DELIVERY_POINTS.map((p) => {
+                        const isSelected =
+                          !!selectedCoords &&
+                          selectedCoords[0] === p.coords[0] &&
+                          selectedCoords[1] === p.coords[1];
+                        return (
+                          <button
+                            key={p.id}
+                            id={`delivery-point-${p.id}`}
+                            type="button"
+                            onClick={() => {
+                              setIsUsingNewAddress(true);
+                              applyAddress({
+                                address: p.address,
+                                number: p.number,
+                                complement: p.complement,
+                                coords: p.coords,
+                              });
+                              toast.success(`${p.emoji} Entrega em: ${p.title}`);
+                            }}
+                            className={`flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all cursor-pointer active:scale-[0.97] ${
+                              isSelected
+                                ? "bg-amber-500/15 border-amber-500 shadow-[0_0_14px_rgba(245,158,11,0.25)]"
+                                : "bg-white/5 border-white/10 hover:border-amber-400/40 hover:bg-white/10"
+                            }`}
+                          >
+                            <span className="text-lg shrink-0">{p.emoji}</span>
+                            <span className="min-w-0">
+                              <span className="block text-[11px] font-bold text-white truncate">{p.title}</span>
+                              <span className="block text-[10px] text-white/50 truncate">{p.neighborhood}</span>
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div>
                     <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">
                       NOME COMPLETO
@@ -1017,22 +1403,118 @@ export function CartCheckoutSheet({
                       placeholder="Seu nome"
                     />
                   </div>
-                  <div>
-                    <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">
-                      ENDERECO
+                  <div className="relative" ref={addressContainerRef}>
+                    <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider flex items-center justify-between">
+                      <span>ENDEREÇO (RUA / AVENIDA)</span>
+                      {matchingSuggestions.length > 0 && isAddressFocused && (
+                        <span className="text-[10px] text-amber-400 font-extrabold flex items-center gap-1.5">
+                          {isSearchingOnline ? (
+                            <>
+                              <Loader2 className="size-3 animate-spin text-amber-400" />
+                              <span>Buscando no mapa...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="size-1.5 rounded-full bg-amber-400 animate-ping" />
+                              <span>{matchingSuggestions.length} sugestão(ões)</span>
+                            </>
+                          )}
+                        </span>
+                      )}
                     </label>
-                    <input
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      type="text"
-                      className="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 text-base font-medium focus:border-white/40 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal"
-                      placeholder="Rua, Avenida..."
-                    />
+
+                    <div className="relative">
+                      <input
+                        value={address}
+                        onChange={(e) => {
+                          setAddress(e.target.value);
+                          setSelectedCoords(null);
+                          setIsAddressFocused(true);
+                        }}
+                        onFocus={() => setIsAddressFocused(true)}
+                        type="text"
+                        className="w-full bg-white/5 border-2 border-white/10 rounded-2xl pl-12 pr-11 py-4 text-base font-medium focus:border-amber-400/60 focus:bg-white/10 focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-normal"
+                        placeholder="Digite o endereço (ex: Sesi Senai, Av...)"
+                      />
+                      <Search className="size-5 text-white/40 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+
+                      {address && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            applyAddress({ address: "" });
+                          }}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 size-7 rounded-full bg-white/10 hover:bg-white/25 text-white/70 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+                          title="Limpar campo de endereço"
+                        >
+                          <X className="size-4" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* DROPDOWN DE AUTOCOMPLETE DE ENDEREÇOS AO DIGITAR */}
+                    <AnimatePresence>
+                      {isAddressFocused && address.trim().length >= 1 && matchingSuggestions.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-[#161616] border border-white/15 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.85)] backdrop-blur-xl overflow-hidden divide-y divide-white/5 max-h-[290px] overflow-y-auto"
+                        >
+                          <div className="px-3.5 py-2 bg-white/5 flex items-center justify-between text-[10px] text-white/50 font-bold uppercase tracking-wider">
+                            <span className="flex items-center gap-1.5">
+                              <span className="size-1.5 rounded-full bg-emerald-400" />
+                              Sugestões inteligentes:
+                            </span>
+                            <span className="text-amber-400 font-mono">Clique para aplicar</span>
+                          </div>
+
+                          {matchingSuggestions.map((item, idx) => (
+                            <button
+                              key={`sug-${idx}-${item.address}-${item.number}`}
+                              type="button"
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                applyAddress({
+                                  address: item.address,
+                                  number: item.number,
+                                  complement: item.complement,
+                                  coords: item.coords ?? null,
+                                });
+                                setIsUsingNewAddress(false);
+                                toast.success(`Endereço selecionado: ${item.title}! 📍`);
+                              }}
+                              className="w-full p-3.5 flex items-start gap-3 hover:bg-white/10 transition-colors text-left cursor-pointer group"
+                            >
+                              <div className="size-8 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <MapPin className="size-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors truncate">
+                                    {item.title}
+                                  </span>
+                                  {item.badge && (
+                                    <span className="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-white/10 text-white/70 border border-white/10 shrink-0">
+                                      {item.badge}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-white/60 truncate mt-0.5">
+                                  {item.address}, {item.number} • {item.neighborhood}
+                                </p>
+                              </div>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="col-span-1">
                       <label className="text-[11px] font-bold text-white/60 ml-2 mb-2 block uppercase tracking-wider">
-                        NUMERO
+                        NÚMERO
                       </label>
                       <input
                         value={number}
@@ -1055,11 +1537,109 @@ export function CartCheckoutSheet({
                       />
                     </div>
                   </div>
+
+                  {/* Checkbox de Salvar Endereço */}
+                  {user && (
+                    <label className="flex items-center gap-2.5 p-3 rounded-2xl bg-white/5 border border-white/10 text-xs font-semibold text-white/80 cursor-pointer select-none hover:bg-white/10 transition-all">
+                      <input
+                        type="checkbox"
+                        checked={saveAddressForFuture}
+                        onChange={(e) => setSaveAddressForFuture(e.target.checked)}
+                        className="size-4 rounded accent-amber-500 cursor-pointer"
+                      />
+                      <span>Salvar este endereço para preencher nos próximos pedidos</span>
+                    </label>
+                  )}
                 </div>
               )}
 
               {step === "review" && (
-                <div className="space-y-6 mt-4 text-white">
+                <div className="space-y-4 mt-4 text-white">
+                  {/* Banner de Resgate de Burger Grátis se tiver disponível */}
+                  {freeBurgersCount > 0 && (
+                    <motion.div
+                      initial={{ scale: 0.95, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="rounded-2xl p-4 bg-gradient-to-r from-amber-500/25 via-orange-600/20 to-amber-500/15 border-2 border-amber-400/60 shadow-[0_0_25px_rgba(245,158,11,0.3)] space-y-2.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className="size-9 rounded-xl bg-amber-400 text-black flex items-center justify-center font-black shadow-md">
+                            <Crown className="size-5 fill-black" />
+                          </div>
+                          <div>
+                            <h4 className="font-display font-black text-xs uppercase tracking-wider text-amber-300">
+                              Hambúrguer Grátis Liberado!
+                            </h4>
+                            <p className="text-[11px] text-white/80">
+                              Você tem <strong>{freeBurgersCount}</strong> hambúrguer(es) de presente da chapa!
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {!isRedeemingFreeBurger ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsRedeemingFreeBurger(true);
+                            setAppliedDiscount({
+                              type: "fixed",
+                              value: 35,
+                              label: "1 Burger Grátis (Fidelidade)",
+                              code: "BURGER_GRATIS",
+                            });
+                            toast.success("🎁 1 Hambúrguer Grátis aplicado ao seu pedido! (-R$ 35,00)");
+                          }}
+                          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-black font-display font-black text-xs uppercase tracking-wider hover:brightness-110 shadow-lg cursor-pointer transition-all flex items-center justify-center gap-2"
+                        >
+                          <Gift className="size-4" />
+                          <span>Resgatar 1 Burger Grátis (-R$ 35,00)</span>
+                        </button>
+                      ) : (
+                        <div className="flex items-center justify-between bg-black/50 rounded-xl px-3.5 py-2.5 border border-emerald-400/50 text-emerald-300 text-xs font-bold">
+                          <span className="flex items-center gap-1.5">
+                            <CheckCircle2 className="size-4 text-emerald-400" />
+                            1 Burger Grátis aplicado com sucesso!
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsRedeemingFreeBurger(false);
+                              setAppliedDiscount(null);
+                            }}
+                            className="text-red-400 hover:text-red-300 text-[11px] underline cursor-pointer font-bold"
+                          >
+                            Desfazer
+                          </button>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+
+                  {/* Prévia de Carimbos que serão acumulados com este pedido */}
+                  {potentialStamps > 0 && (
+                    <div className="rounded-2xl p-3.5 bg-black/40 border border-amber-500/30 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="size-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-black flex items-center justify-center font-bold shadow-md">
+                          <Flame className="size-4 fill-black" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white flex items-center gap-1">
+                            <span>+{potentialStamps} carimbo{potentialStamps > 1 ? "s" : ""} na sua cartela!</span>
+                            <Sparkles className="size-3 text-amber-400 animate-pulse" />
+                          </p>
+                          <p className="text-[10px] text-white/60">
+                            Burger = 1 carimbo • Combo = 2 carimbos • 10 = Grátis
+                          </p>
+                        </div>
+                      </div>
+                      <span className="text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        Fogo & Chapa
+                      </span>
+                    </div>
+                  )}
+
                   <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
                     <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">
                       Resumo do Pedido
