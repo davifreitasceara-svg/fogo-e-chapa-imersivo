@@ -150,6 +150,9 @@ function DrinksPage() {
   const mobileScrollerRef = useRef<HTMLDivElement | null>(null);
   const scrollRafRef = useRef<number | null>(null);
   const lastSnapRef = useRef(0);
+  const mobileTouchStartY = useRef(0);
+  const mobileTouchStartX = useRef(0);
+  const isTopBounceRef = useRef(false);
 
   const handleMobileScroll = useCallback(() => {
     if (scrollRafRef.current !== null) return;
@@ -174,6 +177,38 @@ function DrinksPage() {
       }
     });
   }, []);
+
+  const handleMobileTouchStart = (e: React.TouchEvent) => {
+    mobileTouchStartY.current = e.touches[0]?.clientY ?? 0;
+    mobileTouchStartX.current = e.touches[0]?.clientX ?? 0;
+    const el = mobileScrollerRef.current;
+    isTopBounceRef.current = !el || el.scrollTop <= 6;
+  };
+
+  const handleMobileTouchMove = (e: React.TouchEvent) => {
+    const currentY = e.touches[0]?.clientY ?? 0;
+    const currentX = e.touches[0]?.clientX ?? 0;
+    const deltaY = currentY - mobileTouchStartY.current; // Positivo = dedo arrastando para baixo (puxando o topo para subir)
+    const deltaX = Math.abs(currentX - mobileTouchStartX.current);
+
+    // Se estiver no início (seção 0) e arrastar para baixo mais de 40px: sobe para o carrossel exibindo todos os drinks
+    if (isTopBounceRef.current && deltaY > 40 && deltaY > deltaX * 1.2 && mobileSection === 0) {
+      isTopBounceRef.current = false;
+      setViewMode('carousel');
+      setDetailScroll(0);
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try { navigator.vibrate(14); } catch {}
+      }
+    }
+  };
+
+  const handleMobileWheel = (e: React.WheelEvent) => {
+    const el = mobileScrollerRef.current;
+    if (el && el.scrollTop <= 4 && e.deltaY < -20 && mobileSection === 0) {
+      setViewMode('carousel');
+      setDetailScroll(0);
+    }
+  };
 
   useEffect(() => {
     if (viewMode === 'carousel') {
@@ -497,11 +532,29 @@ function DrinksPage() {
               <div
                 ref={mobileScrollerRef}
                 onScroll={handleMobileScroll}
+                onTouchStart={handleMobileTouchStart}
+                onTouchMove={handleMobileTouchMove}
+                onWheel={handleMobileWheel}
                 className="absolute inset-0 overflow-y-auto snap-y snap-mandatory overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 style={{ WebkitOverflowScrolling: "touch" }}
               >
                 {/* 1. Apresentação */}
                 <section className="snap-start snap-always h-full flex flex-col justify-end px-4 pb-8">
+                  {/* Botão/Dica para subir e ver todos os drinks */}
+                  <div className="w-full flex justify-center mb-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setViewMode('carousel');
+                        setDetailScroll(0);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/20 text-[10px] font-black uppercase tracking-wider text-white/90 shadow-md active:scale-95 cursor-pointer"
+                    >
+                      <span>↑</span>
+                      <span>Subir para ver todos os drinks</span>
+                    </button>
+                  </div>
+
                   <MobileCard scrollerRef={mobileScrollerRef}>
                     <span className="inline-block px-3 py-1 rounded-full border border-white/40 text-[10px] font-bold tracking-widest uppercase text-white/85">
                       {centerDrink.indexLabel}
@@ -602,13 +655,25 @@ function DrinksPage() {
                     >
                       <ShoppingBag size={16} /> Adicionar à sacola
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => mobileScrollerRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
-                      className="mt-2 w-full py-2 text-[11px] font-black uppercase tracking-wider text-white/75 cursor-pointer"
-                    >
-                      ↑ Girar de volta ao início
-                    </button>
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => mobileScrollerRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+                        className="flex-1 py-2 rounded-full bg-white/10 hover:bg-white/20 text-[11px] font-black uppercase tracking-wider text-white/80 text-center active:scale-95 cursor-pointer"
+                      >
+                        ↑ Girar ao Início
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setViewMode('carousel');
+                          setDetailScroll(0);
+                        }}
+                        className="flex-1 py-2 rounded-full bg-white/20 hover:bg-white/30 text-[11px] font-black uppercase tracking-wider text-white text-center active:scale-95 cursor-pointer"
+                      >
+                        Ver Todos Drinks
+                      </button>
+                    </div>
                   </MobileCard>
                 </section>
               </div>

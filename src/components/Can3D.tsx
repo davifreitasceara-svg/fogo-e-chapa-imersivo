@@ -979,20 +979,21 @@ function CanMesh({
       rigRef.current.visible = false;
       return;
     }
-    // No mobile, renderizar apenas a lata ativa e seus 2 vizinhos imediatos para economizar GPU
-    if (isMobile && Math.abs(diff) > 1) {
+    
+    const isDetail = viewModeRef.current === 'detail';
+    const detailScroll = scrollRef.current;
+
+    // No modo de detalhes, esconde as outras latas; no carrossel, mostra todos os drinks
+    if (isDetail && diff !== 0) {
       rigRef.current.visible = false;
       return;
     }
     rigRef.current.visible = true;
 
-    const isDetail = viewModeRef.current === 'detail';
-    const detailScroll = scrollRef.current;
-
-    // Calculate target position based on distance from center
-    let targetX = diff * (isMobile ? 3.2 : 4.0); 
+    // Posicionamento horizontal em arco
+    let targetX = diff * (isMobile ? 2.7 : 4.0); 
     if (diff !== 0) {
-      targetX += diff > 0 ? (isMobile ? 0.4 : 0.8) : (isMobile ? -0.4 : -0.8);
+      targetX += diff > 0 ? (isMobile ? 0.3 : 0.8) : (isMobile ? -0.3 : -0.8);
       if (isDetail) {
         targetX += (diff > 0 ? 15 : -15);
       }
@@ -1016,10 +1017,10 @@ function CanMesh({
       const hop = Math.sin(frac * Math.PI); // 0 de frente, 1 no meio do giro
 
       targetX = 0;
-      targetY = 2.0 + hop * 0.35; // "pula" enquanto gira e pousa de frente
+      targetY = 0.70 + hop * 0.18; // Centralizada no espaço visível da tela do celular, sem ficar colada no topo
       targetRotY = Math.PI + 0.15 + pos * Math.PI * 2;
-      targetRotX = -hop * 0.22; // inclina levemente durante o giro
-      targetRotZ = Math.sin(frac * Math.PI * 2) * 0.1;
+      targetRotX = -hop * 0.16; // inclina levemente durante o giro
+      targetRotZ = Math.sin(frac * Math.PI * 2) * 0.08;
     } else if (diff === 0 && isDetail) {
       targetY = -0.36 - Math.sin(detailScroll * Math.PI) * 0.08;
       
@@ -1036,10 +1037,10 @@ function CanMesh({
 
     // Mais perto da câmera quando virar para trás (+Z aproxima do observador)
     const targetZ = vIndex === 2
-      ? (isDetail ? (mobileSpin ? mobileHop * 0.6 : detailScroll * 0.90) : 0.0)
+      ? (isDetail ? (mobileSpin ? mobileHop * 0.5 : detailScroll * 0.90) : 0.0)
       : -Math.abs(diff) * (isMobile ? 3.4 : 4.2); 
     const targetScale = vIndex === 2 
-      ? (isDetail ? (mobileSpin ? 0.8 - mobileHop * 0.06 : 1.0 + detailScroll * 0.04) : (isMobile ? 0.95 : 1.0)) 
+      ? (isDetail ? (mobileSpin ? 0.78 - mobileHop * 0.05 : 1.0 + detailScroll * 0.04) : (isMobile ? 0.95 : 1.0)) 
       : (isMobile ? 0.72 : 0.85) - Math.abs(diff) * 0.1;
 
     // Giro mais "colado" na rolagem no mobile para a lata acompanhar o dedo
