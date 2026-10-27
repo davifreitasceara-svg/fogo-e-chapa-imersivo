@@ -967,7 +967,14 @@ function CanMesh({
     const vIndex = ((drinkIndex - activeIndex + 2) % totalDrinks + totalDrinks) % totalDrinks;
     const diff = vIndex - 2; 
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
     if (singleMode && diff !== 0) {
+      rigRef.current.visible = false;
+      return;
+    }
+    // No mobile, renderizar apenas a lata ativa e seus 2 vizinhos imediatos para economizar GPU
+    if (isMobile && Math.abs(diff) > 1) {
       rigRef.current.visible = false;
       return;
     }
@@ -977,38 +984,37 @@ function CanMesh({
     const detailScroll = scrollRef.current;
 
     // Calculate target position based on distance from center
-    let targetX = diff * 4.0; 
+    let targetX = diff * (isMobile ? 3.2 : 4.0); 
     if (diff !== 0) {
-      targetX += diff > 0 ? 0.8 : -0.8;
+      targetX += diff > 0 ? (isMobile ? 0.4 : 0.8) : (isMobile ? -0.4 : -0.8);
       if (isDetail) {
         targetX += (diff > 0 ? 15 : -15);
       }
     } else {
       if (isDetail) {
-        // Ao rolar para o final, posiciona à esquerda da foto do copo sem sobrepor
-        targetX = -1.40 + detailScroll * 0.55;
+        // No mobile, mantém a lata centralizada; no desktop, posiciona à esquerda
+        targetX = isMobile ? 0 : (-1.40 + detailScroll * 0.55);
       }
     }
 
-    let targetY = -0.2 + Math.abs(diff) * 0.4; 
+    let targetY = (isMobile ? 0.35 : -0.2) + Math.abs(diff) * 0.4; 
     let targetRotX = 0;
     let targetRotZ = -diff * 0.18; 
     let targetRotY = Math.PI + 0.15 + diff * 0.4; 
 
     if (diff === 0 && isDetail) {
-      // Mantém Y confortável na tela com folga no topo
-      targetY = -0.36 - Math.sin(detailScroll * Math.PI) * 0.08;
+      // No mobile, eleva levemente para dar espaço ao conteúdo de texto
+      targetY = (isMobile ? 0.15 : -0.36) - Math.sin(detailScroll * Math.PI) * 0.08;
       
       // Inclina para trás (topo inclina para dentro da cena)
       targetRotX = -detailScroll * 0.44;
-      // Virado verticalmente para a direita: rotaciona no eixo Y e inclina a coluna vertical para a direita
-      targetRotY = Math.PI + 0.15 - detailScroll * 0.35;
-      targetRotZ = -detailScroll * 0.28;
+      targetRotY = Math.PI + 0.15 - (isMobile ? 0 : detailScroll * 0.35);
+      targetRotZ = -detailScroll * (isMobile ? 0.12 : 0.28);
     }
 
     // Mais perto da câmera quando virar para trás (+Z aproxima do observador)
-    const targetZ = vIndex === 2 ? (isDetail ? detailScroll * 0.90 : 0.0) : -Math.abs(diff) * 4.2; 
-    const targetScale = vIndex === 2 ? (isDetail ? 1.0 + detailScroll * 0.04 : 1.0) : 0.85 - Math.abs(diff) * 0.1;
+    const targetZ = vIndex === 2 ? (isDetail ? detailScroll * (isMobile ? 0.4 : 0.90) : 0.0) : -Math.abs(diff) * (isMobile ? 3.4 : 4.2); 
+    const targetScale = vIndex === 2 ? (isDetail ? (isMobile ? 0.92 : 1.0) + detailScroll * 0.04 : (isMobile ? 0.95 : 1.0)) : (isMobile ? 0.72 : 0.85) - Math.abs(diff) * 0.1;
 
     rigRef.current.position.x = THREE.MathUtils.damp(rigRef.current.position.x, targetX, 5, delta);
     rigRef.current.position.y = THREE.MathUtils.damp(rigRef.current.position.y, targetY, 5, delta);
@@ -1064,6 +1070,28 @@ const MemoizedCanMesh = React.memo(CanMesh, (prev, next) => {
   return prev.drink.id === next.drink.id && prev.drinkIndex === next.drinkIndex && prev.singleMode === next.singleMode;
 });
 
+// Controlador de câmera responsivo: adapta distância e enquadramento automaticamente para telas mobile
+function ResponsiveCamera() {
+  const { camera, size } = useThree();
+  useEffect(() => {
+    const isMobile = size.width < 768;
+    if (isMobile) {
+      camera.position.set(0, 0.45, 14.8);
+      if ('fov' in camera) {
+        (camera as THREE.PerspectiveCamera).fov = 38;
+        (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+      }
+    } else {
+      camera.position.set(0, 0, 10.0);
+      if ('fov' in camera) {
+        (camera as THREE.PerspectiveCamera).fov = 35;
+        (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+      }
+    }
+  }, [size.width, camera]);
+  return null;
+}
+
 export function Can3DScene({ 
   drinks, 
   activeIndex, 
@@ -1085,9 +1113,16 @@ export function Can3DScene({
   const viewModeRef = useRef(viewMode);
   viewModeRef.current = viewMode;
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <div className="w-full h-full">
-      <Canvas camera={{ position: [0, 0, 10.0], fov: 35 }}>
+      <Canvas 
+        dpr={[1, isMobile ? 1.25 : 1.75]}
+        camera={{ position: [0, 0, 10.0], fov: 35 }}
+        gl={{ powerPreference: "high-performance", antialias: true, alpha: true, stencil: false }}
+      >
+        <ResponsiveCamera />
         <TexturePrewarmer drinks={drinks} />
         
         <ambientLight intensity={0.9} />
@@ -1163,12 +1198,12 @@ export function Can3DScene({
         
         {/* Ground shadow estático bake (frames=1: zero render passes a cada frame) */}
         <ContactShadows 
-          position={[0, -2.3, 0]} 
-          opacity={0.4} 
+          position={[0, isMobile ? -1.8 : -2.3, 0]} 
+          opacity={0.35} 
           scale={14} 
           blur={2} 
           far={4} 
-          resolution={128}
+          resolution={isMobile ? 64 : 128}
           frames={1}
         />
       </Canvas>

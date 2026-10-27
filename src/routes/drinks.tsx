@@ -133,26 +133,28 @@ function DrinksPage() {
   };
 
   useEffect(() => {
+    let touchStartX = 0;
     let touchStartY = 0;
+    let touchStartTime = 0;
     let accumulatedDeltaY = 0;
     let rafPending = false;
 
     const processDelta = (delta: number) => {
       if (viewMode === 'carousel') {
-        if (delta > 25) {
+        if (delta > 40) {
           setViewMode('detail');
-          setDetailScroll(Math.min(0.2, (delta - 25) * 0.0015));
+          setDetailScroll(Math.min(0.2, (delta - 40) * 0.0015));
         }
       } else if (viewMode === 'detail') {
         if (delta > 0) {
-          // Rola para baixo: a lata desce suavemente e o suco acelera em volta
+          // Rola para baixo: acelera suco e inclina lata
           setDetailScroll((prev) => Math.min(1, prev + delta * 0.0015));
         } else if (delta < 0) {
-          // Rola para cima: a lata sobe
+          // Rola para cima
           setDetailScroll((prev) => {
             const next = prev + delta * 0.0015;
             if (next <= 0) {
-              if (prev <= 0.02 && delta < -30) {
+              if (prev <= 0.02 && delta < -45) {
                 setViewMode('carousel');
               }
               return 0;
@@ -177,35 +179,49 @@ function DrinksPage() {
     };
 
     const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0]?.clientX ?? 0;
       touchStartY = e.touches[0]?.clientY ?? 0;
+      touchStartTime = Date.now();
       accumulatedDeltaY = 0;
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      const clientY = e.touches[0]?.clientY ?? touchStartY;
-      const deltaY = touchStartY - clientY;
-      touchStartY = clientY;
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touchEndX = e.changedTouches[0]?.clientX ?? touchStartX;
+      const touchEndY = e.changedTouches[0]?.clientY ?? touchStartY;
+      const deltaX = touchStartX - touchEndX;
+      const deltaY = touchStartY - touchEndY;
+      const timeDiff = Date.now() - touchStartTime;
 
-      accumulatedDeltaY += deltaY * 2.2;
-      if (!rafPending) {
-        rafPending = true;
-        requestAnimationFrame(() => {
-          const delta = accumulatedDeltaY;
-          accumulatedDeltaY = 0;
-          rafPending = false;
-          processDelta(delta);
-        });
+      // Se foi um toque rápido (< 500ms)
+      if (timeDiff < 500) {
+        // Gesto horizontal predominante: troca de bebida no carrossel
+        if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+          if (viewMode === 'carousel') {
+            if (deltaX > 0) {
+              shiftRight();
+            } else {
+              shiftLeft();
+            }
+            return;
+          }
+        }
+
+        // Gesto vertical no carrossel: deslizar para cima abre detalhes
+        if (viewMode === 'carousel' && deltaY > 70 && Math.abs(deltaY) > Math.abs(deltaX) * 1.5) {
+          setViewMode('detail');
+          setDetailScroll(0);
+        }
       }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
       rafPending = false;
     };
   }, [viewMode]);
@@ -332,6 +348,11 @@ function DrinksPage() {
                   Ver Detalhes ↓
                 </button>
               </div>
+
+              {/* Dica de Swipe no Celular */}
+              <p className="text-[10px] text-white/75 font-semibold uppercase tracking-wider mt-2 block sm:hidden select-none">
+                ← Deslize para trocar de sabor →
+              </p>
             </div>
 
             <button 
@@ -373,10 +394,23 @@ function DrinksPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 60 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="absolute inset-0 w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex flex-col lg:flex-row items-center justify-between pointer-events-none z-10 pt-16 sm:pt-20 pb-8 sm:pb-12 overflow-y-auto lg:overflow-hidden"
+              className="absolute inset-0 w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex flex-col lg:flex-row items-center justify-between z-10 pt-16 sm:pt-20 pb-24 sm:pb-12 overflow-y-auto lg:overflow-hidden pointer-events-auto"
+              style={{ WebkitOverflowScrolling: "touch" }}
             >
               {/* Left Text Content */}
-              <div className="flex-1 w-full flex flex-col space-y-3 sm:space-y-5 pointer-events-auto max-w-xl py-4" style={{ color: centerDrink.textColor }}>
+              <div className="flex-1 w-full flex flex-col space-y-3 sm:space-y-5 max-w-xl py-4" style={{ color: centerDrink.textColor }}>
+                {/* Botão de Retorno no Mobile */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setViewMode('carousel');
+                    setDetailScroll(0);
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider mb-2 lg:hidden w-fit shadow-md border border-white/30 transition-transform active:scale-95 cursor-pointer"
+                >
+                  <ArrowLeft size={14} /> Voltar ao Carrossel
+                </button>
+
                 <motion.span 
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 0.8, y: 0 }} transition={{ delay: 0.1 }}
                   className="inline-block px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border-2 text-[10px] sm:text-xs font-bold tracking-widest uppercase w-max"

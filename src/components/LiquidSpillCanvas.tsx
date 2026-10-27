@@ -154,9 +154,10 @@ export function LiquidSpillCanvas({
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Handle Resize & DPR for ultra-crisp fluid rendering
+      // Handle Resize & DPR for ultra-crisp fluid rendering without mobile lag
       const rect = container.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75);
       const targetW = Math.round(rect.width * dpr);
       const targetH = Math.round(rect.height * dpr);
 

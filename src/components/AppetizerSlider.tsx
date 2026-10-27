@@ -49,6 +49,7 @@ export function AppetizerSlider({
   currentTheme?: any;
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
   const isMobile = useIsMobile();
 
   const slideLeft = () => {
@@ -61,10 +62,32 @@ export function AppetizerSlider({
     setCurrentIndex((prev) => (prev === 0 ? appetizers.length - 1 : prev - 1));
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0]?.clientX ?? null);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0]?.clientX ?? touchStart;
+    const diff = touchStart - touchEnd;
+    if (Math.abs(diff) > 35) {
+      if (diff > 0) {
+        slideLeft();
+      } else {
+        slideRight();
+      }
+    }
+    setTouchStart(null);
+  };
+
   const currentApp = appetizers[currentIndex]!;
 
   return (
-    <section className="relative w-full min-h-[620px] sm:min-h-[700px] md:max-h-[850px] overflow-hidden flex items-center">
+    <section 
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className="relative w-full min-h-[620px] sm:min-h-[700px] md:max-h-[850px] overflow-hidden flex items-center"
+    >
       {/* Base Animated Background Color */}
       <motion.div
         className="absolute inset-0 z-0"
