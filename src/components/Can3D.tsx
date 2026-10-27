@@ -1008,30 +1008,51 @@ function CanMesh({
     let targetRotZ = -diff * 0.18; 
     let targetRotY = Math.PI + 0.15 + diff * 0.4; 
 
-    if (diff === 0 && isDetail) {
-      // No mobile, posiciona a lata no topo para servir de showcase sem cobrir as informações
-      targetY = (isMobile ? (1.32 - detailScroll * 0.22) : -0.36) - Math.sin(detailScroll * Math.PI) * 0.08;
+    if (diff === 0 && isDetail && isMobile) {
+      // VITRINE GIRATÓRIA MOBILE: cada seção de rolagem = 1 giro completo de 360° no eixo vertical.
+      // Nos pontos de snap (frac = 0) a lata fica exatamente de frente, parada e sem inclinação.
+      const pos = detailScroll * (MOBILE_DETAIL_SECTIONS - 1);
+      const frac = pos - Math.floor(pos);
+      const hop = Math.sin(frac * Math.PI); // 0 de frente, 1 no meio do giro
+
+      targetX = 0;
+      targetY = 2.0 + hop * 0.35; // "pula" enquanto gira e pousa de frente
+      targetRotY = Math.PI + 0.15 + pos * Math.PI * 2;
+      targetRotX = -hop * 0.22; // inclina levemente durante o giro
+      targetRotZ = Math.sin(frac * Math.PI * 2) * 0.1;
+    } else if (diff === 0 && isDetail) {
+      targetY = -0.36 - Math.sin(detailScroll * Math.PI) * 0.08;
       
       // Inclina para trás (topo inclina para dentro da cena)
       targetRotX = -detailScroll * 0.44;
-      targetRotY = Math.PI + 0.15 - (isMobile ? 0 : detailScroll * 0.35);
-      targetRotZ = -detailScroll * (isMobile ? 0.12 : 0.28);
+      targetRotY = Math.PI + 0.15 - detailScroll * 0.35;
+      targetRotZ = -detailScroll * 0.28;
     }
 
+    const mobileSpin = diff === 0 && isDetail && isMobile;
+    const mobileHop = mobileSpin
+      ? Math.sin((detailScroll * (MOBILE_DETAIL_SECTIONS - 1) % 1) * Math.PI)
+      : 0;
+
     // Mais perto da câmera quando virar para trás (+Z aproxima do observador)
-    const targetZ = vIndex === 2 ? (isDetail ? detailScroll * (isMobile ? 0.3 : 0.90) : 0.0) : -Math.abs(diff) * (isMobile ? 3.4 : 4.2); 
+    const targetZ = vIndex === 2
+      ? (isDetail ? (mobileSpin ? mobileHop * 0.6 : detailScroll * 0.90) : 0.0)
+      : -Math.abs(diff) * (isMobile ? 3.4 : 4.2); 
     const targetScale = vIndex === 2 
-      ? (isDetail ? (isMobile ? 0.65 : 1.0) + detailScroll * 0.04 : (isMobile ? 0.95 : 1.0)) 
+      ? (isDetail ? (mobileSpin ? 0.8 - mobileHop * 0.06 : 1.0 + detailScroll * 0.04) : (isMobile ? 0.95 : 1.0)) 
       : (isMobile ? 0.72 : 0.85) - Math.abs(diff) * 0.1;
+
+    // Giro mais "colado" na rolagem no mobile para a lata acompanhar o dedo
+    const rotLambda = mobileSpin ? 9 : 5;
 
     rigRef.current.position.x = THREE.MathUtils.damp(rigRef.current.position.x, targetX, 5, delta);
     rigRef.current.position.y = THREE.MathUtils.damp(rigRef.current.position.y, targetY, 5, delta);
     rigRef.current.position.z = THREE.MathUtils.damp(rigRef.current.position.z, targetZ, 5, delta);
     
-    rigRef.current.rotation.x = THREE.MathUtils.damp(rigRef.current.rotation.x, targetRotX, 5, delta);
-    rigRef.current.rotation.z = THREE.MathUtils.damp(rigRef.current.rotation.z, targetRotZ, 5, delta);
+    rigRef.current.rotation.x = THREE.MathUtils.damp(rigRef.current.rotation.x, targetRotX, rotLambda, delta);
+    rigRef.current.rotation.z = THREE.MathUtils.damp(rigRef.current.rotation.z, targetRotZ, rotLambda, delta);
     
-    meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, targetRotY, 5, delta);
+    meshRef.current.rotation.y = THREE.MathUtils.damp(meshRef.current.rotation.y, targetRotY, rotLambda, delta);
     
     rigRef.current.scale.setScalar(THREE.MathUtils.damp(rigRef.current.scale.x, targetScale, 5, delta));
   });
@@ -1079,6 +1100,8 @@ const MemoizedCanMesh = React.memo(CanMesh, (prev, next) => {
 });
 
 // Controlador de câmera responsivo: adapta distância e enquadramento automaticamente para telas mobile
+// Número de seções da vitrine mobile (cada seção = 1 giro de 360° da lata)
+export const MOBILE_DETAIL_SECTIONS = 4;
 function ResponsiveCamera() {
   const { camera, size } = useThree();
   useEffect(() => {
