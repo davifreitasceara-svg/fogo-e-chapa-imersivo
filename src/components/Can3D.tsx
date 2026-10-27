@@ -727,6 +727,12 @@ const JuiceLiquidFlow = React.memo(function JuiceLiquidFlow({
     rigRef.current.scale.setScalar(currentScale);
 
     // CRÍTICO: visible SEMPRE true para que os shaders fiquem 100% compilados na GPU desde o frame 1!
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    if (isMobile) {
+      rigRef.current.visible = false;
+      return;
+    }
+
     rigRef.current.visible = true;
 
     // Acompanha a lata protagonista em sincronia absoluta: posicionada à esquerda da foto do copo!
@@ -1003,8 +1009,8 @@ function CanMesh({
     let targetRotY = Math.PI + 0.15 + diff * 0.4; 
 
     if (diff === 0 && isDetail) {
-      // No mobile, eleva levemente para dar espaço ao conteúdo de texto
-      targetY = (isMobile ? 0.15 : -0.36) - Math.sin(detailScroll * Math.PI) * 0.08;
+      // No mobile, posiciona a lata no topo para servir de showcase sem cobrir as informações
+      targetY = (isMobile ? (1.32 - detailScroll * 0.22) : -0.36) - Math.sin(detailScroll * Math.PI) * 0.08;
       
       // Inclina para trás (topo inclina para dentro da cena)
       targetRotX = -detailScroll * 0.44;
@@ -1013,8 +1019,10 @@ function CanMesh({
     }
 
     // Mais perto da câmera quando virar para trás (+Z aproxima do observador)
-    const targetZ = vIndex === 2 ? (isDetail ? detailScroll * (isMobile ? 0.4 : 0.90) : 0.0) : -Math.abs(diff) * (isMobile ? 3.4 : 4.2); 
-    const targetScale = vIndex === 2 ? (isDetail ? (isMobile ? 0.92 : 1.0) + detailScroll * 0.04 : (isMobile ? 0.95 : 1.0)) : (isMobile ? 0.72 : 0.85) - Math.abs(diff) * 0.1;
+    const targetZ = vIndex === 2 ? (isDetail ? detailScroll * (isMobile ? 0.3 : 0.90) : 0.0) : -Math.abs(diff) * (isMobile ? 3.4 : 4.2); 
+    const targetScale = vIndex === 2 
+      ? (isDetail ? (isMobile ? 0.65 : 1.0) + detailScroll * 0.04 : (isMobile ? 0.95 : 1.0)) 
+      : (isMobile ? 0.72 : 0.85) - Math.abs(diff) * 0.1;
 
     rigRef.current.position.x = THREE.MathUtils.damp(rigRef.current.position.x, targetX, 5, delta);
     rigRef.current.position.y = THREE.MathUtils.damp(rigRef.current.position.y, targetY, 5, delta);

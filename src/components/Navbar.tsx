@@ -6,10 +6,10 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
-  { href: "/#about", label: "About" },
-  { href: "/#menu", label: "Menu" },
-  { href: "/#delivery", label: "Delivery" },
-  { href: "/drinks", label: "Drinks" },
+  { href: "/#menu", label: "Cardápio" },
+  { href: "/#drinks", label: "Bebidas" },
+  { href: "/drinks", label: "Latas 3D" },
+  { href: "/#contato", label: "Onde Estamos" },
 ];
 
 export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
@@ -42,22 +42,38 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
   }, []);
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
     if (href === "/drinks") {
-      e.preventDefault();
+      if (typeof window !== "undefined" && window.location.pathname === "/drinks") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
       navigate({ to: "/drinks" });
-    } else if (href === "/" || href === "") {
-      e.preventDefault();
+      return;
+    } 
+    
+    if (href === "/" || href === "") {
       navigate({ to: "/" });
-    } else if (href.startsWith("/#")) {
-      e.preventDefault();
+      return;
+    } 
+    
+    if (href.startsWith("/#")) {
       const targetId = href.replace("/#", "");
       if (typeof window !== "undefined" && window.location.pathname === "/") {
         document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
       } else {
         navigate({ to: "/" }).then(() => {
-          setTimeout(() => {
-            document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
-          }, 120);
+          let attempts = 0;
+          const interval = setInterval(() => {
+            attempts++;
+            const el = document.getElementById(targetId);
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth" });
+              clearInterval(interval);
+            } else if (attempts > 12) {
+              clearInterval(interval);
+            }
+          }, 80);
         });
       }
     }

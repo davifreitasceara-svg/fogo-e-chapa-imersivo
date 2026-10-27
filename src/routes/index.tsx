@@ -3419,6 +3419,24 @@ function Index() {
     setHeroIndex((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
   };
 
+  const [heroTouchStart, setHeroTouchStart] = useState<number | null>(null);
+  const handleHeroTouchStart = (e: React.TouchEvent) => {
+    setHeroTouchStart(e.touches[0]?.clientX ?? null);
+  };
+  const handleHeroTouchEnd = (e: React.TouchEvent) => {
+    if (heroTouchStart === null) return;
+    const touchEnd = e.changedTouches[0]?.clientX ?? heroTouchStart;
+    const diff = heroTouchStart - touchEnd;
+    if (Math.abs(diff) > 35) {
+      if (diff > 0) {
+        nextHero();
+      } else {
+        prevHero();
+      }
+    }
+    setHeroTouchStart(null);
+  };
+
   const currentSlide = carouselSlides[heroIndex]!;
 
   // Dynamic theme based on the currently selected burger
@@ -3886,18 +3904,13 @@ function Index() {
               {[
                 { href: "#menu", label: "Cardápio" },
                 { href: "#gallery", label: "Galeria 3D" },
-                { href: "/drinks", label: "Bebidas" },
+                { href: "#drinks", label: "Bebidas" },
                 { href: "#contato", label: "Onde Estamos" },
               ].map((link) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
                   onClick={(e) => {
-                    if (link.href === "/drinks") {
-                      e.preventDefault();
-                      navigate({ to: "/drinks" });
-                      return;
-                    }
                     if (link.href.startsWith("#")) {
                       e.preventDefault();
                       document.getElementById(link.href.replace("#", ""))?.scrollIntoView({ behavior: "smooth" });
@@ -4128,16 +4141,27 @@ function Index() {
                   Galeria 3D
                 </a>
                 <a
+                  href="#drinks"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    document.getElementById("drinks")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
+                >
+                  Bebidas & Refrigerantes
+                </a>
+                <a
                   href="/drinks"
                   onClick={(e) => {
                     e.preventDefault();
                     setIsNavOpen(false);
                     navigate({ to: "/drinks" });
                   }}
-                  className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors flex items-center justify-between"
+                  className="px-4 py-2.5 rounded-xl text-amber-300 font-bold text-sm hover:bg-white/10 transition-colors flex items-center justify-between"
                 >
-                  <span>Bebidas Exclusivas</span>
-                  <span className="text-[10px] bg-amber-500/25 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">Lata 3D</span>
+                  <span>Vitrine 3D de Latas</span>
+                  <span className="text-[10px] bg-amber-500/25 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full font-bold">Interativa</span>
                 </a>
                 <a
                   href="#contato"
@@ -4182,7 +4206,9 @@ function Index() {
         <main className="relative">
           <section
             id="inicio"
-            className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0"
+            onTouchStart={handleHeroTouchStart}
+            onTouchEnd={handleHeroTouchEnd}
+            className="sticky top-0 relative flex min-h-screen items-center justify-center overflow-hidden pt-24 z-0 select-none"
           >
             {/* Hero Video Background */}
             <div
@@ -4341,26 +4367,77 @@ function Index() {
                 </motion.div>
               ))}
 
-              {/* Carousel arrows */}
+              {/* Carousel Arrows - Desktop & Mobile */}
+              {/* Desktop Left */}
               <div className="hidden sm:block absolute top-1/2 left-8 -translate-y-1/2 z-30">
                 <Button
                   onClick={prevHero}
                   size="icon"
                   variant="outline"
-                  className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"
+                  className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0 cursor-pointer"
                 >
                   <ChevronLeft className="size-8" />
                 </Button>
               </div>
+              {/* Desktop Right */}
               <div className="hidden sm:block absolute top-1/2 right-8 -translate-y-1/2 z-30">
                 <Button
                   onClick={nextHero}
                   size="icon"
                   variant="outline"
-                  className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0"
+                  className="bg-white text-black hover:bg-gray-100 rounded-full size-14 shadow-xl border-0 cursor-pointer"
                 >
                   <ChevronRight className="size-8" />
                 </Button>
+              </div>
+
+              {/* Mobile Navigation Arrows (compact and positioned safely on edges) */}
+              <div className="sm:hidden absolute top-[44%] left-2.5 -translate-y-1/2 z-30 pointer-events-auto">
+                <button
+                  type="button"
+                  onClick={prevHero}
+                  aria-label="Hambúrguer anterior"
+                  className="size-11 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center active:scale-90 shadow-xl cursor-pointer"
+                >
+                  <ChevronLeft className="size-6" strokeWidth={2.5} />
+                </button>
+              </div>
+              <div className="sm:hidden absolute top-[44%] right-2.5 -translate-y-1/2 z-30 pointer-events-auto">
+                <button
+                  type="button"
+                  onClick={nextHero}
+                  aria-label="Próximo hambúrguer"
+                  className="size-11 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 flex items-center justify-center active:scale-90 shadow-xl cursor-pointer"
+                >
+                  <ChevronRight className="size-6" strokeWidth={2.5} />
+                </button>
+              </div>
+
+              {/* Mobile Burger Switcher Dots & Counter */}
+              <div className="sm:hidden flex flex-col items-center gap-1.5 z-30 mt-6 mb-1">
+                <div className="flex items-center gap-3 bg-black/45 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full shadow-lg">
+                  <div className="flex gap-1.5 items-center">
+                    {carouselSlides.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setSlideDirection(i > heroIndex ? 1 : -1);
+                          setHeroIndex(i);
+                        }}
+                        aria-label={`Ver hambúrguer ${i + 1}`}
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          i === heroIndex ? "w-6 bg-white" : "w-2 bg-white/40"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-black text-white tracking-wider">
+                    0{heroIndex + 1} / 0{carouselSlides.length}
+                  </span>
+                </div>
+                <p className="text-[10px] text-white/70 font-semibold uppercase tracking-widest select-none">
+                  ← Deslize para trocar de sabor →
+                </p>
               </div>
 
               {/* Action Buttons */}
