@@ -114,12 +114,31 @@ export const CreditCardForm = ({
     <section className={`ccp ${className}`}>
       <div className="wrap w-full">
         <section id="card" className={`card-container ${flip ? "flip" : ""}`}>
-          <section className="card__front" style={{ ["--ring1" as any]: ring1, ["--ring2" as any]: ring2 }}>
+          <section
+            className="card__front"
+            style={{ ["--ring1" as any]: ring1, ["--ring2" as any]: ring2 }}
+          >
             <div className="card__header">
               <svg viewBox="0 0 60 40" width="45" height="32" className="opacity-90 drop-shadow-md">
                 <rect x="0" y="0" width="60" height="40" rx="6" fill="url(#gold-grad)" />
-                <path d="M 0 12 L 20 12 M 0 28 L 20 28 M 40 12 L 60 12 M 40 28 L 60 28 M 20 0 V 40 M 40 0 V 40" stroke="#b8860b" strokeWidth="2" fill="none" opacity="0.6"/>
-                <rect x="20" y="10" width="20" height="20" rx="4" stroke="#b8860b" strokeWidth="2" fill="none" opacity="0.8"/>
+                <path
+                  d="M 0 12 L 20 12 M 0 28 L 20 28 M 40 12 L 60 12 M 40 28 L 60 28 M 20 0 V 40 M 40 0 V 40"
+                  stroke="#b8860b"
+                  strokeWidth="2"
+                  fill="none"
+                  opacity="0.6"
+                />
+                <rect
+                  x="20"
+                  y="10"
+                  width="20"
+                  height="20"
+                  rx="4"
+                  stroke="#b8860b"
+                  strokeWidth="2"
+                  fill="none"
+                  opacity="0.8"
+                />
                 <defs>
                   <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#e6c27a" />
@@ -147,7 +166,12 @@ export const CreditCardForm = ({
             <div className="card__footer flex items-end justify-between gap-2">
               <div className="card__holder flex-1 min-w-0 pr-2">
                 <div className="card__section__title">Titular do Cartão</div>
-                <div id="card_holder" className="font-bold tracking-wider text-[15px] drop-shadow-sm truncate">{holder || "NOME NO CARTÃO"}</div>
+                <div
+                  id="card_holder"
+                  className="font-bold tracking-wider text-[15px] drop-shadow-sm truncate"
+                >
+                  {holder || "NOME NO CARTÃO"}
+                </div>
               </div>
               <div className="flex items-center gap-4 shrink-0">
                 <div className="card__expires text-right">
@@ -157,7 +181,7 @@ export const CreditCardForm = ({
                     <span id="card_expires_year">{year ? year.slice(-2) : "AA"}</span>
                   </div>
                 </div>
-                
+
                 {/* Fake Mastercard Logo */}
                 <div className="flex pointer-events-none drop-shadow-lg mr-2">
                   <div className="size-8 rounded-full bg-red-500/80 mix-blend-screen translate-x-3 relative z-10"></div>
@@ -167,7 +191,10 @@ export const CreditCardForm = ({
             </div>
           </section>
 
-          <section className="card__back" style={{ ["--ring1" as any]: ring1, ["--ring2" as any]: ring2 }}>
+          <section
+            className="card__back"
+            style={{ ["--ring1" as any]: ring1, ["--ring2" as any]: ring2 }}
+          >
             <div className="card__hide_line" />
             <div className="card_cvv">
               <span>CVV</span>
@@ -221,9 +248,13 @@ export const CreditCardForm = ({
                   onBlur={() => setFocusField(null)}
                   aria-invalid={!validity.month}
                 >
-                  <option value="" disabled>Mes</option>
+                  <option value="" disabled>
+                    Mes
+                  </option>
                   {Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0")).map((m) => (
-                    <option key={m} value={m}>{m}</option>
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
                   ))}
                 </select>
                 <select
@@ -234,9 +265,13 @@ export const CreditCardForm = ({
                   onBlur={() => setFocusField(null)}
                   aria-invalid={!validity.year}
                 >
-                  <option value="" disabled>Ano</option>
+                  <option value="" disabled>
+                    Ano
+                  </option>
                   {years.map((y) => (
-                    <option key={y} value={y}>{y}</option>
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
                   ))}
                 </select>
               </div>

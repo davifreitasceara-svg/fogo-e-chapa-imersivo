@@ -119,7 +119,9 @@ export function MenuSection({ onAdd }: { onAdd: () => void }) {
                 key={tab.id}
                 onClick={() => setActive(tab.id)}
                 className={`relative rounded-full px-6 py-2.5 text-sm font-semibold uppercase transition-colors ${
-                  active === tab.id ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  active === tab.id
+                    ? "text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {active === tab.id && (
@@ -190,4 +192,3 @@ export function MenuSection({ onAdd }: { onAdd: () => void }) {
     </section>
   );
 }
-

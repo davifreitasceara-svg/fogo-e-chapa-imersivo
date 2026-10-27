@@ -10,7 +10,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         fire: "bg-primary text-primary-foreground shadow-fire hover:-translate-y-0.5 hover:bg-primary/90",
-        outline: "border border-border bg-transparent text-foreground hover:border-primary hover:text-primary",
+        outline:
+          "border border-border bg-transparent text-foreground hover:border-primary hover:text-primary",
         ghost: "bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
       },
       size: {
@@ -24,7 +25,10 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> { asChild?: boolean }
+export interface ButtonProps
+  extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
 
 function Button({ className, variant, size, asChild = false, ...props }: ButtonProps) {
   const Comp = asChild ? Slot : "button";
