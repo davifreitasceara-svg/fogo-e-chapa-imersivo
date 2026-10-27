@@ -227,14 +227,88 @@ export const normalizeText = (s: string) =>
 export function findDeliveryPointByText(text: string): DeliveryPoint | undefined {
   const t = normalizeText(text || "");
   if (!t) return undefined;
-  // 1. Título exato contido no texto
-  const byTitle = DELIVERY_POINTS.find((p) => t.includes(normalizeText(p.title)));
+  // 1. Título exato contido no texto ou texto contido no título
+  const byTitle = DELIVERY_POINTS.find(
+    (p) => t.includes(normalizeText(p.title)) || normalizeText(p.title).includes(t),
+  );
   if (byTitle) return byTitle;
-  // 2. Rua + número
+  // 2. Keywords
+  const byKeyword = DELIVERY_POINTS.find(
+    (p) =>
+      p.keywords &&
+      p.keywords.some((k) => {
+        const nk = normalizeText(k);
+        return t.includes(nk) || (t.length >= 4 && nk.includes(t));
+      }),
+  );
+  if (byKeyword) return byKeyword;
+  // 3. Rua + número
   const byStreet = DELIVERY_POINTS.find(
     (p) => t.includes(normalizeText(p.address)) && p.number !== "s/n" && t.includes(p.number),
   );
   if (byStreet) return byStreet;
-  // 3. Complemento (ex: "SESI SENAI Parangaba")
-  return DELIVERY_POINTS.find((p) => t.includes(normalizeText(p.complement)));
+  // 4. Complemento
+  const byComplement = DELIVERY_POINTS.find((p) => {
+    const comp = normalizeText(p.complement);
+    return comp && (t.includes(comp) || comp.includes(t));
+  });
+  if (byComplement) return byComplement;
+
+  return undefined;
 }
+
+/** Extrai um título legível e amigável do destino para o cabeçalho e telemetria do GPS. */
+export function getDestinationTitle(address?: string, coords?: LatLng | null): string {
+  if (coords) {
+    const byCoords = DELIVERY_POINTS.find(
+      (p) =>
+        Math.abs(p.coords[0] - coords[0]) < 0.003 &&
+        Math.abs(p.coords[1] - coords[1]) < 0.003,
+    );
+    if (byCoords) return byCoords.title;
+  }
+  if (!address || !address.trim()) return "Seu Endereço";
+  const matched = findDeliveryPointByText(address);
+  if (matched) return matched.title;
+  const parts = address.split(/[•|,|-]/);
+  const first = parts[0]?.trim();
+  if (first && first.length > 2) {
+    return first;
+  }
+  return address.trim();
+}
+
+/**
+ * Busca a rota real de condução pelas ruas de Fortaleza usando OSRM com fallback suave.
+ */
+export async function fetchRealRoute(start: LatLng, end: LatLng): Promise<LatLng[]> {
+  try {
+    const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 4500);
+    const res = await fetch(url, { signal: ctrl.signal });
+    clearTimeout(timer);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.routes && data.routes[0]?.geometry?.coordinates?.length) {
+        // Converte [lon, lat] do GeoJSON para [lat, lon] do Leaflet
+        return data.routes[0].geometry.coordinates.map(([lon, lat]: [number, number]) => [lat, lon]);
+      }
+    }
+  } catch (e) {
+    // Falha silenciosa, usa interpolação suave de fallback
+  }
+
+  // Fallback: interpola 16 pontos suaves entre origem e destino
+  const steps = 16;
+  const pts: LatLng[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const factor = i / steps;
+    pts.push([
+      start[0] + (end[0] - start[0]) * factor,
+      start[1] + (end[1] - start[1]) * factor,
+    ]);
+  }
+  return pts;
+}
+

@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { CreditCardForm } from "./ui/credit-card-form";
 import { PixPayment } from "./ui/pix-payment";
 import { useAuth } from "@/context/AuthContext";
-import { useUserAddresses } from "@/hooks/useUserAddresses";
+import { useUserAddresses, isSameAddress } from "@/hooks/useUserAddresses";
 import { useLoyalty } from "@/hooks/useLoyalty";
 import { DELIVERY_POINTS, normalizeText, type LatLng } from "@/lib/deliveryPoints";
 
@@ -533,7 +533,16 @@ export function CartCheckoutSheet({
         setDetailsError("Informações incompletas");
         return;
       }
-      if (saveAddressForFuture && address.trim()) {
+      const alreadySaved = addresses.some((a) =>
+        isSameAddress(a, {
+          address: address.trim(),
+          number: number.trim(),
+          complement: complement.trim() || undefined,
+        }),
+      );
+
+      // Só salva se o usuário marcou para salvar no futuro e se NÃO for um endereço que já estava salvo
+      if (saveAddressForFuture && address.trim() && !alreadySaved) {
         saveAddress({
           title: "Endereço Principal",
           name: name.trim(),
@@ -1271,9 +1280,7 @@ export function CartCheckoutSheet({
 
                         <div className="grid grid-cols-1 gap-2 max-h-[170px] overflow-y-auto pr-1">
                           {addresses.map((addr) => {
-                            const isSelected =
-                              address.trim() === addr.address.trim() &&
-                              number.trim() === addr.number.trim();
+                            const isSelected = isSameAddress(addr, { address, number, complement });
                             return (
                               <div
                                 key={addr.id}

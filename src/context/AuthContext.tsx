@@ -62,27 +62,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const redirectOrigin =
         typeof window !== "undefined" && window.location.origin
-          ? window.location.origin
+          ? `${window.location.origin}/`
           : undefined;
-
-      const options = redirectOrigin
-        ? {
-            redirectTo: redirectOrigin,
-            queryParams: {
-              access_type: "offline",
-              prompt: "consent",
-            },
-          }
-        : {
-            queryParams: {
-              access_type: "offline",
-              prompt: "consent",
-            },
-          };
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options,
+        options: {
+          redirectTo: redirectOrigin,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
       });
 
       if (error) {

@@ -3,7 +3,10 @@ import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router"
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import {
   RESTAURANT_COORDS,
+  DELIVERY_POINTS,
   findDeliveryPointByText,
+  getDestinationTitle,
+  fetchRealRoute,
   type LatLng,
 } from "@/lib/deliveryPoints";
 import { motion, AnimatePresence } from "framer-motion";
@@ -3259,7 +3262,7 @@ function Index() {
   const [activeDrinkId, setActiveDrinkId] = useState<number | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
-  const [deliveryAddress, setDeliveryAddress] = useState<string>("SESI SENAI Parangaba • Av. João Pessoa, 6754");
+  const [deliveryAddress, setDeliveryAddress] = useState<string>("");
   const [deliveryCoords, setDeliveryCoords] = useState<LatLng | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -3563,15 +3566,18 @@ function Index() {
   ) => {
     if (Object.keys(cart).length === 0) return;
 
-    // In a real app, this would send an API request.
-    // O motoboy sai antes da Hamburgueria, coleta o pedido e segue até o destino escolhido
+    // Resolve as coordenadas e o endereço real escolhido pelo cliente
+    const matchedPoint = findDeliveryPointByText(address);
+    const resolvedCoords = coords ?? matchedPoint?.coords ?? null;
+    const finalAddress = address?.trim() || matchedPoint?.title || "Seu Endereço";
+
     setCart({});
     setActiveOrderTime(Date.now());
     setActiveOrderType(orderType || "delivery");
     setActiveDriver(Math.floor(Math.random() * MOCK_DRIVERS.length));
     setActiveRoute(0);
-    setDeliveryAddress(address?.trim() || "SESI SENAI Parangaba • Av. João Pessoa, 6754");
-    setDeliveryCoords(coords ?? null);
+    setDeliveryAddress(finalAddress);
+    setDeliveryCoords(resolvedCoords);
     setTrackingOpen(true);
   };
 
@@ -5468,6 +5474,7 @@ function DeliveryTrackingModal({
   activeDriver,
   activeRoute,
   deliveryAddress,
+  destinationCoords,
 }: {
   onClose: () => void;
   currentTheme: any;
@@ -5476,6 +5483,7 @@ function DeliveryTrackingModal({
   activeDriver: number;
   activeRoute: number;
   deliveryAddress?: string;
+  destinationCoords?: LatLng | null;
 }) {
   const [ratingState, setRatingState] = useState<"driver" | "food" | "done" | null>(null);
   const [driverRating, setDriverRating] = useState(0);
@@ -5484,11 +5492,44 @@ function DeliveryTrackingModal({
   const [currentTime, setCurrentTime] = useState(Date.now());
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
+  const fullRouteRef = useRef<number[][]>([]);
+  const pathDataRef = useRef<{ dists: number[]; total: number }>({ dists: [0], total: 0 });
 
   useEffect(() => {
     const int = setInterval(() => setCurrentTime(Date.now()), 1000);
     return () => clearInterval(int);
   }, []);
+
+  const destinationTitle = useMemo(() => {
+    return getDestinationTitle(deliveryAddress, destinationCoords);
+  }, [deliveryAddress, destinationCoords]);
+
+  const matchedPoint = useMemo(() => {
+    if (destinationCoords) {
+      const byCoords = DELIVERY_POINTS.find(
+        (p) =>
+          Math.abs(p.coords[0] - destinationCoords[0]) < 0.003 &&
+          Math.abs(p.coords[1] - destinationCoords[1]) < 0.003,
+      );
+      if (byCoords) return byCoords;
+    }
+    return deliveryAddress ? findDeliveryPointByText(deliveryAddress) : undefined;
+  }, [destinationCoords, deliveryAddress]);
+
+  const mockRoute = MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0];
+
+  const customerPos: LatLng = useMemo(() => {
+    if (destinationCoords) return destinationCoords;
+    if (matchedPoint?.coords) return matchedPoint.coords;
+    return mockRoute?.customer || [-3.7546, -38.4889];
+  }, [destinationCoords, matchedPoint, mockRoute]);
+
+  const totalKm = useMemo(() => {
+    const dx = (customerPos[1] - RESTAURANT_COORDS[1]) * 102;
+    const dy = (customerPos[0] - RESTAURANT_COORDS[0]) * 111;
+    const directKm = Math.sqrt(dx * dx + dy * dy);
+    return Math.max(1.8, Math.round(directKm * 1.35 * 10) / 10);
+  }, [customerPos]);
 
   const elapsedApp = currentTime - (activeOrderTime || currentTime);
   const totalDuration = 180000;
@@ -5497,7 +5538,6 @@ function DeliveryTrackingModal({
   const progressRatio = Math.min(1, Math.max(0, elapsedApp / totalDuration));
   const isDone = remainingMs === 0;
 
-  const mockRoute = MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0];
   const route1Len = mockRoute.route1?.length || 10;
   const route2Len = mockRoute.route2?.length || 10;
   const restaurantRatio = route1Len / Math.max(1, route1Len + route2Len);
@@ -5521,13 +5561,12 @@ function DeliveryTrackingModal({
   // Telemetria realista do GPS (vida real)
   const remainingDistanceKm = useMemo(() => {
     if (isDone || progressRatio >= 0.99) return "0 m";
-    const totalKm = 5.4;
     const remaining = Math.max(0.05, totalKm * (1 - progressRatio));
     if (remaining < 1) {
       return `${Math.round(remaining * 1000)} m`;
     }
     return `${remaining.toFixed(1)} km`;
-  }, [isDone, progressRatio]);
+  }, [isDone, progressRatio, totalKm]);
 
   const currentSpeed = useMemo(() => {
     if (stage === "at_restaurant" || stage === "delivered") return 0;
@@ -5538,7 +5577,7 @@ function DeliveryTrackingModal({
 
   const currentStreetName = useMemo(() => {
     if (stage === "delivered") {
-      return "Portaria Principal • SESI SENAI Parangaba";
+      return `Portaria / Entrada • ${destinationTitle}`;
     }
     if (stage === "at_restaurant") {
       return "Hamburgueria Fogo & Chapa • Coleta de Pedido";
@@ -5557,13 +5596,13 @@ function DeliveryTrackingModal({
     if (deliverProg < 0.25) {
       return "Av. 13 de Maio • Saindo da Loja";
     } else if (deliverProg < 0.6) {
-      return "Av. João Pessoa • Tráfego Fluindo";
-    } else if (deliverProg < 0.85) {
-      return "Av. Dr. Silas Munguba • Próx. Parangaba";
+      return `Tráfego Fluindo • Rumo a ${destinationTitle}`;
+    } else if (deliverProg < 0.88) {
+      return `Próximo ao Destino • ${destinationTitle}`;
     } else {
-      return "Chegando ao SESI SENAI Parangaba";
+      return `Chegando em ${destinationTitle}`;
     }
-  }, [stage, progressRatio, restaurantRatio]);
+  }, [stage, progressRatio, restaurantRatio, destinationTitle]);
 
   useEffect(() => {
     if (activeOrderType === "pickup" || !mapRef.current) return;
@@ -5585,26 +5624,75 @@ function DeliveryTrackingModal({
         maxZoom: 19,
       }).addTo(map);
 
+      const driverStart: LatLng = [-3.743457, -38.537248];
+      const restaurantPos: LatLng = RESTAURANT_COORDS;
+      const customer: LatLng = customerPos;
+      const route1: number[][] = (mockRoute.route1 && mockRoute.route1.length > 2)
+        ? mockRoute.route1
+        : [driverStart, restaurantPos];
+
+      const computeDistances = (path: number[][]) => {
+        const dists = [0];
+        let total = 0;
+        for (let i = 0; i < path.length - 1; i++) {
+          const pNext = path[i + 1];
+          const pCurr = path[i];
+          if (!pNext || !pCurr) continue;
+          const dx = (pNext[1] ?? 0) - (pCurr[1] ?? 0);
+          const dy = (pNext[0] ?? 0) - (pCurr[0] ?? 0);
+          total += Math.sqrt(dx * dx + dy * dy);
+          dists.push(total);
+        }
+        return { dists, total };
+      };
+
+      // Inicializa rota de fallback imediata (restaurant -> customer)
+      const initialRoute: number[][] = [
+        ...route1,
+        [restaurantPos[0], restaurantPos[1]],
+        [customer[0], customer[1]],
+      ];
+      fullRouteRef.current = initialRoute;
+      pathDataRef.current = computeDistances(initialRoute);
+
+      const polyline = L.polyline(initialRoute, {
+        color: "#6b7280",
+        weight: 6,
+        opacity: 0.45,
+        lineCap: "round",
+        lineJoin: "round",
+      }).addTo(map);
+
       // Re-enquadra a rota sempre que o container mudar de tamanho
-      // (o modal anima a entrada, então o tamanho inicial pode ser 0)
       const fitRoute = () => {
         const m = mapInstanceRef.current;
         if (!m || !mapRef.current) return;
         const { clientWidth, clientHeight } = mapRef.current;
         if (clientWidth === 0 || clientHeight === 0) return;
         m.invalidateSize();
-        const r = (MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0])!;
-        const pts = [...(r.route1 || []), ...(r.route2 || [])];
+        const pts = fullRouteRef.current.length > 1 ? fullRouteRef.current : [driverStart, restaurantPos, customer];
         if (pts.length > 1) {
           m.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
         } else {
-          m.setView(r.start, 15);
+          m.setView(driverStart, 15);
         }
       };
       resizeObserver = new ResizeObserver(fitRoute);
       resizeObserver.observe(mapRef.current as Element);
       requestAnimationFrame(fitRoute);
       setTimeout(fitRoute, 400);
+
+      // Busca a rota real de condução pelas ruas de Fortaleza (OSRM)
+      fetchRealRoute(restaurantPos, customer).then((osrmRoute) => {
+        if (cancelled || !mapInstanceRef.current || !osrmRoute || osrmRoute.length < 2) return;
+        const newFull = [...route1, ...osrmRoute];
+        fullRouteRef.current = newFull;
+        pathDataRef.current = computeDistances(newFull);
+        polyline.setLatLngs(newFull as any);
+        if (L) {
+          map.fitBounds(L.latLngBounds(newFull), { padding: [40, 40] });
+        }
+      });
 
       const style = document.createElement("style");
       style.innerHTML = `
@@ -5640,22 +5728,7 @@ function DeliveryTrackingModal({
       `;
       document.head.appendChild(style);
 
-      const driverStart = mockRoute.start || (mockRoute.route1 && mockRoute.route1[0]) || [-3.7435, -38.5372];
-      const restaurantPos = mockRoute.restaurant || (mockRoute.route1 && mockRoute.route1[mockRoute.route1.length - 1]) || driverStart;
-      const customer = mockRoute.customer || [-3.76854, -38.5619];
-      const route1 = mockRoute.route1 || [];
-      const route2 = mockRoute.route2 || [];
-      const fullRoute = [...route1, ...route2];
-
-      const polyline = L.polyline(fullRoute, {
-        color: "#6b7280",
-        weight: 6,
-        opacity: 0.45,
-        lineCap: "round",
-        lineJoin: "round",
-      }).addTo(map);
-
-      // Vista inicial segura; o fitRoute enquadra a rota assim que o container tiver tamanho
+      // Vista inicial segura
       map.setView(driverStart, 15);
       fitRoute();
 
@@ -5691,9 +5764,9 @@ function DeliveryTrackingModal({
         className: "leaflet-custom-tooltip font-bold text-[10px]",
       });
 
-      // Marcador do Destino (SESI SENAI Parangaba)
+      // Marcador do Destino Real
       const customerMarker = L.marker(customer, { icon: createDot("#10b981", "📍", 36) }).addTo(map);
-      customerMarker.bindTooltip("📍 SESI SENAI Parangaba", {
+      customerMarker.bindTooltip(`📍 ${destinationTitle}`, {
         permanent: true,
         direction: "top",
         offset: [0, -20],
@@ -5718,23 +5791,6 @@ function DeliveryTrackingModal({
       // O entregador inicia ANTES de chegar na hamburgueria!
       const driverMarker = L.marker(driverStart, { icon: driverIcon }).addTo(map);
 
-      const computeDistances = (path: number[][]) => {
-        const dists = [0];
-        let total = 0;
-        for (let i = 0; i < path.length - 1; i++) {
-          const pNext = path[i + 1];
-          const pCurr = path[i];
-          if (!pNext || !pCurr) continue;
-          const dx = (pNext[1] ?? 0) - (pCurr[1] ?? 0);
-          const dy = (pNext[0] ?? 0) - (pCurr[0] ?? 0);
-          total += Math.sqrt(dx * dx + dy * dy);
-          dists.push(total);
-        }
-        return { dists, total };
-      };
-
-      const fullPathData = computeDistances(fullRoute);
-
       let reqId: number;
       function animate() {
         if (!mapInstanceRef.current) return;
@@ -5750,9 +5806,12 @@ function DeliveryTrackingModal({
 
         const progress = elapsed / duration;
 
-        const pathInfo = fullPathData;
-        const path = fullRoute;
-        if (path.length < 2) return;
+        const pathInfo = pathDataRef.current;
+        const path = fullRouteRef.current;
+        if (path.length < 2 || pathInfo.total === 0) {
+          if (!isDone) reqId = requestAnimationFrame(animate);
+          return;
+        }
 
         const targetDist = progress * pathInfo.total;
         let idx = 0;
@@ -5848,7 +5907,7 @@ function DeliveryTrackingModal({
         mapInstanceRef.current = null;
       }
     };
-  }, [currentTheme, activeOrderTime, activeRoute]);
+  }, [currentTheme, activeOrderTime, activeRoute, customerPos, destinationTitle]);
 
   const toggleMapSize = () => setIsMapExpanded(!isMapExpanded);
 
@@ -6004,8 +6063,7 @@ function DeliveryTrackingModal({
     const L = (window as any).L;
     if (!m || !L) return;
     m.invalidateSize();
-    const r = (MOCK_ROUTES[activeRoute] || MOCK_ROUTES[0])!;
-    const pts = [...(r.route1 || []), ...(r.route2 || [])];
+    const pts = fullRouteRef.current.length > 1 ? fullRouteRef.current : [RESTAURANT_COORDS, customerPos];
     if (pts.length > 1) {
       m.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
     }
@@ -6184,17 +6242,17 @@ function DeliveryTrackingModal({
                       <h4 className="text-sm font-black text-gray-900 leading-tight">
                         {stage === "to_restaurant" && "Indo retirar na Hamburgueria Fogo & Chapa"}
                         {stage === "at_restaurant" && "Pedido coletado na Fogo & Chapa!"}
-                        {stage === "delivering" && "A caminho do SESI SENAI Parangaba!"}
-                        {stage === "delivered" && "Pedido Entregue no SESI SENAI!"}
+                        {stage === "delivering" && `A caminho de ${destinationTitle}!`}
+                        {stage === "delivered" && `Pedido Entregue em ${destinationTitle}!`}
                       </h4>
                       <p className="text-[11px] font-medium text-gray-500 truncate max-w-[240px] sm:max-w-md">
                         {stage === "to_restaurant"
                           ? "O entregador está se deslocando até a hamburgueria para buscar seu pedido"
                           : stage === "at_restaurant"
-                          ? "Lanche conferido e embalado na chapa! Saindo rumo à Parangaba..."
+                          ? `Lanche conferido e embalado na chapa! Saindo rumo a ${destinationTitle}...`
                           : stage === "delivering"
-                          ? `Destino: ${deliveryAddress || mockRoute.address}`
-                          : "Bom apetite! Entregador na portaria do SESI SENAI"}
+                          ? `Destino: ${deliveryAddress || destinationTitle}`
+                          : `Bom apetite! Entregador no local (${destinationTitle})`}
                       </p>
                     </div>
                   </div>
