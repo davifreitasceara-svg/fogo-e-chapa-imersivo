@@ -187,7 +187,9 @@ export function LiquidSpillCanvas({
 
       const pourX = boxX + (coords.pourX / 100) * boxW;
       const pourY = boxY + (coords.pourY / 100) * boxH;
-      const landX = boxX + (coords.landX / 100) * boxW;
+      // No mobile, puxa o ponto de aterrissagem do líquido para mais perto do copo (1.04x em vez de 1.30x) para não vazar da tela do celular!
+      const landRatio = isMobile ? (big ? 1.06 : 1.02) : (coords.landX / 100);
+      const landX = boxX + Math.min(coords.landX / 100, landRatio) * boxW;
       const floorY = boxY + (coords.floorY / 100) * boxH;
 
       const dxTotal = landX - pourX;

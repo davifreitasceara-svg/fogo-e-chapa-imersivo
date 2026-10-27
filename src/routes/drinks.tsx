@@ -396,21 +396,35 @@ function DrinksPage() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="absolute inset-0 w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex flex-col lg:flex-row items-center justify-between z-10 pt-16 sm:pt-20 pb-24 sm:pb-12 overflow-y-auto lg:overflow-hidden pointer-events-auto"
               style={{ WebkitOverflowScrolling: "touch" }}
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                const max = el.scrollHeight - el.clientHeight;
+                const p = max > 0 ? el.scrollTop / max : 0;
+                setDetailScroll(Math.min(1, Math.max(0, p)));
+              }}
             >
-              {/* Left Text Content */}
-              <div className="flex-1 w-full flex flex-col space-y-3 sm:space-y-5 max-w-xl py-4" style={{ color: centerDrink.textColor }}>
-                {/* Botão de Retorno no Mobile */}
+              {/* Sticky Bar no Topo para Mobile */}
+              <div className="sticky top-0 z-30 lg:hidden w-full flex items-center justify-between py-2 px-1 mb-1">
                 <button
                   type="button"
                   onClick={() => {
                     setViewMode('carousel');
                     setDetailScroll(0);
                   }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider mb-2 lg:hidden w-fit shadow-md border border-white/30 transition-transform active:scale-95 cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-md text-white text-xs font-black uppercase tracking-wider shadow-lg border border-white/20 transition-transform active:scale-95 cursor-pointer"
                 >
                   <ArrowLeft size={14} /> Voltar ao Carrossel
                 </button>
+                <span className="text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white/90 border border-white/10">
+                  Lata 3D Interativa
+                </span>
+              </div>
 
+              {/* Espaço reservado para visualização da Lata 3D no topo em telas mobile */}
+              <div className="h-[210px] sm:h-[250px] lg:hidden w-full shrink-0 pointer-events-none" />
+
+              {/* Left Text Content */}
+              <div className="flex-1 w-full flex flex-col space-y-3 sm:space-y-5 max-w-xl py-2 sm:py-4" style={{ color: centerDrink.textColor }}>
                 <motion.span 
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 0.8, y: 0 }} transition={{ delay: 0.1 }}
                   className="inline-block px-3.5 py-1 sm:px-4 sm:py-1.5 rounded-full border-2 text-[10px] sm:text-xs font-bold tracking-widest uppercase w-max"

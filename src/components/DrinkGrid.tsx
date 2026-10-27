@@ -500,11 +500,11 @@ export function SpillableGlass({
     }, 1820);
     timersRef.current.push(tClack);
 
-    // Puddle stays visible on table, then dissolves smoothly at 2.85s
+    // Puddle stays visible on table, then dissolves smoothly at 3.8s (giving users time to see on mobile)
     const tPuddle = window.setTimeout(() => {
       setPuddleVisible(false);
       isBusyRef.current = false;
-    }, 2850);
+    }, 3800);
     timersRef.current.push(tPuddle);
   }, [big, controls, isSecaNunca, liquid, muted, onSpill, reduceMotion]);
 
@@ -584,11 +584,22 @@ export function SpillableGlass({
       {/* Interactive hover hint (cleanly hidden while pouring or when puddle is present) */}
       {showHint && !isPouring && !puddleVisible && (
         <span
-          className="pointer-events-none absolute bottom-1 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider shadow-lg backdrop-blur transition-all duration-300 md:translate-y-2 md:opacity-0 md:group-hover/glass:translate-y-0 md:group-hover/glass:opacity-100"
+          className="pointer-events-none absolute bottom-1 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-white/95 px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider shadow-lg backdrop-blur transition-all duration-300 md:translate-y-2 md:opacity-0 md:group-hover/glass:translate-y-0 md:group-hover/glass:opacity-100"
           style={{ color: "#1f1f1f" }}
         >
           <Droplets className="size-3.5 animate-bounce" style={{ color: liquid.color }} />
-          Toque para derramar
+          Toque no copo para derramar
+        </span>
+      )}
+
+      {/* Visible Active Status while pouring/puddle */}
+      {(isPouring || puddleVisible) && (
+        <span
+          className="pointer-events-none absolute -bottom-2 left-1/2 z-30 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1 text-[10px] font-black uppercase tracking-wider shadow-xl animate-pulse"
+          style={{ backgroundColor: liquid.color, color: "#fff" }}
+        >
+          <Sparkles className="size-3" />
+          {isPouring ? "Derramando bebida!" : "Poça na mesa"}
         </span>
       )}
     </div>
@@ -701,8 +712,8 @@ function DrinkCard({
       </p>
 
       {/* Glass with Fluid Physics */}
-      <div className="relative flex flex-1 items-center justify-center py-6">
-        <div className="w-full max-w-[280px]">
+      <div className="relative flex flex-col flex-1 items-center justify-center py-4 sm:py-6 overflow-visible">
+        <div className="w-full max-w-[220px] sm:max-w-[280px] overflow-visible">
           <SpillableGlass
             src={drink.image}
             alt={drink.name}
@@ -712,6 +723,17 @@ function DrinkCard({
             onSpill={onSpill}
           />
         </div>
+
+        {/* Action Link to open 3D details */}
+        <button
+          type="button"
+          onClick={() => onOpen(drink.id)}
+          className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 hover:bg-black/10 text-[11px] font-bold opacity-80 hover:opacity-100 transition-all cursor-pointer"
+          style={{ color: theme.secondary }}
+        >
+          <Maximize2 className="size-3" />
+          <span>Ver em Tela Cheia / Detalhes</span>
+        </button>
       </div>
 
       {/* Actions */}
