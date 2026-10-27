@@ -4226,7 +4226,7 @@ function Index() {
             >
               <OptimizedBackgroundVideo
                 src="/quero_mais_chamas.mp4"
-                className="w-full h-full object-cover opacity-[0.55] mix-blend-screen"
+                className="w-full h-full object-cover opacity-45 sm:opacity-55"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/10 to-black/90 pointer-events-none"></div>
             </div>
@@ -4482,7 +4482,7 @@ function Index() {
 
             <section
               id="menu"
-              className="relative border-white/10 py-20 sm:py-28 overflow-hidden transition-colors duration-700"
+              className="relative border-white/10 py-20 sm:py-28 overflow-hidden transition-colors duration-700 content-auto"
               style={{ backgroundColor: currentTheme.bgDark }}
             >
               {/* Section Header */}
@@ -4798,7 +4798,7 @@ function Index() {
             {/* Galeria Section (3D Cylinder - Exact Match) */}
             <section
               id="gallery"
-              className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700"
+              className="relative overflow-hidden border-y border-white/10 py-24 flex flex-col items-center transition-colors duration-700 content-auto"
               style={{ backgroundColor: currentTheme.bgVeryDark }}
             >
               <div
@@ -4847,6 +4847,7 @@ function Index() {
             }
             .animate-spin-gallery {
               animation: spinGallery 40s linear infinite;
+              transform: translateZ(0);
             }
             .animate-spin-gallery:hover {
               animation-play-state: paused;
@@ -4906,7 +4907,7 @@ function Index() {
             {/* Drinks Section */}
             <section
               id="drinks"
-              className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20"
+              className="relative flex flex-col items-center justify-center min-h-[90vh] overflow-hidden bg-white py-20 content-auto"
             >
               {/* Background Video */}
               <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
@@ -4916,7 +4917,7 @@ function Index() {
                 />
               </div>
 
-              <Bubbles count={40} color={currentTheme.secondary} />
+              <Bubbles count={20} color={currentTheme.secondary} />
 
               <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-12 flex flex-col md:flex-row items-center justify-center w-full h-full gap-8 md:gap-0">
                 {/* Left Content - Title and Text */}
@@ -5206,7 +5207,7 @@ function Index() {
           <OptimizedBackgroundVideo
             src="/quero_mais_chamas.mp4"
             active={isFooterNear}
-            className="w-full h-full object-cover object-bottom opacity-40 mix-blend-screen"
+            className="w-full h-full object-cover object-bottom opacity-35"
           />
           {/* Gradient to darken the top so the form and links are readable */}
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-transparent"></div>
@@ -6011,7 +6012,7 @@ function DeliveryTrackingModal({
           <div className="absolute inset-0 z-0 pointer-events-none">
             <OptimizedBackgroundVideo
               src="/quero_mais_chamas.mp4"
-              className="w-full h-full object-cover opacity-40 mix-blend-screen"
+              className="w-full h-full object-cover opacity-35"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0F0F0F]/70 to-[#0F0F0F]"></div>
           </div>
