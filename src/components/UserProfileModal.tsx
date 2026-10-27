@@ -210,7 +210,16 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
     stampsCount,
     freeBurgersCount,
     redeemFreeBurger,
+    addStampManual,
+    refreshLoyalty,
   } = useLoyalty();
+
+  // Recarrega os carimbos mais recentes do armazenamento sempre que o modal abrir
+  useEffect(() => {
+    if (open) {
+      refreshLoyalty();
+    }
+  }, [open, refreshLoyalty]);
 
   const [activeTab, setActiveTab] = useState<"overview" | "addresses" | "orders">("overview");
 
@@ -278,6 +287,23 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
   };
 
 
+
+  // Simular carimbo direto na chapa
+  const handleSimulateStamp = async () => {
+    playGrillSizzleSound("burst");
+    setIsSizzling(true);
+    const res = await addStampManual(1);
+    if (res.wonFree) {
+      toast.success("🎉 PARABÉNS! Cartela completa! Você ganhou 1 BURGER GRÁTIS! 🍔🔥", {
+        duration: 6000,
+      });
+    } else {
+      toast.success(`🔥 Carimbo registrado com sucesso! (${res.stamps}/10)`, {
+        duration: 3500,
+      });
+    }
+    setTimeout(() => setIsSizzling(false), 450);
+  };
 
   // Resgatar burger grátis pelo perfil
   const handleRedeemFree = async () => {
@@ -710,19 +736,32 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                         </div>
 
                         {/* ==================================================== */}
-                        {/* INTERATIVIDADE DIVERTIDA: ATIÇAR A BRASA             */}
+                        {/* INTERATIVIDADE DIVERTIDA: ATIÇAR A BRASA & CARIMBAR   */}
                         {/* ==================================================== */}
                         <div className="pt-2 border-t border-white/10 space-y-2">
-                          <motion.button
-                            type="button"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.96 }}
-                            onClick={handleBoostFlame}
-                            className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 hover:from-orange-500 hover:to-amber-400 text-black font-display font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                          >
-                            <Flame className={`size-4 ${isSizzling ? "animate-spin text-white" : ""}`} />
-                            <span>Atiçar a Brasa (+Calor na Chapa)</span>
-                          </motion.button>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <motion.button
+                              type="button"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.96 }}
+                              onClick={handleBoostFlame}
+                              className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 hover:from-orange-500 hover:to-amber-400 text-black font-display font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                            >
+                              <Flame className={`size-4 ${isSizzling ? "animate-spin text-white" : ""}`} />
+                              <span>Atiçar Brasa (+Calor)</span>
+                            </motion.button>
+
+                            <motion.button
+                              type="button"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.96 }}
+                              onClick={handleSimulateStamp}
+                              className="w-full py-2.5 px-3 rounded-2xl bg-white/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-300 font-display font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                            >
+                              <Sparkles className="size-4 text-amber-400" />
+                              <span>Carimbar Selo (+1)</span>
+                            </motion.button>
+                          </div>
                         </div>
 
                         {/* Frase divertida do Mestre da Brasa */}

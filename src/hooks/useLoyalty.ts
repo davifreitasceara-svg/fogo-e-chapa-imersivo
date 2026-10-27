@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -11,9 +11,32 @@ export interface LoyaltyRewardResult {
   completedCycle: boolean;
 }
 
+const LOYALTY_SYNC_EVENT = "fogo_loyalty_sync";
+
+function broadcastLoyaltyUpdate(stamps: number, freeBurgers: number) {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent(LOYALTY_SYNC_EVENT, {
+        detail: { stamps, freeBurgers },
+      }),
+    );
+  }
+}
+
 export function useLoyalty() {
   const { user } = useAuth();
-  const [stampsCount, setStampsCount] = useState<number>(0);
+  const [stampsCount, setStampsCount] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    try {
+      const key = "fogo_guest_loyalty";
+      const local = localStorage.getItem(key);
+      if (local) {
+        const parsed = JSON.parse(local);
+        return typeof parsed.stamps === "number" ? parsed.stamps : 2;
+      }
+    } catch {}
+    return 2;
+  });
   const [freeBurgersCount, setFreeBurgersCount] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -21,74 +44,129 @@ export function useLoyalty() {
     return user?.id ? `fogo_loyalty_${user.id}` : "fogo_guest_loyalty";
   }, [user?.id]);
 
-  // Carregar dados de fidelidade (do Supabase Auth user_metadata ou localStorage)
-  useEffect(() => {
+  const loadFromStorage = useCallback(() => {
+    if (typeof window === "undefined") return null;
+    const storageKey = user?.id ? `fogo_loyalty_${user.id}` : "fogo_guest_loyalty";
+    try {
+      const cached = localStorage.getItem(storageKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        const stamps = typeof parsed.stamps === "number" ? parsed.stamps : 0;
+        const free = typeof parsed.freeBurgers === "number" ? parsed.freeBurgers : 0;
+        setStampsCount(stamps);
+        setFreeBurgersCount(free);
+        return { stamps, free };
+      }
+    } catch {}
+    return null;
+  }, [user?.id]);
+
+  // Carregar dados de fidelidade com sincronização
+  const refreshLoyalty = useCallback(() => {
+    if (typeof window === "undefined") return;
+
     if (!user) {
       // Visitante
-      try {
-        const local = localStorage.getItem("fogo_guest_loyalty");
-        if (local) {
-          const parsed = JSON.parse(local);
-          setStampsCount(parsed.stamps || 0);
-          setFreeBurgersCount(parsed.freeBurgers || 0);
-        }
-      } catch {
-        /* ignore */
+      const fromLocal = loadFromStorage();
+      if (!fromLocal) {
+        setStampsCount(2);
+        setFreeBurgersCount(0);
+        try {
+          localStorage.setItem("fogo_guest_loyalty", JSON.stringify({ stamps: 2, freeBurgers: 0 }));
+        } catch {}
       }
       setIsLoaded(true);
       return;
     }
 
     const storageKey = `fogo_loyalty_${user.id}`;
-    let loadedFromCache = false;
+    const fromLocal = loadFromStorage();
 
-    // 1. Tentar ler do localStorage primeiro (imediato)
-    try {
-      const cached = localStorage.getItem(storageKey);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        setStampsCount(parsed.stamps || 0);
-        setFreeBurgersCount(parsed.freeBurgers || 0);
-        loadedFromCache = true;
-      }
-    } catch {
-      /* ignore */
+    // Se o usuário logou e tinha carimbos salvos como visitante, migra para a conta dele
+    const guestData = localStorage.getItem("fogo_guest_loyalty");
+    if (!fromLocal && guestData) {
+      try {
+        const parsedGuest = JSON.parse(guestData);
+        if (parsedGuest.stamps > 0 || parsedGuest.freeBurgers > 0) {
+          setStampsCount(parsedGuest.stamps);
+          setFreeBurgersCount(parsedGuest.freeBurgers || 0);
+          localStorage.setItem(storageKey, guestData);
+          localStorage.removeItem("fogo_guest_loyalty");
+          setIsLoaded(true);
+          return;
+        }
+      } catch {}
     }
 
-    // 2. Sincronizar com user_metadata do Supabase
-    const meta = user.user_metadata as Record<string, any> | undefined;
-    const metaStamps = meta?.["stamps_count"];
-    const metaFreeBurgers = meta?.["free_burgers_count"];
+    // Se não há dados no localStorage, verifica user_metadata do Supabase ou dá 2 carimbos de boas-vindas
+    if (!fromLocal) {
+      const meta = user.user_metadata as Record<string, any> | undefined;
+      const metaStamps = meta?.["stamps_count"];
+      const metaFreeBurgers = meta?.["free_burgers_count"];
 
-    if (typeof metaStamps === "number") {
-      setStampsCount(metaStamps);
-      setFreeBurgersCount(typeof metaFreeBurgers === "number" ? metaFreeBurgers : 0);
+      const initialStamps = typeof metaStamps === "number" ? metaStamps : 2;
+      const initialFree = typeof metaFreeBurgers === "number" ? metaFreeBurgers : 0;
+      setStampsCount(initialStamps);
+      setFreeBurgersCount(initialFree);
       try {
         localStorage.setItem(
           storageKey,
-          JSON.stringify({
-            stamps: metaStamps,
-            freeBurgers: typeof metaFreeBurgers === "number" ? metaFreeBurgers : 0,
-          }),
+          JSON.stringify({ stamps: initialStamps, freeBurgers: initialFree }),
         );
-      } catch {
-        /* ignore */
-      }
-    } else if (!loadedFromCache) {
-      // Primeira vez do usuário: inicializa com 2 carimbos de boas-vindas!
-      setStampsCount(2);
-      setFreeBurgersCount(0);
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ stamps: 2, freeBurgers: 0 }));
-      } catch {
-        /* ignore */
+      } catch {}
+    } else {
+      // Já tem dados no localStorage. Verifica se o Supabase tem contagem maior
+      const meta = user.user_metadata as Record<string, any> | undefined;
+      const metaStamps = meta?.["stamps_count"];
+      const metaFree = meta?.["free_burgers_count"];
+      if (typeof metaStamps === "number" && metaStamps > fromLocal.stamps) {
+        setStampsCount(metaStamps);
+        setFreeBurgersCount(typeof metaFree === "number" ? metaFree : fromLocal.free);
+        try {
+          localStorage.setItem(
+            storageKey,
+            JSON.stringify({ stamps: metaStamps, freeBurgers: metaFree || fromLocal.free }),
+          );
+        } catch {}
       }
     }
 
     setIsLoaded(true);
-  }, [user]);
+  }, [user, loadFromStorage]);
 
-  // Salvar estado localmente e na nuvem
+  useEffect(() => {
+    refreshLoyalty();
+
+    // Listener para sincronização instantânea entre abas e entre componentes montados
+    const handleSync = (e: Event) => {
+      const custom = e as CustomEvent<{ stamps: number; freeBurgers: number }>;
+      if (custom.detail) {
+        setStampsCount(custom.detail.stamps);
+        setFreeBurgersCount(custom.detail.freeBurgers);
+      }
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      const key = getStorageKey();
+      if (e.key === key && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (typeof parsed.stamps === "number") setStampsCount(parsed.stamps);
+          if (typeof parsed.freeBurgers === "number") setFreeBurgersCount(parsed.freeBurgers);
+        } catch {}
+      }
+    };
+
+    window.addEventListener(LOYALTY_SYNC_EVENT, handleSync);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener(LOYALTY_SYNC_EVENT, handleSync);
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [refreshLoyalty, getStorageKey]);
+
+  // Salvar estado localmente e na nuvem, notificando todos os ouvintes
   const saveLoyaltyState = async (newStamps: number, newFreeBurgers: number) => {
     setStampsCount(newStamps);
     setFreeBurgersCount(newFreeBurgers);
@@ -97,11 +175,25 @@ export function useLoyalty() {
     try {
       localStorage.setItem(
         storageKey,
-        JSON.stringify({ stamps: newStamps, freeBurgers: newFreeBurgers }),
+        JSON.stringify({
+          stamps: newStamps,
+          freeBurgers: newFreeBurgers,
+          updatedAt: Date.now(),
+        }),
       );
+      // Salva também na chave visitante como backup local seguro
+      if (!user?.id) {
+        localStorage.setItem(
+          "fogo_guest_loyalty",
+          JSON.stringify({ stamps: newStamps, freeBurgers: newFreeBurgers }),
+        );
+      }
     } catch {
       /* ignore */
     }
+
+    // Notifica todos os componentes montados (UserProfileModal, CartSheet, etc.)
+    broadcastLoyaltyUpdate(newStamps, newFreeBurgers);
 
     // Se usuário estiver logado, persiste no Supabase user_metadata
     if (user?.id) {
@@ -110,6 +202,7 @@ export function useLoyalty() {
           data: {
             stamps_count: newStamps,
             free_burgers_count: newFreeBurgers,
+            loyalty_updated_at: Date.now(),
           },
         });
       } catch (err) {
@@ -126,9 +219,22 @@ export function useLoyalty() {
    */
   const processOrderRewards = async (
     cart: Record<number, number>,
-    products: any[],
+    products: any[] = [],
   ): Promise<LoyaltyRewardResult> => {
     let earnedStamps = 0;
+
+    // Garante que o estado mais recente esteja carregado antes de somar
+    const storageKey = getStorageKey();
+    let currentStamps = stampsCount;
+    let currentFree = freeBurgersCount;
+    try {
+      const cached = localStorage.getItem(storageKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (typeof parsed.stamps === "number") currentStamps = parsed.stamps;
+        if (typeof parsed.freeBurgers === "number") currentFree = parsed.freeBurgers;
+      }
+    } catch {}
 
     // Percorre cada item do carrinho
     Object.entries(cart).forEach(([idStr, quantity]) => {
@@ -137,46 +243,58 @@ export function useLoyalty() {
       if (qty <= 0) return;
 
       const product = products.find((p) => p.id === prodId);
-      if (!product) return;
+      const name = (product?.name || "").toLowerCase();
+      const id = prodId;
 
-      const name = (product.name || "").toLowerCase();
-      const id = product.id;
-
-      // É COMBO? (IDs 400+, ou palavra "combo", "triplo", "aristofome", "fome dos reis")
+      // 1. É COMBO? (IDs 400+, ou palavra combo, triplo, aristofome, reis)
       const isCombo =
         (id >= 400 && id < 500) ||
         name.includes("combo") ||
         name.includes("triplo") ||
         name.includes("aristofome") ||
+        name.includes("reis") ||
         name.includes("fome dos reis");
 
-      // É HAMBÚRGUER?
+      // 2. É HAMBÚRGUER? (Qualquer burger do menu, ou id 1 a 20, ou nome contendo burger/burguer)
       const isBurger =
-        product.category === "burger" && !isCombo && id < 100; // IDs de burgers artesanais (1, 2, 3, 4, 5, 6...)
+        !isCombo &&
+        (product?.category === "burger" ||
+          (id >= 1 && id <= 20) ||
+          name.includes("burger") ||
+          name.includes("burguer") ||
+          name.includes("brasa") ||
+          name.includes("inferno") ||
+          name.includes("davi vs golias") ||
+          name.includes("triplex") ||
+          name.includes("mac"));
 
       if (isCombo) {
-        // Combo ganha 2 carimbos por unidade
         earnedStamps += qty * 2;
       } else if (isBurger) {
-        // Hambúrguer comum ganha 1 carimbo por unidade
         earnedStamps += qty * 1;
       }
     });
 
+    // Se o cliente comprou algo mas por ventura não bateu na categoria (ex: entrada premium),
+    // dá pelo menos 1 carimbo de incentivo
+    if (earnedStamps <= 0 && Object.keys(cart).length > 0) {
+      earnedStamps = 1;
+    }
+
     if (earnedStamps <= 0) {
       return {
         stampsEarned: 0,
-        newStampsCount: stampsCount,
+        newStampsCount: currentStamps,
         freeBurgersEarned: 0,
-        totalFreeBurgers: freeBurgersCount,
+        totalFreeBurgers: currentFree,
         completedCycle: false,
       };
     }
 
-    const totalAccumulated = stampsCount + earnedStamps;
+    const totalAccumulated = currentStamps + earnedStamps;
     const completedCycles = Math.floor(totalAccumulated / 10);
     const finalStamps = totalAccumulated % 10;
-    const finalFreeBurgers = freeBurgersCount + completedCycles;
+    const finalFreeBurgers = currentFree + completedCycles;
 
     await saveLoyaltyState(finalStamps, finalFreeBurgers);
 
@@ -205,7 +323,7 @@ export function useLoyalty() {
   };
 
   /**
-   * Simular ganho de carimbos para testes no perfil
+   * Adicionar carimbos manualmente (para testes no perfil ou promoções)
    */
   const addStampManual = async (amount: number = 1) => {
     const total = stampsCount + amount;
@@ -232,5 +350,6 @@ export function useLoyalty() {
     addStampManual,
     resetStamps,
     saveLoyaltyState,
+    refreshLoyalty,
   };
 }
