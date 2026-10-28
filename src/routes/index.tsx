@@ -51,6 +51,7 @@ import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo"
 import { BurgerBoxLogin } from "@/components/BurgerBoxLogin";
 import { UserProfileModal } from "@/components/UserProfileModal";
 import { useAuth } from "@/context/AuthContext";
+import { useLoyalty } from "@/hooks/useLoyalty";
 import { ComboCards } from "@/components/ComboCards";
 import { DrinkGrid, DrinkSpotlight } from "@/components/DrinkGrid";
 import heroBurger from "@/assets/hero-burger.png";
@@ -3259,6 +3260,7 @@ function Index() {
   const navigate = useNavigate();
   const router = useRouter();
   const { user } = useAuth();
+  const { stampsCount, freeBurgersCount } = useLoyalty();
   const [activeDrinkId, setActiveDrinkId] = useState<number | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
@@ -4059,6 +4061,19 @@ function Index() {
                 />
               </Sheet>
 
+              {/* Botão de Cartão Fidelidade */}
+              <button
+                onClick={() => setProfileOpen(true)}
+                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/25 to-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 font-bold px-3 py-1.5 text-xs transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                title="Abrir meu Cartão Fidelidade Fogo & Chapa"
+              >
+                <Flame className="size-3.5 fill-amber-400 text-amber-400 animate-pulse" />
+                <span className="hidden lg:inline font-display">Fidelidade</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-amber-400 text-black font-black leading-none">
+                  {freeBurgersCount > 0 ? "🎁 GRÁTIS!" : `${stampsCount}/10`}
+                </span>
+              </button>
+
               {user ? (
                 <Button
                   onClick={() => setProfileOpen(true)}
@@ -4144,6 +4159,23 @@ function Index() {
                   className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
                 >
                   Galeria 3D
+                </a>
+                <a
+                  href="#fidelidade"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    setProfileOpen(true);
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-amber-300 font-bold text-sm hover:bg-white/10 transition-colors flex items-center justify-between bg-amber-500/10 border border-amber-500/30"
+                >
+                  <span className="flex items-center gap-2">
+                    <Flame className="size-4 text-amber-400 fill-amber-400 animate-pulse" />
+                    <span>Cartão Fidelidade</span>
+                  </span>
+                  <span className="text-[10px] bg-amber-500 text-black font-black px-2 py-0.5 rounded-full">
+                    {freeBurgersCount > 0 ? "🎁 Burger Grátis!" : `${stampsCount}/10 Selos`}
+                  </span>
                 </a>
                 <a
                   href="#drinks"
