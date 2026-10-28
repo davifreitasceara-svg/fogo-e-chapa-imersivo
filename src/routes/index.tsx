@@ -4868,24 +4868,24 @@ function Index() {
                     style={{ transformStyle: "preserve-3d" }}
                   >
                     {[
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
                     ].map((item, idx) => {
                       const angle = idx * (360 / 12);
                       return (
                         <div
                           key={idx}
-                          className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-lg transition-transform duration-500 hover:border-amber-500/30"
+                          className="group absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/15 bg-black/40 shadow-2xl transition-all duration-500 hover:border-amber-500/70 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]"
                           style={{
                             transform: `rotateY(${angle}deg) translateZ(-550px)`,
                             backfaceVisibility: "hidden",
@@ -4894,8 +4894,17 @@ function Index() {
                           <img
                             src={item.img}
                             alt={item.alt}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+                          <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col pointer-events-none">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 drop-shadow">
+                              {item.subtitle}
+                            </span>
+                            <span className="font-display text-base sm:text-lg font-black text-white drop-shadow-md">
+                              {item.title}
+                            </span>
+                          </div>
                         </div>
                       );
                     })}
