@@ -54,6 +54,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLoyalty } from "@/hooks/useLoyalty";
 import { ComboCards } from "@/components/ComboCards";
 import { DrinkGrid, DrinkSpotlight } from "@/components/DrinkGrid";
+import { AnimatedBrandLogo } from "@/components/AnimatedBrandLogo";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
 import burgerBrasa from "@/assets/burger-brasa.png";
@@ -3880,17 +3881,14 @@ function Index() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              <a
+              <AnimatedBrandLogo
                 href="#inicio"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsNavOpen(false);
                   document.getElementById("inicio")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="font-display text-lg sm:text-2xl font-black tracking-tighter text-white hover:opacity-90 transition-opacity cursor-pointer"
-              >
-                FOGO E CHAPA
-              </a>
+              />
             </motion.div>
 
             <motion.nav
