@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 interface AnimatedBrandLogoProps {
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
@@ -36,8 +37,16 @@ const CHAPA_FLAME_LICKS = [
 ];
 
 export function AnimatedBrandLogo({ onClick, href = "#inicio" }: AnimatedBrandLogoProps) {
+  const { user } = useAuth();
   const [animKey, setAnimKey] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Trigger animation when user logs in or logs out
+  useEffect(() => {
+    if (user?.id) {
+      setAnimKey((prev) => prev + 1);
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     setIsPlaying(true);
