@@ -21,6 +21,9 @@ import {
   Crown,
   Zap,
   Gift,
+  History,
+  RotateCcw,
+  LogIn,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
@@ -204,13 +207,17 @@ function ArtisanalBurgerStamp({
 }
 
 export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileModalProps) {
-  const { user, signOut } = useAuth();
+  const { user, signOut, signInWithGoogle } = useAuth();
   const { addresses, saveAddress, deleteAddress } = useUserAddresses();
   const {
+    cardId,
     stampsCount,
     freeBurgersCount,
+    tier,
+    history,
     redeemFreeBurger,
     addStampManual,
+    resetStamps,
     refreshLoyalty,
   } = useLoyalty();
 
@@ -237,25 +244,25 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
   const [newComplement, setNewComplement] = useState("");
   const [copiedId, setCopiedId] = useState(false);
 
-  if (!user) return null;
+  const isGuest = !user;
 
-  const metadata = user.user_metadata as Record<string, any> | undefined;
+  const metadata = user?.user_metadata as Record<string, any> | undefined;
   const userName =
     (metadata?.["full_name"] as string | undefined) ||
     (metadata?.["name"] as string | undefined) ||
-    user.email?.split("@")[0] ||
-    "Cliente Fogo & Chapa";
+    user?.email?.split("@")[0] ||
+    "Visitante VIP";
 
   const userAvatar =
     (metadata?.["avatar_url"] as string | undefined) ||
     (metadata?.["picture"] as string | undefined);
 
-  const memberId = `FC-${user.id.substring(0, 8).toUpperCase()}`;
+  const memberId = cardId || (user ? `FC-${user.id.substring(0, 8).toUpperCase()}` : "FC-VIP-GUEST");
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(memberId);
     setCopiedId(true);
-    toast.success("ID de membro copiado!");
+    toast.success("Código do Cartão Fidelidade copiado!");
     setTimeout(() => setCopiedId(false), 2000);
   };
 
@@ -434,8 +441,13 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                       <h3 className="font-display text-xl sm:text-2xl font-black uppercase text-white truncate tracking-tight">
                         {userName}
                       </h3>
+                      {isGuest && (
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
+                          Visitante
+                        </span>
+                      )}
                     </div>
-                    <p className="text-xs text-white/60 truncate mt-0.5">{user.email}</p>
+                    <p className="text-xs text-white/60 truncate mt-0.5">{user?.email || "Conta Local Sincronizável"}</p>
 
                     <div className="flex items-center gap-2 mt-2">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider">
@@ -446,8 +458,8 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                       <button
                         type="button"
                         onClick={handleCopyId}
-                        className="inline-flex items-center gap-1 text-[10px] text-white/40 hover:text-white/80 transition-colors"
-                        title="Clique para copiar seu ID"
+                        className="inline-flex items-center gap-1 text-[10px] text-white/60 hover:text-amber-300 transition-colors font-mono font-bold bg-white/5 px-2 py-0.5 rounded-md border border-white/10"
+                        title="Clique para copiar o código do seu cartão"
                       >
                         <span>{memberId}</span>
                         {copiedId ? <Check className="size-2.5 text-emerald-400" /> : <Copy className="size-2.5" />}
@@ -556,15 +568,20 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                           </div>
                         </div>
 
-                        {/* Chip metálico do cartão */}
+                        {/* Chip metálico do cartão com Código Exclusivo */}
                         <div className="my-3 flex items-center justify-between relative z-10">
                           <div className="w-10 h-7 rounded-md bg-gradient-to-tr from-amber-400 via-amber-200 to-amber-500 border border-amber-600 shadow-inner flex items-center justify-center">
                             <div className="w-6 h-4 border border-amber-800/40 rounded-sm flex items-center justify-center">
                               <Flame className="size-2.5 text-amber-900 fill-amber-900" />
                             </div>
                           </div>
-                          <div className="text-[10px] font-mono tracking-widest text-amber-300/80">
-                            PASSAPORTE VIP
+                          <div className="flex items-center gap-2">
+                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 uppercase tracking-wider">
+                              {tier === "Mestre" ? "👑 Mestre" : tier === "Guerreiro" ? "⚔️ Guerreiro" : "🔥 Aspirante"}
+                            </span>
+                            <span className="text-[11px] font-mono font-black tracking-wider text-amber-300">
+                              {memberId}
+                            </span>
                           </div>
                         </div>
 
@@ -572,7 +589,7 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                         <div className="relative z-10 flex items-end justify-between">
                           <div>
                             <div className="text-[9px] font-bold uppercase tracking-wider text-white/40">
-                              Mestre da Mesa
+                              Titular do Cartão
                             </div>
                             <div className="font-display font-black text-base text-white tracking-wide uppercase truncate max-w-[240px]">
                               {userName}
@@ -589,6 +606,31 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                           </div>
                         </div>
                       </motion.div>
+
+                      {/* BANNER PARA CONVIDADO CONECTAR CONTA GOOGLE */}
+                      {isGuest && (
+                        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/20 via-orange-600/15 to-transparent border border-amber-500/40 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+                          <div className="flex items-center gap-2.5">
+                            <div className="size-8 rounded-xl bg-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+                              <Sparkles className="size-4 animate-pulse" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-white">⭐ 2 Carimbos de Boas-Vindas Ativos!</p>
+                              <p className="text-[10px] text-white/70">
+                                Faça login para salvar seu progresso na nuvem e resgatar burgers grátis em qualquer aparelho!
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => signInWithGoogle()}
+                            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white text-black font-bold text-xs hover:bg-gray-200 transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-md cursor-pointer"
+                          >
+                            <LogIn className="size-3.5" />
+                            <span>Entrar com Google</span>
+                          </button>
+                        </div>
+                      )}
 
                       {/* BANNER CELEBRATÓRIO QUANDO TIVER BURGER GRÁTIS */}
                       {freeBurgersCount > 0 && (
@@ -739,7 +781,7 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                         {/* INTERATIVIDADE DIVERTIDA: ATIÇAR A BRASA & CARIMBAR   */}
                         {/* ==================================================== */}
                         <div className="pt-2 border-t border-white/10 space-y-2">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                             <motion.button
                               type="button"
                               whileHover={{ scale: 1.02 }}
@@ -748,7 +790,7 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                               className="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 hover:from-orange-500 hover:to-amber-400 text-black font-display font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.35)] transition-all cursor-pointer flex items-center justify-center gap-1.5"
                             >
                               <Flame className={`size-4 ${isSizzling ? "animate-spin text-white" : ""}`} />
-                              <span>Atiçar Brasa (+Calor)</span>
+                              <span>Atiçar Brasa</span>
                             </motion.button>
 
                             <motion.button
@@ -759,7 +801,22 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                               className="w-full py-2.5 px-3 rounded-2xl bg-white/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-300 font-display font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                             >
                               <Sparkles className="size-4 text-amber-400" />
-                              <span>Carimbar Selo (+1)</span>
+                              <span>Carimbar (+1)</span>
+                            </motion.button>
+
+                            <motion.button
+                              type="button"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.96 }}
+                              onClick={() => {
+                                resetStamps();
+                                toast.info("Cartela reiniciada para um novo ciclo de pedidos!");
+                              }}
+                              className="w-full py-2.5 px-2 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white font-display font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1"
+                              title="Reiniciar contagem de carimbos da cartela"
+                            >
+                              <RotateCcw className="size-3.5" />
+                              <span>Zerar Selos</span>
                             </motion.button>
                           </div>
                         </div>
@@ -767,6 +824,64 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                         {/* Frase divertida do Mestre da Brasa */}
                         <div className="text-center text-[10px] text-amber-300/80 italic pt-1">
                           "{chefPhrase}"
+                        </div>
+                      </div>
+
+                      {/* ==================================================== */}
+                      {/* EXTRATO DO CARTÃO FIDELIDADE (HISTÓRICO DE CARIMBOS) */}
+                      {/* ==================================================== */}
+                      <div className="p-4 rounded-3xl bg-white/5 border border-white/10 space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-display font-black text-xs uppercase tracking-wider text-white flex items-center gap-1.5">
+                            <History className="size-3.5 text-amber-400" />
+                            <span>Extrato do Cartão Fidelidade</span>
+                          </h4>
+                          <span className="text-[10px] text-white/50 font-mono">
+                            {history.length} evento{history.length > 1 ? "s" : ""}
+                          </span>
+                        </div>
+
+                        <div className="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+                          {history.map((item) => (
+                            <div
+                              key={item.id}
+                              className="p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-xs"
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div
+                                  className={`size-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold ${
+                                    item.type === "redeem"
+                                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                      : item.type === "order"
+                                        ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                                        : "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                                  }`}
+                                >
+                                  {item.type === "redeem" ? "🎁" : item.type === "order" ? "🍔" : "🔥"}
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="font-bold text-white truncate text-[11px]">{item.title}</p>
+                                  <p className="text-[9px] text-white/50 truncate">{item.description}</p>
+                                </div>
+                              </div>
+                              <div className="text-right shrink-0 ml-2">
+                                {item.stampsDelta !== 0 && (
+                                  <span
+                                    className={`text-[11px] font-mono font-black ${
+                                      item.stampsDelta > 0 ? "text-amber-400" : "text-white/40"
+                                    }`}
+                                  >
+                                    {item.stampsDelta > 0 ? `+${item.stampsDelta}` : item.stampsDelta} selos
+                                  </span>
+                                )}
+                                {item.freeBurgersDelta !== 0 && (
+                                  <span className="block text-[10px] font-bold text-emerald-400">
+                                    {item.freeBurgersDelta > 0 ? `+${item.freeBurgersDelta} Burger` : `${item.freeBurgersDelta} Burger`}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
@@ -998,17 +1113,28 @@ export function UserProfileModal({ open, onClose, onOpenTracking }: UserProfileM
                 </div>
 
                 {/* ========================================================= */}
-                {/* RODAPÉ DO PERFIL COM LOGOUT                               */}
+                {/* RODAPÉ DO PERFIL COM LOGOUT OU LOGIN                      */}
                 {/* ========================================================= */}
                 <div className="mt-4 pt-3.5 border-t border-white/10 flex items-center gap-3 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="flex-1 py-3 px-4 rounded-2xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-red-300 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <LogOut className="size-4" />
-                    <span>Sair da Conta</span>
-                  </button>
+                  {user ? (
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="flex-1 py-3 px-4 rounded-2xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-red-300 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <LogOut className="size-4" />
+                      <span>Sair da Conta</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => signInWithGoogle()}
+                      className="flex-1 py-3 px-4 rounded-2xl border border-amber-500/50 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <LogIn className="size-4" />
+                      <span>Entrar com Google</span>
+                    </button>
+                  )}
 
                   <button
                     type="button"

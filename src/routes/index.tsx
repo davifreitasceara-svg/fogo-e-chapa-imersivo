@@ -51,8 +51,10 @@ import { OptimizedBackgroundVideo } from "@/components/OptimizedBackgroundVideo"
 import { BurgerBoxLogin } from "@/components/BurgerBoxLogin";
 import { UserProfileModal } from "@/components/UserProfileModal";
 import { useAuth } from "@/context/AuthContext";
+import { useLoyalty } from "@/hooks/useLoyalty";
 import { ComboCards } from "@/components/ComboCards";
 import { DrinkGrid, DrinkSpotlight } from "@/components/DrinkGrid";
+import { AnimatedBrandLogo } from "@/components/AnimatedBrandLogo";
 import heroBurger from "@/assets/hero-burger.png";
 import burgerClassico from "@/assets/burger-classico.png";
 import burgerBrasa from "@/assets/burger-brasa.png";
@@ -3259,6 +3261,7 @@ function Index() {
   const navigate = useNavigate();
   const router = useRouter();
   const { user } = useAuth();
+  const { stampsCount, freeBurgersCount } = useLoyalty();
   const [activeDrinkId, setActiveDrinkId] = useState<number | null>(null);
   const [activeDriver, setActiveDriver] = useState<number>(0);
   const [activeRoute, setActiveRoute] = useState<number>(0);
@@ -3878,17 +3881,14 @@ function Index() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              <a
+              <AnimatedBrandLogo
                 href="#inicio"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsNavOpen(false);
                   document.getElementById("inicio")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="font-display text-lg sm:text-2xl font-black tracking-tighter text-white hover:opacity-90 transition-opacity cursor-pointer"
-              >
-                FOGO E CHAPA
-              </a>
+              />
             </motion.div>
 
             <motion.nav
@@ -4059,6 +4059,19 @@ function Index() {
                 />
               </Sheet>
 
+              {/* Botão de Cartão Fidelidade */}
+              <button
+                onClick={() => setProfileOpen(true)}
+                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/25 to-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 font-bold px-3 py-1.5 text-xs transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+                title="Abrir meu Cartão Fidelidade Fogo & Chapa"
+              >
+                <Flame className="size-3.5 fill-amber-400 text-amber-400 animate-pulse" />
+                <span className="hidden lg:inline font-display">Fidelidade</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-amber-400 text-black font-black leading-none">
+                  {freeBurgersCount > 0 ? "🎁 GRÁTIS!" : `${stampsCount}/10`}
+                </span>
+              </button>
+
               {user ? (
                 <Button
                   onClick={() => setProfileOpen(true)}
@@ -4144,6 +4157,23 @@ function Index() {
                   className="px-4 py-2.5 rounded-xl text-white font-bold text-sm hover:bg-white/10 transition-colors"
                 >
                   Galeria 3D
+                </a>
+                <a
+                  href="#fidelidade"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsNavOpen(false);
+                    setProfileOpen(true);
+                  }}
+                  className="px-4 py-2.5 rounded-xl text-amber-300 font-bold text-sm hover:bg-white/10 transition-colors flex items-center justify-between bg-amber-500/10 border border-amber-500/30"
+                >
+                  <span className="flex items-center gap-2">
+                    <Flame className="size-4 text-amber-400 fill-amber-400 animate-pulse" />
+                    <span>Cartão Fidelidade</span>
+                  </span>
+                  <span className="text-[10px] bg-amber-500 text-black font-black px-2 py-0.5 rounded-full">
+                    {freeBurgersCount > 0 ? "🎁 Burger Grátis!" : `${stampsCount}/10 Selos`}
+                  </span>
                 </a>
                 <a
                   href="#drinks"
@@ -4868,24 +4898,24 @@ function Index() {
                     style={{ transformStyle: "preserve-3d" }}
                   >
                     {[
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
-                      { img: "/parts/pao.jpg", alt: "Pão Brioche" },
-                      { img: "/parts/carne.jpg", alt: "Blend de Carne" },
-                      { img: "/parts/queijo.jpg", alt: "Queijo Cheddar" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
+                      { img: "/parts/smash_chapa.jpg", alt: "Smash Burger na Chapa", title: "Smash na Chapa", subtitle: "Fogo & Sabor" },
+                      { img: "/parts/fogo_brasa.jpg", alt: "Blend de Carne na Brasa", title: "Fogo & Brasa", subtitle: "Defumado na Grelha" },
+                      { img: "/parts/queijo_chapa.jpg", alt: "Queijo Borbulhante na Chapa", title: "Cheddar na Chapa", subtitle: "Crosta Dourada" },
                     ].map((item, idx) => {
                       const angle = idx * (360 / 12);
                       return (
                         <div
                           key={idx}
-                          className="absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/10 shadow-lg transition-transform duration-500 hover:border-amber-500/30"
+                          className="group absolute left-1/2 top-1/2 w-[240px] h-[340px] sm:w-[280px] sm:h-[380px] -ml-[120px] sm:-ml-[140px] -mt-[170px] sm:-mt-[190px] rounded-[24px] overflow-hidden border border-white/15 bg-black/40 shadow-2xl transition-all duration-500 hover:border-amber-500/70 hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]"
                           style={{
                             transform: `rotateY(${angle}deg) translateZ(-550px)`,
                             backfaceVisibility: "hidden",
@@ -4894,8 +4924,17 @@ function Index() {
                           <img
                             src={item.img}
                             alt={item.alt}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+                          <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col pointer-events-none">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 drop-shadow">
+                              {item.subtitle}
+                            </span>
+                            <span className="font-display text-base sm:text-lg font-black text-white drop-shadow-md">
+                              {item.title}
+                            </span>
+                          </div>
                         </div>
                       );
                     })}

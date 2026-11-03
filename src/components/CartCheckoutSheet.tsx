@@ -86,7 +86,7 @@ export function CartCheckoutSheet({
   const [changeAmount, setChangeAmount] = useState<string>("");
   const { user } = useAuth();
   const { addresses, saveAddress, deleteAddress } = useUserAddresses();
-  const { freeBurgersCount, processOrderRewards, redeemFreeBurger } = useLoyalty();
+  const { stampsCount, freeBurgersCount, cardId, processOrderRewards, redeemFreeBurger } = useLoyalty();
   const [saveAddressForFuture, setSaveAddressForFuture] = useState(true);
   const [isUsingNewAddress, setIsUsingNewAddress] = useState(false);
   const [isRedeemingFreeBurger, setIsRedeemingFreeBurger] = useState(false);
@@ -1624,28 +1624,58 @@ export function CartCheckoutSheet({
                     </motion.div>
                   )}
 
-                  {/* Prévia de Carimbos que serão acumulados com este pedido */}
-                  {potentialStamps > 0 && (
-                    <div className="rounded-2xl p-3.5 bg-black/40 border border-amber-500/30 flex items-center justify-between">
+                  {/* Painel do Cartão Fidelidade no Carrinho */}
+                  <div className="rounded-2xl p-3.5 bg-gradient-to-r from-amber-500/10 via-black/50 to-orange-500/10 border border-amber-500/30 flex flex-col gap-2.5 shadow-md">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <div className="size-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-black flex items-center justify-center font-bold shadow-md">
+                        <div className="size-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-black flex items-center justify-center font-bold shadow-md shrink-0">
                           <Flame className="size-4 fill-black" />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-white flex items-center gap-1">
-                            <span>+{potentialStamps} carimbo{potentialStamps > 1 ? "s" : ""} na sua cartela!</span>
+                          <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                            <span>Cartão Fidelidade ({cardId})</span>
                             <Sparkles className="size-3 text-amber-400 animate-pulse" />
                           </p>
                           <p className="text-[10px] text-white/60">
-                            Burger = 1 carimbo • Combo = 2 carimbos • 10 = Grátis
+                            {potentialStamps > 0 ? (
+                              <span className="text-amber-300 font-medium">
+                                +{potentialStamps} carimbo{potentialStamps > 1 ? "s" : ""} com este pedido!
+                              </span>
+                            ) : (
+                              "Cada hambúrguer = 1 selo • Combo = 2 selos"
+                            )}
                           </p>
                         </div>
                       </div>
-                      <span className="text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                        Fogo & Chapa
-                      </span>
+
+                      <div className="text-right shrink-0">
+                        <span className="text-[11px] font-mono font-black px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                          {stampsCount}/10 Selos
+                        </span>
+                      </div>
                     </div>
-                  )}
+
+                    {/* Barra de Progresso com Previsão do Pedido */}
+                    <div className="space-y-1">
+                      <div className="w-full h-2 rounded-full bg-black/60 border border-white/10 p-0.5 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500"
+                          style={{
+                            width: `${Math.min(100, Math.max(10, ((stampsCount + potentialStamps) / 10) * 100))}%`,
+                          }}
+                        />
+                      </div>
+                      <div className="flex justify-between text-[9px] text-white/50">
+                        <span>Atual: {stampsCount} selos</span>
+                        {potentialStamps > 0 && (
+                          <span className="text-amber-400 font-bold">
+                            Após o pedido: {Math.min(10, stampsCount + potentialStamps)}/10
+                            {stampsCount + potentialStamps >= 10 && " 🎉 Burger Grátis!"}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-3">
                     <h3 className="font-bold text-sm text-white/60 uppercase tracking-wider mb-2">

@@ -4,6 +4,7 @@ import { ShoppingBag, Menu, X, LogIn } from "lucide-react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { AnimatedBrandLogo } from "@/components/AnimatedBrandLogo";
 
 const navLinks = [
   { href: "/#menu", label: "Cardápio" },
@@ -101,13 +102,10 @@ export function Navbar({ onOpenLogin }: { onOpenLogin?: () => void }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
-          <a
+          <AnimatedBrandLogo
             href="/"
             onClick={(e) => handleNavClick(e, "/")}
-            className="font-display text-xl sm:text-2xl font-black tracking-tighter text-white hover:opacity-90 transition-opacity cursor-pointer"
-          >
-            FOGO E CHAPA
-          </a>
+          />
         </motion.div>
 
         {/* Center: Floating Navigation Pill */}
